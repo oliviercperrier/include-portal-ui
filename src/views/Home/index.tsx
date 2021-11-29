@@ -98,7 +98,7 @@ const Home = (): React.ReactElement => {
                     />
                   }
                   className={styles.loginStatsLabel}
-                  subLabel={"Files"}
+                  subLabel={"Biospecimens"}
                 />
                 <MultiLabel
                   iconPosition={MultiLabelIconPositionEnum.Top}
@@ -110,7 +110,7 @@ const Home = (): React.ReactElement => {
                     />
                   }
                   className={styles.loginStatsLabel}
-                  subLabel={"Storage"}
+                  subLabel={"Data Files"}
                 />
               </StackLayout>
             </Spin>

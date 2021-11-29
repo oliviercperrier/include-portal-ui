@@ -11,7 +11,6 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
   const { keycloak } = useKeycloak();
   const [result, setResult] = useState<T>();
   const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState();
   const [refreshIndex, setRefreshIndex] = useState(0);
 
@@ -23,7 +22,6 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
     let cancelled = false;
     if (skip) {
       setLoading(false);
-      setLoaded(false);
     } else {
       setLoading(true);
       axios({
@@ -40,7 +38,6 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
           if (!cancelled) {
             setResult(r.data);
             setLoading(false);
-            setLoaded(true);
           }
         })
         .catch((error) => {
@@ -57,7 +54,7 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
     };
   }, [config.url, refreshIndex]);
 
-  return { result, loading, loaded, error, refresh, setResult };
+  return { result, loading, error, refresh };
 };
 
 export default useApi;

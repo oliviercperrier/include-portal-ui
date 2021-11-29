@@ -18,9 +18,7 @@ import ProtectedRoute from "ProtectedRoute";
 const App = () => {
   const { keycloak, initialized } = useKeycloak();
   const keycloakIsReady = keycloak && initialized;
-
-  intl.init({ currentLocale: "fr", locales: { fr: locales.fr } });
-
+  
   return (
     <div id="appContainer">
       {keycloakIsReady ? (

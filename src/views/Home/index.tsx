@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import MultiLabel, {
   MultiLabelIconPositionEnum,
@@ -13,14 +13,14 @@ import BookIcon from "components/Icons/BookIcon";
 import FileTextIcon from "components/Icons/FileTextIcon";
 import IncludeIcon from "components/Icons/IncludeIcon";
 import StorageIcon from "components/Icons/StorageIcon";
-import TeamIcon from "components/Icons/TeamIcon";
 import UserIcon from "components/Icons/UserIcon";
-//import fetchPublicStats from "services/publicStats";
+import useApi from "hooks/useApi";
+import EnvVariables from "helpers/EnvVariables";
 
 import styles from "./index.module.scss";
 
-const formatCounts = (num: number) => numberFormat(num);
 const formatStorage = (storage: string) => {
+  if (!storage) return;
   const parts = storage.split(/\.| /);
   return `${parts[0]}${parts[2]}`;
 };
@@ -30,24 +30,18 @@ const { Title } = Typography;
 const Home = (): React.ReactElement => {
   const { keycloak } = useKeycloak();
   const isAuthenticated = keycloak.authenticated || false;
-
-  const [stats, setStats] = useState({
-    studies: 0,
-    participants: 0,
-    biospecimens: 0,
-    fileSize: "0.0 TB",
+  const { result, loading } = useApi<{
+    studies: number;
+    participants: number;
+    biospecimens: number;
+    fileSize: string;
+  }>({
+    config: {
+      url: `${EnvVariables.configFor({
+        key: "ARRANGER_API",
+      })}/statistics`,
+    },
   });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      //const result = await fetchPublicStats();
-      //setStats(result);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
 
   if (isAuthenticated) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
@@ -72,7 +66,7 @@ const Home = (): React.ReactElement => {
               <StackLayout className={styles.loginStatsContainer}>
                 <MultiLabel
                   iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={formatCounts(stats?.studies)}
+                  label={numberFormat(result?.studies!)}
                   Icon={
                     <BookIcon
                       className={styles.loginPageIconColor}
@@ -84,7 +78,7 @@ const Home = (): React.ReactElement => {
                 />
                 <MultiLabel
                   iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={formatCounts(stats?.participants)}
+                  label={numberFormat(result?.participants!)}
                   Icon={
                     <UserIcon
                       className={styles.loginPageIconColor}
@@ -96,7 +90,7 @@ const Home = (): React.ReactElement => {
                 />
                 <MultiLabel
                   iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={formatCounts(stats?.biospecimens)}
+                  label={numberFormat(result?.biospecimens!)}
                   Icon={
                     <FileTextIcon
                       className={styles.loginPageIconColor}
@@ -108,7 +102,7 @@ const Home = (): React.ReactElement => {
                 />
                 <MultiLabel
                   iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={formatStorage(stats?.fileSize)}
+                  label={formatStorage(result?.fileSize!)}
                   Icon={
                     <StorageIcon
                       className={styles.loginPageIconColor}

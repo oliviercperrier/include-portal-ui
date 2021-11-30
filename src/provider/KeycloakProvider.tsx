@@ -12,7 +12,7 @@ export interface IProvider {
 }
 
 const eventLogger = (eventType: AuthClientEvent, error?: AuthClientError) => {
-  if (EnvVariables.configFor({ key: "ENV" }) == "develpment" && error) {
+  if (EnvVariables.configFor({ key: "ENV" }) == "development" && error) {
     console.error("eventLogger ", "eventType ", eventType);
     console.error("eventLogger ", error);
   }

@@ -1,3 +1,7 @@
+import "./index.css";
+import "style/themes/include/dist/antd.css";
+import "style/themes/include/main.scss";
+
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";

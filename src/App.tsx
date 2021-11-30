@@ -10,17 +10,15 @@ import SideImageLayout from "components/Layout/SideImage";
 import { STATIC_ROUTES } from "utils/routes";
 import Spinner from "components/uiKit/Spinner";
 import MainSideImage from "components/assets/mainSideImage.jpg";
-
-import "style/themes/include/main.scss";
-import "style/themes/include/dist/antd.css";
 import ProtectedRoute from "ProtectedRoute";
+import PageLayout from "components/Layout";
 
 const App = () => {
   const { keycloak, initialized } = useKeycloak();
   const keycloakIsReady = keycloak && initialized;
-  
+
   return (
-    <div id="appContainer">
+    <div className="App" id="appContainer">
       {keycloakIsReady ? (
         <Switch>
           <Route exact path={STATIC_ROUTES.HOME}>
@@ -28,9 +26,15 @@ const App = () => {
               <Home />
             </SideImageLayout>
           </Route>
-          <ProtectedRoute exact path={STATIC_ROUTES.DASHBOARD}>
-            <Dashboard />
-          </ProtectedRoute>
+          <ProtectedRoute
+            exact
+            path={STATIC_ROUTES.DASHBOARD}
+            render={() => (
+              <PageLayout>
+                <Dashboard />
+              </PageLayout>
+            )}
+          />
         </Switch>
       ) : (
         <Spinner size={"large"} />

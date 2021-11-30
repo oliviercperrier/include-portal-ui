@@ -1,0 +1,133 @@
+@import "colors";
+
+.homePageContent {
+  padding: 24px;
+  .loginContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 800px;
+    margin: auto;
+
+    .logoTitleContainer {
+      text-align: center;
+
+      .logotTitle {
+        color: $gray-1;
+        margin-bottom: 0;
+        margin-top: 16px;
+        font-size: 20px;
+      }
+    }
+
+    .loginStats {
+      background-color: $gray-9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px 24px 24px 24px;
+
+      .statsDivider {
+        border-top: 1px solid $gray-7;
+        margin: 12px 0;
+      }
+
+      .statsTitle {
+        color: $gray-6;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 24px;
+        margin-bottom: 0;
+      }
+
+      > div {
+        width: 100%;
+      }
+
+      .loginStatsContainer {
+        justify-content: space-between;
+        display: flex;
+        margin-top: 24px;
+        flex-wrap: wrap;
+
+        .loginPageIconColor {
+          margin-top: -1px;
+          fill: $blue-7;
+        }
+
+        .loginStatsLabel {
+          color: $gray-1;
+
+          :global(.wrapper__label) {
+            font-size: 24px;
+            line-height: 24px;
+          }
+        }
+      }
+    }
+
+    .loginHeader {
+      display: flex;
+      align-items: center;
+    }
+
+    .loginDescription {
+      .loginDescTitle,
+      .loginDescText {
+        color: $gray-1;
+      }
+
+      .loginDescTitle {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 38px;
+
+        .titleEmphase {
+          color: $blue-4;
+        }
+      }
+
+      .loginDescText {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+
+    h1 {
+      margin-left: 16px;
+      line-height: 38px;
+    }
+  }
+}
+
+@media (max-width: 1180px) {
+  .loginContainer {
+    align-items: center;
+  }
+}
+
+@media (max-width: 800px) {
+  .loginContainer {
+    margin: 0;
+
+    .loginStats {
+      margin: 0;
+
+      .loginStatsContainer {
+        .loginStatsLabel {
+          :global(.wrapper__label) {
+            font-size: 1.6rem;
+          }
+
+          :global(.wrapper__icon) {
+            width: 16px;
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}

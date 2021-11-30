@@ -1,0 +1,53 @@
+@import "colors";
+
+.sideImagePageContainer {
+  position: relative;
+  height: 100vh;
+  overflow-y: hidden;
+  min-width: 1024;
+  background-color: $gray-8;
+
+  .contentWrapper {
+    height: 100%;
+    width: 100%;
+  }
+
+  .sideImageContainer {
+    background: #ffffff;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    width: 573px;
+    height: 100%;
+  }
+
+  .pageContent {
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    overflow: auto;
+  }
+
+  .logoImage {
+    width: 275px;
+    position: absolute;
+    margin: 20px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .sideImageContainer {
+    flex: 0;
+  }
+
+  .pageContent {
+    display: flex;
+    background-position: bottom;
+    background: linear-gradient(
+        0deg,
+        transparentize($gray-8, 0.1),
+        transparentize($gray-8, 0.1)
+      ),
+      url(../../assets/mainSideImage.jpg) bottom;
+    background-size: cover;
+  }
+}

@@ -1,7 +1,8 @@
 @import "colors";
 
 .homePageContent {
-  padding: 24px;
+  padding: 40px;
+
   .loginContainer {
     display: flex;
     flex-direction: column;
@@ -82,8 +83,6 @@
       .loginDescTitle {
         font-style: normal;
         font-weight: 600;
-        font-size: 30px;
-        line-height: 38px;
 
         .titleEmphase {
           color: $blue-4;
@@ -103,30 +102,85 @@
   }
 }
 
+@media (min-width: 1181px) {
+  .loginContainer {
+    .loginDescription {
+      .loginDescTitle {
+        font-size: 30px;
+        line-height: 38px;
+      }
+
+      .loginDescText {
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+  }
+}
+
 @media (max-width: 1180px) {
   .loginContainer {
-    align-items: center;
+    .loginDescription {
+      text-align: center;
+      .loginDescTitle {
+        font-size: 24px;
+        line-height: 32px;
+      }
+    }
+    .loginButtons {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
 
 @media (max-width: 800px) {
-  .loginContainer {
-    margin: 0;
+  .homePageContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 40px 16px;
+    .loginContainer {
+      margin: unset;
+      .loginDescription {
+        .loginDescTitle,
+        .loginDescText {
+          color: $gray-1;
+        }
 
-    .loginStats {
-      margin: 0;
+        .loginDescTitle {
+          text-align: center;
 
-      .loginStatsContainer {
-        .loginStatsLabel {
-          :global(.wrapper__label) {
-            font-size: 1.6rem;
-          }
-
-          :global(.wrapper__icon) {
-            width: 16px;
-            margin-right: 0.5rem;
+          .titleEmphase {
+            color: $blue-4;
           }
         }
+
+        .loginDescText {
+          font-size: 16px;
+          line-height: 24px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .loginStats {
+    padding-bottom: 8px !important;
+  }
+
+  .loginStatsLabel {
+    width: 50%;
+    margin-bottom: 16px;
+  }
+
+  .loginButtons {
+    > div {
+      width: 100%;
+
+      [type="button"] {
+        width: 100%;
       }
     }
   }

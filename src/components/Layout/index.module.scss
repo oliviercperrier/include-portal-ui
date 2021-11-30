@@ -1,0 +1,7 @@
+.mainLayout {
+  min-height: 100%;
+  .mainContent {
+    flex: 1;
+    min-height: unset;
+  }
+}

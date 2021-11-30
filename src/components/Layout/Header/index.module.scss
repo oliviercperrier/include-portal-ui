@@ -1,0 +1,68 @@
+@import "colors";
+
+.mainHeader {
+  height: 64px;
+  background-color: $gray-1;
+  padding: 12px 32px;
+  box-shadow: 0 0 4px 0 #0000003b;
+
+  * {
+    overflow: unset;
+  }
+
+  div[class$="-header-heading"],
+  span[class$="-header-heading-title"],
+  div[class$="-header-heading-left"] {
+    height: 100%;
+  }
+
+  div[class$="-header-heading-left"] {
+    margin: 0;
+  }
+
+  span[class$="-header-heading-extra"] {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    height: 100%;
+    width: auto;
+  }
+
+  .headerMenu {
+    margin-left: 24px;
+  }
+
+  .headerBtn {
+    border: none;
+    color: $gray-8;
+    padding: 4px 8px;
+    margin: 0 5px;
+
+    &:hover,
+    &:focus {
+      background-color: $gray-4;
+      border: none;
+      color: $gray-8;
+    }
+  }
+
+  .icon path {
+    fill: $gray-8;
+  }
+
+  .userMenuTrigger {
+    color: $gray-8;
+    display: flex;
+    align-items: center;
+
+    .userGravatar {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      margin: 5px 8px;
+    }
+  }
+}

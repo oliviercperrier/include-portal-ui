@@ -42,6 +42,7 @@
     "url": "git+https://github.com/include-dcc/include-portal-ui.git"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.4.17",
     "@ferlab/style": "^1.9.9",
     "@ferlab/ui": "^2.2.5",
@@ -50,9 +51,11 @@
     "@testing-library/jest-dom": "^5.15.0",
     "antd": "^4.16.13",
     "axios": "^0.24.0",
+    "classnames": "^2.3.1",
     "jwt-decode": "^3.1.2",
     "keycloak-js": "^15.0.2",
     "lodash": "^4.17.21",
+    "md5": "^2.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl-universal": "^2.4.8",
@@ -67,6 +70,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.176",
+    "@types/md5": "^2.3.1",
     "@types/node": "^16.11.7",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",

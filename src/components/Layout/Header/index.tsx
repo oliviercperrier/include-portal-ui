@@ -13,13 +13,16 @@ import Gravatar from "components/uiKit/Gravatar";
 import HeaderLink from "components/Layout/Header/HeaderLink";
 import { STATIC_ROUTES } from "utils/routes";
 import history from "utils/history";
+import { useUser } from "store/user";
 
 import style from "./index.module.scss";
 
 const iconSize = { width: 14, height: 14 };
 
 const Header = () => {
+  const { user } = useUser();
   const currentPathName = history.location.pathname;
+
   return (
     <PageHeader
       title={<IncludeIcon className={style.logo} />}
@@ -85,7 +88,8 @@ const Header = () => {
           >
             {/* CHANGE WITH USER */}
             <Gravatar className={style.userGravatar} email="" size={100} />
-            Hover me <DownOutlined />
+            <span className={style.userName}>{user?.firstname}</span>
+            <DownOutlined />
           </a>
         </Dropdown>,
       ]}

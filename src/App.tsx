@@ -1,6 +1,4 @@
-import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
-import intl from "react-intl-universal";
-import locales from "locales";
+import { useKeycloak } from "@react-keycloak/web";
 import { Switch, Route } from "react-router-dom";
 import ContextProvider from "provider/ContextProvider";
 
@@ -12,6 +10,7 @@ import Spinner from "components/uiKit/Spinner";
 import MainSideImage from "components/assets/mainSideImage.jpg";
 import ProtectedRoute from "ProtectedRoute";
 import PageLayout from "components/Layout";
+import Authenticator from "auth/Authenticator";
 
 const App = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -20,22 +19,24 @@ const App = () => {
   return (
     <div className="App" id="appContainer">
       {keycloakIsReady ? (
-        <Switch>
-          <Route exact path={STATIC_ROUTES.HOME}>
-            <SideImageLayout sideImgSrc={MainSideImage}>
-              <Home />
-            </SideImageLayout>
-          </Route>
-          <ProtectedRoute
-            exact
-            path={STATIC_ROUTES.DASHBOARD}
-            render={() => (
-              <PageLayout>
-                <Dashboard />
-              </PageLayout>
-            )}
-          />
-        </Switch>
+        <Authenticator>
+          <Switch>
+            <Route exact path={STATIC_ROUTES.HOME}>
+              <SideImageLayout sideImgSrc={MainSideImage}>
+                <Home />
+              </SideImageLayout>
+            </Route>
+            <ProtectedRoute
+              exact
+              path={STATIC_ROUTES.DASHBOARD}
+              render={() => (
+                <PageLayout>
+                  <Dashboard />
+                </PageLayout>
+              )}
+            />
+          </Switch>
+        </Authenticator>
       ) : (
         <Spinner size={"large"} />
       )}

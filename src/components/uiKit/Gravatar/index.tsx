@@ -2,7 +2,7 @@ import React from "react";
 import md5 from "md5";
 import trim from "lodash/trim";
 
-export default ({ email = "", d = "", size = 100, ...props }) => (
+const Gravatar = ({ email = "", d = "", size = 100, ...props }) => (
   <img
     src={`https://www.gravatar.com/avatar/${md5(
       trim(email.toLowerCase())
@@ -11,3 +11,5 @@ export default ({ email = "", d = "", size = 100, ...props }) => (
     {...props}
   />
 );
+
+export default Gravatar;

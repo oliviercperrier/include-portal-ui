@@ -64,10 +64,11 @@ const Header = () => {
         </div>
       }
       extra={[
-        <Button className={style.headerBtn}>
+        <Button key="external-website" className={style.headerBtn}>
           Website <ExternalLinkIcon className={style.icon} {...iconSize} />
         </Button>,
         <Dropdown
+          key="user-menu"
           trigger={["click"]}
           overlay={
             <Menu>

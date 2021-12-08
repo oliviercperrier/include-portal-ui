@@ -13,7 +13,7 @@ const { store, persistor } = getStoreConfig();
 persistor.subscribe(function () {
   intl.init({
     currentLocale: store.getState().global.lang || LANG.EN,
-    locales: { [LANG.FR]: locales[LANG.FR] },
+    locales,
   });
 });
 

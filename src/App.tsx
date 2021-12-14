@@ -1,5 +1,5 @@
 import { useKeycloak } from "@react-keycloak/web";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import ContextProvider from "provider/ContextProvider";
 
 import Home from "views//Home";
@@ -11,6 +11,11 @@ import MainSideImage from "components/assets/mainSideImage.jpg";
 import ProtectedRoute from "ProtectedRoute";
 import PageLayout from "components/Layout";
 import Authenticator from "auth/Authenticator";
+import Studies from "views/Studies";
+import DataExploration from "views/DataExploration";
+import Participants from "views/Participants";
+import Biospecimen from "views/Biospecimen";
+import DataFiles from "views/DataFiles";
 
 const App = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -32,6 +37,37 @@ const App = () => {
               render={() => <Dashboard />}
               layout={PageLayout}
             />
+            <ProtectedRoute
+              exact
+              path={STATIC_ROUTES.STUDIES}
+              render={() => <Studies />}
+              layout={PageLayout}
+            />
+            <ProtectedRoute
+              exact
+              path={STATIC_ROUTES.DATA_EXPLORATION}
+              render={() => <DataExploration />}
+              layout={PageLayout}
+            />
+            <ProtectedRoute
+              exact
+              path={STATIC_ROUTES.PARTICIPANTS}
+              render={() => <Participants />}
+              layout={PageLayout}
+            />
+            <ProtectedRoute
+              exact
+              path={STATIC_ROUTES.BIOSPECIMEN}
+              render={() => <Biospecimen />}
+              layout={PageLayout}
+            />
+            <ProtectedRoute
+              exact
+              path={STATIC_ROUTES.DATA_FILES}
+              render={() => <DataFiles />}
+              layout={PageLayout}
+            />
+            <Redirect from="*" to={STATIC_ROUTES.DASHBOARD} />
           </Switch>
         </Authenticator>
       ) : (

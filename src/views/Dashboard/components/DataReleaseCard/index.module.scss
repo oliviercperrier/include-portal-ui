@@ -1,0 +1,16 @@
+@import "colors";
+
+.dataReleaseCard {
+  background-color: $gray-8;
+  padding: 24px;
+  width: 100%;
+
+  .cardTitle {
+      color: $gray-1;
+      margin: 0;
+  }
+
+  .externalLink {
+      color: $gray-6
+  }
+}

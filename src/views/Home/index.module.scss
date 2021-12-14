@@ -47,25 +47,10 @@
         width: 100%;
       }
 
-      .loginStatsContainer {
-        justify-content: space-between;
+      .dataRelease {
         display: flex;
-        margin-top: 24px;
-        flex-wrap: wrap;
-
-        .loginPageIconColor {
-          margin-top: -1px;
-          fill: $blue-7;
-        }
-
-        .loginStatsLabel {
-          color: $gray-1;
-
-          :global(.wrapper__label) {
-            font-size: 24px;
-            line-height: 24px;
-          }
-        }
+        justify-content: space-between;
+        margin-top: 12px;
       }
     }
 

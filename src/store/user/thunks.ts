@@ -4,7 +4,8 @@ import keycloak from "initKeycloak";
 
 const userApi: any = {
   fetchById: (token: string) => ({
-    firstname: "Olivier Castro-Perrier",
+    firstName: "Olivier",
+    lastName: "Castro-Perrier"
   }),
 }; // link the service to retrieve user
 

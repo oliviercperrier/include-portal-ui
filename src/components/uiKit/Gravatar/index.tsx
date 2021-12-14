@@ -1,11 +1,10 @@
 import React from "react";
 import md5 from "md5";
-import trim from "lodash/trim";
 
-const Gravatar = ({ email = "", d = "", size = 100, ...props }) => (
+const Gravatar = ({ email = "", d = "retro", size = 100, ...props }) => (
   <img
     src={`https://www.gravatar.com/avatar/${md5(
-      trim(email.toLowerCase())
+      email.trim().toLowerCase()
     )}?s=${size}&d=${d}`}
     alt="Gravatar"
     {...props}

@@ -1,13 +1,22 @@
 import React from "react";
-import { Redirect, Route, RouteProps } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  RouteProps,
+} from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
-
+import ConditionalWrapper from "components/utils/ConditionalWrapper";
 import { hasUserRole } from "helpers/roles";
 import { STATIC_ROUTES } from "utils/routes";
 
-const ProtectedRoute = ({ ...routeProps }: RouteProps) => {
+type OwnProps = RouteProps & {
+  layout?: (children: any) => React.ReactElement;
+};
+
+const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   const { user } = { user: { roles: ["allo"], acceptedTerms: true } } as any; //useUser(); TODO
   const { keycloak } = useKeycloak();
+  const Layout = routeProps.layout!;
   const userNeedsToLogin = !keycloak.authenticated;
 
   if (userNeedsToLogin) {
@@ -27,7 +36,13 @@ const ProtectedRoute = ({ ...routeProps }: RouteProps) => {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }
 
-  return <Route {...routeProps} />;
+  return (
+    <ConditionalWrapper
+      condition={Layout != undefined}
+      children={<Route {...routeProps} />}
+      wrapper={(children) => <Layout>{children}</Layout>}
+    />
+  );
 };
 
 export default ProtectedRoute;

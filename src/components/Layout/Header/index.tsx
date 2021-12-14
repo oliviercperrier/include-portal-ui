@@ -14,6 +14,7 @@ import HeaderLink from "components/Layout/Header/HeaderLink";
 import { STATIC_ROUTES } from "utils/routes";
 import history from "utils/history";
 import { useUser } from "store/user";
+import intl from "react-intl-universal";
 
 import style from "./index.module.scss";
 
@@ -32,53 +33,60 @@ const Header = () => {
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DASHBOARD}
             icon={<HomeIcon className={style.icon} {...iconSize} />}
-            title="Dashboard"
+            title={intl.get("layout.main.menu.dashboard")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.STUDIES}
             icon={<BookIcon className={style.icon} {...iconSize} />}
-            title="Studies"
+            title={intl.get("layout.main.menu.studies")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DATA_EXPLORATION}
             icon={<DataExplorationIcon className={style.icon} {...iconSize} />}
-            title="Data Exploration"
+            title={intl.get("layout.main.menu.explore")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.PARTICIPANTS}
             icon={<UserIcon className={style.icon} {...iconSize} />}
-            title="Participants"
+            title={intl.get("layout.main.menu.participants")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.BIOSPECIMEN}
             icon={<ExperimentIcon className={style.icon} {...iconSize} />}
-            title="Biospecimen"
+            title={intl.get("layout.main.menu.biospecimen")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DATA_FILES}
             icon={<FileTextIcon className={style.icon} {...iconSize} />}
-            title="Data Files"
+            title={intl.get("layout.main.menu.datafiles")}
           />
         </div>
       }
       extra={[
         <Button key="external-website" className={style.headerBtn}>
-          Website <ExternalLinkIcon className={style.icon} {...iconSize} />
+          {intl.get("layout.main.menu.website")}{" "}
+          <ExternalLinkIcon className={style.icon} {...iconSize} />
         </Button>,
         <Dropdown
           key="user-menu"
           trigger={["click"]}
           overlay={
             <Menu>
-              <Menu.Item key="profile">My Profile</Menu.Item>
-              <Menu.Item key="settings">Settings</Menu.Item>
+              <Menu.Item key="profile">
+                {intl.get("layout.user.menu.myprofile")}
+              </Menu.Item>
+              <Menu.Item key="settings">
+                {intl.get("layout.user.menu.settings")}
+              </Menu.Item>
               <Menu.Divider key="divider 1" />
-              <Menu.Item key="logout">Logout</Menu.Item>
+              <Menu.Item key="logout">
+                {intl.get("layout.user.menu.logout")}
+              </Menu.Item>
             </Menu>
           }
         >
@@ -87,8 +95,12 @@ const Header = () => {
             onClick={(e) => e.preventDefault()}
           >
             {/* CHANGE WITH USER */}
-            <Gravatar className={style.userGravatar} email="" size={100} />
-            <span className={style.userName}>{user?.firstname}</span>
+            <Gravatar
+              className={style.userGravatar}
+              email="ocastro-perrier@ferlab.bio"
+              size={100}
+            />
+            <span className={style.userName}>{user?.firstName}</span>
             <DownOutlined />
           </a>
         </Dropdown>,

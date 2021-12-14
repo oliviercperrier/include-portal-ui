@@ -1,0 +1,20 @@
+@import "colors";
+
+.loginStatsContainer {
+  .loginPageIconColor {
+    margin-top: -1px;
+
+    path {
+      fill: $blue-7;
+    }
+  }
+
+  .loginStatsLabel {
+    color: $gray-1;
+
+    :global(.wrapper__label) {
+      font-size: 24px;
+      line-height: 24px;
+    }
+  }
+}

@@ -29,11 +29,8 @@ const App = () => {
             <ProtectedRoute
               exact
               path={STATIC_ROUTES.DASHBOARD}
-              render={() => (
-                <PageLayout>
-                  <Dashboard />
-                </PageLayout>
-              )}
+              render={() => <Dashboard />}
+              layout={PageLayout}
             />
           </Switch>
         </Authenticator>

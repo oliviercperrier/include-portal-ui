@@ -1,0 +1,14 @@
+@input-placeholder-color: @gray-6;
+@input-color: @gray-8;
+@input-hover-border-color: @blue-6;
+@input-outline-offset: 0;
+
+.@{input-prefix-cls} {
+  &-number,
+  & {
+    &-focused,
+    &:focus {
+      border-color: @input-hover-border-color;
+    }
+  }
+}

@@ -87,8 +87,8 @@ const Header = () => {
             onClick={(e) => e.preventDefault()}
           >
             {/* CHANGE WITH USER */}
-            <Gravatar className={style.userGravatar} email="" size={100} />
-            <span className={style.userName}>{user?.firstname}</span>
+            <Gravatar className={style.userGravatar} email="ocastro-perrier@ferlab.bio" size={100} />
+            <span className={style.userName}>{user?.firstName}</span>
             <DownOutlined />
           </a>
         </Dropdown>,

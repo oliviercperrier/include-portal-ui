@@ -1,47 +1,19 @@
 import React from "react";
 import { Link, Redirect } from "react-router-dom";
-import MultiLabel, {
-  MultiLabelIconPositionEnum,
-} from "@ferlab/ui/core/components/labels/MultiLabel";
-import { numberFormat } from "@ferlab/ui/core/utils/numberUtils";
-import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import { useKeycloak } from "@react-keycloak/web";
-import { Button, Spin, Space, Typography, Divider } from "antd";
+import { Button, Space, Typography, Divider } from "antd";
 
 import { STATIC_ROUTES } from "utils/routes";
-import BookIcon from "components/Icons/BookIcon";
-import FileTextIcon from "components/Icons/FileTextIcon";
 import IncludeIcon from "components/Icons/IncludeIcon";
-import StorageIcon from "components/Icons/StorageIcon";
-import UserIcon from "components/Icons/UserIcon";
-import useApi from "hooks/useApi";
-import EnvVariables from "helpers/EnvVariables";
 
 import styles from "./index.module.scss";
+import DataRelease from "components/DataRelease";
 
-const formatStorage = (storage: string) => {
-  if (!storage) return;
-  const parts = storage.split(/\.| /);
-  return `${parts[0]}${parts[2]}`;
-};
-const iconSize = { height: 24, width: 24 };
 const { Title } = Typography;
 
 const Home = (): React.ReactElement => {
   const { keycloak } = useKeycloak();
   const isAuthenticated = keycloak.authenticated || false;
-  const { result, loading } = useApi<{
-    studies: number;
-    participants: number;
-    biospecimens: number;
-    fileSize: string;
-  }>({
-    config: {
-      url: `${EnvVariables.configFor({
-        key: "ARRANGER_API",
-      })}/statistics`,
-    },
-  });
 
   if (isAuthenticated) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
@@ -62,58 +34,7 @@ const Home = (): React.ReactElement => {
               Available Data
             </Title>
             <Divider className={styles.statsDivider} />
-            <Spin spinning={loading}>
-              <StackLayout className={styles.loginStatsContainer}>
-                <MultiLabel
-                  iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={numberFormat(result?.studies!)}
-                  Icon={
-                    <BookIcon
-                      className={styles.loginPageIconColor}
-                      {...iconSize}
-                    />
-                  }
-                  className={styles.loginStatsLabel}
-                  subLabel={"Studies"}
-                />
-                <MultiLabel
-                  iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={numberFormat(result?.participants!)}
-                  Icon={
-                    <UserIcon
-                      className={styles.loginPageIconColor}
-                      {...iconSize}
-                    />
-                  }
-                  className={styles.loginStatsLabel}
-                  subLabel={"Participants"}
-                />
-                <MultiLabel
-                  iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={numberFormat(result?.biospecimens!)}
-                  Icon={
-                    <FileTextIcon
-                      className={styles.loginPageIconColor}
-                      {...iconSize}
-                    />
-                  }
-                  className={styles.loginStatsLabel}
-                  subLabel={"Biospecimens"}
-                />
-                <MultiLabel
-                  iconPosition={MultiLabelIconPositionEnum.Top}
-                  label={formatStorage(result?.fileSize!)}
-                  Icon={
-                    <StorageIcon
-                      className={styles.loginPageIconColor}
-                      {...iconSize}
-                    />
-                  }
-                  className={styles.loginStatsLabel}
-                  subLabel={"Data Files"}
-                />
-              </StackLayout>
-            </Spin>
+            <DataRelease className={styles.dataRelease}/>
           </div>
           <div className={styles.loginDescription}>
             <Title level={2} className={styles.loginDescTitle}>

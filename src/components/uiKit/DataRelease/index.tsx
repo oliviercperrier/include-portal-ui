@@ -42,7 +42,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
   });
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={false}>
       <Space
         className={cx(styles.dataReleaseContainer, className)}
         size={itemSpacing!}
@@ -70,7 +70,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
         />
         <MultiLabel
           iconPosition={MultiLabelIconPositionEnum.Top}
-          label={formatStorage(result?.fileSize!) || "500TB"}
+          label={formatStorage(result?.fileSize!) || "0TB"}
           Icon={<DatabaseOutlined className={styles.dataReleaseIcon} />}
           className={styles.dataReleaseStatsLabel}
           subLabel={"Data Files"}

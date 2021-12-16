@@ -6,5 +6,7 @@ interface IConditionalWrapperProps {
   children: React.ReactElement;
 }
 
-export default ({ condition, wrapper, children }: IConditionalWrapperProps) =>
+const ConditionalWrapper = ({ condition, wrapper, children }: IConditionalWrapperProps) =>
   condition ? wrapper(children) : children;
+
+export default ConditionalWrapper;

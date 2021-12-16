@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { PageHeader, Dropdown, Button, Menu } from "antd";
 import IncludeIcon from "components/Icons/IncludeIcon";
@@ -93,6 +94,7 @@ const Header = () => {
           <a
             className={style.userMenuTrigger}
             onClick={(e) => e.preventDefault()}
+            href=""
           >
             {/* CHANGE WITH USER */}
             <Gravatar

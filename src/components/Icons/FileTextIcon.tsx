@@ -2,7 +2,7 @@ import * as React from "react";
 import cx from "classnames";
 import { IconProps } from "components/Icons";
 
-export default ({
+const FileTextIcon = ({
   width = 24,
   height = 24,
   className = "",
@@ -23,3 +23,5 @@ export default ({
     />
   </svg>
 );
+
+export default FileTextIcon;

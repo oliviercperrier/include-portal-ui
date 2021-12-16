@@ -6,10 +6,6 @@ import { FilterGroup, FilterInfo } from "./types";
 import { ExtendedMappingResults } from "graphql/models";
 import { DocumentNode } from "@apollo/client";
 
-// TODO : Extract all variant stuff to make generic
-//import SuggesterWrapper from "views/screens/variant/Suggester/Wrapper";
-//import Suggester from "views/screens/variant/Suggester";
-
 import styles from "./Filters.module.scss";
 
 type OwnProps = {
@@ -43,14 +39,14 @@ const FilterList = ({
           />
         </SuggesterWrapper>
       )*/}
-      <div className={styles.expandButtonContainerVariant}>
+      <div className={styles.filterExpandBtnWrapper}>
         <Button onClick={() => setFiltersOpen(!filtersOpen)} type="link">
           {filtersOpen
-            ? intl.get("screen.patientvariant.filter.collapse.all")
-            : intl.get("screen.patientvariant.filter.expand.all")}
+            ? intl.get("components.filterList.collapseAll")
+            : intl.get("components.filterList.expandAll")}
         </Button>
       </div>
-      <Layout className={styles.variantFilterWrapper}>
+      <Layout className={styles.filterWrapper}>
         {filterInfo.groups.map((group: FilterGroup, i) => (
           <div key={index}>
             {group.title ? (
@@ -64,7 +60,7 @@ const FilterList = ({
                 index={index}
                 cacheKey={cacheKey}
                 query={query}
-                classname={styles.variantFilterContainer}
+                classname={styles.customFilterContainer}
                 filterKey={field}
                 extendedMappingResults={extendedMappingResults}
                 filtersOpen={filtersOpen}

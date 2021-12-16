@@ -28,6 +28,13 @@ const fr = {
       },
     },
   },
+  // COMPONENTS
+  components: {
+    filterList: {
+      collapseAll: "Tout fermer",
+      expandAll: "Tout ouvrir",
+    },
+  },
   // LAYOUT
   layout: {
     main: {
@@ -42,8 +49,8 @@ const fr = {
         myprofile: "Mon Profil",
         settings: "Réglages",
         logout: "Se déconnecter",
-      }
-    }
+      },
+    },
   },
   // SCREENS
   screen: {
@@ -51,9 +58,9 @@ const fr = {
       hello: "Bonjour",
       card: {
         datarelease: {
-          title: "Publication de données {version}"
-        }
-      }
+          title: "Publication de données {version}",
+        },
+      },
     },
     dataExploration: {
       sidemenu: {

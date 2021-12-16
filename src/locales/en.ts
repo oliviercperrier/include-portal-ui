@@ -28,6 +28,13 @@ const en = {
       },
     },
   },
+  // COMPONENTS
+  components: {
+    filterList: {
+      collapseAll: "Collapse all",
+      expandAll: "Expand all",
+    }
+  },
   // LAYOUT
   layout: {
     main: {

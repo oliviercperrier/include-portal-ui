@@ -22,10 +22,11 @@ type OwnProps = {
 const GenericFilters: FunctionComponent<OwnProps> = ({
   index,
   query,
+  cacheKey,
   extendedMappingResults,
 }) => {
   const { filters } = useFilters();
-  const allSqons = getQueryBuilderCache("VARIANT_REPO_CACHE_KEY").state;
+  const allSqons = getQueryBuilderCache(cacheKey).state;
   const results = useGetAggregations(
     {
       sqon: resolveSyntheticSqon(allSqons, filters),
@@ -37,7 +38,7 @@ const GenericFilters: FunctionComponent<OwnProps> = ({
   return (
     <Spin size="large" spinning={results.loading}>
       <Layout
-        className={`${styles.variantFilterWrapper} ${styles.genericFilterWrapper}`}
+        className={`${styles.filterWrapper} ${styles.genericFilterWrapper}`}
       >
         {generateFilters(
           results?.aggregations,
@@ -45,7 +46,7 @@ const GenericFilters: FunctionComponent<OwnProps> = ({
             loading: extendedMappingResults.loading,
             data: extendedMappingResults.data,
           },
-          styles.variantFilterContainer,
+          styles.customFilterContainer,
           true,
           true,
           true,

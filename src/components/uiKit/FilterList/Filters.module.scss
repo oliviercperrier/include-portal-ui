@@ -1,6 +1,6 @@
 @import 'style/themes/clin/_colors';
 
-.variantFilterWrapper {
+.filterWrapper {
   min-height: 100px;
 
   .filterGroupTitle {
@@ -17,7 +17,7 @@
   }
 
   &.genericFilterWrapper {
-    .variantFilterContainer {
+    .customFilterContainer {
       &:last-child {
         padding-bottom: 8px;
       }
@@ -25,14 +25,14 @@
   }
 
   &:not(.genericFilterWrapper) {
-    .variantFilterContainer {
+    .customFilterContainer {
       &:last-child {
         padding-bottom: 16px;
       }
     }
   }
 
-  .variantFilterContainer {
+  .customFilterContainer {
     margin-top: 8px;
     :global(.ant-collapse) {
       border: none;
@@ -40,7 +40,7 @@
   }
 }
 
-.expandButtonContainerVariant {
+.filterExpandBtnWrapper {
   display: grid;
   justify-content: end;
 

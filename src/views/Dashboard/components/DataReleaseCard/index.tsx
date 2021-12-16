@@ -1,5 +1,5 @@
 import React from "react";
-import DataRelease from "components/DataRelease";
+import DataRelease from "components/uiKit/DataRelease";
 import { Button, Space, Typography } from "antd";
 import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";
 import intl from "react-intl-universal";

@@ -7,7 +7,7 @@ import { STATIC_ROUTES } from "utils/routes";
 import IncludeIcon from "components/Icons/IncludeIcon";
 
 import styles from "./index.module.scss";
-import DataRelease from "components/DataRelease";
+import DataRelease from "components/uiKit/DataRelease";
 
 const { Title } = Typography;
 

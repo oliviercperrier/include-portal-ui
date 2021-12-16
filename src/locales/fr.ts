@@ -1,16 +1,74 @@
 const fr = {
-  "screen.dashboard.hello": "Bonjour",
-  "screen.dashboard.card.datarelease.title": "Publication de données",
-  "layout.main.menu.dashboard": "Tableau de bord",
-  "layout.main.menu.studies": "Études",
-  "layout.main.menu.explore": "Exploration des données",
-  "layout.main.menu.participants": "Participants",
-  "layout.main.menu.biospecimen": "Biospécimen",
-  "layout.main.menu.datafiles": "Fichiers de données",
-  "layout.main.menu.website": "Site internet",
-  "layout.user.menu.myprofile": "Mon Profil",
-  "layout.user.menu.settings": "Réglages",
-  "layout.user.menu.logout": "Se déconnecter",
+  // GLOBAL
+  global: {
+    filters: {
+      actions: {
+        all: "Sélectionner tout",
+        none: "Effacer",
+        clear: "Effacer",
+        less: "Voir -",
+        more: "De plus",
+        apply: "Appliquer",
+      },
+      operators: {
+        between: "Entre",
+        lessthan: "Plus petit que",
+        lessthanorequal: "Plus petit ou égale",
+        greaterthan: "Plus grand que",
+        greaterthanorequal: "Plus grand ou égale",
+      },
+      range: {
+        is: "Est",
+      },
+      messages: {
+        empty: "Aucune valeur trouvée pour cette requête",
+      },
+      checkbox: {
+        placeholder: "Recherche...",
+      },
+    },
+  },
+  // LAYOUT
+  layout: {
+    main: {
+      menu: {
+        dashboard: "Tableau de bord",
+        studies: "Études",
+        explore: "Exploration des données",
+        participants: "Participants",
+        biospecimen: "Biospécimen",
+        datafiles: "Fichiers de données",
+        website: "Site internet",
+        myprofile: "Mon Profil",
+        settings: "Réglages",
+        logout: "Se déconnecter",
+      }
+    }
+  },
+  // SCREENS
+  screen: {
+    dashboard: {
+      hello: "Bonjour",
+      card: {
+        datarelease: {
+          title: "Publication de données {version}"
+        }
+      }
+    },
+    dataExploration: {
+      sidemenu: {
+        participant: "Participant",
+        biospecimen: "Biospécimen",
+        datafiles: "Fichier de données",
+      },
+      tabs: {
+        summary: "Sommaire",
+        participants: "Participants",
+        biospecimens: "Biospécimens",
+        datafiles: "Fichier de données",
+      },
+    },
+  },
 };
 
 export default fr;

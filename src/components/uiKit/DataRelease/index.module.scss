@@ -1,15 +1,13 @@
 @import "colors";
 
-.loginStatsContainer {
-  .loginPageIconColor {
+.dataReleaseContainer {
+  .dataReleaseIcon {
     margin-top: -1px;
-
-    path {
-      fill: $blue-7;
-    }
+    color: $blue-7;
+    font-size: 20px;
   }
 
-  .loginStatsLabel {
+  .dataReleaseStatsLabel {
     color: $gray-1;
 
     :global(.wrapper__label) {

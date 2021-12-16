@@ -17,7 +17,7 @@ persistor.subscribe(function () {
   });
 });
 
-export default ({ children }: any) => {
+const ContextProvider = ({ children }: any) => {
   return (
     <KeycloakProvider>
       <ReduxProvider store={store}>
@@ -28,3 +28,5 @@ export default ({ children }: any) => {
     </KeycloakProvider>
   );
 };
+
+export default ContextProvider;

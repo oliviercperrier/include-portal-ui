@@ -21,8 +21,6 @@ const App = () => {
   const { keycloak, initialized } = useKeycloak();
   const keycloakIsReady = keycloak && initialized;
 
-  console.log(keycloakIsReady)
-
   return (
     <div className="App" id="appContainer">
       {keycloakIsReady ? (

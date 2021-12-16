@@ -28,7 +28,9 @@ const store: any = configureStore({
   reducer: persistReducer(persistConfig, rootReducer),
   devTools: devMode,
   middleware: (getDefaultMiddleware) => {
-    let defaultMid = getDefaultMiddleware();
+    let defaultMid = getDefaultMiddleware({
+      serializableCheck: false
+    });
     return devMode ? defaultMid.concat(logger) : defaultMid;
   },
 });

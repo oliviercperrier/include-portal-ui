@@ -1,3 +1,4 @@
+// eslint-disable-next-line react-hooks/exhaustive-deps
 import { useState, useEffect } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import { useKeycloak } from "@react-keycloak/web";
@@ -52,6 +53,7 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-linegit
   }, [config.url, refreshIndex]);
 
   return { result, loading, error, refresh };

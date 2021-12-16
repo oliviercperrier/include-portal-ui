@@ -38,7 +38,7 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
 
   return (
     <ConditionalWrapper
-      condition={Layout != undefined}
+      condition={Layout !== undefined}
       children={<Route {...routeProps} />}
       wrapper={(children) => <Layout>{children}</Layout>}
     />

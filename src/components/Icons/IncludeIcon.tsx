@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IconProps } from "components/Icons";
 
-export default ({ width = 58, height = 60, className = "" }: IconProps) => (
+const IncludeIcon = ({ width = 58, height = 60, className = "" }: IconProps) => (
   <svg
     width={width}
     height={height}
@@ -36,3 +36,5 @@ export default ({ width = 58, height = 60, className = "" }: IconProps) => (
     />
   </svg>
 );
+
+export default IncludeIcon;

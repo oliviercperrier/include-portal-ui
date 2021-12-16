@@ -53,7 +53,7 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-linegit
+    // eslint-disable-next-line
   }, [config.url, refreshIndex]);
 
   return { result, loading, error, refresh };

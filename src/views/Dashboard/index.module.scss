@@ -1,9 +1,13 @@
-.dashboardWrapper {
-    .dataIntroWrapper {
-        width: 100%;
-    }
+@import "layout";
 
-    .greeting {
-        margin: 0;
-    }
+.dashboardWrapper {
+  padding: $default-page-content-padding;
+
+  .dataIntroWrapper {
+    width: 100%;
+  }
+
+  .greeting {
+    margin: 0;
+  }
 }

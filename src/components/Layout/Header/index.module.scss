@@ -4,7 +4,7 @@
   height: 64px;
   background-color: $gray-1;
   padding: 12px 32px;
-  box-shadow: 0 0 4px 0 #0000003b;
+  box-shadow: 0 0 8px 0 transparentize(#26436F, 0.75);
 
   * {
     overflow: unset;

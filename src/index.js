@@ -1,7 +1,7 @@
 // Import css before everything to make sure it is applied correctly
 import "./index.css";
-import "style/themes/include/dist/antd.css";
 import "style/themes/include/main.scss";
+import "style/themes/include/dist/antd.css";
 
 import React from "react";
 import ReactDOM from "react-dom";

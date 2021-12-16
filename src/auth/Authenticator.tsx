@@ -20,7 +20,11 @@ const Authenticator = (props: Props) => {
     }
   }, [dispatch, keycloak]);
 
-  return isLoading || !user ? <Spinner size={"large"} /> : props.children;
+  return isLoading || (keycloak.authenticated && !user) ? (
+    <Spinner size={"large"} />
+  ) : (
+    props.children
+  );
 };
 
 export default Authenticator;

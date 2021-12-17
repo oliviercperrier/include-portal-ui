@@ -33,7 +33,15 @@ const en = {
     filterList: {
       collapseAll: "Collapse all",
       expandAll: "Expand all",
-    }
+    },
+    table: {
+      itemCount: {
+        singlePage:
+          "{count, plural, =0 {No result} other {<strong>#</strong> results}}",
+        multiplePages:
+          "Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>",
+      },
+    },
   },
   // LAYOUT
   layout: {
@@ -46,6 +54,10 @@ const en = {
         biospecimen: "Biospecimen",
         datafiles: "Data Files",
         website: "Website",
+      },
+    },
+    user: {
+      menu: {
         myprofile: "My Profile",
         settings: "Settings",
         logout: "Logout",
@@ -70,9 +82,9 @@ const en = {
       },
       tabs: {
         summary: "Summary",
-        participants: "Participants",
-        biospecimens: "Biospecimens",
-        datafiles: "Data Files",
+        participants: "Participants ({count})",
+        biospecimens: "Biospecimens ({count})",
+        datafiles: "Data Files ({count})",
       },
     },
   },

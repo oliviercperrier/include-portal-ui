@@ -1,8 +1,8 @@
 import { DocumentNode, TypedDocumentNode } from "@apollo/client";
 import { GqlResults } from "graphql/models";
-import { useLazyResultQuery } from "graphql/utils/query";
+import useLazyResultQuery from "hooks/graphql/useLazyResultQuery";
 
-export const useGetAggregations = (
+const useGetAggregations = (
   variables: any,
   query: DocumentNode | TypedDocumentNode,
   index: string
@@ -18,3 +18,5 @@ export const useGetAggregations = (
     total: 0,
   };
 };
+
+export default useGetAggregations;

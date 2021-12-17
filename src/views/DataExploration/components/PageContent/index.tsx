@@ -13,9 +13,14 @@ import intl from "react-intl-universal";
 import { ExtendedMapping } from "graphql/models";
 import { useFilters } from "@ferlab/ui/core/data/filters/utils";
 import { getQueryBuilderDictionary } from "utils/translation";
+import { Space, Tabs } from "antd";
+
+import SummaryTab from "views/DataExploration/components/tabs/Summary";
+import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
+import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
+import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
 
 import styles from "./index.module.scss";
-import { Space, Tabs } from "antd";
 
 interface OwnProps {
   mappingResults: any; // TODO Set a type
@@ -63,34 +68,48 @@ const PageContent = ({ mappingResults }: OwnProps) => {
               </span>
             }
             key="summary"
-          ></Tabs.TabPane>
+          >
+            <SummaryTab />
+          </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <UserOutlined />
-                {intl.get("screen.dataExploration.tabs.participants")}
+                {intl.get("screen.dataExploration.tabs.participants", {
+                  count: 0,
+                })}
               </span>
             }
             key="participants"
-          ></Tabs.TabPane>
+          >
+            <ParticipantsTab />
+          </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <ExperimentOutlined />
-                {intl.get("screen.dataExploration.tabs.biospecimens")}
+                {intl.get("screen.dataExploration.tabs.biospecimens", {
+                  count: 0,
+                })}
               </span>
             }
             key="biospecimens"
-          ></Tabs.TabPane>
+          >
+            <BiospecimensTab />
+          </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <FileTextOutlined />
-                {intl.get("screen.dataExploration.tabs.datafiles")}
+                {intl.get("screen.dataExploration.tabs.datafiles", {
+                  count: 0,
+                })}
               </span>
             }
             key="datafiles"
-          ></Tabs.TabPane>
+          >
+            <DataFilesTabs />
+          </Tabs.TabPane>
         </Tabs>
       </Space>
     </StackLayout>

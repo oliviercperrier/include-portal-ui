@@ -1,30 +1,21 @@
 import {
-  ApolloError,
   DocumentNode,
   OperationVariables,
   QueryHookOptions,
   TypedDocumentNode,
   useQuery,
-} from '@apollo/client';
-import { useEffect, useState } from 'react';
+} from "@apollo/client";
+import { IBaseQueryResults } from "hooks/graphql/type";
+import { useEffect, useState } from "react";
 
-export enum Hits {
-  COLLECTION = 'hits.edges',
-  SINGLE_ITEM = 'hits.edges[0].node',
-  ITEM = 'hits',
-}
-
-export interface IBaseQueryResults<TData> {
-  error: ApolloError | undefined;
-  result: TData | undefined;
-  loading: boolean;
-}
-
-export const useLazyResultQuery = <TData = any, TVariables = OperationVariables>(
+const useLazyResultQuery = <TData = any, TVariables = OperationVariables>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
-  options?: QueryHookOptions<TData, TVariables>,
+  options?: QueryHookOptions<TData, TVariables>
 ): IBaseQueryResults<TData> => {
-  const { data, error, loading, previousData } = useQuery<TData, TVariables>(query, options);
+  const { data, error, loading, previousData } = useQuery<TData, TVariables>(
+    query,
+    options
+  );
 
   const result = data ? data : previousData;
   return { error, loading, result };
@@ -36,9 +27,12 @@ export const useLazyResultQuery = <TData = any, TVariables = OperationVariables>
  *
  * see example here: /views/screens/variant/Entity/index.tsx
  */
-export const useLazyResultQueryOnLoadOnly = <TData = any, TVariables = OperationVariables>(
+export const useLazyResultQueryOnLoadOnly = <
+  TData = any,
+  TVariables = OperationVariables
+>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
-  options?: QueryHookOptions<TData, TVariables>,
+  options?: QueryHookOptions<TData, TVariables>
 ) => {
   const [customOptions, setCustomOptions] = useState<{
     skip?: boolean;
@@ -60,7 +54,12 @@ export const useLazyResultQueryOnLoadOnly = <TData = any, TVariables = Operation
 
   return {
     loading,
-    data: options?.skip || customOptions?.skip ? customOptions.dataToReturn : result,
+    data:
+      options?.skip || customOptions?.skip
+        ? customOptions.dataToReturn
+        : result,
     error,
   };
 };
+
+export default useLazyResultQuery;

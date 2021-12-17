@@ -1,5 +1,5 @@
 import React from "react";
-import { Spin, Space } from "antd";
+import { Spin, Row, Col } from "antd";
 import cx from "classnames";
 import MultiLabel, {
   MultiLabelIconPositionEnum,
@@ -28,7 +28,7 @@ const formatStorage = (storage: string) => {
 };
 
 const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
-  const { result, loading } = useApi<{
+  const { result } = useApi<{
     studies: number;
     participants: number;
     biospecimens: number;
@@ -43,39 +43,47 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
 
   return (
     <Spin spinning={false}>
-      <Space
+      <Row
         className={cx(styles.dataReleaseContainer, className)}
-        size={itemSpacing!}
+        gutter={[40, 24]}
       >
-        <MultiLabel
-          iconPosition={MultiLabelIconPositionEnum.Top}
-          label={numberFormat(result?.studies!)}
-          Icon={<ReadOutlined className={styles.dataReleaseIcon} />}
-          className={styles.dataReleaseStatsLabel}
-          subLabel={"Studies"}
-        />
-        <MultiLabel
-          iconPosition={MultiLabelIconPositionEnum.Top}
-          label={numberFormat(result?.participants!)}
-          Icon={<UserOutlined className={styles.dataReleaseIcon} />}
-          className={styles.dataReleaseStatsLabel}
-          subLabel={"Participants"}
-        />
-        <MultiLabel
-          iconPosition={MultiLabelIconPositionEnum.Top}
-          label={numberFormat(result?.biospecimens!)}
-          Icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
-          className={styles.dataReleaseStatsLabel}
-          subLabel={"Biospecimens"}
-        />
-        <MultiLabel
-          iconPosition={MultiLabelIconPositionEnum.Top}
-          label={formatStorage(result?.fileSize!) || "0TB"}
-          Icon={<DatabaseOutlined className={styles.dataReleaseIcon} />}
-          className={styles.dataReleaseStatsLabel}
-          subLabel={"Data Files"}
-        />
-      </Space>
+        <Col xs={12} md={6}>
+          <MultiLabel
+            iconPosition={MultiLabelIconPositionEnum.Top}
+            label={numberFormat(result?.studies!)}
+            Icon={<ReadOutlined className={styles.dataReleaseIcon} />}
+            className={styles.dataReleaseStatsLabel}
+            subLabel={"Studies"}
+          />
+        </Col>
+        <Col xs={12} md={6}>
+          <MultiLabel
+            iconPosition={MultiLabelIconPositionEnum.Top}
+            label={numberFormat(result?.participants!)}
+            Icon={<UserOutlined className={styles.dataReleaseIcon} />}
+            className={styles.dataReleaseStatsLabel}
+            subLabel={"Participants"}
+          />
+        </Col>
+        <Col xs={12} md={6}>
+          <MultiLabel
+            iconPosition={MultiLabelIconPositionEnum.Top}
+            label={numberFormat(result?.biospecimens!)}
+            Icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
+            className={styles.dataReleaseStatsLabel}
+            subLabel={"Biospecimens"}
+          />
+        </Col>
+        <Col xs={12} md={6}>
+          <MultiLabel
+            iconPosition={MultiLabelIconPositionEnum.Top}
+            label={formatStorage(result?.fileSize!) || "0TB"}
+            Icon={<DatabaseOutlined className={styles.dataReleaseIcon} />}
+            className={styles.dataReleaseStatsLabel}
+            subLabel={"Data Files"}
+          />
+        </Col>
+      </Row>
     </Spin>
   );
 };

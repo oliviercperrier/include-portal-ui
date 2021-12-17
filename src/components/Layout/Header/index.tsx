@@ -31,7 +31,7 @@ const Header = () => {
     <PageHeader
       title={<IncludeIcon className={style.logo} />}
       subTitle={
-        <div className={style.headerList}>
+        <nav className={style.headerList}>
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DASHBOARD}
@@ -68,7 +68,7 @@ const Header = () => {
             icon={<FileTextOutlined />}
             title={intl.get("layout.main.menu.datafiles")}
           />
-        </div>
+        </nav>
       }
       extra={[
         <Button key="external-website" className={style.headerBtn}>

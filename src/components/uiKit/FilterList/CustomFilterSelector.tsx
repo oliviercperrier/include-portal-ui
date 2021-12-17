@@ -8,7 +8,7 @@ import {
 import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
 import { Spin } from "antd";
 import { useEffect } from "react";
-import { useGetAggregations } from "graphql/actions";
+import useGetAggregations from "hooks/graphql/useGetAggregations";
 import { DocumentNode } from "@apollo/client";
 
 type OwnProps = FilterSelectorProps & {

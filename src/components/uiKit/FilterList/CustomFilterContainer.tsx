@@ -13,7 +13,7 @@ import {
   ExtendedMappingResults,
   GqlResults,
 } from "graphql/models";
-import { getFilterGroup, getFilters } from "graphql/utils/Filters";
+import { getFilterGroup, getFilters } from "graphql/utils/filters";
 import history from "utils/history";
 import { underscoreToDot } from "@ferlab/ui/core/data/arranger/formatting";
 import { DocumentNode } from "@apollo/client";

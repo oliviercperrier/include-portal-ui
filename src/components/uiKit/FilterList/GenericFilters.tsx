@@ -6,8 +6,8 @@ import {
 import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
 import { Layout, Spin } from "antd";
 import { DocumentNode } from "@apollo/client";
-import { generateFilters } from "graphql/utils/Filters";
-import { useGetAggregations } from "graphql/actions";
+import { generateFilters } from "graphql/utils/filters";
+import useGetAggregations from "hooks/graphql/useGetAggregations";
 import { ExtendedMappingResults } from "graphql/models";
 
 import styles from "./Filters.module.scss";

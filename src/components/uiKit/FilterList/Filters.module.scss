@@ -1,0 +1,55 @@
+@import 'style/themes/clin/_colors';
+
+.filterWrapper {
+  min-height: 100px;
+
+  .filterGroupTitle {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding-left: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $gray-7;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &.genericFilterWrapper {
+    .customFilterContainer {
+      &:last-child {
+        padding-bottom: 8px;
+      }
+    }
+  }
+
+  &:not(.genericFilterWrapper) {
+    .customFilterContainer {
+      &:last-child {
+        padding-bottom: 16px;
+      }
+    }
+  }
+
+  .customFilterContainer {
+    margin-top: 8px;
+    :global(.ant-collapse) {
+      border: none;
+    }
+  }
+}
+
+.filterExpandBtnWrapper {
+  display: grid;
+  justify-content: end;
+
+  button {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  span:not(:hover) {
+    text-decoration: underline;
+  }
+}

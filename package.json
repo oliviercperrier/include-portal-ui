@@ -44,8 +44,8 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.4.17",
-    "@ferlab/style": "^1.9.9",
-    "@ferlab/ui": "^2.2.5",
+    "@ferlab/style": "^1.11.0",
+    "@ferlab/ui": "^2.4.1",
     "@react-keycloak/web": "^3.4.0",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.15.0",

@@ -2,12 +2,14 @@
 import React from "react";
 import { PageHeader, Dropdown, Button, Menu } from "antd";
 import IncludeIcon from "components/Icons/IncludeIcon";
-import HomeIcon from "components/Icons/HomeIcon";
-import BookIcon from "components/Icons/BookIcon";
-import DataExplorationIcon from "components/Icons/DataExplorationIcon";
-import UserIcon from "components/Icons/UserIcon";
-import FileTextIcon from "components/Icons/FileTextIcon";
-import ExperimentIcon from "components/Icons/ExperimentIcon";
+import {
+  ExperimentOutlined,
+  UserOutlined,
+  ReadOutlined,
+  HomeOutlined,
+  FileSearchOutlined,
+  FileTextOutlined
+} from "@ant-design/icons";
 import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";
 import { DownOutlined } from "@ant-design/icons";
 import Gravatar from "components/uiKit/Gravatar";
@@ -29,44 +31,44 @@ const Header = () => {
     <PageHeader
       title={<IncludeIcon className={style.logo} />}
       subTitle={
-        <div className={style.headerList}>
+        <nav className={style.headerList}>
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DASHBOARD}
-            icon={<HomeIcon className={style.icon} {...iconSize} />}
+            icon={<HomeOutlined />}
             title={intl.get("layout.main.menu.dashboard")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.STUDIES}
-            icon={<BookIcon className={style.icon} {...iconSize} />}
+            icon={<ReadOutlined />}
             title={intl.get("layout.main.menu.studies")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DATA_EXPLORATION}
-            icon={<DataExplorationIcon className={style.icon} {...iconSize} />}
+            icon={<FileSearchOutlined />}
             title={intl.get("layout.main.menu.explore")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.PARTICIPANTS}
-            icon={<UserIcon className={style.icon} {...iconSize} />}
+            icon={<UserOutlined />}
             title={intl.get("layout.main.menu.participants")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.BIOSPECIMEN}
-            icon={<ExperimentIcon className={style.icon} {...iconSize} />}
+            icon={<ExperimentOutlined />}
             title={intl.get("layout.main.menu.biospecimen")}
           />
           <HeaderLink
             currentPathName={currentPathName}
             to={STATIC_ROUTES.DATA_FILES}
-            icon={<FileTextIcon className={style.icon} {...iconSize} />}
+            icon={<FileTextOutlined />}
             title={intl.get("layout.main.menu.datafiles")}
           />
-        </div>
+        </nav>
       }
       extra={[
         <Button key="external-website" className={style.headerBtn}>

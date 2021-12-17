@@ -1,11 +1,13 @@
 @import "colors";
+@import "layout";
 
 .mainHeader {
-  height: 64px;
+  height: $main-header-height;
   background-color: $gray-1;
   padding: 12px 32px;
   box-shadow: 0 0 8px 0 transparentize(#26436F, 0.75);
-
+  z-index: 1000;
+  
   * {
     overflow: unset;
   }

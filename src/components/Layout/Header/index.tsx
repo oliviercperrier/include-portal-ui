@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
 import { PageHeader, Dropdown, Button, Menu } from "antd";
 import IncludeIcon from "components/Icons/IncludeIcon";
 import {
@@ -8,7 +7,7 @@ import {
   ReadOutlined,
   HomeOutlined,
   FileSearchOutlined,
-  FileTextOutlined
+  FileTextOutlined,
 } from "@ant-design/icons";
 import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";
 import { DownOutlined } from "@ant-design/icons";
@@ -20,12 +19,20 @@ import { useUser } from "store/user";
 import intl from "react-intl-universal";
 
 import style from "./index.module.scss";
+import { useKeycloak } from "@react-keycloak/web";
 
 const iconSize = { width: 14, height: 14 };
 
 const Header = () => {
   const { user } = useUser();
+  const { keycloak } = useKeycloak();
   const currentPathName = history.location.pathname;
+
+  const handleLogout = () => {
+    keycloak.logout({
+      redirectUri: window.location.origin,
+    });
+  };
 
   return (
     <PageHeader
@@ -87,7 +94,7 @@ const Header = () => {
                 {intl.get("layout.user.menu.settings")}
               </Menu.Item>
               <Menu.Divider key="divider 1" />
-              <Menu.Item key="logout">
+              <Menu.Item key="logout" onClick={handleLogout}>
                 {intl.get("layout.user.menu.logout")}
               </Menu.Item>
             </Menu>

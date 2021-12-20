@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Layout } from "antd";
 import CustomFilterContainer from "./CustomFilterContainer";
 import intl from "react-intl-universal";

@@ -12,7 +12,9 @@ interface OwnProps {
 const TableHeader = ({ extra = [], pageIndex, pageSize }: OwnProps) => (
   <div className={styles.tableHeader}>
     <ItemsCount page={pageIndex} size={pageSize} total={0} />
-    {extra}
+    {extra.map((element, index) => (
+      <div key={index}>{element}</div>
+    ))}
   </div>
 );
 

@@ -1,4 +1,3 @@
-import React from "react";
 import md5 from "md5";
 
 const Gravatar = ({ email = "", d = "retro", size = 100, ...props }) => (

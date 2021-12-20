@@ -1,4 +1,3 @@
-import React from "react";
 import DataRelease from "components/uiKit/DataRelease";
 import { Button, Card, Space, Typography } from "antd";
 import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";

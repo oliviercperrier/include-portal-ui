@@ -42,6 +42,36 @@ const fr = {
           "Résultats <strong>{from}</strong> - <strong>{to}</strong> sur <strong>{total}</strong>",
       },
     },
+    querybuilder: {
+      query: {
+        combine: {
+          and: "Et",
+          or: "Ou",
+        },
+        noQuery: "Utiliser les filtres pour créer une requête",
+      },
+      actions: {
+        new: "Nouvelle",
+        changeOperatorTo: "Changer l'opérateur à",
+        addQuery: "Nouvelle requête",
+        combine: "Combiner",
+        labels: "Champs",
+        delete: {
+          title: "Supprimer cette requête ?",
+          titleSelected: "Supprimer cette requête ?",
+          cancel: "Annuler",
+          confirm: "Supprimer",
+        },
+        clear: {
+          title: "Supprimer toutes les requêtes ?",
+          cancel: "Annuler",
+          confirm: "Supprimer",
+          buttonTitle: "Tout effacer",
+          description:
+            "Vous êtes sur le point de supprimer toutes vos requêtes. Ils seront perdus à jamais.",
+        },
+      },
+    },
   },
   // LAYOUT
   layout: {

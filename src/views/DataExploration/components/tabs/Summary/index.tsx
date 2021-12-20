@@ -1,6 +1,5 @@
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Col, Row, Typography } from "antd";
-import React from "react";
 
 //import styles from "./index.module.scss";
 

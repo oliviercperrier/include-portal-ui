@@ -1,4 +1,3 @@
-import React from "react";
 import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Row, Col, Space, Typography } from "antd";
@@ -27,35 +26,42 @@ const Dashboard = () => {
           <DataReleaseCard />
         </Space>
         <Row gutter={[24, 24]}>
-          <Col span={24}>
+          <Col xs={24} md={12} xxl={6}>
             <GridCard
               theme="shade"
               title={<Title level={4}>Authorized Studies</Title>}
               content="Content.."
             />
           </Col>
-          <Col xs={24} md={12}>
+          <Col xs={24} md={12} xxl={6}>
             <GridCard
               theme="shade"
               title={<Title level={4}>Card</Title>}
               content="Content.."
             />
           </Col>
-          <Col xs={24} md={12}>
+          <Col xs={24} md={12} xxl={6}>
             <GridCard
               theme="shade"
               title={<Title level={4}>Card</Title>}
               content="Content.."
             />
           </Col>
-          <Col xs={24} md={12}>
+          <Col xs={24} md={12} xxl={6}>
             <GridCard
               theme="shade"
               title={<Title level={4}>Card</Title>}
               content="Content.."
             />
           </Col>
-          <Col xs={24} md={12}>
+          <Col xs={24} md={12} xxl={6}>
+            <GridCard
+              theme="shade"
+              title={<Title level={4}>Card</Title>}
+              content="Content.."
+            />
+          </Col>
+          <Col xs={24} md={12} xxl={6}>
             <GridCard
               theme="shade"
               title={<Title level={4}>Card</Title>}

@@ -1,4 +1,3 @@
-import React, { FunctionComponent } from "react";
 import {
   getQueryBuilderCache,
   useFilters,
@@ -6,7 +5,7 @@ import {
 import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
 import { Layout, Spin } from "antd";
 import { DocumentNode } from "@apollo/client";
-import { generateFilters } from "graphql/utils/filters";
+import { generateFilters } from "graphql/utils/Filters";
 import useGetAggregations from "hooks/graphql/useGetAggregations";
 import { ExtendedMappingResults } from "graphql/models";
 
@@ -19,12 +18,12 @@ type OwnProps = {
   extendedMappingResults: ExtendedMappingResults;
 };
 
-const GenericFilters: FunctionComponent<OwnProps> = ({
+const GenericFilters = ({
   index,
   query,
   cacheKey,
   extendedMappingResults,
-}) => {
+}: OwnProps) => {
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(cacheKey).state;
   const results = useGetAggregations(

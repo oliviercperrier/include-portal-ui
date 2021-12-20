@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import { Button, Space, Typography, Divider } from "antd";

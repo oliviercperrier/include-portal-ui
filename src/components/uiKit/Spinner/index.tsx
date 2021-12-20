@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { Spin } from "antd";
 import { SpinProps } from "antd/lib/spin";
 

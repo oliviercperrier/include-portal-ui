@@ -1,4 +1,3 @@
-import React from "react";
 import SidebarMenu, {
   ISidebarMenuItem,
 } from "@ferlab/ui/core/components/sidebarMenu";

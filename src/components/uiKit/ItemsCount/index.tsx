@@ -1,4 +1,3 @@
-import React from "react";
 import cx from "classnames";
 import intl from "react-intl-universal";
 import { Typography } from "antd";

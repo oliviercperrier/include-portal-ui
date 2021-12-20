@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import FilterContainer from "@ferlab/ui/core/components/filters/FilterContainer";
 import {
   IFilter,
@@ -13,7 +13,7 @@ import {
   ExtendedMappingResults,
   GqlResults,
 } from "graphql/models";
-import { getFilterGroup, getFilters } from "graphql/utils/filters";
+import { getFilterGroup, getFilters } from "graphql/utils/Filters";
 import history from "utils/history";
 import { underscoreToDot } from "@ferlab/ui/core/data/arranger/formatting";
 import { DocumentNode } from "@apollo/client";

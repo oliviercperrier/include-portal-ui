@@ -1,4 +1,3 @@
-import React from "react";
 import { Spin, Row, Col } from "antd";
 import cx from "classnames";
 import MultiLabel, {

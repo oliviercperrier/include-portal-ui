@@ -42,6 +42,36 @@ const en = {
           "Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>",
       },
     },
+    querybuilder: {
+      query: {
+        combine: {
+          and: "And",
+          or: "Or",
+        },
+        noQuery: "Use the filters to build a query",
+      },
+      actions: {
+        new: "New",
+        changeOperatorTo: "Change operator to",
+        addQuery: "New query",
+        combine: "Combine",
+        labels: "Labels",
+        delete: {
+          title: "Delete this query?",
+          titleSelected: "Delete this query?",
+          cancel: "Cancel",
+          confirm: "Delete",
+        },
+        clear: {
+          title: "Delete all queries?",
+          cancel: "Cancel",
+          confirm: "Delete",
+          buttonTitle: "Clear all",
+          description:
+            "You are about to delete all your queries. They will be lost forever.",
+        },
+      },
+    },
   },
   // LAYOUT
   layout: {

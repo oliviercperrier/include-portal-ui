@@ -8,5 +8,7 @@ export enum STATIC_ROUTES {
     DATA_EXPLORATION = "/data-exploration",
     PARTICIPANTS = "/participants",
     BIOSPECIMEN = "/biospecimen",
-    DATA_FILES = "/data-files"
+    DATA_FILES = "/data-files",
+    MY_PROFILE = "/profile",
+    SETTINGS = "/settings"
 }

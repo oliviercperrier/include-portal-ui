@@ -1,7 +1,6 @@
 import intl from "react-intl-universal";
 import { IDictionary as FiltersDict } from "@ferlab/ui/core/components/filters/types";
 import { IDictionary as QueryBuilderDict } from "@ferlab/ui/core/components/QueryBuilder/types";
-import React from "react";
 
 export const getFiltersDictionary = (): FiltersDict => ({
   actions: {
@@ -37,29 +36,35 @@ export const getQueryBuilderDictionary = (
 ): QueryBuilderDict => ({
   query: {
     combine: {
-      and: intl.get("querybuilder.query.combine.and"),
-      or: intl.get("querybuilder.query.combine.or"),
+      and: intl.get("components.querybuilder.query.combine.and"),
+      or: intl.get("components.querybuilder.query.combine.or"),
     },
-    noQuery: intl.get("querybuilder.query.noQuery"),
+    noQuery: intl.get("components.querybuilder.query.noQuery"),
     facet: facetResolver,
   },
   actions: {
-    new: intl.get("querybuilder.actions.new"),
-    addQuery: intl.get("querybuilder.actions.addQuery"),
-    combine: intl.get("querybuilder.actions.combine"),
-    labels: intl.get("querybuilder.actions.labels"),
-    changeOperatorTo: intl.get("querybuilder.actions.changeOperatorTo"),
+    new: intl.get("components.querybuilder.actions.new"),
+    addQuery: intl.get("components.querybuilder.actions.addQuery"),
+    combine: intl.get("components.querybuilder.actions.combine"),
+    labels: intl.get("components.querybuilder.actions.labels"),
+    changeOperatorTo: intl.get(
+      "components.querybuilder.actions.changeOperatorTo"
+    ),
     delete: {
-      title: intl.get("querybuilder.actions.delete.title"),
-      cancel: intl.get("querybuilder.actions.delete.cancel"),
-      confirm: intl.get("querybuilder.actions.delete.confirm"),
+      title: intl.get("components.querybuilder.actions.delete.title"),
+      cancel: intl.get("components.querybuilder.actions.delete.cancel"),
+      confirm: intl.get("components.querybuilder.actions.delete.confirm"),
     },
     clear: {
-      title: intl.get("querybuilder.actions.clear.title"),
-      cancel: intl.get("querybuilder.actions.clear.cancel"),
-      confirm: intl.get("querybuilder.actions.clear.confirm"),
-      buttonTitle: intl.get("querybuilder.actions.clear.buttonTitle"),
-      description: intl.get("querybuilder.actions.clear.description"),
+      title: intl.get("components.querybuilder.actions.clear.title"),
+      cancel: intl.get("components.querybuilder.actions.clear.cancel"),
+      confirm: intl.get("components.querybuilder.actions.clear.confirm"),
+      buttonTitle: intl.get(
+        "components.querybuilder.actions.clear.buttonTitle"
+      ),
+      description: intl.get(
+        "components.querybuilder.actions.clear.description"
+      ),
     },
   },
 });

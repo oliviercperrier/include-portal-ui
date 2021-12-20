@@ -1,5 +1,5 @@
-import { TSortableItems } from "components/uiKit/SortableGrid/SortableItem";
-import DragHandle from "components/uiKit/SortableGrid/DragHandle";
+import { TSortableItems } from "@ferlab/ui/core/layout/SortableGrid/SortableItem";
+import DragHandle from "@ferlab/ui/core/layout/SortableGrid/DragHandle";
 import { HolderOutlined } from "@ant-design/icons";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Typography } from "antd";

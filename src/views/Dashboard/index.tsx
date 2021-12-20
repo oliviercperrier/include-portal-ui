@@ -3,7 +3,7 @@ import { Space, Typography } from "antd";
 import { useUser } from "store/user";
 import DataReleaseCard from "./components/DataReleaseCard";
 import intl from "react-intl-universal";
-import SortableGrid from "components/uiKit/SortableGrid";
+import SortableGrid from "@ferlab/ui/core/layout/SortableGrid";
 import { dashboardCards } from "./utils/dashboardCards";
 
 import styles from "./index.module.scss";

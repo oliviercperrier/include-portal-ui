@@ -58,7 +58,7 @@ const SortableGrid = ({ items, gutter }: OwnProps) => {
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={items.map(({ id }) => id)}
+        items={currentItems.map(({ id }) => id)}
         strategy={rectSortingStrategy}
       >
         <Grid>

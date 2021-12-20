@@ -9,13 +9,13 @@ export type TSortableItems = Omit<ColProps, "ref" | "style"> & {
 };
 
 const SortableItems = ({ id, component, ...rest }: TSortableItems) => {
-  const { setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const { setNodeRef, transform, transition,isDragging } = useSortable({ id });
 
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? "100" : "auto",
-    opacity: isDragging ? 0.65 : 1
+    opacity: isDragging ? 0.65 : 1,
   };
 
   return (

@@ -13,7 +13,11 @@ import PageContent from "views/DataExploration/components/PageContent";
 
 import styles from "./index.module.scss";
 
-const DataExploration = () => {
+interface OwnProps {
+  tab?: string;
+}
+
+const DataExploration = (props: OwnProps) => {
   const menuItems: ISidebarMenuItem[] = [
     {
       key: "1",
@@ -39,7 +43,7 @@ const DataExploration = () => {
     <StackLayout horizontal className={styles.dataExplorationLayout}>
       <SidebarMenu className={styles.sideMenu} menuItems={menuItems} />
       <ScrollContent className={styles.scrollContent}>
-        <PageContent mappingResults={{}}></PageContent>
+        <PageContent mappingResults={{}} tabId={props.tab}></PageContent>
       </ScrollContent>
     </StackLayout>
   );

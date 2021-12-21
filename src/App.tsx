@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, RouteComponentProps } from "react-router-dom";
 import ContextProvider from "provider/ContextProvider";
 
 import Home from "views/Home";
 import Dashboard from "views//Dashboard";
 import SideImageLayout from "components/Layout/SideImage";
-import { STATIC_ROUTES } from "utils/routes";
+import { DYNAMIC_ROUTES, STATIC_ROUTES } from "utils/routes";
 import Spinner from "components/uiKit/Spinner";
 import MainSideImage from "components/assets/mainSideImage.jpg";
 import ProtectedRoute from "ProtectedRoute";
@@ -49,8 +49,10 @@ const App = () => {
               />
               <ProtectedRoute
                 exact
-                path={STATIC_ROUTES.DATA_EXPLORATION}
-                render={() => <DataExploration />}
+                path={DYNAMIC_ROUTES.DATA_EXPLORATION}
+                render={(props: RouteComponentProps<{ tab?: string }>) => (
+                  <DataExploration tab={props.match?.params.tab} />
+                )}
                 layout={PageLayout}
               />
               <ProtectedRoute

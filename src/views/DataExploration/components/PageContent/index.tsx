@@ -20,12 +20,14 @@ import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
 
 import styles from "./index.module.scss";
+import { STATIC_ROUTES } from "utils/routes";
 
 interface OwnProps {
   mappingResults: any; // TODO Set a type
+  tabId?: string;
 }
 
-const PageContent = ({ mappingResults }: OwnProps) => {
+const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
   const { filters } = useFilters();
   const total = 0;
 
@@ -58,7 +60,17 @@ const PageContent = ({ mappingResults }: OwnProps) => {
           total={total}
           dictionary={getQueryBuilderDictionary(facetTransResolver)}
         />
-        <Tabs type="card">
+        <Tabs
+          type="card"
+          activeKey={tabId}
+          onChange={(key) => {
+            if (history.location.hash !== key) {
+              history.push(
+                `${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`
+              );
+            }
+          }}
+        >
           <Tabs.TabPane
             tab={
               <span>

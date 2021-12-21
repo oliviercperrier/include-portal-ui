@@ -1,0 +1,12 @@
+@import "colors";
+
+.cardTitleWithDragHandle {
+    display: flex;
+    align-items: center;
+    
+    .dragHandle {
+        font-size: 16px;
+        margin-right: 5px;
+        color: $gray-7;
+    }
+}

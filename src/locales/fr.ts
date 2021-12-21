@@ -103,6 +103,13 @@ const fr = {
           title: "Publication de données {version}",
         },
       },
+      links: {
+        studies: "Études",
+        participants: "Participants",
+        biospecimens: "Biospécimens",
+        datafiles: "Fichier de données",
+        variantSearch: "Recherche de variants",
+      }
     },
     dataExploration: {
       sidemenu: {

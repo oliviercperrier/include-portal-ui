@@ -1,0 +1,14 @@
+
+.customCol {
+    display: flex;
+
+    @media screen and (max-width: 1150px) {
+        flex: unset !important;
+        width: 50%;
+    }
+
+    @media screen and (max-width: 478px) {
+        flex: unset !important;
+        width: 100%;
+    }
+}

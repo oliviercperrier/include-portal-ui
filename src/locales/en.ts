@@ -103,6 +103,13 @@ const en = {
           title: "Data release {version}",
         },
       },
+      links: {
+        studies: "Studies",
+        participants: "Participants",
+        biospecimens: "Biospecimens",
+        datafiles: "Data Files",
+        variantSearch: "Variant Search",
+      }
     },
     dataExploration: {
       sidemenu: {

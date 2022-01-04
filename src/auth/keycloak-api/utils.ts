@@ -10,7 +10,6 @@ client.interceptors.request.use((config) => {
   if (config.headers) {
     config.headers.Authorization = `Bearer ${keycloak.token}`;
   }
-  console.log(">>>> config : ", config);
   return config;
 });
 
@@ -91,7 +90,6 @@ export const getAccessTokenStatus = (rpt: Rpt) =>
 export const KEYCLOAK_CONFIG = JSON.parse(keycloakConfig) as Config;
 
 export const rptRequest = async (data: any) => {
-  console.log(">>>> keyclock config : ", KEYCLOAK_CONFIG);
   const response = await client.post(
     `${KEYCLOAK_CONFIG.url}realms/clin/protocol/openid-connect/token`,
     data

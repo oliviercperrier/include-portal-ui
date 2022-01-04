@@ -9,6 +9,8 @@ export default class EnvironmentVariables {
     KC_AUTH_SERVER_URL: process.env.REACT_APP_KC_AUTH_SERVER_URL,
     KC_CLIENT_ID: process.env.REACT_APP_KC_CLIENT_ID,
     KC_REALM: process.env.REACT_APP_KC_REALM,
+    // USERSNAP
+    USER_SNAP_API_KEY: process.env.REACT_APP_USER_SNAP_API_KEY
   };
 
   static configFor({ key }: { key: string }): string {

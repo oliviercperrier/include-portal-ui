@@ -5,9 +5,6 @@ export enum STATIC_ROUTES {
   NOT_FOUND = "/404",
   DASHBOARD = "/dashboard",
   STUDIES = "/studies",
-  PARTICIPANTS = "/participants",
-  BIOSPECIMEN = "/biospecimen",
-  DATA_FILES = "/data-files",
   MY_PROFILE = "/profile",
   SETTINGS = "/settings",
 

@@ -13,9 +13,6 @@ import ProtectedRoute from "ProtectedRoute";
 import PageLayout from "components/Layout";
 import Authenticator from "auth/Authenticator";
 import Studies from "views/Studies";
-import Participants from "views/Participants";
-import Biospecimen from "views/Biospecimen";
-import DataFiles from "views/DataFiles";
 import MyProfile from "views/MyProfile";
 import Settings from "views/Settings";
 import DataExploration from "views/DataExploration";
@@ -53,24 +50,6 @@ const App = () => {
                 render={(props: RouteComponentProps<{ tab?: string }>) => (
                   <DataExploration tab={props.match?.params.tab} />
                 )}
-                layout={PageLayout}
-              />
-              <ProtectedRoute
-                exact
-                path={STATIC_ROUTES.PARTICIPANTS}
-                render={() => <Participants />}
-                layout={PageLayout}
-              />
-              <ProtectedRoute
-                exact
-                path={STATIC_ROUTES.BIOSPECIMEN}
-                render={() => <Biospecimen />}
-                layout={PageLayout}
-              />
-              <ProtectedRoute
-                exact
-                path={STATIC_ROUTES.DATA_FILES}
-                render={() => <DataFiles />}
                 layout={PageLayout}
               />
               <ProtectedRoute

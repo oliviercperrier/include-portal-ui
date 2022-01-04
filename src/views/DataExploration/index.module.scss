@@ -3,6 +3,11 @@
 .dataExplorationLayout {
   height: calc(100vh - #{$main-header-height});
 
+  .filterLoader {
+    padding: 24px;
+    width: 100%;
+  }
+
   .sideMenu {
     li[role="menuitem"] {
       color: white;

@@ -33,7 +33,7 @@ const Home = (): React.ReactElement => {
               Available Data
             </Title>
             <Divider className={styles.statsDivider} />
-            <DataRelease className={styles.dataRelease}/>
+            <DataRelease className={styles.dataRelease} />
           </div>
           <div className={styles.loginDescription}>
             <Title level={2} className={styles.loginDescTitle}>

@@ -8,12 +8,7 @@ export interface FilterInfo {
   suggester?: {
     title: () => string;
     placeholder: () => string;
-    suggestionType: SUGGESTION_TYPE;
+    suggestionType: string; // Add enum?
     tooltipTitle: () => string;
   };
-}
-
-export enum SUGGESTION_TYPE {
-    VARIANTS = "variants",
-    GENES = "genes"
 }

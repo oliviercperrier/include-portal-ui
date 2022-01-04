@@ -10,10 +10,16 @@ export default class EnvironmentVariables {
     KC_CLIENT_ID: process.env.REACT_APP_KC_CLIENT_ID,
     KC_REALM: process.env.REACT_APP_KC_REALM,
     // USERSNAP
-    USER_SNAP_API_KEY: process.env.REACT_APP_USER_SNAP_API_KEY
+    USER_SNAP_API_KEY: process.env.REACT_APP_USER_SNAP_API_KEY,
   };
 
   static configFor({ key }: { key: string }): string {
-    return EnvironmentVariables.vars[key] || '';
+    return EnvironmentVariables.vars[key] || "";
   }
 }
+
+export const getEnvVarByKey = <T>(key: string, defaultValue?: T): T =>
+  (process.env[`REACT_APP_${key}`] as any) || defaultValue;
+
+export const getFTEnvVarByKey = <T>(key: string, defaultValue?: T): T =>
+  (process.env[`REACT_APP_FT_${key}`] as any) || defaultValue;

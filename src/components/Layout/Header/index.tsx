@@ -59,19 +59,19 @@ const Header = () => {
           />
           <HeaderLink
             currentPathName={currentPathName}
-            to={STATIC_ROUTES.PARTICIPANTS}
+            to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
             icon={<UserOutlined />}
             title={intl.get("layout.main.menu.participants")}
           />
           <HeaderLink
             currentPathName={currentPathName}
-            to={STATIC_ROUTES.BIOSPECIMEN}
+            to={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
             icon={<ExperimentOutlined />}
             title={intl.get("layout.main.menu.biospecimen")}
           />
           <HeaderLink
             currentPathName={currentPathName}
-            to={STATIC_ROUTES.DATA_FILES}
+            to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
             icon={<FileTextOutlined />}
             title={intl.get("layout.main.menu.datafiles")}
           />

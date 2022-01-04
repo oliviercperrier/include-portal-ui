@@ -1,18 +1,20 @@
-import queryString from 'querystring';
+import queryString from "querystring";
 import {
   KEYCLOAK_AUTH_GRANT_TYPE,
   KEYCLOAK_CONFIG,
   rptRequest,
   Rpt,
   getAccessTokenStatus,
-} from 'auth/keycloak-api/utils';
+} from "auth/keycloak-api/utils";
 
 export class RptManager {
   private static storedRpt?: Rpt;
 
   private static async requestNewRpt() {
-    const data = queryString.encode({ grant_type: KEYCLOAK_AUTH_GRANT_TYPE, audience: KEYCLOAK_CONFIG.authClientId });
-    console.log('>>> data : ', data);
+    const data = queryString.encode({
+      grant_type: KEYCLOAK_AUTH_GRANT_TYPE,
+      audience: KEYCLOAK_CONFIG.authClientId,
+    });
     return rptRequest(data);
   }
 

@@ -6,28 +6,34 @@
 @alert-warning-border-color: @orange-4;
 @alert-error-bg-color: @red-1;
 @alert-error-border-color: @red-4;
+@alert-close-color: inherit;
+@alert-close-hover-color: inherit;
 
 .@{alert-prefix-cls} {
   &-success {
-    .@{alert-prefix-cls}-message {
+    .@{alert-prefix-cls}-message,
+    .@{alert-prefix-cls}-close-icon {
       color: @green-9;
     }
   }
 
   &-info {
-    .@{alert-prefix-cls}-message {
+    .@{alert-prefix-cls}-message,
+    .@{alert-prefix-cls}-close-icon {
       color: @blue-9;
     }
   }
 
   &-warning {
-    .@{alert-prefix-cls}-message {
+    .@{alert-prefix-cls}-message,
+    .@{alert-prefix-cls}-close-icon {
       color: @orange-9;
     }
   }
 
   &-error {
-    .@{alert-prefix-cls}-message {
+    .@{alert-prefix-cls}-message,
+    .@{alert-prefix-cls}-close-icon {
       color: @red-8;
     }
   }

@@ -1,8 +1,12 @@
 import { TSortableItems } from "@ferlab/ui/core/layout/SortableGrid/SortableItem";
 import DragHandle from "@ferlab/ui/core/layout/SortableGrid/DragHandle";
-import { HolderOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  HolderOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Typography } from "antd";
+import { List, Typography } from "antd";
 import DataExplorationLinks from "views/Dashboard/components/DataExplorationLinks";
 
 import styles from "./index.module.scss";
@@ -44,7 +48,29 @@ export const dashboardCards: TSortableItems[] = [
             <Handle id="1" /> Authorized Studies
           </Title>
         }
-        content="Content.."
+        content={
+          <List
+            bordered
+            dataSource={[
+              {
+                title: "Olivier OlivierOlivier OlivierOlivier Olivier Olivier Olivier Olivier",
+                description: "wow wow wow wow wow wow wow wow wow wow wow wow wow wow wow wow wow ",
+              },
+              {
+                title: "David",
+                description: "omg",
+              },
+            ]}
+            renderItem={(item) => (
+              <List.Item className="wrapped" actions={[<DeleteOutlined />, <UserAddOutlined />]}>
+                <List.Item.Meta
+                  title={<a href="https://ant.design">{item.title}</a>}
+                  description={item.description}
+                />
+              </List.Item>
+            )}
+          ></List>
+        }
       />
     ),
   },

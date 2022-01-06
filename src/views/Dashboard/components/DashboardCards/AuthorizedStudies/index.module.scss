@@ -1,0 +1,59 @@
+@import "colors";
+
+.authorizedStudiesList {
+  max-height: 325px;
+  overflow: auto;
+}
+
+.onHoverLink {
+  > span {
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.dataAccessBtn {
+  padding: 0;
+  @extend .onHoverLink;
+}
+
+.authSection {
+  margin-bottom: 12px;
+  .safetyIcon {
+    font-size: 20px;
+  }
+
+  .notice {
+    font-size: 12px;
+    vertical-align: super;
+    line-height: 10px;
+  }
+}
+
+.studiesListItem {
+  .filesCount {
+    font-size: 12px;
+
+    .fileLink {
+      padding: 0;
+      height: unset;
+      @extend .onHoverLink;
+    }
+  }
+
+  .dataUseGroups {
+    font-size: 12px;
+    margin-top: 4px;
+    color: $gray-7;
+  }
+
+  .itemMeta {
+    margin-bottom: 0px;
+  }
+
+  .progress {
+    width: 50%;
+  }
+}

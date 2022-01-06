@@ -5,7 +5,10 @@ body {
   min-height: 100vh;
 }
 
-#root,
-.App {
+#root {
   height: 100%;
+}
+
+#appContainer {
+  height: 100vh;
 }

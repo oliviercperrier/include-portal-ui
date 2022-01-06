@@ -1,21 +1,26 @@
 import React, { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Button, List, Progress, Space } from "antd";
-import cx from "classnames";
+import { Button, List, Space } from "antd";
+import Empty from "@ferlab/ui/core/components/Empty";
 import {
   ApiOutlined,
-  DeleteOutlined,
   DisconnectOutlined,
   QuestionCircleOutlined,
   SafetyOutlined,
-  UserAddOutlined,
 } from "@ant-design/icons";
 import { DashboardCardProps } from "views/Dashboard/components/DashboardCards";
 import CardHeader from "views/Dashboard/components/CardHeader";
-import { Link } from "react-router-dom";
 import Text from "antd/lib/typography/Text";
+import AuthorizedStudiesListItem from "./ListItem";
 
 import styles from "./index.module.scss";
+
+export interface IListItemData {
+  title: string;
+  nbFiles: number;
+  totalFiles: number;
+  percent: number;
+}
 
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -41,7 +46,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
           <Space
             className={styles.authSection}
             direction="horizontal"
-            align="baseline"
+            align="start"
           >
             {isConnected ? (
               <>
@@ -78,47 +83,42 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
               </>
             )}
           </Space>
-          <List
+          <List<IListItemData>
             className={styles.authorizedStudiesList}
             bordered
             itemLayout="vertical"
+            locale={{
+              emptyText: (
+                <Empty imageType="grid" description="No available studies" />
+              ),
+            }}
             dataSource={[
               {
                 title: "Pediatric Brain Tumor Atlas: CBTTC",
-                description: (
-                  <div className={styles.filesCount}>
-                    Authorization:{" "}
-                    <Link to="">
-                      <Button className={styles.fileLink} type="text">
-                        18845
-                      </Button>
-                    </Link>{" "}
-                    of{" "}
-                    <Link to="">
-                      <Button className={styles.fileLink} type="text">
-                        27783
-                      </Button>
-                    </Link>{" "}
-                    Files
-                  </div>
-                ),
+                nbFiles: 18845,
+                totalFiles: 27783,
+                percent: 50,
               },
               {
-                title: "David",
-                description: "omg",
+                title: "CARING for Children with COVID: NICHD-2019-POP02",
+                nbFiles: 18845,
+                totalFiles: 27783,
+                percent: 100,
+              },
+              {
+                title: "Kids First: Neuroblastoma",
+                nbFiles: 18845,
+                totalFiles: 27783,
+                percent: 75,
+              },
+              {
+                title: "CARING for Children with COVID: NICHD-2019-POP02",
+                nbFiles: 18845,
+                totalFiles: 27783,
+                percent: 96,
               },
             ]}
-            renderItem={(item) => (
-              <List.Item className={cx("wrapped", styles.studiesListItem)}>
-                <List.Item.Meta
-                  title={<a href="https://ant.design">{item.title}</a>}
-                  description={item.description}
-                  className={styles.itemMeta}
-                />
-                <div className={styles.dataUseGroups}>Data use Groups: Open access</div>
-                <Progress className={styles.progress} size="small" percent={50}></Progress>
-              </List.Item>
-            )}
+            renderItem={(item) => <AuthorizedStudiesListItem data={item} />}
           ></List>
         </div>
       }

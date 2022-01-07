@@ -72,6 +72,12 @@ const fr = {
         },
       },
     },
+    dataRelease: {
+      studies: "Études",
+      participants: "Participants",
+      biospecimens: "Biospécimens",
+      datafiles: "Fichier de données",
+    },
   },
   // LAYOUT
   layout: {
@@ -96,6 +102,20 @@ const fr = {
   },
   // SCREENS
   screen: {
+    home: {
+      title: "INCLUDE Data Hub",
+      datarelease: {
+        title: "Données disponibles",
+      },
+      uncover: "Découvrez de",
+      newInsights: "nouvelles connaissances",
+      biologyConditions:
+        "sur la biologie du syndrome de Down et des conditions concomitantes.",
+      accessLargeScale:
+        "Accédez à des ressources de données à grande échelle et explorez des ensembles de données de cohorte personnalisés basés sur les données des participants, des échantillons biologiques, cliniques et génomiques.",
+      login: "Connexion",
+      signup: "S'inscrire",
+    },
     dashboard: {
       hello: "Bonjour",
       card: {
@@ -109,7 +129,24 @@ const fr = {
         biospecimens: "Biospécimens",
         datafiles: "Fichier de données",
         variantSearch: "Recherche de variants",
-      }
+      },
+      cards: {
+        authorizedStudies: {
+          title: "Études autorisées",
+          headerBtn: "Accès aux données",
+          connectedNotice:
+            "Votre compte est connecté. Vous avez accès à toutes les données contrôlées par INLCUDE publiées.",
+          disconnectedNotice:
+            "Accédez à toutes les données contrôlées par INCLUDE publiées en connectant votre compte à l'aide de vos informations d'identification NIH.",
+          connect: "Connecter",
+          disconnect: "Déconnecter",
+          noAvailableStudies: "Aucune étude disponible",
+          authorization: "Autorisation",
+          of: "de",
+          files: "Fichiers",
+          dataGroups: "Groupes d'utilisation des données: {groups}",
+        },
+      },
     },
     dataExploration: {
       sidemenu: {

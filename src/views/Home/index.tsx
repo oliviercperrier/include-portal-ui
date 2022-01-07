@@ -1,12 +1,12 @@
 import { Link, Redirect } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import { Button, Space, Typography, Divider } from "antd";
-
+import intl from "react-intl-universal";
 import { STATIC_ROUTES } from "utils/routes";
 import IncludeIcon from "components/Icons/IncludeIcon";
+import DataRelease from "components/uiKit/DataRelease";
 
 import styles from "./index.module.scss";
-import DataRelease from "components/uiKit/DataRelease";
 
 const { Title } = Typography;
 
@@ -25,25 +25,26 @@ const Home = (): React.ReactElement => {
           <div className={styles.logoTitleContainer}>
             <IncludeIcon />
             <Title level={4} className={styles.logotTitle}>
-              INCLUDE Data Hub
+              {intl.get("screen.home.title")}
             </Title>
           </div>
           <div className={styles.loginStats}>
             <Title level={4} className={styles.statsTitle}>
-              Available Data
+              {intl.get("screen.home.datarelease.title")}
             </Title>
             <Divider className={styles.statsDivider} />
             <DataRelease className={styles.dataRelease} />
           </div>
           <div className={styles.loginDescription}>
             <Title level={2} className={styles.loginDescTitle}>
-              Uncover <span className={styles.titleEmphase}>new insigths</span>{" "}
-              into the biology of Down Syndrome and co-occurring conditions.
+              {intl.get("screen.home.uncover")}{" "}
+              <span className={styles.titleEmphase}>
+                {intl.get("screen.home.newInsights")}
+              </span>{" "}
+              {intl.get("screen.home.biologyConditions")}
             </Title>
             <span className={styles.loginDescText}>
-              Access large-scale data resources and explore custom built cohort
-              datasets based on participant, biospecimen, clinical and genomic
-              data.
+              {intl.get("screen.home.accessLargeScale")}
             </span>
           </div>
           <Space className={styles.loginButtons} size={16}>
@@ -58,11 +59,11 @@ const Home = (): React.ReactElement => {
               }}
               size={"large"}
             >
-              Log in
+              {intl.get("screen.home.login")}
             </Button>
             <Link to={STATIC_ROUTES.JOIN}>
               <Button ghost size={"large"}>
-                Sign up
+                {intl.get("screen.home.signup")}
               </Button>
             </Link>
           </Space>

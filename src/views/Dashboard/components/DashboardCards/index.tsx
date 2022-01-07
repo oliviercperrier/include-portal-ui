@@ -28,27 +28,55 @@ export const dashboardCards: TSortableItems[] = [
     xs: 24,
     md: 12,
     xxl: 6,
-    component: <GridCard className={styles.dashboardCard} theme="shade" title={""} content="Content.." />,
+    component: (
+      <GridCard
+        className={styles.dashboardCard}
+        theme="shade"
+        title={""}
+        content="Content.."
+      />
+    ),
   },
   {
     id: "3",
     xs: 24,
     md: 12,
     xxl: 6,
-    component: <GridCard className={styles.dashboardCard} theme="shade" title={""} content="Content.." />,
+    component: (
+      <GridCard
+        className={styles.dashboardCard}
+        theme="shade"
+        title={""}
+        content="Content.."
+      />
+    ),
   },
   {
     id: "4",
     xs: 24,
     md: 12,
     xxl: 6,
-    component: <GridCard className={styles.dashboardCard} theme="shade" title={""} content="Content.." />,
+    component: (
+      <GridCard
+        className={styles.dashboardCard}
+        theme="shade"
+        title={""}
+        content="Content.."
+      />
+    ),
   },
   {
     id: "5",
     xs: 24,
     md: 12,
     xxl: 6,
-    component: <GridCard className={styles.dashboardCard} theme="shade" title={""} content="Content.." />,
+    component: (
+      <GridCard
+        className={styles.dashboardCard}
+        theme="shade"
+        title={""}
+        content="Content.."
+      />
+    ),
   },
 ];

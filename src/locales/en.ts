@@ -72,6 +72,12 @@ const en = {
         },
       },
     },
+    dataRelease: {
+      studies: "Studies",
+      participants: "Participants",
+      biospecimens: "Biospecimens",
+      datafiles: "Data Files",
+    },
   },
   // LAYOUT
   layout: {
@@ -96,6 +102,20 @@ const en = {
   },
   // SCREENS
   screen: {
+    home: {
+      title: "INCLUDE Data Hub",
+      datarelease: {
+        title: "Available Data",
+      },
+      uncover: "Uncover",
+      newInsights: "new insigths",
+      biologyConditions:
+        "into the biology of Down Syndrome and co-occurring conditions.",
+      accessLargeScale:
+        "Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and genomic data.",
+      login: "Login",
+      signup: "Sign up",
+    },
     dashboard: {
       hello: "Hello",
       card: {
@@ -109,7 +129,24 @@ const en = {
         biospecimens: "Biospecimens",
         datafiles: "Data Files",
         variantSearch: "Variant Search",
-      }
+      },
+      cards: {
+        authorizedStudies: {
+          title: "Authorized Studies",
+          headerBtn: "Data access",
+          connectedNotice:
+            "Your account is connected. You have access to all released INLCUDE controlled data.",
+          disconnectedNotice:
+            "Access all released INCLUDE controlled data by connecting your account using your NIH credentials.",
+          connect: "Connect",
+          disconnect: "Disconnect",
+          noAvailableStudies: "No available studies",
+          authorization: "Authorization",
+          of: "of",
+          files: "Files",
+          dataGroups: "Data use groups: {groups}",
+        },
+      },
     },
     dataExploration: {
       sidemenu: {

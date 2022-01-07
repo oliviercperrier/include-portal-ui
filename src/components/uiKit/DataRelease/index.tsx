@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import useApi from "hooks/useApi";
 import EnvVariables from "helpers/EnvVariables";
+import intl from "react-intl-universal";
 
 import styles from "./index.module.scss";
 
@@ -52,7 +53,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
             label={numberFormat(result?.studies!)}
             Icon={<ReadOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={"Studies"}
+            subLabel={intl.get("components.dataRelease.studies")}
           />
         </Col>
         <Col xs={12} md={6}>
@@ -61,7 +62,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
             label={numberFormat(result?.participants!)}
             Icon={<UserOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={"Participants"}
+            subLabel={intl.get("components.dataRelease.participants")}
           />
         </Col>
         <Col xs={12} md={6}>
@@ -70,7 +71,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
             label={numberFormat(result?.biospecimens!)}
             Icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={"Biospecimens"}
+            subLabel={intl.get("components.dataRelease.biospecimens")}
           />
         </Col>
         <Col xs={12} md={6}>
@@ -79,7 +80,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
             label={formatStorage(result?.fileSize!) || "0TB"}
             Icon={<DatabaseOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={"Data Files"}
+            subLabel={intl.get("components.dataRelease.datafiles")}
           />
         </Col>
       </Row>

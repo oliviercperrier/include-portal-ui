@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Button, List, Space } from "antd";
+import intl from "react-intl-universal";
 import {
   ApiOutlined,
   DisconnectOutlined,
@@ -20,35 +21,40 @@ export interface IListItemData {
   nbFiles: number;
   totalFiles: number;
   percent: number;
+  groups: string[];
 }
 
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
-  const data = [
+  const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
     {
       title: "Pediatric Brain Tumor Atlas: CBTTC",
       nbFiles: 18845,
       totalFiles: 27783,
       percent: 50,
+      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
       title: "CARING for Children with COVID: NICHD-2019-POP02",
       nbFiles: 18845,
       totalFiles: 27783,
       percent: 100,
+      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
       title: "Kids First: Neuroblastoma",
       nbFiles: 18845,
       totalFiles: 27783,
       percent: 75,
+      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
       title: "CARING for Children with COVID: NICHD-2019-POP02",
       nbFiles: 18845,
       totalFiles: 27783,
       percent: 96,
+      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
   ];
 
@@ -59,11 +65,12 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       title={
         <CardHeader
           id={id}
-          title="Authorized Studies"
+          title={intl.get("screen.dashboard.cards.authorizedStudies.title")}
           withHandle
           extra={[
             <Button type="text" className={styles.dataAccessBtn}>
-              Data access <QuestionCircleOutlined />
+              {intl.get("screen.dashboard.cards.authorizedStudies.headerBtn")}{" "}
+              <QuestionCircleOutlined />
             </Button>,
           ]}
         />
@@ -79,8 +86,9 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
               <>
                 <SafetyOutlined className={styles.safetyIcon} />
                 <Text className={styles.notice}>
-                  Your account is connected. You have access to all released
-                  INLCUDE controlled data.
+                  {intl.get(
+                    "screen.dashboard.cards.authorizedStudies.connectedNotice"
+                  )}
                 </Text>
                 <Button
                   type="primary"
@@ -89,15 +97,18 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                   icon={<DisconnectOutlined />}
                   onClick={() => setIsConnected(false)}
                 >
-                  Disconnect
+                  {intl.get(
+                    "screen.dashboard.cards.authorizedStudies.disconnect"
+                  )}
                 </Button>
               </>
             ) : (
               <>
                 <SafetyOutlined className={styles.safetyIcon} />
                 <Text className={styles.notice}>
-                  Access all released INCLUDE controlled data by connecting your
-                  account using your NIH credentials.
+                  {intl.get(
+                    "screen.dashboard.cards.authorizedStudies.disconnectedNotice"
+                  )}
                 </Text>
                 <Button
                   type="primary"
@@ -105,7 +116,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                   icon={<ApiOutlined />}
                   onClick={() => setIsConnected(true)}
                 >
-                  Connect
+                  {intl.get("screen.dashboard.cards.authorizedStudies.connect")}
                 </Button>
               </>
             )}
@@ -116,10 +127,15 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
             itemLayout="vertical"
             locale={{
               emptyText: (
-                <Empty imageType="grid" description="No available studies" />
+                <Empty
+                  imageType="grid"
+                  description={intl.get(
+                    "screen.dashboard.cards.authorizedStudies.noAvailableStudies"
+                  )}
+                />
               ),
             }}
-            dataSource={[]}
+            dataSource={data}
             renderItem={(item) => <AuthorizedStudiesListItem data={item} />}
           ></List>
         </div>

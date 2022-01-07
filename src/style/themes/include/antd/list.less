@@ -1,0 +1,52 @@
+.@{list-prefix-cls} {
+  &-bordered {
+    .@{list-prefix-cls}-item,
+    .@{list-prefix-cls}-footer,
+    .@{list-prefix-cls}-header {
+      padding: 8px 12px;
+    }
+  }
+
+  .@{list-prefix-cls}-item {
+    &:hover {
+      background-color: @gray-3;
+      cursor: pointer;
+    }
+
+    &-action {
+      margin-left: 20px;
+
+      &-split {
+        display: none;
+      }
+
+      > li {
+        &:last-child {
+          padding-right: 4px;
+        }
+        color: @text-color;
+      }
+    }
+
+    &-meta {
+      &-description {
+        color: @text-color;
+      }
+
+      &-title {
+        margin-bottom: 2px;
+      }
+    }
+  }
+
+  .@{list-prefix-cls}-item.wrapped {
+    .@{list-prefix-cls}-item-meta {
+      &-description,
+      &-title {
+        white-space: pre;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

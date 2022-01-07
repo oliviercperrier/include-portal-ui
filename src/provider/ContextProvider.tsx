@@ -7,6 +7,8 @@ import history from "utils/history";
 import getStoreConfig from "store";
 import { LANG } from "utils/constants";
 import locales from "locales";
+import { ConfigProvider } from "antd";
+import Empty from "@ferlab/ui/core/components/Empty";
 
 const { store, persistor } = getStoreConfig();
 persistor.subscribe(function () {
@@ -18,13 +20,15 @@ persistor.subscribe(function () {
 
 const ContextProvider = ({ children }: any) => {
   return (
-    <KeycloakProvider>
-      <ReduxProvider store={store}>
-        <PersistGate persistor={persistor}>
-          <Router history={history}>{children}</Router>
-        </PersistGate>
-      </ReduxProvider>
-    </KeycloakProvider>
+    <ConfigProvider renderEmpty={() => <Empty imageType="grid" />}>
+      <KeycloakProvider>
+        <ReduxProvider store={store}>
+          <PersistGate persistor={persistor}>
+            <Router history={history}>{children}</Router>
+          </PersistGate>
+        </ReduxProvider>
+      </KeycloakProvider>
+    </ConfigProvider>
   );
 };
 

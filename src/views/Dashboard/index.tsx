@@ -4,10 +4,10 @@ import { useUser } from "store/user";
 import DataReleaseCard from "./components/DataReleaseCard";
 import intl from "react-intl-universal";
 import SortableGrid from "@ferlab/ui/core/layout/SortableGrid";
-import { dashboardCards } from "./utils/dashboardCards";
 import { getFTEnvVarByKey } from "helpers/EnvVariables";
 import { AlterTypes } from "utils/types";
 import NotificationBanner from "components/featureToggle/NotificationBanner";
+import { dashboardCards } from "./components/DashboardCards";
 
 import styles from "./index.module.scss";
 

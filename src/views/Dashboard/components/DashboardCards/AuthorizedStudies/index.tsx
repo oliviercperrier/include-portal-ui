@@ -68,7 +68,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
           title={intl.get("screen.dashboard.cards.authorizedStudies.title")}
           withHandle
           extra={[
-            <Button type="text" className={styles.dataAccessBtn}>
+            <Button key="1" type="text" className={styles.dataAccessBtn}>
               {intl.get("screen.dashboard.cards.authorizedStudies.headerBtn")}{" "}
               <QuestionCircleOutlined />
             </Button>,

@@ -7,7 +7,7 @@ declare global {
 }
 
 export const initUserSnap = () => {
-  const apiKey = EnvVariables.configFor({ key: "USER_SNAP_API_KEY" });
+  const apiKey = EnvVariables.configFor("USER_SNAP_API_KEY");
 
   if (!apiKey) {
     return;

@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Authenticator = (props: Props) => {
-  const { user, isLoading } = useUser();
+  const { isLoading } = useUser();
   const { keycloak } = useKeycloak();
   const dispatch = useDispatch();
 
@@ -20,11 +20,7 @@ const Authenticator = (props: Props) => {
     }
   }, [dispatch, keycloak]);
 
-  return isLoading || (keycloak.authenticated && !user) ? (
-    <Spinner size={"large"} />
-  ) : (
-    props.children
-  );
+  return isLoading ? <Spinner size={"large"} /> : props.children;
 };
 
 export default Authenticator;

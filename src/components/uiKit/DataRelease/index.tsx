@@ -35,9 +35,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
     fileSize: string;
   }>({
     config: {
-      url: `${EnvVariables.configFor({
-        key: "ARRANGER_API",
-      })}/statistics`,
+      url: `${EnvVariables.configFor("ARRANGER_API")}/statistics`,
     },
   });
 

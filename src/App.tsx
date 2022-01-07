@@ -32,6 +32,8 @@ const App = () => {
                   <Home />
                 </SideImageLayout>
               </Route>
+              <Route exact path={STATIC_ROUTES.JOIN} render={() => <>Join Survey</>}/>
+              <Route exact path={STATIC_ROUTES.ERROR} render={() => <>Error</>}/>
               <ProtectedRoute
                 exact
                 path={STATIC_ROUTES.DASHBOARD}

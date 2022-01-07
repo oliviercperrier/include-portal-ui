@@ -123,10 +123,10 @@ const Header = () => {
               {/* CHANGE WITH USER */}
               <Gravatar
                 className={style.userGravatar}
-                email="ocastro-perrier@ferlab.bio"
+                email={""}
                 size={100}
               />
-              <span className={style.userName}>{user?.firstName}</span>
+              <span className={style.userName}>{user?.first_name}</span>
               <DownOutlined />
             </a>
           </Dropdown>,

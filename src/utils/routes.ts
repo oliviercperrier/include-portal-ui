@@ -1,8 +1,8 @@
 export enum STATIC_ROUTES {
   JOIN = "/join",
-  TERMS = "/terms",
   HOME = "/",
   NOT_FOUND = "/404",
+  ERROR = "/error",
   DASHBOARD = "/dashboard",
   STUDIES = "/studies",
   MY_PROFILE = "/profile",

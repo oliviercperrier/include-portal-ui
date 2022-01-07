@@ -9,7 +9,7 @@ import { RootState } from "store/types";
 import GlobalReducer from "store/global";
 import UserReducer from "store/user";
 
-const devMode = EnvVariables.configFor({ key: "ENV" }) === "development";
+const devMode = EnvVariables.configFor("ENV") === "development";
 
 const persistConfig = {
   key: "root",
@@ -29,7 +29,7 @@ const store: any = configureStore({
   devTools: devMode,
   middleware: (getDefaultMiddleware) => {
     let defaultMid = getDefaultMiddleware({
-      serializableCheck: false
+      serializableCheck: false,
     });
     return devMode ? defaultMid.concat(logger) : defaultMid;
   },

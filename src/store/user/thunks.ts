@@ -1,20 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { User, UserActionsEnum } from "store/user/types";
-import keycloak from "initKeycloak";
+import { UserApi } from "services/api/user";
 
-const userApi: any = {
-  fetchById: (token: string) => ({
-    firstName: "Olivier",
-    lastName: "Castro-Perrier"
-  }),
-}; // link the service to retrieve user
+const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
+  const { data, error } = await UserApi.fetchUser();
 
-const fetchUser = createAsyncThunk<User>(
-  UserActionsEnum.FETCH_USER,
-  async (thunkAPI) => {
-    const response = userApi.fetchById(keycloak.token);
-    return response;
+  if (!error) {
+    return data;
   }
-);
+
+  if (error?.response?.status === 404) {
+    const { data: newUser, error: newUserError } = await UserApi.createUser();
+    if (newUserError) {
+      return thunkAPI.rejectWithValue(error?.message);
+    }
+    return newUser;
+  } else {
+    return thunkAPI.rejectWithValue(error?.message);
+  }
+});
 
 export { fetchUser };

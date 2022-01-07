@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState } from "store/user/types";
 import { fetchUser } from "store/user/thunks";
+import { TUser } from "services/api/user/models";
 
 export const UserState: initialState = {
   user: null,
@@ -14,15 +15,20 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchUser.pending, (state, action) => {
       state.isLoading = true;
+      state.error = undefined;
     });
-    builder.addCase(fetchUser.fulfilled, (state, action) => ({
-      ...state,
-      user: action.payload,
-      isLoading: false,
-    }));
+    builder.addCase(
+      fetchUser.fulfilled,
+      (state, action: PayloadAction<TUser>) => ({
+        ...state,
+        error: undefined,
+        user: action.payload,
+        isLoading: false,
+      })
+    );
     builder.addCase(fetchUser.rejected, (state, action) => ({
       ...state,
-      error: action.error.message,
+      error: action.payload as string,
       isLoading: false,
     }));
   },

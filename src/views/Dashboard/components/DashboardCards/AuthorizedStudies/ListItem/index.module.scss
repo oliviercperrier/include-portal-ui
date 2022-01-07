@@ -1,0 +1,30 @@
+@import "colors";
+
+.AuthorizedStudiesListItem {
+  .filesCount {
+    font-size: 12px;
+
+    .fileLink {
+      padding: 0;
+      height: unset;
+      font-size: 12px;
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .dataUseGroups {
+    font-size: 12px;
+    color: $gray-7;
+  }
+
+  .itemMeta {
+    margin-bottom: 2px;
+  }
+
+  .progress {
+    width: 50%;
+  }
+}

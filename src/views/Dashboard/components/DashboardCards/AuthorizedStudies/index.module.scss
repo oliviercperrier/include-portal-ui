@@ -1,0 +1,29 @@
+@import "colors";
+
+.authorizedStudiesList {
+  max-height: 325px;
+  overflow: auto;
+}
+
+.dataAccessBtn {
+  padding: 0;
+  > span {
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.authSection {
+  margin-bottom: 12px;
+  .safetyIcon {
+    font-size: 20px;
+  }
+
+  .notice {
+    font-size: 12px;
+    vertical-align: super;
+    line-height: 10px;
+  }
+}

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Button, List, Space } from "antd";
-import Empty from "@ferlab/ui/core/components/Empty";
 import {
   ApiOutlined,
   DisconnectOutlined,
@@ -14,6 +13,7 @@ import Text from "antd/lib/typography/Text";
 import AuthorizedStudiesListItem from "./ListItem";
 
 import styles from "./index.module.scss";
+import Empty from "@ferlab/ui/core/components/Empty";
 
 export interface IListItemData {
   title: string;
@@ -23,7 +23,34 @@ export interface IListItemData {
 }
 
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
+  const data = [
+    // Add appropriate api call and replace this list with the result
+    {
+      title: "Pediatric Brain Tumor Atlas: CBTTC",
+      nbFiles: 18845,
+      totalFiles: 27783,
+      percent: 50,
+    },
+    {
+      title: "CARING for Children with COVID: NICHD-2019-POP02",
+      nbFiles: 18845,
+      totalFiles: 27783,
+      percent: 100,
+    },
+    {
+      title: "Kids First: Neuroblastoma",
+      nbFiles: 18845,
+      totalFiles: 27783,
+      percent: 75,
+    },
+    {
+      title: "CARING for Children with COVID: NICHD-2019-POP02",
+      nbFiles: 18845,
+      totalFiles: 27783,
+      percent: 96,
+    },
+  ];
 
   return (
     <GridCard
@@ -92,32 +119,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                 <Empty imageType="grid" description="No available studies" />
               ),
             }}
-            dataSource={[
-              {
-                title: "Pediatric Brain Tumor Atlas: CBTTC",
-                nbFiles: 18845,
-                totalFiles: 27783,
-                percent: 50,
-              },
-              {
-                title: "CARING for Children with COVID: NICHD-2019-POP02",
-                nbFiles: 18845,
-                totalFiles: 27783,
-                percent: 100,
-              },
-              {
-                title: "Kids First: Neuroblastoma",
-                nbFiles: 18845,
-                totalFiles: 27783,
-                percent: 75,
-              },
-              {
-                title: "CARING for Children with COVID: NICHD-2019-POP02",
-                nbFiles: 18845,
-                totalFiles: 27783,
-                percent: 96,
-              },
-            ]}
+            dataSource={[]}
             renderItem={(item) => <AuthorizedStudiesListItem data={item} />}
           ></List>
         </div>

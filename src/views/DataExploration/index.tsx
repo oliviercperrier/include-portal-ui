@@ -1,6 +1,6 @@
 import SidebarMenu, {
   ISidebarMenuItem,
-} from "@ferlab/ui/core/components/sidebarMenu";
+} from "@ferlab/ui/core/components/SidebarMenu";
 import intl from "react-intl-universal";
 import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import ScrollContent from "@ferlab/ui/core/layout/ScrollContent";

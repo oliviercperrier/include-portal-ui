@@ -8,6 +8,7 @@ import { RootState } from "store/types";
 // Reducers
 import GlobalReducer from "store/global";
 import UserReducer from "store/user";
+import FenceReducer from "store/fence";
 
 const devMode = EnvVariables.configFor({ key: "ENV" }) === "development";
 
@@ -22,6 +23,7 @@ const persistConfig = {
 const rootReducer = combineReducers<RootState>({
   global: GlobalReducer,
   user: UserReducer,
+  fence: FenceReducer,
 });
 
 const store: any = configureStore({
@@ -29,7 +31,7 @@ const store: any = configureStore({
   devTools: devMode,
   middleware: (getDefaultMiddleware) => {
     let defaultMid = getDefaultMiddleware({
-      serializableCheck: false
+      serializableCheck: false,
     });
     return devMode ? defaultMid.concat(logger) : defaultMid;
   },

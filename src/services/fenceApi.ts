@@ -4,6 +4,7 @@ import { isDecodedJwtExpired } from "utils/jwt";
 import { FENCE_NAMES } from "../utils/fenceTypes";
 import { DecodedJwt } from "utils/tokenTypes";
 import EnvironmentVariables from "helpers/EnvVariables";
+import { sendRequest } from "./api";
 
 const DCF = FENCE_NAMES.dcf;
 const GEN3 = FENCE_NAMES.gen3;
@@ -91,19 +92,19 @@ export const fenceConnect = async (fence: FENCE_NAMES) => {
 };
 
 export const fetchAccessToken = async (fenceName: FENCE_NAMES) => {
-  const data = await sendRequest({
+  const response = await sendRequest({
     method: "GET",
     url: `${FENCE_AUTH_TOKENS_URI}?fence=${fenceName}`,
   });
-  return data.access_token;
+  return response.data.access_token;
 };
 
 export const fetchRefreshedAccessToken = async (fenceName: FENCE_NAMES) => {
-  const data = await sendRequest({
+  const response = await sendRequest({
     method: "POST",
     url: `${FENCE_AUTH_REFRESH_URI}?fence=${fenceName}`,
   });
-  return data.access_token;
+  return response.data.access_token;
 };
 
 const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {

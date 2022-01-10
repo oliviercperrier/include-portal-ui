@@ -21,6 +21,15 @@ const FENCE_AUTH_REFRESH_URI = EnvironmentVariables.configFor({
 const FENCE_AUTH_TOKENS_URI = EnvironmentVariables.configFor({
   key: "FENCE_AUTH_TOKENS_URI",
 });
+const GEN3_API_ROOT = EnvironmentVariables.configFor({
+  key: "GEN3_API",
+});
+const DCF_API_ROOT = EnvironmentVariables.configFor({
+  key: "DCF_API",
+});
+const IDP = EnvironmentVariables.configFor({
+  key: "IDP",
+});
 
 const getScope = (fenceName: FENCE_NAMES) => {
   switch (fenceName) {
@@ -37,8 +46,8 @@ const getScope = (fenceName: FENCE_NAMES) => {
 //  When connecting to a fence, the window.open call has to happen in the same synchronus callstack
 //  as the event handler, so client_id and redirect_uri must be available at all times.
 const PROVIDERS = {
-  gen3: { fenceUri: gen3ApiRoot },
-  dcf: { fenceUri: dcfApiRoot },
+  gen3: { fenceUri: GEN3_API_ROOT },
+  dcf: { fenceUri: DCF_API_ROOT },
 };
 
 /*
@@ -59,7 +68,7 @@ export const fenceConnect = async (fence: FENCE_NAMES) => {
   const { fenceUri } = PROVIDERS[fence];
   const scope = getScope(fence);
   // eslint-disable-next-line max-len
-  const url = `${fenceUri}user/oauth2/authorize?client_id=${clientId}&response_type=${RESPONSE_TYPE}&scope=${scope}&redirect_uri=${redirectUri}&idp=${idp}`;
+  const url = `${fenceUri}user/oauth2/authorize?client_id=${clientId}&response_type=${RESPONSE_TYPE}&scope=${scope}&redirect_uri=${redirectUri}&idp=${IDP}`;
   const authWindow = window.open(url)!;
   return new Promise((resolve, reject) => {
     const interval = setInterval(async () => {

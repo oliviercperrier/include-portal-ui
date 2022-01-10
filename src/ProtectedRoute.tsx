@@ -23,9 +23,9 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
     return <Redirect to={STATIC_ROUTES.HOME} />;
   }
 
-  //if (!user || !user.understand_disclaimer) {
-  //  return <Redirect to={STATIC_ROUTES.JOIN} />;
-  //}
+  if (!user || !user.understand_disclaimer) {
+    return <Redirect to={STATIC_ROUTES.JOIN} />;
+  }
 
   const currentPath = routeProps.path;
   if (currentPath === STATIC_ROUTES.HOME) {

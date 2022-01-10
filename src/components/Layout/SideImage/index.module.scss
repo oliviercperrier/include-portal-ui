@@ -16,8 +16,8 @@
     background: #ffffff;
     background-repeat: no-repeat;
     background-position: bottom;
-    width: 573px;
     height: 100%;
+    transition: width 0.2s ease;
   }
 
   .pageContent {
@@ -31,6 +31,18 @@
     width: 275px;
     position: absolute;
     margin: 20px;
+  }
+}
+
+@media (min-width: 1351px) {
+  .sideImageContainer {
+    width: 575px;
+  }
+}
+
+@media (max-width: 1350px) {
+  .sideImageContainer {
+    width: 435px;
   }
 }
 

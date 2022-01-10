@@ -36,7 +36,11 @@ const App = () => {
               <Route
                 exact
                 path={STATIC_ROUTES.JOIN}
-                render={() => <JoinPage />}
+                render={() => (
+                  <SideImageLayout sideImgSrc={MainSideImage}>
+                    <JoinPage />
+                  </SideImageLayout>
+                )}
               />
               <Route
                 exact

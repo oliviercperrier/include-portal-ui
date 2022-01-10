@@ -19,7 +19,7 @@ import { useUser } from "store/user";
 import intl from "react-intl-universal";
 import { getFTEnvVarByKey } from "helpers/EnvVariables";
 import NotificationBanner from "components/featureToggle/NotificationBanner";
-import { AlterTypes } from "utils/types";
+import { AlterTypes, IncludeKeycloakTokenParsed } from "utils/types";
 import { useKeycloak } from "@react-keycloak/web";
 
 import style from "./index.module.scss";
@@ -123,7 +123,9 @@ const Header = () => {
               {/* CHANGE WITH USER */}
               <Gravatar
                 className={style.userGravatar}
-                email={""}
+                email={
+                  (keycloak.tokenParsed as IncludeKeycloakTokenParsed).email
+                }
                 size={100}
               />
               <span className={style.userName}>{user?.first_name}</span>

@@ -16,6 +16,7 @@ import Studies from "views/Studies";
 import MyProfile from "views/MyProfile";
 import Settings from "views/Settings";
 import DataExploration from "views/DataExploration";
+import JoinPage from "views/Join";
 
 const App = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -32,8 +33,16 @@ const App = () => {
                   <Home />
                 </SideImageLayout>
               </Route>
-              <Route exact path={STATIC_ROUTES.JOIN} render={() => <>Join Survey</>}/>
-              <Route exact path={STATIC_ROUTES.ERROR} render={() => <>Error</>}/>
+              <Route
+                exact
+                path={STATIC_ROUTES.JOIN}
+                render={() => <JoinPage />}
+              />
+              <Route
+                exact
+                path={STATIC_ROUTES.ERROR}
+                render={() => <>Error</>}
+              />
               <ProtectedRoute
                 exact
                 path={STATIC_ROUTES.DASHBOARD}

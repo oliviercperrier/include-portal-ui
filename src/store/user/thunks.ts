@@ -1,11 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserApi } from "services/api/user";
+import { TUser } from "services/api/user/models";
 
-const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
+const fetchUser = createAsyncThunk<TUser>("user/fetch", async (_, thunkAPI) => {
   const { data, error } = await UserApi.fetchUser();
 
   if (!error) {
-    return data;
+    return data!;
   }
 
   if (error?.response?.status === 404) {
@@ -13,7 +14,7 @@ const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
     if (newUserError) {
       return thunkAPI.rejectWithValue(error?.message);
     }
-    return newUser;
+    return newUser!;
   } else {
     return thunkAPI.rejectWithValue(error?.message);
   }

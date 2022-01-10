@@ -19,8 +19,9 @@ import { useUser } from "store/user";
 import intl from "react-intl-universal";
 import { getFTEnvVarByKey } from "helpers/EnvVariables";
 import NotificationBanner from "components/featureToggle/NotificationBanner";
-import { AlterTypes, IncludeKeycloakTokenParsed } from "utils/types";
+import { AlterTypes } from "common/types";
 import { useKeycloak } from "@react-keycloak/web";
+import { IncludeKeycloakTokenParsed } from "common/tokenTypes";
 
 import style from "./index.module.scss";
 

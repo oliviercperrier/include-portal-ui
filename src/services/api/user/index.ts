@@ -1,7 +1,7 @@
 import EnvironmentVariables from "helpers/EnvVariables";
 import keycloak from "initKeycloak";
-import { IncludeKeycloakTokenParsed } from "utils/types";
-import { TUserInsert } from "./models";
+import { IncludeKeycloakTokenParsed } from "common/tokenTypes";
+import { TUser, TUserInsert } from "./models";
 import { sendRequest } from "services/api";
 
 const url = EnvironmentVariables.configFor("USERS_API");
@@ -12,7 +12,7 @@ const headers = () => ({
 });
 
 const fetchUser = () => {
-  return sendRequest({
+  return sendRequest<TUser>({
     method: "GET",
     url: `${url}/user`,
     headers: headers(),
@@ -21,7 +21,7 @@ const fetchUser = () => {
 
 const createUser = (body?: Omit<TUserInsert, "keycloak_id">) => {
   const tokenParsed = keycloak.tokenParsed as IncludeKeycloakTokenParsed;
-  return sendRequest({
+  return sendRequest<TUser>({
     method: "POST",
     url: `${url}/user`,
     headers: headers(),

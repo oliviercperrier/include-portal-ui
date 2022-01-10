@@ -5,7 +5,7 @@ import { Router } from "react-router";
 import KeycloakProvider from "provider/KeycloakProvider";
 import history from "utils/history";
 import getStoreConfig from "store";
-import { LANG } from "utils/constants";
+import { LANG } from "common/constants";
 import locales from "locales";
 import { ConfigProvider } from "antd";
 import Empty from "@ferlab/ui/core/components/Empty";

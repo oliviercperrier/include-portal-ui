@@ -27,3 +27,4 @@
 
 - Clone: https://github.com/include-dcc/include-users-api
 - Follow the steps here: https://github.com/include-dcc/include-users-api/blob/main/README.md
+- Make sure to add the include keycloak config for the users-api in your `.env`

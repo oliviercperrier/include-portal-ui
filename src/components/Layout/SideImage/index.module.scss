@@ -21,10 +21,17 @@
   }
 
   .pageContent {
-    justify-content: center;
-    align-items: center;
-    flex: 1;
     overflow: auto;
+    flex: 1;
+
+    &.alignCenter {
+      justify-content: center;
+      align-items: center;
+    }
+
+    &.light {
+      background-color: $gray-2;
+    }
   }
 
   .logoImage {
@@ -53,7 +60,9 @@
 
   .pageContent {
     display: flex;
-    background-position: bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     background: linear-gradient(
         0deg,
         transparentize($gray-8, 0.1),

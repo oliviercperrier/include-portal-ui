@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import EnvVariables from "helpers/EnvVariables";
+import cx from "classnames";
 import { Row } from "antd";
 
 import style from "./index.module.scss";
@@ -7,14 +8,26 @@ import style from "./index.module.scss";
 interface OwnProps {
   logoSrc?: string;
   sideImgSrc?: string;
+  alignCenter?: boolean;
+  theme?: "light" | "dark";
   children: ReactElement;
 }
 
-const SideImageLayout = ({ logoSrc, sideImgSrc, children }: OwnProps) => (
+const SideImageLayout = ({
+  logoSrc,
+  sideImgSrc,
+  alignCenter = true,
+  theme = "dark",
+  children,
+}: OwnProps) => (
   <div className={style.sideImagePageContainer}>
     {logoSrc && (
       <a href={EnvVariables.configFor("INCLUDE_WEB_ROOT")}>
-        <img className={style.logoImage} src={logoSrc} alt="Include Logo Logo" />
+        <img
+          className={style.logoImage}
+          src={logoSrc}
+          alt="Include Logo Logo"
+        />
       </a>
     )}
     <Row className={style.contentWrapper}>
@@ -26,7 +39,15 @@ const SideImageLayout = ({ logoSrc, sideImgSrc, children }: OwnProps) => (
           backgroundSize: "cover",
         }}
       />
-      <Row className={style.pageContent}>{children}</Row>
+      <Row
+        className={cx(
+          style.pageContent,
+          alignCenter && style.alignCenter,
+          theme === "light" && style.light
+        )}
+      >
+        {children}
+      </Row>
     </Row>
   </div>
 );

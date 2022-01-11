@@ -12,9 +12,9 @@ import { DashboardCardProps } from "views/Dashboard/components/DashboardCards";
 import CardHeader from "views/Dashboard/components/CardHeader";
 import Text from "antd/lib/typography/Text";
 import AuthorizedStudiesListItem from "./ListItem";
+import Empty from "@ferlab/ui/core/components/Empty";
 
 import styles from "./index.module.scss";
-import Empty from "@ferlab/ui/core/components/Empty";
 
 export interface IListItemData {
   title: string;

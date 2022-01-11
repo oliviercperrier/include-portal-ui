@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { omit } from "lodash";
 import { initialState } from "store/fence/types";
 import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from "utils/fenceTypes";
-import { connectFence, fetchFenceConnection } from "./thunks";
+import { connectFence, disconnectFence, fetchFenceConnection } from "./thunks";
 
 export const FenceState: initialState = {
   loadingFences: [],
@@ -64,16 +64,16 @@ const fenceSlice = createSlice({
     });
 
     // DISCONNECT FENCE
-    builder.addCase(connectFence.pending, (state, action) => {
+    builder.addCase(disconnectFence.pending, (state, action) => {
       state.loadingFences = addLoadingFences(state, action.meta.arg);
     });
-    builder.addCase(connectFence.fulfilled, (state, action) => {
+    builder.addCase(disconnectFence.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.connectionStatus[action.meta.arg] =
         FENCE_CONNECTION_STATUSES.disconnected;
       state.fenceConnections = omit(state.fenceConnections, [action.meta.arg]);
     });
-    builder.addCase(connectFence.rejected, (state, action) => {
+    builder.addCase(disconnectFence.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.fencesDisconnectError = [
         ...state.fencesDisconnectError,

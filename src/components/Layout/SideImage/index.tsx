@@ -43,7 +43,7 @@ const SideImageLayout = ({
         className={cx(
           style.pageContent,
           alignCenter && style.alignCenter,
-          theme === "light" && style.light
+          theme === "light" ? style.light : style.dark
         )}
       >
         {children}

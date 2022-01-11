@@ -60,15 +60,18 @@
 
   .pageContent {
     display: flex;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background: linear-gradient(
-        0deg,
-        transparentize($gray-8, 0.1),
-        transparentize($gray-8, 0.1)
-      ),
-      url(../../assets/mainSideImage.jpg) bottom;
-    background-size: cover;
+
+    &.dark {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background: linear-gradient(
+          0deg,
+          transparentize($gray-8, 0.1),
+          transparentize($gray-8, 0.1)
+        ),
+        url(../../assets/mainSideImage.jpg) bottom;
+      background-size: cover;
+    }
   }
 }

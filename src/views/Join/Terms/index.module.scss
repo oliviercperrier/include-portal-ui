@@ -1,0 +1,57 @@
+.termsAndConditionsWrapper {
+  width: 100%;
+
+  :global(.ant-typography) {
+    margin: 0px;
+  }
+
+  .card {
+    padding: 12px;
+
+    div[class$="-body"] {
+      padding-top: 12px;
+    }
+  }
+
+  .termsCardHeader {
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+      line-height: 24px;
+    }
+
+    .lastUpdateDate {
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+
+  .termsListWrapper {
+    max-height: 275px;
+  }
+
+  .termsList {
+    padding-left: 24px;
+    overflow: auto;
+    margin-bottom: 0px;
+
+    li {
+      &:not(:last-child) {
+        margin-bottom: 12px;
+      }
+    }
+  }
+
+  .checkboxForm {
+    .checkboxItem {
+      margin-bottom: 0;
+    }
+  }
+
+  .checkboxFormFooter {
+    width: 100%;
+    margin-top: 24px;
+    justify-content: end;
+  }
+}

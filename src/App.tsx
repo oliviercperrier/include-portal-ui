@@ -13,7 +13,7 @@ import Authenticator from "auth/Authenticator";
 import ErrorPage from "views/Error";
 import loadable from "@loadable/component";
 
-const loadableProps = { fallback: <Spinner /> };
+const loadableProps = { fallback: <Spinner size="large"/> };
 const Dashboard = loadable(() => import("views/Dashboard"), loadableProps);
 const Studies = loadable(() => import("views/Studies"), loadableProps);
 const MyProfile = loadable(() => import("views/MyProfile"), loadableProps);

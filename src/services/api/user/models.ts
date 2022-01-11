@@ -1,6 +1,7 @@
 export type TUser = {
   keycloak_id: string;
   consent_date?: Date;
+  accepted_terms: boolean;
   understand_disclaimer: boolean;
   first_name: string;
   last_name: string;

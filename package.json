@@ -32,7 +32,7 @@
     "lint": "eslint $(git diff-index --name-only --diff-filter=d HEAD | grep \"[\\.js|\\.jsx|\\.tsx|\\.ts]$\" | xargs)",
     "lint:fix": "eslint --fix --rule 'no-console: 2'",
     "theme:antd": "lessc --js ./src/style/themes/include/antd-include-theme.less ./src/style/themes/include/dist/antd.css",
-    "theme:scss": "npm run theme:clean; less2sass ./src/style/themes/include/colors.less; mv ./src/style/themes/include/colors.scss ./src/style/themes/include/dist/_colors.scss",
+    "theme:scss": "npm run theme:clean && less2sass ./src/style/themes/include/colors.less && mv ./src/style/themes/include/colors.scss ./src/style/themes/include/dist/_colors.scss",
     "theme:clean": "find ./src/style/themes/include/dist/* -type f -exec rm {} \\; || true",
     "theme": "npm run theme:scss && npm run theme:antd",
     "eject": "react-scripts eject"

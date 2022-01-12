@@ -29,6 +29,7 @@
     "theme:watch": "nodemon --watch './src/style/themes' -e scss,less --exec 'npm run theme'",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:netlify": "npm ci && npm run build",
     "test": "react-scripts test",
     "lint": "eslint $(git diff-index --name-only --diff-filter=d HEAD | grep \"[\\.js|\\.jsx|\\.tsx|\\.ts]$\" | xargs)",
     "lint:fix": "eslint --fix --rule 'no-console: 2'",

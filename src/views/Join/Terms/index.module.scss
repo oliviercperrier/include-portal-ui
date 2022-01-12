@@ -5,11 +5,13 @@
     margin: 0px;
   }
 
-  .card {
-    padding: 12px;
-
-    div[class$="-body"] {
-      padding-top: 12px;
+  .cardWrapper {
+    .card {
+      padding: 12px;
+  
+      div[class$="-body"] {
+        padding-top: 12px;
+      }
     }
   }
 

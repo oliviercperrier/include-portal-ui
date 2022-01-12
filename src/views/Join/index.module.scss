@@ -1,0 +1,22 @@
+.joinPageWrapper {
+  max-height: 100vh;
+  width: 100%;
+  padding: 80px 80px 40px 80px;
+
+  .contentWrapper {
+    max-width: 750px;
+    margin: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .joinPageWrapper {
+    padding: 60px 40px;
+  }
+}
+
+@media (max-width: 425px) {
+  .joinPageWrapper {
+    padding: 40px 30px;
+  }
+}

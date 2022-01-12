@@ -8,12 +8,13 @@ import intl from "react-intl-universal";
 import styles from "./index.module.scss";
 
 interface OwnProps {
+  id: any;
   data: IListItemData;
 }
 
-const AuthorizedStudiesListItem = ({ data }: OwnProps) => {
+const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
   return (
-    <List.Item className={cx("wrapped", styles.AuthorizedStudiesListItem)}>
+    <List.Item key={id} className={cx("wrapped", styles.AuthorizedStudiesListItem)}>
       <List.Item.Meta
         title={data.title}
         description={

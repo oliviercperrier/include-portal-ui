@@ -1,6 +1,6 @@
 import intlFr from "./fr";
 import intlEn from "./en";
-import { LANG } from "utils/constants";
+import { LANG } from "common/constants";
 
 const locales = {
   [LANG.FR]: intlFr,

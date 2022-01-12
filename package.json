@@ -36,7 +36,8 @@
     "theme:antd": "npm run theme:antd:colors && npm run theme:antd:main",
     "theme:antd:main": "lessc --js src/style/themes/include/antd-include-theme.less src/style/themes/include/dist/antd.css",
     "theme:antd:colors": "less2sass ./src/style/themes/include/colors.less && mv -f ./src/style/themes/include/colors.scss ./src/style/themes/include/dist/_colors.scss",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "npm run theme"
   },
   "repository": {
     "type": "git",

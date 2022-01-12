@@ -33,7 +33,7 @@ export const dashboardCards: TSortableItems[] = [
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
     component: (
       <GridCard
-        className={styles.dashboardCard}
+        wrapperClassName={styles.dashboardCard}
         theme="shade"
         title={""}
         content="Content.."
@@ -48,7 +48,7 @@ export const dashboardCards: TSortableItems[] = [
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
     component: (
       <GridCard
-        className={styles.dashboardCard}
+        wrapperClassName={styles.dashboardCard}
         theme="shade"
         title={""}
         content="Content.."
@@ -63,7 +63,7 @@ export const dashboardCards: TSortableItems[] = [
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
     component: (
       <GridCard
-        className={styles.dashboardCard}
+        wrapperClassName={styles.dashboardCard}
         theme="shade"
         title={""}
         content="Content.."
@@ -78,7 +78,7 @@ export const dashboardCards: TSortableItems[] = [
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
     component: (
       <GridCard
-        className={styles.dashboardCard}
+        wrapperClassName={styles.dashboardCard}
         theme="shade"
         title={""}
         content="Content.."

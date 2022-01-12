@@ -12,11 +12,12 @@ import { DashboardCardProps } from "views/Dashboard/components/DashboardCards";
 import CardHeader from "views/Dashboard/components/CardHeader";
 import Text from "antd/lib/typography/Text";
 import AuthorizedStudiesListItem from "./ListItem";
-
-import styles from "./index.module.scss";
 import Empty from "@ferlab/ui/core/components/Empty";
 
+import styles from "./index.module.scss";
+
 export interface IListItemData {
+  key: any;
   title: string;
   nbFiles: number;
   totalFiles: number;
@@ -29,6 +30,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
     {
+      key: "1",
       title: "Pediatric Brain Tumor Atlas: CBTTC",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -36,6 +38,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
+      key: "2",
       title: "CARING for Children with COVID: NICHD-2019-POP02",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -43,6 +46,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
+      key: "3",
       title: "Kids First: Neuroblastoma",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -50,6 +54,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
+      key: "4",
       title: "CARING for Children with COVID: NICHD-2019-POP02",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -61,7 +66,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   return (
     <GridCard
       theme="shade"
-      className={className}
+      wrapperClassName={className}
       title={
         <CardHeader
           id={id}
@@ -136,7 +141,9 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
               ),
             }}
             dataSource={data}
-            renderItem={(item) => <AuthorizedStudiesListItem data={item} />}
+            renderItem={(item) => (
+              <AuthorizedStudiesListItem id={item.key} data={item} />
+            )}
           ></List>
         </div>
       }

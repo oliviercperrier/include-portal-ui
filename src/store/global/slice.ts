@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState } from "store/global/types";
-import { LANG } from "utils/constants";
+import { LANG } from "common/constants";
 
 export const GlobalState: initialState = {
   lang: LANG.EN,

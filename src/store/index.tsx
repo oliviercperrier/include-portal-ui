@@ -14,9 +14,7 @@ const devMode = EnvVariables.configFor("ENV") === "development";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [
-    /* Add reducer to persist in local storage */
-  ],
+  whitelist: ["global"],
 };
 
 const rootReducer = combineReducers<RootState>({

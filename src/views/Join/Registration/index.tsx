@@ -7,6 +7,7 @@ import { STATIC_ROUTES } from "utils/routes";
 import { useDispatch } from "react-redux";
 import { completeRegistration } from "store/user/thunks";
 import { useUser } from "store/user";
+import { userActions } from "store/user/slice";
 
 import styles from "./index.module.scss";
 
@@ -365,7 +366,9 @@ const RegistrationStep = () => {
           {intl.get("screen.join.back")}
         </Button>
         <Space>
-          <Button>{intl.get("screen.join.cancel")}</Button>
+          <Button onClick={() => dispatch(userActions.cleanLogout())}>
+            {intl.get("screen.join.cancel")}
+          </Button>
           <Button
             type="primary"
             loading={isUpdating}

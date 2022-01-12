@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "store/user/types";
+import keycloak from "initKeycloak";
 import { fetchUser, updateUser } from "store/user/thunks";
 
 export const UserState: initialState = {
@@ -11,7 +12,15 @@ export const UserState: initialState = {
 const userSlice = createSlice({
   name: "user",
   initialState: UserState,
-  reducers: {},
+  reducers: {
+    cleanLogout: (state) => {
+      keycloak.logout({
+        redirectUri: window.location.origin,
+      });
+
+      return UserState;
+    },
+  },
   extraReducers: (builder) => {
     // Fetch User
     builder.addCase(fetchUser.pending, (state) => {
@@ -48,4 +57,5 @@ const userSlice = createSlice({
   },
 });
 
+export const userActions = userSlice.actions;
 export default userSlice.reducer;

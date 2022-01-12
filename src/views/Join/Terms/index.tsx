@@ -6,11 +6,12 @@ import intl from "react-intl-universal";
 import { useDispatch } from "react-redux";
 import { updateUser } from "store/user/thunks";
 import history from "utils/history";
-
-import styles from "./index.module.scss";
 import { STATIC_ROUTES } from "utils/routes";
 import { useUser } from "store/user";
 import { TUser } from "services/api/user/models";
+import { userActions } from "store/user/slice";
+
+import styles from "./index.module.scss";
 
 enum FORM_FIELDS {
   CHECKBOXES = "checkboxes",
@@ -43,7 +44,7 @@ const TermsStep = () => {
       <Title level={3}>{intl.get("screen.join.disclaimers.title")}</Title>
       <Text>{intl.get("screen.join.disclaimers.description")}</Text>
       <GridCard
-         wrapperClassName={styles.cardWrapper}
+        wrapperClassName={styles.cardWrapper}
         className={styles.card}
         title={
           <div className={styles.termsCardHeader}>
@@ -137,7 +138,9 @@ const TermsStep = () => {
         </Form.Item>
       </Form>
       <Space className={styles.checkboxFormFooter}>
-        <Button>{intl.get("screen.join.cancel")}</Button>
+        <Button onClick={() => dispatch(userActions.cleanLogout())}>
+          {intl.get("screen.join.cancel")}
+        </Button>
         <Button
           type="primary"
           className="iconRight"

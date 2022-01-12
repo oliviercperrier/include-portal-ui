@@ -43,6 +43,7 @@ const TermsStep = () => {
       <Title level={3}>{intl.get("screen.join.disclaimers.title")}</Title>
       <Text>{intl.get("screen.join.disclaimers.description")}</Text>
       <GridCard
+         wrapperClassName={styles.cardWrapper}
         className={styles.card}
         title={
           <div className={styles.termsCardHeader}>
@@ -69,6 +70,7 @@ const TermsStep = () => {
         }
       />
       <GridCard
+        wrapperClassName={styles.cardWrapper}
         className={styles.card}
         title={intl.get("screen.join.disclaimers.disclaimer.title")}
         content={

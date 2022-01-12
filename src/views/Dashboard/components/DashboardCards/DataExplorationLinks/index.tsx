@@ -20,7 +20,7 @@ const DataExplorationLinks = ({ id, className = "" }: DashboardCardProps) => {
   return (
     <GridCard
       theme="shade"
-      className={className}
+      wrapperClassName={className}
       title={<CardHeader id={id} title="Data Exploration" />}
       content={
         <Row gutter={[16, 16]}>

@@ -1,5 +1,4 @@
 export enum STATIC_ROUTES {
-  JOIN = "/join",
   HOME = "/",
   NOT_FOUND = "/404",
   ERROR = "/error",
@@ -7,6 +6,10 @@ export enum STATIC_ROUTES {
   STUDIES = "/studies",
   MY_PROFILE = "/profile",
   SETTINGS = "/settings",
+
+  JOIN = "/join",
+  JOIN_TERMS = "/join/terms",
+  JOIN_REGISTRATION = "/join/registration",
 
   DATA_EXPLORATION = "/data-exploration",
   DATA_EXPLORATION_SUMMARY = "/data-exploration/summary",

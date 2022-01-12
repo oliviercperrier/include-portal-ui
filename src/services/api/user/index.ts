@@ -1,7 +1,7 @@
 import EnvironmentVariables from "helpers/EnvVariables";
 import keycloak from "initKeycloak";
 import { IncludeKeycloakTokenParsed } from "common/tokenTypes";
-import { TUser, TUserInsert } from "./models";
+import { TUser, TUserInsert, TUserUpdate } from "./models";
 import { sendRequest } from "services/api";
 
 const url = EnvironmentVariables.configFor("USERS_API");
@@ -34,7 +34,27 @@ const createUser = (body?: Omit<TUserInsert, "keycloak_id">) => {
   });
 };
 
+const updateUser = (body: TUserUpdate) => {
+  return sendRequest<TUser>({
+    method: "PUT",
+    url: `${url}/user`,
+    headers: headers(),
+    data: body,
+  });
+};
+
+const completeRegistration = (body: TUserUpdate) => {
+  return sendRequest<TUser>({
+    method: "PUT",
+    url: `${url}/user/complete-registration`,
+    headers: headers(),
+    data: body,
+  });
+};
+
 export const UserApi = {
   fetchUser,
   createUser,
+  updateUser,
+  completeRegistration,
 };

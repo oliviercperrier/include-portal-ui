@@ -1,67 +1,73 @@
 @import "colors";
 
-.withCustomHelp {
-  div[class$="-item-label"] {
-    padding-bottom: 0;
-  }
-}
-
-div[class$="-item-label"] {
-  font-weight: 600;
-}
-
-.help {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 8px;
-  line-height: 20px;
-}
-
-h3.subSectionTitle {
-  margin-bottom: 24px;
-
-  &:not(:first-child) {
-    margin-top: 8px;
-  }
-}
-
-.dynamicField {
-  margin-top: -18px;
-
-  &:not(.withCustomHelp) {
+.registrationForm {
+  .withCustomHelp {
     div[class$="-item-label"] {
-      padding-bottom: 4px;
+      padding-bottom: 0;
     }
   }
 
-  label {
+  div[class$="-item-label"] {
+    font-weight: 600;
+  }
+
+  .help {
+    display: block;
     font-size: 12px;
-    &::before {
-      content: none !important;
+    margin-bottom: 8px;
+    line-height: 20px;
+  }
+
+  h3.subSectionTitle {
+    margin-bottom: 24px;
+
+    &:not(:first-child) {
+      margin-top: 8px;
     }
   }
-}
 
-.fullNameField {
-  margin-bottom: 8px;
-}
+  .dynamicField {
+    margin-top: -18px;
 
-.affiliationField {
-  margin-bottom: 0;
-}
+    &:not(.withCustomHelp) {
+      div[class$="-item-label"] {
+        padding-bottom: 4px;
+      }
+    }
 
-.noAffiliationField,
-.affiliationField,
-.researchAreaField {
-  padding-top: 8px;
-}
+    label {
+      font-size: 12px;
+      &::before {
+        content: none !important;
+      }
+    }
+  }
 
-.iconSuffix {
-  color: $gray-6;
-}
+  .fullNameField {
+    margin-bottom: 8px;
+  }
 
-.registrationFooter {
-  width: 100%;
-  margin-top: 24px;
-  justify-content: space-between;
+  .affiliationField {
+    margin-bottom: 0;
+  }
+
+  .noAffiliationField,
+  .affiliationField,
+  .researchAreaField {
+    padding-top: 8px;
+  }
+
+  .iconSuffix {
+    color: $gray-6;
+  }
+
+  .registrationFooter {
+    width: 100%;
+    margin-top: 24px;
+    justify-content: space-between;
+  }
+
+  .noMargin {
+    margin: 0;
+  }
 }

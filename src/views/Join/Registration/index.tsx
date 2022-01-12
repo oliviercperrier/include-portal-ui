@@ -2,97 +2,157 @@ import { Button, Checkbox, Form, Input, Radio, Space, Typography } from "antd";
 import cx from "classnames";
 import { ArrowLeftOutlined, MailOutlined } from "@ant-design/icons";
 import intl from "react-intl-universal";
+import history from "utils/history";
+import { STATIC_ROUTES } from "utils/routes";
+import { useDispatch } from "react-redux";
+import { completeRegistration } from "store/user/thunks";
+import { useUser } from "store/user";
 
 import styles from "./index.module.scss";
+
+enum FORM_FIELDS {
+  EXTERNAL_ID = "external_id",
+  USER_ID = "user_id",
+  FULL_NAME = "full_name",
+  EXTERNAL_EMAIL = "external_email",
+  ROLES = "roles",
+  OTHER_ROLE = "other_role",
+  AFFILIATION = "affiliation",
+  NO_AFFILIATION = "no_affiliation",
+  DATA_USAGE = "data_use",
+  OTHER_DATA_USAGE = "other_data_use",
+  RESEARCH_AREA = "reasearch_area",
+}
 
 const { Title } = Typography;
 
 const RegistrationStep = () => {
+  const { isUpdating } = useUser();
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const validateMessages = {
-    required: "This field is required!",
+    required: intl.get("global.forms.errors.requiredField"),
     types: {
-      email: "Enter a valid email",
+      email: intl.get("global.forms.errors.enterValidEmail"),
     },
   };
+
+  const removeOtherKey = (list: string[], otherValue: string) => {
+    const listWithoutOtherKey = list.filter((value) => value !== "other");
+    if (otherValue) {
+      listWithoutOtherKey.push(otherValue);
+    }
+    return listWithoutOtherKey;
+  };
+
+  const roleOptions = [
+    intl.get("screen.join.registration.roleOptions.1"),
+    intl.get("screen.join.registration.roleOptions.2"),
+    intl.get("screen.join.registration.roleOptions.3"),
+    intl.get("screen.join.registration.roleOptions.4"),
+    intl.get("screen.join.registration.roleOptions.5"),
+    intl.get("screen.join.registration.roleOptions.6"),
+  ];
+
+  const usageOptions = [
+    intl.get("screen.join.registration.usageOptions.1"),
+    intl.get("screen.join.registration.usageOptions.2"),
+    intl.get("screen.join.registration.usageOptions.3"),
+  ];
 
   return (
     <Form
       form={form}
-      className={styles.checkboxForm}
-      onFinish={(values) => console.log(values)}
+      className={styles.registrationForm}
+      onFinish={(values) => {
+        dispatch(
+          completeRegistration({
+            data: {
+              external_individual_fullname: values[FORM_FIELDS.FULL_NAME],
+              external_individual_email: values[FORM_FIELDS.EXTERNAL_EMAIL],
+              roles: removeOtherKey(
+                values[FORM_FIELDS.ROLES],
+                values[FORM_FIELDS.OTHER_ROLE]
+              ),
+              affiliation: values[FORM_FIELDS.AFFILIATION],
+              research_area: values[FORM_FIELDS.RESEARCH_AREA],
+              portal_usages: removeOtherKey(
+                values[FORM_FIELDS.DATA_USAGE],
+                values[FORM_FIELDS.OTHER_DATA_USAGE]
+              ),
+            },
+            callback: () => history.push(STATIC_ROUTES.DASHBOARD),
+          })
+        );
+      }}
       layout="vertical"
       validateMessages={validateMessages}
     >
-      <Title level={3} className={styles.subSectionTitle}>
-        Identification
-      </Title>
+      <Title level={3} className={styles.subSectionTitle}></Title>
       <Form.Item
-        name="externalid"
-        label="I have an eRA Commons ID or NIH NED User ID:"
+        name={FORM_FIELDS.EXTERNAL_ID}
+        label={intl.get("screen.join.registration.labels.eraOrNihID")}
         rules={[{ required: true }]}
       >
         <Radio.Group>
           <Space direction="vertical">
-            <Radio value="yes">Yes</Radio>
-            <Radio value="no">No</Radio>
+            <Radio value="yes">{intl.get("global.yes")}</Radio>
+            <Radio value="no">{intl.get("global.no")}</Radio>
           </Space>
         </Radio.Group>
       </Form.Item>
-
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, currentValues) =>
-          prevValues.externalid !== currentValues.externalid
+          prevValues.external_id !== currentValues.external_id
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue("externalid") === "yes" ? (
+          getFieldValue(FORM_FIELDS.EXTERNAL_ID) === "yes" ? (
             <Form.Item
               className={cx(styles.withCustomHelp, styles.dynamicField)}
-              name="userId"
-              label="Please enter your user ID"
-              rules={[{ required: true }]}
+              label={intl.get("screen.join.registration.labels.enterUserId")}
+              required
             >
-              <div>
-                <span className={styles.help}>
-                  This information will not be made public.
-                </span>
+              <span className={styles.help}>
+                {intl.get("screen.join.registration.noticeNotPublicInfo")}
+              </span>
+              <Form.Item
+                name={FORM_FIELDS.USER_ID}
+                rules={[{ required: true }]}
+              >
                 <Input />
-              </div>
+              </Form.Item>
             </Form.Item>
           ) : null
         }
       </Form.Item>
-
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, currentValues) =>
-          prevValues.externalid !== currentValues.externalid
+          prevValues.external_id !== currentValues.external_id
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue("externalid") === "no" ? (
+          getFieldValue(FORM_FIELDS.EXTERNAL_ID) === "no" ? (
             <div className={styles.dynamicField}>
               <span className={styles.help}>
-                Please provide the name and email address of an individual at
-                your institution, organization, or similar who is aware of your
-                intended use of the data (We do not expect to contact this
-                individual except in cases where we need to verify your
-                identity).
+                {intl.get("screen.join.registration.nameAndEmailOfIndividual")}
               </span>
               <Form.Item
-                name="fullName"
-                label="Full name"
+                name={FORM_FIELDS.FULL_NAME}
+                label={intl.get("screen.join.registration.labels.fullName")}
                 rules={[{ required: true }]}
                 className={styles.fullNameField}
               >
-                <Input placeholder="First Last" />
+                <Input
+                  placeholder={intl.get("screen.join.placeHolders.firstLast")}
+                />
               </Form.Item>
               <Form.Item
-                name="externalEmail"
-                label="Email"
+                name={FORM_FIELDS.EXTERNAL_EMAIL}
+                label={intl.get("screen.join.registration.labels.email")}
                 rules={[{ required: true, type: "email" }]}
               >
                 <Input
@@ -104,47 +164,41 @@ const RegistrationStep = () => {
           ) : null
         }
       </Form.Item>
-
       <Title level={3} className={styles.subSectionTitle}>
-        Role & Affiliation
+        {intl.get("screen.join.registration.sections.roleAndAffiliation")}
       </Title>
       <Form.Item
         className={styles.withCustomHelp}
-        name="role"
-        label="I am a:"
+        name={FORM_FIELDS.ROLES}
+        label={intl.get("screen.join.registration.labels.iAmA")}
         rules={[{ required: true }]}
       >
         <Checkbox.Group>
-          <span className={styles.help}>Check all that apply</span>
+          <span className={styles.help}>
+            {intl.get("screen.join.registration.helps.checkAllThatApply")}
+          </span>
           <Space direction="vertical">
-            <Checkbox value="Researcher at an academic or not-for-profit institution">
-              Researcher at an academic or not-for-profit institution
+            {roleOptions.map((option) => (
+              <Checkbox value={option}>{option}</Checkbox>
+            ))}
+            <Checkbox value="other">
+              {intl.get("screen.join.registration.optionsOther")}
             </Checkbox>
-            <Checkbox value="Representative from a For-Profit or Commercial Entity">
-              Representative from a For-Profit or Commercial Entity
-            </Checkbox>
-            <Checkbox value="Tool or Algorithm Developer">
-              Tool or Algorithm Developer
-            </Checkbox>
-            <Checkbox value="Clinician">Clinician</Checkbox>
-            <Checkbox value="Community member">Community member</Checkbox>
-            <Checkbox value="Federal Employee">Federal Employee</Checkbox>
-            <Checkbox value="other">Other</Checkbox>
           </Space>
         </Checkbox.Group>
       </Form.Item>
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, currentValues) =>
-          prevValues.role !== currentValues.role
+          prevValues.roles !== currentValues.roles
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue("role")?.includes("other") ? (
+          getFieldValue(FORM_FIELDS.ROLES)?.includes("other") ? (
             <Form.Item
               className={styles.dynamicField}
-              name="otherRole"
-              label="Please describe"
+              name={FORM_FIELDS.OTHER_ROLE}
+              label={intl.get("screen.join.registration.labels.pleaseDescribe")}
               rules={[{ required: true }]}
             >
               <Input />
@@ -155,23 +209,30 @@ const RegistrationStep = () => {
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, currentValues) =>
-          prevValues.noAffiliation !== currentValues.noAffiliation
+          prevValues.no_affiliation !== currentValues.no_affiliation
         }
       >
         {({ getFieldValue }) =>
-          !getFieldValue("noAffiliation") ? (
+          !getFieldValue(FORM_FIELDS.NO_AFFILIATION) ? (
             <Form.Item
               className={cx(styles.withCustomHelp, styles.affiliationField)}
-              name="affiliation"
-              label="I am affiliated with:"
-              rules={[{ required: true }]}
+              label={intl.get(
+                "screen.join.registration.labels.iAmAffiliatedWith"
+              )}
+              required
             >
-              <div>
-                <span className={styles.help}>
-                  Provide institutional or organizational affiliation
-                </span>
+              <span className={styles.help}>
+                {intl.get(
+                  "screen.join.registration.helps.provideOrgAffiliation"
+                )}
+              </span>
+              <Form.Item
+                name={FORM_FIELDS.AFFILIATION}
+                className={styles.noMargin}
+                rules={[{ required: true }]}
+              >
                 <Input />
-              </div>
+              </Form.Item>
             </Form.Item>
           ) : null
         }
@@ -179,92 +240,109 @@ const RegistrationStep = () => {
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, currentValues) =>
-          prevValues.noAffiliation !== currentValues.noAffiliation
+          prevValues.no_affiliation !== currentValues.no_affiliation
         }
       >
         {() => (
           <Form.Item
-            name="noAffiliation"
+            name={FORM_FIELDS.NO_AFFILIATION}
             label={
-              form.getFieldValue("noAffiliation") ? "I am affiliated with:" : ""
+              form.getFieldValue(FORM_FIELDS.NO_AFFILIATION)
+                ? intl.get("screen.join.registration.labels.iAmAffiliatedWith")
+                : ""
             }
-            className={cx(styles.withCustomHelp, styles.noAffiliationField)}
-            rules={[{ required: true }]}
+            required
+            className={cx(
+              styles.withCustomHelp,
+              form.getFieldValue(FORM_FIELDS.NO_AFFILIATION) &&
+                styles.noAffiliationField
+            )}
+            rules={[{ required: false }]}
             valuePropName="checked"
           >
-            <Checkbox value="noAffiliation">
-              I do not have an institutional affiliation.
+            <Checkbox>
+              {intl.get("screen.join.registration.noAffiliationOption")}
             </Checkbox>
           </Form.Item>
         )}
       </Form.Item>
       <Title level={3} className={styles.subSectionTitle}>
-        Research & Data Use
+        {intl.get("screen.join.registration.sections.researchAndDataUse")}
       </Title>
       <Form.Item
         className={styles.withCustomHelp}
-        name="dataUse"
-        label="I intend to use the INCLUDE Portal data to:"
+        name={FORM_FIELDS.DATA_USAGE}
+        label={intl.get("screen.join.registration.labels.intendToUser")}
         rules={[{ required: true }]}
       >
         <Checkbox.Group>
-          <span className={styles.help}>Check all that apply</span>
+          <span className={styles.help}>
+            {intl.get("screen.join.registration.helps.checkAllThatApply")}
+          </span>
           <Space direction="vertical">
-            <Checkbox value="Learn more about Down syndrome and its health outcomes, management, and/or treatment">
-              Learn more about Down syndrome and its health outcomes,
-              management, and/or treatment
+            {usageOptions.map((option) => (
+              <Checkbox value={option}>{option}</Checkbox>
+            ))}
+            <Checkbox value="other">
+              {intl.get("screen.join.registration.optionsOther")}
             </Checkbox>
-            <Checkbox value="Help me design a new research study">
-              Help me design a new research study
-            </Checkbox>
-            <Checkbox value="Identify datasets that I want to analyze">
-              Identify datasets that I want to analyze
-            </Checkbox>
-            <Checkbox value="other">Other</Checkbox>
           </Space>
         </Checkbox.Group>
       </Form.Item>
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, currentValues) =>
-          prevValues.dataUse !== currentValues.dataUse
+          prevValues.data_use !== currentValues.data_use
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue("dataUse")?.includes("other") ? (
+          getFieldValue(FORM_FIELDS.DATA_USAGE)?.includes("other") ? (
             <Form.Item
               className={cx(styles.withCustomHelp, styles.dynamicField)}
-              name="otherDataUse"
-              label="Data use statement"
-              rules={[{ required: true }]}
+              label={intl.get(
+                "screen.join.registration.labels.dataUseStatement"
+              )}
+              required
             >
               <span className={styles.help}>
-                For other purpose, including commercial purpose, you must
-                describe your use below
+                {intl.get("screen.join.registration.helps.describeUseBelow")}
               </span>
-              <Input.TextArea />
+              <Form.Item
+                name={FORM_FIELDS.OTHER_DATA_USAGE}
+                rules={[{ required: true }]}
+              >
+                <Input.TextArea />
+              </Form.Item>
             </Form.Item>
           ) : null
         }
       </Form.Item>
       <Form.Item
         className={cx(styles.withCustomHelp, styles.researchAreaField)}
-        name="reasearchArea"
-        label="My research area or area of interest may best be described as:"
+        label={intl.get("screen.join.registration.labels.researchAreaDescribe")}
       >
         <span className={styles.help}>
-          Provide a brief description and a link to your professional biography
-          or organization website, if available
+          {intl.get("screen.join.registration.helps.provideBriefDescription")}
         </span>
-        <Input.TextArea />
+        <Form.Item name={FORM_FIELDS.RESEARCH_AREA}>
+          <Input.TextArea />
+        </Form.Item>
       </Form.Item>
-
       <Space className={styles.registrationFooter}>
-        <Button icon={<ArrowLeftOutlined />}>Back</Button>
+        <Button
+          icon={<ArrowLeftOutlined />}
+          onClick={() => history.push(STATIC_ROUTES.JOIN_TERMS)}
+        >
+          {intl.get("screen.join.back")}
+        </Button>
         <Space>
           <Button>{intl.get("screen.join.cancel")}</Button>
-          <Button type="primary" onClick={() => form.submit()}>
-            Submit
+          <Button
+            type="primary"
+            loading={isUpdating}
+            onClick={() => form.submit()}
+          >
+            {intl.get("screen.join.submit")}
           </Button>
         </Space>
       </Space>

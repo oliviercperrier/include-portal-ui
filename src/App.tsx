@@ -36,7 +36,6 @@ const App = () => {
               </SideImageLayout>
             </Route>
             <Route
-              exact
               path={STATIC_ROUTES.JOIN}
               render={() => (
                 <SideImageLayout

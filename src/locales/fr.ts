@@ -200,7 +200,7 @@ const fr = {
           },
           checkbox: "I have read and understand the INCLUDE Portal Disclaimers",
         },
-        errors: "Please accept portal disclaimers and terms & conditions.",
+        errors: "Please accept the terms & conditions and portal disclaimers.",
       },
       registration: {
         sections: {
@@ -209,7 +209,7 @@ const fr = {
           researchAndDataUse: "Research & Data Use",
         },
         labels: {
-          eraOrNihID: "I have an eRA Commons ID or NIH NED User ID:",
+          haveAUserID: "I have a user ID for:",
           enterUserId: "Please enter your user ID",
           fullName: "Full name",
           email: "Email",

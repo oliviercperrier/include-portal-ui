@@ -24,6 +24,14 @@ enum FORM_FIELDS {
   RESEARCH_AREA = "reasearch_area",
 }
 
+enum EXTERNAL_ID_OPTIONS {
+  ERA = "era",
+  NIH = "nih",
+  NO = "no",
+}
+
+const OTHER_KEY = "other";
+
 const { Title } = Typography;
 
 const RegistrationStep = () => {
@@ -39,7 +47,7 @@ const RegistrationStep = () => {
   };
 
   const removeOtherKey = (list: string[], otherValue: string) => {
-    const listWithoutOtherKey = list.filter((value) => value !== "other");
+    const listWithoutOtherKey = list.filter((value) => value !== OTHER_KEY);
     if (otherValue) {
       listWithoutOtherKey.push(otherValue);
     }
@@ -65,10 +73,18 @@ const RegistrationStep = () => {
     <Form
       form={form}
       className={styles.registrationForm}
-      onFinish={(values) => {
+      onFinish={(values) =>
         dispatch(
           completeRegistration({
             data: {
+              era_commons_id:
+                values[FORM_FIELDS.EXTERNAL_ID] === EXTERNAL_ID_OPTIONS.ERA
+                  ? values[FORM_FIELDS.USER_ID]
+                  : undefined,
+              nih_ned_id:
+                values[FORM_FIELDS.EXTERNAL_ID] === EXTERNAL_ID_OPTIONS.NIH
+                  ? values[FORM_FIELDS.USER_ID]
+                  : undefined,
               external_individual_fullname: values[FORM_FIELDS.FULL_NAME],
               external_individual_email: values[FORM_FIELDS.EXTERNAL_EMAIL],
               roles: removeOtherKey(
@@ -84,21 +100,28 @@ const RegistrationStep = () => {
             },
             callback: () => history.push(STATIC_ROUTES.DASHBOARD),
           })
-        );
-      }}
+        )
+      }
       layout="vertical"
       validateMessages={validateMessages}
     >
       <Title level={3} className={styles.subSectionTitle}></Title>
       <Form.Item
         name={FORM_FIELDS.EXTERNAL_ID}
-        label={intl.get("screen.join.registration.labels.eraOrNihID")}
+        label={intl.get("screen.join.registration.labels.haveAUserID")}
         rules={[{ required: true }]}
       >
         <Radio.Group>
           <Space direction="vertical">
-            <Radio value="yes">{intl.get("global.yes")}</Radio>
-            <Radio value="no">{intl.get("global.no")}</Radio>
+            <Radio value={EXTERNAL_ID_OPTIONS.ERA}>
+              {intl.get("screen.join.registration.userIdOptions.1")}
+            </Radio>
+            <Radio value={EXTERNAL_ID_OPTIONS.NIH}>
+              {intl.get("screen.join.registration.userIdOptions.2")}
+            </Radio>
+            <Radio value={EXTERNAL_ID_OPTIONS.NO}>
+              {intl.get("screen.join.registration.userIdOptions.3")}
+            </Radio>
           </Space>
         </Radio.Group>
       </Form.Item>
@@ -109,7 +132,9 @@ const RegistrationStep = () => {
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue(FORM_FIELDS.EXTERNAL_ID) === "yes" ? (
+          [EXTERNAL_ID_OPTIONS.ERA, EXTERNAL_ID_OPTIONS.NIH].includes(
+            getFieldValue(FORM_FIELDS.EXTERNAL_ID)
+          ) ? (
             <Form.Item
               className={cx(styles.withCustomHelp, styles.dynamicField)}
               label={intl.get("screen.join.registration.labels.enterUserId")}
@@ -135,7 +160,7 @@ const RegistrationStep = () => {
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue(FORM_FIELDS.EXTERNAL_ID) === "no" ? (
+          getFieldValue(FORM_FIELDS.EXTERNAL_ID) === EXTERNAL_ID_OPTIONS.NO ? (
             <div className={styles.dynamicField}>
               <span className={styles.help}>
                 {intl.get("screen.join.registration.nameAndEmailOfIndividual")}
@@ -178,10 +203,12 @@ const RegistrationStep = () => {
             {intl.get("screen.join.registration.helps.checkAllThatApply")}
           </span>
           <Space direction="vertical">
-            {roleOptions.map((option) => (
-              <Checkbox value={option}>{option}</Checkbox>
+            {roleOptions.map((option, index) => (
+              <Checkbox key={index} value={option}>
+                {option}
+              </Checkbox>
             ))}
-            <Checkbox value="other">
+            <Checkbox value={OTHER_KEY}>
               {intl.get("screen.join.registration.optionsOther")}
             </Checkbox>
           </Space>
@@ -194,7 +221,7 @@ const RegistrationStep = () => {
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue(FORM_FIELDS.ROLES)?.includes("other") ? (
+          getFieldValue(FORM_FIELDS.ROLES)?.includes(OTHER_KEY) ? (
             <Form.Item
               className={styles.dynamicField}
               name={FORM_FIELDS.OTHER_ROLE}
@@ -280,10 +307,12 @@ const RegistrationStep = () => {
             {intl.get("screen.join.registration.helps.checkAllThatApply")}
           </span>
           <Space direction="vertical">
-            {usageOptions.map((option) => (
-              <Checkbox value={option}>{option}</Checkbox>
+            {usageOptions.map((option, index) => (
+              <Checkbox key={index} value={option}>
+                {option}
+              </Checkbox>
             ))}
-            <Checkbox value="other">
+            <Checkbox value={OTHER_KEY}>
               {intl.get("screen.join.registration.optionsOther")}
             </Checkbox>
           </Space>
@@ -296,7 +325,7 @@ const RegistrationStep = () => {
         }
       >
         {({ getFieldValue }) =>
-          getFieldValue(FORM_FIELDS.DATA_USAGE)?.includes("other") ? (
+          getFieldValue(FORM_FIELDS.DATA_USAGE)?.includes(OTHER_KEY) ? (
             <Form.Item
               className={cx(styles.withCustomHelp, styles.dynamicField)}
               label={intl.get(

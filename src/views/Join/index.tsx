@@ -10,6 +10,10 @@ import styles from "./index.module.scss";
 const JoinPage = () => {
   const { user } = useUser();
 
+  if (user?.completed_registration) {
+    return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
+  }
+
   return (
     <ScrollContent className={styles.joinPageWrapper}>
       <div className={styles.contentWrapper}>

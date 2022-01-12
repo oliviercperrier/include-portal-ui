@@ -200,7 +200,7 @@ const en = {
           },
           checkbox: "I have read and understand the INCLUDE Portal Disclaimers",
         },
-        errors: "Please accept portal disclaimers and terms & conditions.",
+        errors: "Please accept the terms & conditions and portal disclaimers.",
       },
       registration: {
         sections: {
@@ -209,7 +209,7 @@ const en = {
           researchAndDataUse: "Research & Data Use",
         },
         labels: {
-          eraOrNihID: "I have an eRA Commons ID or NIH NED User ID:",
+          haveAUserID: "I have a user ID for:",
           enterUserId: "Please enter your user ID",
           fullName: "Full name",
           email: "Email",
@@ -249,8 +249,13 @@ const en = {
           2: "Help me design a new research study",
           3: "Identify datasets that I want to analyze",
         },
+        userIdOptions: {
+          1: "ERA Commons",
+          2: "NIH NED",
+          3: "I do not have a user ID",
+        },
         optionsOther: "Other",
-        noAffiliationOption: "I do not have an institutional affiliation."
+        noAffiliationOption: "I do not have an institutional affiliation.",
       },
     },
   },

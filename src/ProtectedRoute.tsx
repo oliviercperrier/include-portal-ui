@@ -16,7 +16,7 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   const userNeedsToLogin = !user || !keycloak.authenticated;
 
   if (error) {
-    return <Redirect to={DYNAMIC_ROUTES.ERROR} />;
+    return <Redirect to={STATIC_ROUTES.ERROR} />;
   }
 
   if (userNeedsToLogin) {

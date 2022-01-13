@@ -1,7 +1,5 @@
 export enum STATIC_ROUTES {
   HOME = "/",
-  NOT_FOUND = "/404",
-  ERROR = "/error",
   DASHBOARD = "/dashboard",
   STUDIES = "/studies",
   MY_PROFILE = "/profile",
@@ -20,4 +18,5 @@ export enum STATIC_ROUTES {
 
 export enum DYNAMIC_ROUTES {
   DATA_EXPLORATION = "/data-exploration/:tab?",
+  ERROR = "/error/:status?",
 }

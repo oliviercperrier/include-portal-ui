@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import ConditionalWrapper from "components/utils/ConditionalWrapper";
-import { STATIC_ROUTES } from "utils/routes";
+import { DYNAMIC_ROUTES, STATIC_ROUTES } from "utils/routes";
 import { useUser } from "store/user";
 
 type OwnProps = RouteProps & {
@@ -16,7 +16,7 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   const userNeedsToLogin = !user || !keycloak.authenticated;
 
   if (error) {
-    return <Redirect to={STATIC_ROUTES.ERROR} />;
+    return <Redirect to={DYNAMIC_ROUTES.ERROR} />;
   }
 
   if (userNeedsToLogin) {

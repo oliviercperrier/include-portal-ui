@@ -2,6 +2,7 @@ import { Button, Result } from "antd";
 import { ExceptionStatusType } from "antd/lib/result";
 import history from "utils/history";
 import { STATIC_ROUTES } from "utils/routes";
+import intl from "react-intl-universal";
 
 import styles from "./index.module.scss";
 
@@ -21,19 +22,19 @@ const getResultProps = (
       return {
         status: "403",
         title: "403",
-        subTitle: "Sorry, you are not authorized to access this page.",
+        subTitle: intl.get("global.errors.403"),
       };
     case "404":
       return {
         status: "404",
         title: "404",
-        subTitle: "Sorry, the page you visited does not exist.",
+        subTitle: intl.get("global.errors.404"),
       };
     default:
       return {
         status: "500",
         title: "500",
-        subTitle: "Sorry, something went wrong.",
+        subTitle: intl.get("global.errors.500"),
       };
   }
 };

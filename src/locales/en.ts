@@ -35,6 +35,11 @@ const en = {
         enterValidEmail: "Enter a valid email",
       },
     },
+    errors: {
+      403: "Sorry, you are not authorized to access this page.",
+      404: "Sorry, the page you visited does not exist.",
+      500: "Sorry, something went wrong.",
+    },
   },
   // COMPONENTS
   components: {

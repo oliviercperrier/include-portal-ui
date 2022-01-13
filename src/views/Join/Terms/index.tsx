@@ -17,6 +17,11 @@ enum FORM_FIELDS {
   CHECKBOXES = "checkboxes",
 }
 
+enum CHECKBOXES_OPTIONS {
+  ACCEPTED_TERMS = "accepted_terms",
+  UNDERSTAND_DISCLAIMER = "understand_disclaimer",
+}
+
 const { Title, Text } = Typography;
 
 const TermsStep = () => {
@@ -27,10 +32,10 @@ const TermsStep = () => {
   const getInitialValues = (user: TUser) => {
     let value = [];
     if (user?.accepted_terms) {
-      value.push("accepted_terms");
+      value.push(CHECKBOXES_OPTIONS.ACCEPTED_TERMS);
     }
     if (user?.understand_disclaimer) {
-      value.push("understand_disclaimer");
+      value.push(CHECKBOXES_OPTIONS.UNDERSTAND_DISCLAIMER);
     }
     return value;
   };
@@ -127,10 +132,10 @@ const TermsStep = () => {
         >
           <Checkbox.Group>
             <Space direction="vertical">
-              <Checkbox value={"accepted_terms"}>
+              <Checkbox value={CHECKBOXES_OPTIONS.ACCEPTED_TERMS}>
                 {intl.get("screen.join.disclaimers.terms.checkbox")}
               </Checkbox>
-              <Checkbox value={"understand_disclaimer"}>
+              <Checkbox value={CHECKBOXES_OPTIONS.UNDERSTAND_DISCLAIMER}>
                 {intl.get("screen.join.disclaimers.disclaimer.checkbox")}
               </Checkbox>
             </Space>

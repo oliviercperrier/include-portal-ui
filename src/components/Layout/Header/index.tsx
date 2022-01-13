@@ -126,7 +126,6 @@ const Header = () => {
               onClick={(e) => e.preventDefault()}
               href=""
             >
-              {/* CHANGE WITH USER */}
               <Gravatar
                 className={style.userGravatar}
                 email={

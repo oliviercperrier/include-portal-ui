@@ -50,7 +50,7 @@ const completeRegistration = createAsyncThunk<
     callback?: () => void;
   },
   { rejectValue: string }
->("user/update", async (args, thunkAPI) => {
+>("user/complete/registration", async (args, thunkAPI) => {
   const { data, error } = await UserApi.completeRegistration(args.data);
 
   return handleUserReponse(

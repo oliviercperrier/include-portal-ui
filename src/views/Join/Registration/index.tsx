@@ -106,7 +106,9 @@ const RegistrationStep = () => {
       layout="vertical"
       validateMessages={validateMessages}
     >
-      <Title level={3} className={styles.subSectionTitle}></Title>
+      <Title level={3} className={styles.subSectionTitle}>
+        {intl.get("screen.join.registration.sections.identification")}
+      </Title>
       <Form.Item
         name={FORM_FIELDS.EXTERNAL_ID}
         label={intl.get("screen.join.registration.labels.haveAUserID")}

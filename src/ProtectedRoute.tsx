@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import ConditionalWrapper from "components/utils/ConditionalWrapper";
-import { DYNAMIC_ROUTES, STATIC_ROUTES } from "utils/routes";
+import { STATIC_ROUTES } from "utils/routes";
 import { useUser } from "store/user";
 
 type OwnProps = RouteProps & {

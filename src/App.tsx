@@ -13,12 +13,15 @@ import Authenticator from "auth/Authenticator";
 import ErrorPage from "views/Error";
 import loadable from "@loadable/component";
 
-const loadableProps = { fallback: <Spinner size="large"/> };
+const loadableProps = { fallback: <Spinner size="large" /> };
 const Dashboard = loadable(() => import("views/Dashboard"), loadableProps);
 const Studies = loadable(() => import("views/Studies"), loadableProps);
 const MyProfile = loadable(() => import("views/MyProfile"), loadableProps);
 const Settings = loadable(() => import("views/Settings"), loadableProps);
-const DataExploration = loadable(() => import("views/DataExploration"), loadableProps);
+const DataExploration = loadable(
+  () => import("views/DataExploration"),
+  loadableProps
+);
 const JoinPage = loadable(() => import("views/Join"), loadableProps);
 
 const App = () => {
@@ -48,12 +51,9 @@ const App = () => {
               )}
             />
             <Route
-              exact
-              path={STATIC_ROUTES.ERROR}
-              render={() => (
-                <SideImageLayout sideImgSrc={MainSideImage}>
-                  <ErrorPage />
-                </SideImageLayout>
+              path={DYNAMIC_ROUTES.ERROR}
+              render={(props: RouteComponentProps<{ status?: any }>) => (
+                <ErrorPage status={props.match.params.status} />
               )}
             />
             <ProtectedRoute

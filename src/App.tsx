@@ -2,7 +2,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { Switch, Route, Redirect, RouteComponentProps } from "react-router-dom";
 import ContextProvider from "provider/ContextProvider";
 
-import Home from "views/Home";
+import Login from "views/Login";
 import SideImageLayout from "components/Layout/SideImage";
 import { DYNAMIC_ROUTES, STATIC_ROUTES } from "utils/routes";
 import Spinner from "components/uiKit/Spinner";
@@ -33,9 +33,9 @@ const App = () => {
       {keycloakIsReady ? (
         <Authenticator>
           <Switch>
-            <Route exact path={STATIC_ROUTES.HOME}>
+            <Route exact path={STATIC_ROUTES.LOGIN}>
               <SideImageLayout sideImgSrc={MainSideImage}>
-                <Home />
+                <Login />
               </SideImageLayout>
             </Route>
             <Route

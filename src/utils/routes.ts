@@ -1,5 +1,7 @@
 export enum STATIC_ROUTES {
   HOME = "/",
+  LOGIN = "/login",
+  AUTH_REDIRECT = "/auth-redirect",
   DASHBOARD = "/dashboard",
   STUDIES = "/studies",
   MY_PROFILE = "/profile",

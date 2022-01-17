@@ -20,7 +20,7 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   }
 
   if (userNeedsToLogin) {
-    return <Redirect to={STATIC_ROUTES.HOME} />;
+    return <Redirect to={STATIC_ROUTES.LOGIN} />;
   }
 
   if (
@@ -32,7 +32,8 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   }
 
   const currentPath = routeProps.path;
-  if (currentPath === STATIC_ROUTES.HOME) {
+
+  if (currentPath === STATIC_ROUTES.LOGIN) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }
 

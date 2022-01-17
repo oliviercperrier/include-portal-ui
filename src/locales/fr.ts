@@ -115,7 +115,7 @@ const fr = {
   },
   // SCREENS
   screen: {
-    home: {
+    loginPage: {
       title: "INCLUDE Data Hub",
       datarelease: {
         title: "Données disponibles",
@@ -125,7 +125,7 @@ const fr = {
       biologyConditions:
         "sur la biologie du syndrome de Down et des conditions concomitantes.",
       accessLargeScale:
-        "Accédez à des ressources de données à grande échelle et explorez des ensembles de données de cohorte personnalisés basés sur les données des participants, des échantillons biologiques, cliniques et génomiques.",
+        "Accédez à des ressources de données à grande échelle et explorez des ensembles de données de cohorte personnalisés basés sur les données des participants, des échantillons biologiques, cliniques et omiques.",
       login: "Connexion",
       signup: "S'inscrire",
     },

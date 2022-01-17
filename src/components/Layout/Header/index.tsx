@@ -67,7 +67,10 @@ const Header = () => {
             />
             <HeaderLink
               currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION}
+              to={[
+                STATIC_ROUTES.DATA_EXPLORATION,
+                STATIC_ROUTES.DATA_EXPLORATION_SUMMARY,
+              ]}
               icon={<FileSearchOutlined />}
               title={intl.get("layout.main.menu.explore")}
             />

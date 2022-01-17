@@ -18,6 +18,14 @@ const Home = (): React.ReactElement => {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }
 
+  const handleSignin = async () => {
+    const url = keycloak.createLoginUrl({
+      // eslint-disable-next-line max-len
+      redirectUri: `${window.location.origin}/${STATIC_ROUTES.DASHBOARD}`,
+    });
+    window.location.assign(url);
+  };
+
   return (
     <div className={styles.homePageContent}>
       <div className={styles.loginContainer}>
@@ -48,24 +56,12 @@ const Home = (): React.ReactElement => {
             </span>
           </div>
           <Space className={styles.loginButtons} size={16}>
-            <Button
-              type={"primary"}
-              onClick={async () => {
-                const url = keycloak.createLoginUrl({
-                  // eslint-disable-next-line max-len
-                  redirectUri: `${window.location.origin}/${STATIC_ROUTES.DASHBOARD}`,
-                });
-                window.location.assign(url);
-              }}
-              size={"large"}
-            >
+            <Button type={"primary"} onClick={handleSignin} size={"large"}>
               {intl.get("screen.home.login")}
             </Button>
-            <Link to={STATIC_ROUTES.JOIN}>
-              <Button ghost size={"large"}>
-                {intl.get("screen.home.signup")}
-              </Button>
-            </Link>
+            <Button onClick={handleSignin} ghost size={"large"}>
+              {intl.get("screen.home.signup")}
+            </Button>
           </Space>
         </Space>
       </div>

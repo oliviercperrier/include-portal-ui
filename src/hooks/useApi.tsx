@@ -1,7 +1,7 @@
 // eslint-disable-next-line react-hooks/exhaustive-deps
 import { useState, useEffect } from "react";
-import axios, { AxiosRequestConfig } from "axios";
-import { useKeycloak } from "@react-keycloak/web";
+import { AxiosRequestConfig } from "axios";
+import { sendRequest } from "services/api";
 
 interface OwnProps {
   config: AxiosRequestConfig;
@@ -9,10 +9,9 @@ interface OwnProps {
 }
 
 const useApi = <T,>({ config, skip = false }: OwnProps) => {
-  const { keycloak } = useKeycloak();
   const [result, setResult] = useState<T>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
+  const [error, setError] = useState<any>("");
   const [refreshIndex, setRefreshIndex] = useState(0);
 
   const refresh = () => {
@@ -25,30 +24,20 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
       setLoading(false);
     } else {
       setLoading(true);
-      axios({
+      setError(undefined);
+
+      sendRequest<T>({
         ...config,
         method: config.method ? config.method : "GET",
-        headers: {
-          ...config.headers,
-          Authorization: config.headers?.Authorization
-            ? config.headers?.Authorization
-            : `Bearer ${keycloak.token}`,
-        },
-      })
-        .then((r) => {
-          if (!cancelled) {
-            setResult(r.data);
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
+      }).then(({ data, error }) => {
+        if (error) {
           setLoading(false);
-          if (error.response) {
-            setError(error.response.data);
-          } else {
-            setError(error.message);
-          }
-        });
+          setError(error.message);
+        } else if (!cancelled) {
+          setResult(data);
+          setLoading(false);
+        }
+      });
     }
     return () => {
       cancelled = true;

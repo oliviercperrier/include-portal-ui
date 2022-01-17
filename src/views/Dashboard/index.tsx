@@ -5,7 +5,7 @@ import DataReleaseCard from "./components/DataReleaseCard";
 import intl from "react-intl-universal";
 import SortableGrid from "@ferlab/ui/core/layout/SortableGrid";
 import { getFTEnvVarByKey } from "helpers/EnvVariables";
-import { AlterTypes } from "utils/types";
+import { AlterTypes } from "common/types";
 import NotificationBanner from "components/featureToggle/NotificationBanner";
 import { dashboardCards } from "./components/DashboardCards";
 
@@ -36,7 +36,7 @@ const Dashboard = () => {
             showIcon
           />
           <Title level={4} className={styles.greeting}>
-            {intl.get("screen.dashboard.hello")}, {user?.firstName}
+            {intl.get("screen.dashboard.hello")}, {user?.first_name}
           </Title>
           <DataReleaseCard />
         </Space>

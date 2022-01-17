@@ -19,8 +19,12 @@ import { useUser } from "store/user";
 import intl from "react-intl-universal";
 import { getFTEnvVarByKey } from "helpers/EnvVariables";
 import NotificationBanner from "components/featureToggle/NotificationBanner";
-import { AlterTypes } from "utils/types";
+import { AlterTypes } from "common/types";
 import { useKeycloak } from "@react-keycloak/web";
+import { IncludeKeycloakTokenParsed } from "common/tokenTypes";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userActions } from "store/user/slice";
 
 import style from "./index.module.scss";
 
@@ -31,14 +35,9 @@ const BANNER_MSG_KEY = FT_FLAG_KEY + "_MSG";
 
 const Header = () => {
   const { user } = useUser();
+  const dispatch = useDispatch();
   const { keycloak } = useKeycloak();
   const currentPathName = history.location.pathname;
-
-  const handleLogout = () => {
-    keycloak.logout({
-      redirectUri: window.location.origin,
-    });
-  };
 
   return (
     <>
@@ -103,13 +102,20 @@ const Header = () => {
             overlay={
               <Menu>
                 <Menu.Item key="profile">
-                  {intl.get("layout.user.menu.myprofile")}
+                  <Link to={STATIC_ROUTES.MY_PROFILE}>
+                    {intl.get("layout.user.menu.myprofile")}
+                  </Link>
                 </Menu.Item>
                 <Menu.Item key="settings">
-                  {intl.get("layout.user.menu.settings")}
+                  <Link to={STATIC_ROUTES.SETTINGS}>
+                    {intl.get("layout.user.menu.settings")}{" "}
+                  </Link>
                 </Menu.Item>
                 <Menu.Divider key="divider 1" />
-                <Menu.Item key="logout" onClick={handleLogout}>
+                <Menu.Item
+                  key="logout"
+                  onClick={() => dispatch(userActions.cleanLogout())}
+                >
                   {intl.get("layout.user.menu.logout")}
                 </Menu.Item>
               </Menu>
@@ -120,13 +126,14 @@ const Header = () => {
               onClick={(e) => e.preventDefault()}
               href=""
             >
-              {/* CHANGE WITH USER */}
               <Gravatar
                 className={style.userGravatar}
-                email="ocastro-perrier@ferlab.bio"
+                email={
+                  (keycloak.tokenParsed as IncludeKeycloakTokenParsed).email
+                }
                 size={100}
               />
-              <span className={style.userName}>{user?.firstName}</span>
+              <span className={style.userName}>{user?.first_name}</span>
               <DownOutlined />
             </a>
           </Dropdown>,

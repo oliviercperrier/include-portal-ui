@@ -15,8 +15,10 @@ import AuthorizedStudiesListItem from "./ListItem";
 import Empty from "@ferlab/ui/core/components/Empty";
 
 import styles from "./index.module.scss";
+import useFenceConnections from "hooks/useFenceConnection";
 
 export interface IListItemData {
+  key: any;
   title: string;
   nbFiles: number;
   totalFiles: number;
@@ -26,9 +28,12 @@ export interface IListItemData {
 
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
+  const { loadingFences, connectionStatus } = useFenceConnections();
+
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
     {
+      key: "1",
       title: "Pediatric Brain Tumor Atlas: CBTTC",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -36,6 +41,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
+      key: "2",
       title: "CARING for Children with COVID: NICHD-2019-POP02",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -43,6 +49,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
+      key: "3",
       title: "Kids First: Neuroblastoma",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -50,6 +57,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
     },
     {
+      key: "4",
       title: "CARING for Children with COVID: NICHD-2019-POP02",
       nbFiles: 18845,
       totalFiles: 27783,
@@ -61,14 +69,14 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   return (
     <GridCard
       theme="shade"
-      className={className}
+      wrapperClassName={className}
       title={
         <CardHeader
           id={id}
           title={intl.get("screen.dashboard.cards.authorizedStudies.title")}
           withHandle
           extra={[
-            <Button type="text" className={styles.dataAccessBtn}>
+            <Button key="1" type="text" className={styles.dataAccessBtn}>
               {intl.get("screen.dashboard.cards.authorizedStudies.headerBtn")}{" "}
               <QuestionCircleOutlined />
             </Button>,
@@ -136,7 +144,9 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
               ),
             }}
             dataSource={data}
-            renderItem={(item) => <AuthorizedStudiesListItem data={item} />}
+            renderItem={(item) => (
+              <AuthorizedStudiesListItem id={item.key} data={item} />
+            )}
           ></List>
         </div>
       }

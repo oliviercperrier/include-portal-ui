@@ -2,7 +2,7 @@ import {
   FENCE_CONNECTION_STATUSES,
   FENCE_NAMES,
   TFenceConnections,
-} from "utils/fenceTypes";
+} from "common/fenceTypes";
 
 export type initialState = {
   loadingFences: FENCE_NAMES[];

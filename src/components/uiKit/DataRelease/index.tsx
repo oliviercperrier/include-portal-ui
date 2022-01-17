@@ -31,13 +31,11 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
   const { result } = useApi<{
     studies: number;
     participants: number;
-    biospecimens: number;
+    samples: number;
     fileSize: string;
   }>({
     config: {
-      url: `${EnvVariables.configFor({
-        key: "ARRANGER_API",
-      })}/statistics`,
+      url: `${EnvVariables.configFor("ARRANGER_API")}/statistics`,
     },
   });
 
@@ -68,7 +66,7 @@ const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
         <Col xs={12} md={6}>
           <MultiLabel
             iconPosition={MultiLabelIconPositionEnum.Top}
-            label={numberFormat(result?.biospecimens!)}
+            label={numberFormat(result?.samples!)}
             Icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
             subLabel={intl.get("components.dataRelease.biospecimens")}

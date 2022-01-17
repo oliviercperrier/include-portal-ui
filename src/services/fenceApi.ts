@@ -1,8 +1,8 @@
 import jwtDecode from "jwt-decode";
 
 import { isDecodedJwtExpired } from "utils/jwt";
-import { FENCE_NAMES } from "../utils/fenceTypes";
-import { DecodedJwt } from "utils/tokenTypes";
+import { FENCE_NAMES } from "common/fenceTypes";
+import { DecodedJwt } from "common/tokenTypes";
 import EnvironmentVariables from "helpers/EnvVariables";
 import { sendRequest } from "./api";
 
@@ -13,24 +13,18 @@ const RESPONSE_TYPE = "code";
 
 const GEN3_SCOPE = "openid+data+user";
 const DCF_SCOPE = "openid+user";
-const FENCE_AUTH_CLIENT_URI = EnvironmentVariables.configFor({
-  key: "FENCE_AUTH_CLIENT_URI",
-});
-const FENCE_AUTH_REFRESH_URI = EnvironmentVariables.configFor({
-  key: "FENCE_AUTH_REFRESH_URI",
-});
-const FENCE_AUTH_TOKENS_URI = EnvironmentVariables.configFor({
-  key: "FENCE_AUTH_TOKENS_URI",
-});
-const GEN3_API_ROOT = EnvironmentVariables.configFor({
-  key: "GEN3_API",
-});
-const DCF_API_ROOT = EnvironmentVariables.configFor({
-  key: "DCF_API",
-});
-const IDP = EnvironmentVariables.configFor({
-  key: "IDP",
-});
+const FENCE_AUTH_CLIENT_URI = EnvironmentVariables.configFor(
+  "FENCE_AUTH_CLIENT_URI"
+);
+const FENCE_AUTH_REFRESH_URI = EnvironmentVariables.configFor(
+  "FENCE_AUTH_REFRESH_URI"
+);
+const FENCE_AUTH_TOKENS_URI = EnvironmentVariables.configFor(
+  "FENCE_AUTH_TOKENS_URI"
+);
+const GEN3_API_ROOT = EnvironmentVariables.configFor("GEN3_API");
+const DCF_API_ROOT = EnvironmentVariables.configFor("DCF_API");
+const IDP = EnvironmentVariables.configFor("IDP");
 
 const getScope = (fenceName: FENCE_NAMES) => {
   switch (fenceName) {
@@ -92,19 +86,19 @@ export const fenceConnect = async (fence: FENCE_NAMES) => {
 };
 
 export const fetchAccessToken = async (fenceName: FENCE_NAMES) => {
-  const response = await sendRequest({
+  const { data } = await sendRequest({
     method: "GET",
     url: `${FENCE_AUTH_TOKENS_URI}?fence=${fenceName}`,
   });
-  return response.data.access_token;
+  return data.access_token;
 };
 
 export const fetchRefreshedAccessToken = async (fenceName: FENCE_NAMES) => {
-  const response = await sendRequest({
+  const { data } = await sendRequest({
     method: "POST",
     url: `${FENCE_AUTH_REFRESH_URI}?fence=${fenceName}`,
   });
-  return response.data.access_token;
+  return data.access_token;
 };
 
 const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {
@@ -119,14 +113,13 @@ const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {
 export const getFenceConnection = async (fenceName: FENCE_NAMES) => {
   const token = await fetchTokenThenRefreshIfNeeded(fenceName);
   const { fenceUri } = PROVIDERS[fenceName];
-  const response = await sendRequest({
+  const { data } = await sendRequest({
     url: `${fenceUri}user/user`,
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
 
   /** @namespace data.project_access*/
-  const data = response.data;
   return { ...data, projects: data.project_access }; //Backward compatibility.
 };
 

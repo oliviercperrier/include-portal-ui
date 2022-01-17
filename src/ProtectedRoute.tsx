@@ -1,34 +1,34 @@
 import React from "react";
-import {
-  Redirect,
-  Route,
-  RouteProps,
-} from "react-router-dom";
+import { Redirect, Route, RouteProps } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import ConditionalWrapper from "components/utils/ConditionalWrapper";
-import { hasUserRole } from "helpers/roles";
 import { STATIC_ROUTES } from "utils/routes";
+import { useUser } from "store/user";
 
 type OwnProps = RouteProps & {
   layout?: (children: any) => React.ReactElement;
 };
 
 const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
-  const { user } = { user: { roles: ["allo"], acceptedTerms: true } } as any; //useUser(); TODO
+  const { user, error } = useUser();
   const { keycloak } = useKeycloak();
   const Layout = routeProps.layout!;
-  const userNeedsToLogin = !keycloak.authenticated;
+  const userNeedsToLogin = !user || !keycloak.authenticated;
+
+  if (error) {
+    return <Redirect to={STATIC_ROUTES.ERROR} />;
+  }
 
   if (userNeedsToLogin) {
     return <Redirect to={STATIC_ROUTES.HOME} />;
   }
 
-  if (!hasUserRole(user)) {
+  if (
+    !user.accepted_terms ||
+    !user.understand_disclaimer ||
+    !user.completed_registration
+  ) {
     return <Redirect to={STATIC_ROUTES.JOIN} />;
-  }
-
-  if (!user!.acceptedTerms) {
-    return <Redirect to={STATIC_ROUTES.TERMS} />;
   }
 
   const currentPath = routeProps.path;

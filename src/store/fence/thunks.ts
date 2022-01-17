@@ -11,7 +11,7 @@ import {
   ALL_FENCE_NAMES,
   FENCE_CONNECTION_STATUSES,
   FENCE_NAMES,
-} from "utils/fenceTypes";
+} from "common/fenceTypes";
 
 const fetchAllFenceConnections = createAsyncThunk<
   any,
@@ -19,7 +19,7 @@ const fetchAllFenceConnections = createAsyncThunk<
   { state: RootState }
 >("fence/fetch/all/connections", async (_, thunkAPI) => {
   ALL_FENCE_NAMES.forEach((fenceName) =>
-    thunkAPI.dispatch(fetchFenceConnection(FENCE_NAMES.gen3))
+    thunkAPI.dispatch(fetchFenceConnection(fenceName))
   );
 });
 
@@ -38,7 +38,7 @@ const fetchFenceConnection = createAsyncThunk<
       const { fence } = getState();
 
       return (
-        isEmpty(fence.connectionStatus[fenceName]) &&
+        isEmpty(fence.fenceConnections[fenceName]) &&
         [
           FENCE_CONNECTION_STATUSES.unknown,
           FENCE_CONNECTION_STATUSES.connected,

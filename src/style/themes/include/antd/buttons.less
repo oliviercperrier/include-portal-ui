@@ -14,6 +14,23 @@
 @btn-text-hover-bg: @gray-2;
 
 .@{btn-prefix-cls} {
+  &.iconRight {
+    display: flex;
+    align-items: center;
+  }
+
+  &-lg {
+    &.iconRight .anticon {
+      height: 16px;
+    }
+  }
+
+  :not(&-lg) {
+    &.iconRight .anticon {
+      height: 14px;
+    }
+  }
+
   &-default {
     &:hover {
       background-color: @gray-2;

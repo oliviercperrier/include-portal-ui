@@ -10,14 +10,12 @@ import GlobalReducer from "store/global";
 import UserReducer from "store/user";
 import FenceReducer from "store/fence";
 
-const devMode = EnvVariables.configFor({ key: "ENV" }) === "development";
+const devMode = EnvVariables.configFor("ENV") === "development";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [
-    /* Add reducer to persist in local storage */
-  ],
+  whitelist: ["global"],
 };
 
 const rootReducer = combineReducers<RootState>({

@@ -1,20 +1,81 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { User, UserActionsEnum } from "store/user/types";
-import keycloak from "initKeycloak";
+import { UserApi } from "services/api/user";
+import { TUser, TUserUpdate } from "services/api/user/models";
 
-const userApi: any = {
-  fetchById: (token: string) => ({
-    firstName: "Olivier",
-    lastName: "Castro-Perrier"
-  }),
-}; // link the service to retrieve user
+const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
+  "user/fetch",
+  async (_, thunkAPI) => {
+    const { data, error } = await UserApi.fetchUser();
 
-const fetchUser = createAsyncThunk<User>(
-  UserActionsEnum.FETCH_USER,
-  async (thunkAPI) => {
-    const response = userApi.fetchById(keycloak.token);
-    return response;
+    if (!error) {
+      return data!;
+    }
+
+    if (error?.response?.status === 404) {
+      const { data: newUser, error: newUserError } = await UserApi.createUser();
+
+      return handleUserReponse(
+        newUserError,
+        newUser!,
+        thunkAPI.rejectWithValue
+      );
+    } else {
+      return thunkAPI.rejectWithValue(error?.message);
+    }
   }
 );
 
-export { fetchUser };
+const updateUser = createAsyncThunk<
+  TUser,
+  {
+    data: TUserUpdate;
+    callback?: () => void;
+  },
+  { rejectValue: string }
+>("user/update", async (args, thunkAPI) => {
+  const { data, error } = await UserApi.updateUser(args.data);
+
+  return handleUserReponse(
+    error,
+    data!,
+    thunkAPI.rejectWithValue,
+    args.callback
+  );
+});
+
+const completeRegistration = createAsyncThunk<
+  TUser,
+  {
+    data: TUserUpdate;
+    callback?: () => void;
+  },
+  { rejectValue: string }
+>("user/complete/registration", async (args, thunkAPI) => {
+  const { data, error } = await UserApi.completeRegistration(args.data);
+
+  return handleUserReponse(
+    error,
+    data!,
+    thunkAPI.rejectWithValue,
+    args.callback
+  );
+});
+
+const handleUserReponse = (
+  error: any,
+  data: TUser,
+  reject: (error: string) => any,
+  callback?: () => void
+) => {
+  if (error) {
+    return reject(error?.message);
+  }
+
+  if (callback) {
+    callback();
+  }
+
+  return data!;
+};
+
+export { fetchUser, updateUser, completeRegistration };

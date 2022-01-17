@@ -7,7 +7,7 @@ import {
   FENCE_CONNECTION_STATUSES,
   FENCE_NAMES,
   TFenceConnections,
-} from "utils/fenceTypes";
+} from "common/fenceTypes";
 
 type Output = {
   fenceConnections: TFenceConnections;

@@ -3,8 +3,8 @@ import keycloak from "initKeycloak";
 
 const apiInstance = axios.create();
 
-interface ApiResponse {
-  data: any | undefined;
+interface ApiResponse<T = any> {
+  data: T | any;
   error: AxiosError | undefined;
 }
 
@@ -27,13 +27,13 @@ export const sendRequest = async <T,>(config: AxiosRequestConfig) => {
   return apiInstance
     .request<T>(config)
     .then(
-      (response): ApiResponse => ({
+      (response): ApiResponse<T> => ({
         data: response.data,
         error: undefined,
       })
     )
     .catch(
-      (err): ApiResponse => ({
+      (err): ApiResponse<T> => ({
         data: undefined,
         error: err,
       })

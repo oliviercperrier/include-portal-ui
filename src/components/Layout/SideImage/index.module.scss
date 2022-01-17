@@ -16,21 +16,40 @@
     background: #ffffff;
     background-repeat: no-repeat;
     background-position: bottom;
-    width: 573px;
     height: 100%;
+    transition: width 0.2s ease;
   }
 
   .pageContent {
-    justify-content: center;
-    align-items: center;
-    flex: 1;
     overflow: auto;
+    flex: 1;
+
+    &.alignCenter {
+      justify-content: center;
+      align-items: center;
+    }
+
+    &.light {
+      background-color: $gray-2;
+    }
   }
 
   .logoImage {
     width: 275px;
     position: absolute;
     margin: 20px;
+  }
+}
+
+@media (min-width: 1351px) {
+  .sideImageContainer {
+    width: 575px;
+  }
+}
+
+@media (max-width: 1350px) {
+  .sideImageContainer {
+    width: 435px;
   }
 }
 
@@ -41,13 +60,18 @@
 
   .pageContent {
     display: flex;
-    background-position: bottom;
-    background: linear-gradient(
-        0deg,
-        transparentize($gray-8, 0.1),
-        transparentize($gray-8, 0.1)
-      ),
-      url(../../assets/mainSideImage.jpg) bottom;
-    background-size: cover;
+
+    &.dark {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background: linear-gradient(
+          0deg,
+          transparentize($gray-8, 0.1),
+          transparentize($gray-8, 0.1)
+        ),
+        url(../../assets/mainSideImage.jpg) bottom;
+      background-size: cover;
+    }
   }
 }

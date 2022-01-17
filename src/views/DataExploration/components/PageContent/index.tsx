@@ -27,6 +27,13 @@ interface OwnProps {
   tabId?: string;
 }
 
+export enum TAB_IDS {
+  SUMMARY = "summary",
+  PARTICIPANTS = "participants",
+  BIOSPECIMENS = "biospecimens",
+  DATA_FILES = "datafiles",
+}
+
 const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
   const { filters } = useFilters();
   const total = 0;
@@ -47,8 +54,12 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
           className="data-exploration-repo__query-builder"
           headerConfig={{
             showHeader: true,
-            showTools: false,
+            showTools: true,
             defaultTitle: "My Queries",
+            options: {
+              enableEditTitle: true,
+              enableDuplicate: true,
+            },
           }}
           enableCombine
           enableShowHideLabels
@@ -78,7 +89,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
                 {intl.get("screen.dataExploration.tabs.summary")}
               </span>
             }
-            key="summary"
+            key={TAB_IDS.SUMMARY}
           >
             <SummaryTab />
           </Tabs.TabPane>
@@ -91,7 +102,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
                 })}
               </span>
             }
-            key="participants"
+            key={TAB_IDS.PARTICIPANTS}
           >
             <ParticipantsTab />
           </Tabs.TabPane>
@@ -104,7 +115,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
                 })}
               </span>
             }
-            key="biospecimens"
+            key={TAB_IDS.BIOSPECIMENS}
           >
             <BiospecimensTab />
           </Tabs.TabPane>
@@ -117,7 +128,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
                 })}
               </span>
             }
-            key="datafiles"
+            key={TAB_IDS.DATA_FILES}
           >
             <DataFilesTabs />
           </Tabs.TabPane>

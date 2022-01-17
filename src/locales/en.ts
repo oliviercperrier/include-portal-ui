@@ -115,17 +115,17 @@ const en = {
   },
   // SCREENS
   screen: {
-    home: {
+    loginPage: {
       title: "INCLUDE Data Hub",
       datarelease: {
         title: "Available Data",
       },
       uncover: "Uncover",
-      newInsights: "new insigths",
+      newInsights: "new insights",
       biologyConditions:
         "into the biology of Down Syndrome and co-occurring conditions.",
       accessLargeScale:
-        "Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and genomic data.",
+        "Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and omics data.",
       login: "Login",
       signup: "Sign up",
     },

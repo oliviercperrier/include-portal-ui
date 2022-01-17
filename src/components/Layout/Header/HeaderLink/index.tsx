@@ -7,11 +7,14 @@ import style from "./index.module.scss";
 
 interface OwnProps {
   className?: string;
-  to: string;
+  to: string | string[];
   title: string;
   currentPathName: string;
   icon?: React.ReactElement;
 }
+
+const isActive = (current: string, to: string | string[]) =>
+  to instanceof Array ? to.includes(current) : current === to;
 
 const HeaderLink = ({
   className = "",
@@ -22,12 +25,16 @@ const HeaderLink = ({
   ...props
 }: OwnProps) => {
   return (
-    <Link className={style.headerLink} to={to} {...props}>
+    <Link
+      className={style.headerLink}
+      to={to instanceof Array ? to[0] : to}
+      {...props}
+    >
       <Button
         className={cx(
           className,
           style.headerBtn,
-          currentPathName === to ? style.active : ""
+          isActive(currentPathName, to) ? style.active : ""
         )}
         icon={icon}
       >

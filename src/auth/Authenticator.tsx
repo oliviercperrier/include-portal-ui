@@ -4,12 +4,13 @@ import { useKeycloak } from "@react-keycloak/web";
 import Spinner from "components/uiKit/Spinner";
 import { useUser } from "store/user";
 import { fetchUser } from "store/user/thunks";
+import { userActions } from "store/user/slice";
 
 type Props = {
   children: React.ReactElement;
 };
 
-const Authenticator = (props: Props) => {
+const Authenticator = ({ children }: Props) => {
   const { isLoading } = useUser();
   const { keycloak } = useKeycloak();
   const dispatch = useDispatch();
@@ -17,10 +18,12 @@ const Authenticator = (props: Props) => {
   useEffect(() => {
     if (keycloak.authenticated) {
       dispatch(fetchUser());
+    } else {
+      dispatch(userActions.setIsUserLoading(false));
     }
   }, [dispatch, keycloak]);
 
-  return isLoading ? <Spinner size={"large"} /> : props.children;
+  return isLoading ? <Spinner size={"large"} /> : children;
 };
 
 export default Authenticator;

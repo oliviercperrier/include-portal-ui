@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState } from "store/user/types";
 import keycloak from "initKeycloak";
 import { completeRegistration, fetchUser, updateUser } from "store/user/thunks";
 
 export const UserState: initialState = {
   user: null,
-  isLoading: false,
+  isLoading: true,
   isUpdating: false,
 };
 
@@ -20,6 +20,10 @@ const userSlice = createSlice({
 
       return UserState;
     },
+    setIsUserLoading: (state, action: PayloadAction<boolean>) => ({
+      ...state,
+      isLoading: action.payload,
+    }),
   },
   extraReducers: (builder) => {
     // Fetch User

@@ -9,7 +9,9 @@ import {
   UserOutlined,
   FileSearchOutlined,
 } from "@ant-design/icons";
-import PageContent from "views/DataExploration/components/PageContent";
+import PageContent, {
+  TAB_IDS,
+} from "views/DataExploration/components/PageContent";
 
 import styles from "./index.module.scss";
 import { Spin } from "antd";
@@ -80,7 +82,7 @@ const DataExploration = (props: OwnProps) => {
 
   const menuItems: ISidebarMenuItem[] = [
     {
-      key: "1",
+      key: TAB_IDS.PARTICIPANTS,
       title: intl.get("screen.dataExploration.sidemenu.participant"),
       icon: <UserOutlined className={styles.sideMenuIcon} />,
       panelContent: filtersContainer(
@@ -89,7 +91,7 @@ const DataExploration = (props: OwnProps) => {
       ),
     },
     {
-      key: "2",
+      key: TAB_IDS.BIOSPECIMENS,
       title: intl.get("screen.dataExploration.sidemenu.biospecimen"),
       icon: <ExperimentOutlined className={styles.sideMenuIcon} />,
       panelContent: filtersContainer(
@@ -98,7 +100,7 @@ const DataExploration = (props: OwnProps) => {
       ),
     },
     {
-      key: "3",
+      key: TAB_IDS.DATA_FILES,
       title: intl.get("screen.dataExploration.sidemenu.datafiles"),
       icon: <FileSearchOutlined className={styles.sideMenuIcon} />,
       panelContent: filtersContainer(
@@ -110,7 +112,11 @@ const DataExploration = (props: OwnProps) => {
 
   return (
     <StackLayout horizontal className={styles.dataExplorationLayout}>
-      <SidebarMenu className={styles.sideMenu} menuItems={menuItems} />
+      <SidebarMenu
+        className={styles.sideMenu}
+        menuItems={menuItems}
+        defaultSelectedKey={props.tab}
+      />
       <ScrollContent className={styles.scrollContent}>
         <PageContent mappingResults={{}} tabId={props.tab}></PageContent>
       </ScrollContent>

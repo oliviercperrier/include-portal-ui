@@ -23,12 +23,12 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
     return <Redirect to={STATIC_ROUTES.HOME} />;
   }
 
-  if (!user.accepted_terms || !user.understand_disclaimer) {
-    return <Redirect to={STATIC_ROUTES.JOIN_TERMS} />;
-  }
-
-  if (!user.completed_registration) {
-    return <Redirect to={STATIC_ROUTES.JOIN_REGISTRATION} />;
+  if (
+    !user.accepted_terms ||
+    !user.understand_disclaimer ||
+    !user.completed_registration
+  ) {
+    return <Redirect to={STATIC_ROUTES.JOIN} />;
   }
 
   const currentPath = routeProps.path;

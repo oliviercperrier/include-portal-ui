@@ -5,6 +5,7 @@ export default class EnvironmentVariables {
     INCLUDE_WEB_ROOT: process.env.REACT_APP_INCLUDE_WEB_ROOT,
     // APIS
     ARRANGER_API: process.env.REACT_APP_ARRANGER_API_URL,
+    ARRANGER_PROJECT_ID: process.env.REACT_APP_ARRANGER_PROJECT_ID,
     USERS_API: process.env.REACT_APP_USERS_API_URL,
     RIFF_API: process.env.REACT_APP_RIFF_API_URL,
     FENCE_AUTH_CLIENT_URI: process.env.REACT_APP_FENCE_AUTH_CLIENT_URI,

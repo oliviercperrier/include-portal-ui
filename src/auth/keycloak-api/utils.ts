@@ -1,7 +1,7 @@
 import Axios, { AxiosResponse } from "axios";
 import jwtdecode from "jwt-decode";
 import keycloak from "auth/keycloak-api/keycloak";
-import { keycloakConfig } from "utils/config";
+import { keycloakConfig } from "auth/keycloak-api/config";
 
 const client = Axios.create({
   timeout: 15000,
@@ -33,12 +33,6 @@ export const KEYCLOAK_AUTH_GRANT_TYPE =
 export const KEYCLOAK_AUTH_RESPONSE_MODE = "permissions";
 
 export const KEYCLOAK_REFRESH_GRANT_TYPE = "refresh_token";
-
-type Config = {
-  url: string;
-  authClientId: string;
-  clientId: string;
-};
 
 export type Rpt = {
   decoded: DecodedRpt;
@@ -87,11 +81,9 @@ const decodeRptFromResponse = (response: AxiosResponse<any>): Rpt => {
 export const getAccessTokenStatus = (rpt: Rpt) =>
   tokenStatus(rpt.decoded.iat, rpt.accessExpiresIn);
 
-export const KEYCLOAK_CONFIG = JSON.parse(keycloakConfig) as Config;
-
 export const rptRequest = async (data: any) => {
   const response = await client.post(
-    `${KEYCLOAK_CONFIG.url}realms/clin/protocol/openid-connect/token`,
+    `${keycloakConfig.url}/realms/includedcc/protocol/openid-connect/token`,
     data
   );
   return decodeRptFromResponse(response);

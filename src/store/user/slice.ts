@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState } from "store/user/types";
-import keycloak from "initKeycloak";
+import keycloak from "auth/keycloak-api/keycloak";
 import { completeRegistration, fetchUser, updateUser } from "store/user/thunks";
 
 export const UserState: initialState = {

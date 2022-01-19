@@ -4,13 +4,11 @@ import CustomFilterContainer from "./CustomFilterContainer";
 import intl from "react-intl-universal";
 import { FilterGroup, FilterInfo } from "./types";
 import { ExtendedMappingResults } from "graphql/models";
-import { DocumentNode } from "@apollo/client";
 
 import styles from "./Filters.module.scss";
 
 type OwnProps = {
   index: string;
-  query: DocumentNode;
   cacheKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filterInfo: FilterInfo;
@@ -18,7 +16,6 @@ type OwnProps = {
 
 const FilterList = ({
   index,
-  query,
   cacheKey,
   extendedMappingResults,
   filterInfo,
@@ -59,7 +56,6 @@ const FilterList = ({
                 key={field}
                 index={index}
                 cacheKey={cacheKey}
-                query={query}
                 classname={styles.customFilterContainer}
                 filterKey={field}
                 extendedMappingResults={extendedMappingResults}

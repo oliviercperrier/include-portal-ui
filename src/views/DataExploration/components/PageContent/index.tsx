@@ -39,7 +39,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
   const total = 0;
 
   const facetTransResolver = (key: string) => {
-    const title = intl.get(`filters.group.${key}`);
+    const title = intl.get(`facets.${key}`);
     return title
       ? title
       : mappingResults?.extendedMapping?.find(
@@ -75,7 +75,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
           type="card"
           activeKey={tabId}
           onChange={(key) => {
-            if (history.location.hash !== key) {
+            if (!history.location.pathname.includes(key)) {
               history.push(
                 `${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`
               );

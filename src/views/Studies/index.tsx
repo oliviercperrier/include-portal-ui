@@ -1,5 +1,6 @@
 import { Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
+import { hydrateResults } from "graphql/models";
 import { StudyResultTree } from "graphql/studies/models";
 import { FETCH_STUDIES_QUERY } from "graphql/studies/queries";
 import { useLazyResultQueryOnLoadOnly } from "hooks/graphql/useLazyResultQuery";
@@ -54,18 +55,10 @@ const columns: ColumnsType<any> = [
   },
 ];
 
-const makeRows = (result: StudyResultTree) =>
-  result
-    ? result.study.hits.edges.map((study, index) => ({
-        key: index,
-        ...study.node,
-      }))
-    : [];
-
 const Studies = () => {
   const { loading, result } =
     useLazyResultQueryOnLoadOnly<StudyResultTree>(FETCH_STUDIES_QUERY);
-  const rowsDate = makeRows(result!);
+  const rowsDate = hydrateResults(result?.study?.hits?.edges || []);
 
   return (
     <Space direction="vertical" className={styles.studiesWrapper}>

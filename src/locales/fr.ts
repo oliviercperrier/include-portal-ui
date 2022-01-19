@@ -259,6 +259,21 @@ const fr = {
       },
     },
   },
+  facets: {
+    study_id: "Study ID",
+    karyotype: "Karyotype",
+    down_syndrome_diagnosis: "Down Syndrome Diagnosis",
+    diagnosis: {
+      mondo_id_diagnosis: "Mondo ID Diagnosis"
+    },
+    phenotype: {
+      hpo_id_phenotype: "HPO ID Phenotype"
+    },
+    age_at_data_collection: "Age at data collection",
+    family_type: "Family Type",
+    sex: "Sex",
+    ethnicity: "Ethnicity",
+  },
 };
 
 export default fr;

@@ -16,14 +16,12 @@ import {
 import { getFilterGroup, getFilters } from "graphql/utils/Filters";
 import history from "utils/history";
 import { underscoreToDot } from "@ferlab/ui/core/data/arranger/formatting";
-import { DocumentNode } from "@apollo/client";
 import CustomFilterSelector from "./CustomFilterSelector";
 import { getFiltersDictionary } from "utils/translation";
 
 type OwnProps = {
   classname: string;
   index: string;
-  query: DocumentNode;
   cacheKey: string;
   filterKey: string;
   extendedMappingResults: ExtendedMappingResults;
@@ -33,7 +31,6 @@ type OwnProps = {
 const CustomFilterContainer = ({
   classname,
   index,
-  query,
   cacheKey,
   filterKey,
   filtersOpen,
@@ -73,8 +70,8 @@ const CustomFilterContainer = ({
         customContent={
           <CustomFilterSelector
             index={index}
-            query={query}
             cacheKey={cacheKey}
+            filterKey={filterKey}
             dictionary={getFiltersDictionary()}
             filters={filters}
             filterGroup={filterGroup}
@@ -83,6 +80,7 @@ const CustomFilterContainer = ({
             selectedFilters={selectedFilters}
             searchInputVisible={isSearchVisible}
             onDataLoaded={setResults}
+            extendedMappingResults={extendedMappingResults}
           />
         }
       />

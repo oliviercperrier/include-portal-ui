@@ -7,11 +7,12 @@ interface OwnProps {
   extra?: React.ReactNode[];
   pageIndex: number;
   pageSize: number;
+  total: number;
 }
 
-const TableHeader = ({ extra = [], pageIndex, pageSize }: OwnProps) => (
+const TableHeader = ({ extra = [], pageIndex, pageSize, total }: OwnProps) => (
   <div className={styles.tableHeader}>
-    <ItemsCount page={pageIndex} size={pageSize} total={0} />
+    <ItemsCount page={pageIndex} size={pageSize} total={total} />
     {extra.map((element, index) => (
       <div key={index}>{element}</div>
     ))}

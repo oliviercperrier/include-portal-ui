@@ -6,12 +6,16 @@ import { FilterGroup, FilterInfo } from "./types";
 import { ExtendedMappingResults } from "graphql/models";
 
 import styles from "./Filters.module.scss";
+import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
+
+export type TCustomFilterMapper = (filters: ISyntheticSqon) => ISyntheticSqon;
 
 type OwnProps = {
   index: string;
   cacheKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filterInfo: FilterInfo;
+  filterMapper?: TCustomFilterMapper
 };
 
 const FilterList = ({
@@ -19,6 +23,7 @@ const FilterList = ({
   cacheKey,
   extendedMappingResults,
   filterInfo,
+  filterMapper
 }: OwnProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -60,6 +65,7 @@ const FilterList = ({
                 filterKey={field}
                 extendedMappingResults={extendedMappingResults}
                 filtersOpen={filtersOpen}
+                filterMapper={filterMapper}
               />
             ))}
           </div>

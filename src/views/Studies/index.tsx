@@ -1,9 +1,6 @@
 import { Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { hydrateResults } from "graphql/models";
-import { StudyResultTree } from "graphql/studies/models";
-import { FETCH_STUDIES_QUERY } from "graphql/studies/queries";
-import { useLazyResultQueryOnLoadOnly } from "hooks/graphql/useLazyResultQuery";
+import { useStudies } from "graphql/studies/actions";
 import ApolloProvider from "provider/ApolloProvider";
 import { GraphqlBackend } from "provider/types";
 
@@ -29,6 +26,8 @@ const columns: ColumnsType<any> = [
     dataIndex: "external_id",
     render: (external_id) => (
       <a
+        target="_blank"
+        rel="noreferrer"
         href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${external_id}`}
       >
         {external_id}
@@ -56,9 +55,7 @@ const columns: ColumnsType<any> = [
 ];
 
 const Studies = () => {
-  const { loading, result } =
-    useLazyResultQueryOnLoadOnly<StudyResultTree>(FETCH_STUDIES_QUERY);
-  const rowsDate = hydrateResults(result?.study?.hits?.edges || []);
+  const { loading, data } = useStudies();
 
   return (
     <Space direction="vertical" className={styles.studiesWrapper}>
@@ -67,7 +64,7 @@ const Studies = () => {
         size="small"
         bordered
         columns={columns}
-        dataSource={rowsDate}
+        dataSource={data}
         loading={loading}
         pagination={false}
       ></Table>

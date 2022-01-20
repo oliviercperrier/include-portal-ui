@@ -15,7 +15,7 @@ import PageContent, {
 import ApolloProvider from "provider/ApolloProvider";
 import { Spin } from "antd";
 import { ExtendedMappingResults } from "graphql/models";
-import FilterList from "components/uiKit/FilterList";
+import FilterList, { TCustomFilterMapper } from "components/uiKit/FilterList";
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from "views/DataExploration/utils/constant";
 import { FilterInfo } from "components/uiKit/FilterList/types";
 import { GraphqlBackend } from "provider/types";
@@ -24,6 +24,11 @@ import { INDEXES } from "graphql/constants";
 import { useParams } from "react-router";
 
 import styles from "./index.module.scss";
+import {
+  mapFilterForBiospecimen,
+  mapFilterForFiles,
+  mapFilterForParticipant,
+} from "./utils/mapper";
 
 interface OwnProps {
   tab?: string;
@@ -59,14 +64,29 @@ export const filterGroups: {
   [FilterTypes.Biospecimen]: {
     groups: [
       {
-        fields: [],
+        fields: [
+          "biospecimen_type",
+          "sample_type",
+          "derived_sample_type",
+          "ncit_id_tissue_type",
+          "age_at_biospecimen_collection",
+          "bio_repository",
+        ],
       },
     ],
   },
   [FilterTypes.Datafiles]: {
     groups: [
       {
-        fields: [],
+        fields: [
+          "type_of_omics",
+          "experimental_strategy",
+          "data_category",
+          "data_type",
+          "file_format",
+          "size",
+          "access",
+        ],
       },
     ],
   },
@@ -75,7 +95,8 @@ export const filterGroups: {
 const filtersContainer = (
   mappingResults: ExtendedMappingResults,
   type: FilterTypes,
-  index: string
+  index: string,
+  filterMapper: TCustomFilterMapper
 ): React.ReactNode => {
   if (mappingResults.loading) {
     return <Spin className={styles.filterLoader} spinning />;
@@ -87,12 +108,13 @@ const filtersContainer = (
       cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
       extendedMappingResults={mappingResults}
       filterInfo={filterGroups[type]}
+      filterMapper={filterMapper}
     />
   );
 };
 
 const DataExploration = (props: OwnProps) => {
-  useParams(); // to sync filters with querybuilder
+  const { tab } = useParams<{ tab: string }>(); // to sync filters with querybuilder
   const participantMappingResults = useGetExtendedMappings("participant");
   const fileMappingResults = useGetExtendedMappings("file");
   const biospecimenMappingResults = useGetExtendedMappings("biospecimen");
@@ -105,7 +127,8 @@ const DataExploration = (props: OwnProps) => {
       panelContent: filtersContainer(
         participantMappingResults,
         FilterTypes.Participant,
-        INDEXES.PARTICIPANT
+        INDEXES.PARTICIPANT,
+        mapFilterForParticipant
       ),
     },
     {
@@ -113,9 +136,10 @@ const DataExploration = (props: OwnProps) => {
       title: intl.get("screen.dataExploration.sidemenu.biospecimen"),
       icon: <ExperimentOutlined className={styles.sideMenuIcon} />,
       panelContent: filtersContainer(
-        { data: [], loading: false },
+        biospecimenMappingResults,
         FilterTypes.Biospecimen,
-        INDEXES.BIOSPECIMEN
+        INDEXES.BIOSPECIMEN,
+        mapFilterForBiospecimen
       ),
     },
     {
@@ -125,7 +149,8 @@ const DataExploration = (props: OwnProps) => {
       panelContent: filtersContainer(
         fileMappingResults,
         FilterTypes.Datafiles,
-        INDEXES.FILE
+        INDEXES.FILE,
+        mapFilterForFiles
       ),
     },
   ];
@@ -135,14 +160,14 @@ const DataExploration = (props: OwnProps) => {
       <SidebarMenu
         className={styles.sideMenu}
         menuItems={menuItems}
-        defaultSelectedKey={props.tab}
+        defaultSelectedKey={tab}
       />
       <ScrollContent className={styles.scrollContent}>
         <PageContent
           fileMapping={fileMappingResults}
           biospecimenMapping={biospecimenMappingResults}
           participantMapping={participantMappingResults}
-          tabId={props.tab}
+          tabId={tab}
         ></PageContent>
       </ScrollContent>
     </StackLayout>

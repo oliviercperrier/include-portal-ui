@@ -18,6 +18,7 @@ import history from "utils/history";
 import { underscoreToDot } from "@ferlab/ui/core/data/arranger/formatting";
 import CustomFilterSelector from "./CustomFilterSelector";
 import { getFiltersDictionary } from "utils/translation";
+import { TCustomFilterMapper } from ".";
 
 type OwnProps = {
   classname: string;
@@ -26,6 +27,7 @@ type OwnProps = {
   filterKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filtersOpen: boolean;
+  filterMapper?: TCustomFilterMapper
 };
 
 const CustomFilterContainer = ({
@@ -35,6 +37,7 @@ const CustomFilterContainer = ({
   filterKey,
   filtersOpen,
   extendedMappingResults,
+  filterMapper
 }: OwnProps) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [results, setResults] = useState<GqlResults<any>>();
@@ -43,7 +46,7 @@ const CustomFilterContainer = ({
   );
 
   const onChange = (fg: IFilterGroup, f: IFilter[]) => {
-    updateFilters(history, fg, f);
+    updateFilters(history, fg, f, index);
   };
 
   const aggregations = results?.aggregations
@@ -81,6 +84,7 @@ const CustomFilterContainer = ({
             searchInputVisible={isSearchVisible}
             onDataLoaded={setResults}
             extendedMappingResults={extendedMappingResults}
+            filterMapper={filterMapper}
           />
         }
       />

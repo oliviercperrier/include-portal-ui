@@ -60,3 +60,9 @@ export const hydrateResults = <resultType extends ArrangerNodeData>(
       key: edge.node?.id || index,
     })
   );
+
+export interface IQueryResults<T> {
+  data: T;
+  loading: boolean;
+  total: number;
+}

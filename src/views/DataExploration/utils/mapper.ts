@@ -1,14 +1,33 @@
 import { IValueContent, ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
+import { INDEXES } from "graphql/constants";
 import { ExtendedMapping, ExtendedMappingResults } from "graphql/models";
 
 interface IFieldPrefixMap {
-  fields: string[];
+  index: string;
   prefix: string;
 }
 
-const getPrefix = (field: string, fieldPrefixMaps: IFieldPrefixMap[]) => {
-  const fieldPrefixMap = fieldPrefixMaps.find((config) =>
-    config.fields.includes(field)
+const filePrefixMap: IFieldPrefixMap = {
+  index: INDEXES.FILE,
+  prefix: "files.",
+};
+
+const participantPrefixMap: IFieldPrefixMap = {
+  index: INDEXES.PARTICIPANT,
+  prefix: "participant.",
+};
+
+//const biospecimenPrefixMap: IFieldPrefixMap = {
+//  index: INDEXES.BIOSPECIMEN,
+//  prefix: "biospecimen.",
+//};
+
+const getPrefix = (
+  field: IValueContent,
+  fieldPrefixMaps: IFieldPrefixMap[]
+) => {
+  const fieldPrefixMap = fieldPrefixMaps.find(
+    (config) => config.index === field.index
   );
   return fieldPrefixMap ? fieldPrefixMap.prefix : "";
 };
@@ -31,7 +50,7 @@ const mapFilters = (
       ...c,
       content: {
         ...cc,
-        field: `${getPrefix(cc.field, fieldPrefixMaps)}${cc.field}`,
+        field: `${getPrefix(cc, fieldPrefixMaps)}${cc.field}`,
       },
     };
   });
@@ -40,53 +59,20 @@ const mapFilters = (
   return sqonToMap;
 };
 
-export const mapFilterForParticipant = (
-  sqonFilters: ISyntheticSqon,
-  fileMapping: ExtendedMappingResults,
-  bispecimenMapping: ExtendedMappingResults
-) =>
+export const mapFilterForParticipant = (sqonFilters: ISyntheticSqon) =>
   mapFilters(sqonFilters, [
-    {
-      fields: fileMapping.data.map((item) => item.field),
-      prefix: "files.",
-    },
-    //{
-    //  fields: bispecimenMapping.data.map((item) => item.field),
-    //  prefix: "biospecimen."
-    //}
+    filePrefixMap,
+    //biospecimenPrefixMap
   ]);
 
-export const mapFilterForFiles = (
-  sqonFilters: ISyntheticSqon,
-  bispecimenMapping: ExtendedMappingResults,
-  participantMapping: ExtendedMappingResults
-) =>
+export const mapFilterForFiles = (sqonFilters: ISyntheticSqon) =>
   mapFilters(sqonFilters, [
-    {
-      fields: participantMapping.data.map((item) => item.field),
-      prefix: "participant.",
-    },
-    //{
-    //  fields: bispecimenMapping.data.map((item) => item.field),
-    //  prefix: "biospecimen."
-    //}
+    participantPrefixMap,
+    //biospecimenPrefixMap
   ]);
 
-export const mapFilterForBiospecimen = (
-  sqonFilters: ISyntheticSqon,
-  fileMapping: ExtendedMappingResults,
-  participantMapping: ExtendedMappingResults
-) =>
-  mapFilters(sqonFilters, [
-    {
-      fields: fileMapping.data.map((item) => item.field),
-      prefix: "files.",
-    },
-    {
-      fields: participantMapping.data.map((item) => item.field),
-      prefix: "participant.",
-    },
-  ]);
+export const mapFilterForBiospecimen = (sqonFilters: ISyntheticSqon) =>
+  mapFilters(sqonFilters, [filePrefixMap, participantPrefixMap]);
 
 export const combineExtendedMappings = (mappings: ExtendedMappingResults[]) => {
   let concatMappings: ExtendedMapping[] = [];

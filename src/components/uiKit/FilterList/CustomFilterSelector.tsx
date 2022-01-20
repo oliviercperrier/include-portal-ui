@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import useGetAggregations from "hooks/graphql/useGetAggregations";
 import { ExtendedMappingResults } from "graphql/models";
 import { AGGREGATION_QUERY } from "graphql/queries";
+import { TCustomFilterMapper } from ".";
 
 type OwnProps = FilterSelectorProps & {
   index: string;
@@ -18,6 +19,7 @@ type OwnProps = FilterSelectorProps & {
   filterKey: string;
   onDataLoaded: Function;
   extendedMappingResults: ExtendedMappingResults;
+  filterMapper?: TCustomFilterMapper;
 };
 
 const CustomFilterSelector = ({
@@ -33,14 +35,18 @@ const CustomFilterSelector = ({
   onDataLoaded,
   searchInputVisible,
   extendedMappingResults,
+  filterMapper,
 }: OwnProps) => {
   const { filters: queryFilters } = useFilters();
 
   const allSqons = getQueryBuilderCache(cacheKey).state;
 
+  const newQueryFilters = filterMapper
+    ? filterMapper(queryFilters)
+    : queryFilters;
   const results = useGetAggregations(
     {
-      sqon: resolveSyntheticSqon(allSqons, queryFilters),
+      sqon: resolveSyntheticSqon(allSqons, newQueryFilters),
     },
     AGGREGATION_QUERY(index, [filterKey], extendedMappingResults),
     index

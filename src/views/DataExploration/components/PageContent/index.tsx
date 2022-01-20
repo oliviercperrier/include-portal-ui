@@ -30,6 +30,10 @@ import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
 
 import styles from "./index.module.scss";
+import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
+import { useParticipants } from "graphql/participants/actions";
+import { useDataFiles } from "graphql/files/actions";
+import { useBiospecimen } from "graphql/biospecimens/actions";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -53,31 +57,38 @@ const PageContent = ({
 }: OwnProps) => {
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
-  const total = 0;
 
-  const newParticipantFilters = mapFilterForParticipant(
-    filters,
-    fileMapping,
-    biospecimenMapping
-  );
-  const newBiospecimenFilters = mapFilterForBiospecimen(
-    filters,
-    fileMapping,
-    participantMapping
-  );
-  const newFileFilters = mapFilterForFiles(
-    filters,
-    biospecimenMapping,
-    participantMapping
-  );
+  const participantResults = useParticipants({
+    first: 100,
+    offset: 0,
+    sqon: resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters)),
+    sort: [],
+  });
+
+  const fileResults = useDataFiles({
+    first: 100,
+    offset: 0,
+    sqon: resolveSyntheticSqon(allSqons, mapFilterForFiles(filters)),
+    sort: [],
+  });
+
+  const biospecimenResults = useBiospecimen({
+    first: 100,
+    offset: 0,
+    sqon: resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters)),
+    sort: [],
+  });
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
     return title
       ? title
-      : combineExtendedMappings([participantMapping, fileMapping])?.data?.find(
-          (mapping: ExtendedMapping) => key === mapping.field
-        )?.displayName || key;
+      : combineExtendedMappings([
+          participantMapping,
+          fileMapping,
+          biospecimenMapping,
+        ])?.data?.find((mapping: ExtendedMapping) => key === mapping.field)
+          ?.displayName || key;
   };
 
   return (
@@ -101,7 +112,11 @@ const PageContent = ({
           cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
           currentQuery={filters?.content?.length ? filters : {}}
           loading={participantMapping.loading}
-          total={total}
+          total={
+            participantResults.total +
+            fileResults.total +
+            biospecimenResults.total
+          }
           dictionary={getQueryBuilderDictionary(facetTransResolver)}
         />
         <Tabs
@@ -131,39 +146,39 @@ const PageContent = ({
               <span>
                 <UserOutlined />
                 {intl.get("screen.dataExploration.tabs.participants", {
-                  count: 0,
+                  count: participantResults.total,
                 })}
               </span>
             }
             key={TAB_IDS.PARTICIPANTS}
           >
-            <ParticipantsTab />
+            <ParticipantsTab results={participantResults} />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <ExperimentOutlined />
                 {intl.get("screen.dataExploration.tabs.biospecimens", {
-                  count: 0,
+                  count: biospecimenResults.total,
                 })}
               </span>
             }
             key={TAB_IDS.BIOSPECIMENS}
           >
-            <BiospecimensTab />
+            <BiospecimensTab results={biospecimenResults} />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <FileTextOutlined />
                 {intl.get("screen.dataExploration.tabs.datafiles", {
-                  count: 0,
+                  count: fileResults.total,
                 })}
               </span>
             }
             key={TAB_IDS.DATA_FILES}
           >
-            <DataFilesTabs />
+            <DataFilesTabs results={fileResults} />
           </Tabs.TabPane>
         </Tabs>
       </Space>

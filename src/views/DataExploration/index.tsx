@@ -21,9 +21,9 @@ import { FilterInfo } from "components/uiKit/FilterList/types";
 import { GraphqlBackend } from "provider/types";
 import useGetExtendedMappings from "hooks/graphql/useGetExtendedMappings";
 import { INDEXES } from "graphql/constants";
+import { useParams } from "react-router";
 
 import styles from "./index.module.scss";
-import { useParams } from "react-router";
 
 interface OwnProps {
   tab?: string;
@@ -51,7 +51,7 @@ export const filterGroups: {
           "family_type",
           "sex",
           "race",
-          "ethnicity"
+          "ethnicity",
         ],
       },
     ],
@@ -95,6 +95,7 @@ const DataExploration = (props: OwnProps) => {
   useParams(); // to sync filters with querybuilder
   const participantMappingResults = useGetExtendedMappings("participant");
   const fileMappingResults = useGetExtendedMappings("file");
+  const biospecimenMappingResults = useGetExtendedMappings("biospecimen");
 
   const menuItems: ISidebarMenuItem[] = [
     {
@@ -137,7 +138,12 @@ const DataExploration = (props: OwnProps) => {
         defaultSelectedKey={props.tab}
       />
       <ScrollContent className={styles.scrollContent}>
-        <PageContent mappingResults={{}} tabId={props.tab}></PageContent>
+        <PageContent
+          fileMapping={fileMappingResults}
+          biospecimenMapping={biospecimenMappingResults}
+          participantMapping={participantMappingResults}
+          tabId={props.tab}
+        ></PageContent>
       </ScrollContent>
     </StackLayout>
   );

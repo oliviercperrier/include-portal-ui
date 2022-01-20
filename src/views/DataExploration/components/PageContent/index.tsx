@@ -9,10 +9,20 @@ import {
 import history from "utils/history";
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from "views/DataExploration/utils/constant";
 import intl from "react-intl-universal";
-import { ExtendedMapping } from "graphql/models";
-import { useFilters } from "@ferlab/ui/core/data/filters/utils";
+import { ExtendedMapping, ExtendedMappingResults } from "graphql/models";
+import {
+  getQueryBuilderCache,
+  useFilters,
+} from "@ferlab/ui/core/data/filters/utils";
+import { STATIC_ROUTES } from "utils/routes";
 import { getQueryBuilderDictionary } from "utils/translation";
 import { Space, Tabs } from "antd";
+import {
+  mapFilterForParticipant,
+  combineExtendedMappings,
+  mapFilterForFiles,
+  mapFilterForBiospecimen,
+} from "views/DataExploration/utils/mapper";
 
 import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
@@ -20,10 +30,11 @@ import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
 
 import styles from "./index.module.scss";
-import { STATIC_ROUTES } from "utils/routes";
 
 interface OwnProps {
-  mappingResults: any; // TODO Set a type
+  fileMapping: ExtendedMappingResults;
+  biospecimenMapping: ExtendedMappingResults;
+  participantMapping: ExtendedMappingResults;
   tabId?: string;
 }
 
@@ -34,15 +45,37 @@ export enum TAB_IDS {
   DATA_FILES = "datafiles",
 }
 
-const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
+const PageContent = ({
+  fileMapping,
+  biospecimenMapping,
+  participantMapping,
+  tabId = undefined,
+}: OwnProps) => {
   const { filters } = useFilters();
+  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const total = 0;
+
+  const newParticipantFilters = mapFilterForParticipant(
+    filters,
+    fileMapping,
+    biospecimenMapping
+  );
+  const newBiospecimenFilters = mapFilterForBiospecimen(
+    filters,
+    fileMapping,
+    participantMapping
+  );
+  const newFileFilters = mapFilterForFiles(
+    filters,
+    biospecimenMapping,
+    participantMapping
+  );
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
     return title
       ? title
-      : mappingResults?.extendedMapping?.find(
+      : combineExtendedMappings([participantMapping, fileMapping])?.data?.find(
           (mapping: ExtendedMapping) => key === mapping.field
         )?.displayName || key;
   };
@@ -67,7 +100,7 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
           history={history}
           cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
           currentQuery={filters?.content?.length ? filters : {}}
-          loading={mappingResults.loading}
+          loading={participantMapping.loading}
           total={total}
           dictionary={getQueryBuilderDictionary(facetTransResolver)}
         />

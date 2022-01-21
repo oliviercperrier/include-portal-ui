@@ -60,6 +60,8 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "derived_sample_type",
     title: "Derived Sample Type",
     dataIndex: "derived_sample_type",
+    render: (derived_sample_type) =>
+      derived_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: "age_at_biospecimen_collection",

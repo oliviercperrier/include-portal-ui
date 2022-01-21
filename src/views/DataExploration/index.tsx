@@ -12,7 +12,7 @@ import PageContent, {
   TAB_IDS,
 } from "views/DataExploration/components/PageContent";
 import ApolloProvider from "provider/ApolloProvider";
-import { Space, Spin } from "antd";
+import { Spin } from "antd";
 import { ExtendedMappingResults } from "graphql/models";
 import FilterList, { TCustomFilterMapper } from "components/uiKit/FilterList";
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from "views/DataExploration/utils/constant";

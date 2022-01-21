@@ -1,3 +1,4 @@
+import { IBiospecimenEntity } from "graphql/biospecimens/models";
 import { IFileEntity } from "graphql/files/models";
 import { ArrangerResultsTree } from "graphql/models";
 
@@ -33,5 +34,6 @@ export interface IParticipantEntity {
   study_id: string;
   diagnosis: ArrangerResultsTree<IParticipantDiagnosis>;
   files: ArrangerResultsTree<IFileEntity>;
+  biospecimen: ArrangerResultsTree<IBiospecimenEntity>;
   phenotype: ArrangerResultsTree<IParticipantPhenotype>;
 }

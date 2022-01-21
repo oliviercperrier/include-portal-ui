@@ -22,6 +22,10 @@ export const SEARCH_BIOSPECIMEN_QUERY = gql`
             age_at_biospecimen_collection
             ncit_id_tissue_type
             bio_repository
+
+            participant {
+              participant_id
+            }
           }
         }
       }

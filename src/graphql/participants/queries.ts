@@ -23,6 +23,12 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             family_type
             is_proband
             age_at_data_collection
+
+            files {
+              hits {
+                total
+              }
+            }
           }
         }
       }

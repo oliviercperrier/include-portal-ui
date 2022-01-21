@@ -7,7 +7,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import history from "utils/history";
-import { DATA_EXPLORATION_REPO_CACHE_KEY } from "views/DataExploration/utils/constant";
+import {
+  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGE_SIZE,
+} from "views/DataExploration/utils/constant";
 import intl from "react-intl-universal";
 import { ExtendedMapping, ExtendedMappingResults } from "graphql/models";
 import {
@@ -23,17 +27,18 @@ import {
   mapFilterForFiles,
   mapFilterForBiospecimen,
 } from "views/DataExploration/utils/mapper";
+import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
+import { useParticipants } from "graphql/participants/actions";
+import { useDataFiles } from "graphql/files/actions";
+import { useBiospecimen } from "graphql/biospecimens/actions";
 
 import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
 import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
+import { useState } from "react";
 
 import styles from "./index.module.scss";
-import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
-import { useParticipants } from "graphql/participants/actions";
-import { useDataFiles } from "graphql/files/actions";
-import { useBiospecimen } from "graphql/biospecimens/actions";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -49,6 +54,11 @@ export enum TAB_IDS {
   DATA_FILES = "datafiles",
 }
 
+const DEFAULT_PAGING_CONFIG = {
+  index: DEFAULT_PAGE_INDEX,
+  size: DEFAULT_PAGE_SIZE,
+};
+
 const PageContent = ({
   fileMapping,
   biospecimenMapping,
@@ -57,24 +67,33 @@ const PageContent = ({
 }: OwnProps) => {
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+  const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
+    DEFAULT_PAGING_CONFIG
+  );
+  const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(
+    DEFAULT_PAGING_CONFIG
+  );
+  const [pagingConfigFile, setPagingConfigFile] = useState(
+    DEFAULT_PAGING_CONFIG
+  );
 
   const participantResults = useParticipants({
-    first: 100,
-    offset: 0,
+    first: pagingConfigParticipant.size,
+    offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
     sqon: resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters)),
     sort: [],
   });
 
   const fileResults = useDataFiles({
-    first: 100,
-    offset: 0,
+    first: pagingConfigFile.size,
+    offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
     sqon: resolveSyntheticSqon(allSqons, mapFilterForFiles(filters)),
     sort: [],
   });
 
   const biospecimenResults = useBiospecimen({
-    first: 100,
-    offset: 0,
+    first: pagingConfigBiospecimen.size,
+    offset: pagingConfigBiospecimen.size * (pagingConfigBiospecimen.index - 1),
     sqon: resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters)),
     sort: [],
   });
@@ -152,7 +171,11 @@ const PageContent = ({
             }
             key={TAB_IDS.PARTICIPANTS}
           >
-            <ParticipantsTab results={participantResults} />
+            <ParticipantsTab
+              results={participantResults}
+              setPagingConfig={setPagingConfigParticipant}
+              pagingConfig={pagingConfigParticipant}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
@@ -165,7 +188,11 @@ const PageContent = ({
             }
             key={TAB_IDS.BIOSPECIMENS}
           >
-            <BiospecimensTab results={biospecimenResults} />
+            <BiospecimensTab
+              results={biospecimenResults}
+              setPagingConfig={setPagingConfigBiospecimen}
+              pagingConfig={pagingConfigBiospecimen}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
@@ -178,7 +205,11 @@ const PageContent = ({
             }
             key={TAB_IDS.DATA_FILES}
           >
-            <DataFilesTabs results={fileResults} />
+            <DataFilesTabs
+              results={fileResults}
+              setPagingConfig={setPagingConfigFile}
+              pagingConfig={pagingConfigFile}
+            />
           </Tabs.TabPane>
         </Tabs>
       </Space>

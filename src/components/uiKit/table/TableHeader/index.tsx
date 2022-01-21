@@ -2,6 +2,7 @@ import React from "react";
 import { ItemsCount } from "components/uiKit/ItemsCount";
 
 import styles from "./index.module.scss";
+import { Space } from "antd";
 
 interface OwnProps {
   extra?: React.ReactNode[];
@@ -13,9 +14,11 @@ interface OwnProps {
 const TableHeader = ({ extra = [], pageIndex, pageSize, total }: OwnProps) => (
   <div className={styles.tableHeader}>
     <ItemsCount page={pageIndex} size={pageSize} total={total} />
-    {extra.map((element, index) => (
-      <div key={index}>{element}</div>
-    ))}
+    <Space className={styles.extra} size={12}>
+      {extra.map((element, index) => (
+        <div key={index}>{element}</div>
+      ))}
+    </Space>
   </div>
 );
 

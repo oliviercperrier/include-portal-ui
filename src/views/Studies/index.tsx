@@ -1,5 +1,7 @@
+import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
+import TableHeader from "components/uiKit/table/TableHeader";
 import { useStudies } from "graphql/studies/actions";
 import ApolloProvider from "provider/ApolloProvider";
 import { GraphqlBackend } from "provider/types";
@@ -55,19 +57,26 @@ const columns: ColumnsType<any> = [
 ];
 
 const Studies = () => {
-  const { loading, data } = useStudies();
+  const { loading, data, total } = useStudies();
 
   return (
     <Space direction="vertical" className={styles.studiesWrapper}>
       <Title level={3}>Studies</Title>
-      <Table
-        size="small"
-        bordered
-        columns={columns}
-        dataSource={data}
-        loading={loading}
-        pagination={false}
-      ></Table>
+      <GridCard
+        content={
+          <Space size={12} direction="vertical" className={styles.tableWrapper}>
+            <TableHeader pageIndex={1} pageSize={15} total={total} />
+            <Table
+              size="small"
+              bordered
+              columns={columns}
+              dataSource={data}
+              loading={loading}
+              pagination={false}
+            ></Table>
+          </Space>
+        }
+      ></GridCard>
     </Space>
   );
 };

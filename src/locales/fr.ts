@@ -259,6 +259,38 @@ const fr = {
       },
     },
   },
+  facets: {
+    // Participant
+    study_id: "Study ID",
+    karyotype: "Karyotype",
+    down_syndrome_diagnosis: "Down Syndrome Diagnosis",
+    diagnosis: {
+      mondo_id_diagnosis: "Mondo ID Diagnosis",
+    },
+    phenotype: {
+      hpo_id_phenotype: "HPO ID Phenotype",
+    },
+    age_at_data_collection: "Age at data collection",
+    family_type: "Family Type",
+    sex: "Sex",
+    ethnicity: "Ethnicity",
+    race: "Race",
+    // Biospecimen
+    biospecimen_type: "Biospecimen Type",
+    sample_type: "Sample Type",
+    derived_sample_type: "Derived Sample Type",
+    ncit_id_tissue_type: "NCIT ID Tissues Type",
+    age_at_biospecimen_collection: "Age at Biospecimen Collection",
+    bio_repository: "Bio Repository",
+    // File
+    type_of_omics: "Type of Omics",
+    experimental_strategy: "Experimental Strategy",
+    data_category: "Data Category",
+    data_type: "Data Type",
+    file_format: "File Format",
+    size: "Size",
+    access: "Access",
+  },
 };
 
 export default fr;

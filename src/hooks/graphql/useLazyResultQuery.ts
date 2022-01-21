@@ -36,7 +36,7 @@ export const useLazyResultQueryOnLoadOnly = <
 ) => {
   const [customOptions, setCustomOptions] = useState<{
     skip?: boolean;
-    dataToReturn?: any;
+    dataToReturn?: TData;
   }>({});
   const { loading, result, error } = useLazyResultQuery(query, {
     ...options,
@@ -54,7 +54,7 @@ export const useLazyResultQueryOnLoadOnly = <
 
   return {
     loading,
-    data:
+    result:
       options?.skip || customOptions?.skip
         ? customOptions.dataToReturn
         : result,

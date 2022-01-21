@@ -7,23 +7,43 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import history from "utils/history";
-import { DATA_EXPLORATION_REPO_CACHE_KEY } from "views/DataExploration/utils/constant";
+import {
+  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGE_SIZE,
+} from "views/DataExploration/utils/constant";
 import intl from "react-intl-universal";
-import { ExtendedMapping } from "graphql/models";
-import { useFilters } from "@ferlab/ui/core/data/filters/utils";
+import { ExtendedMapping, ExtendedMappingResults } from "graphql/models";
+import {
+  getQueryBuilderCache,
+  useFilters,
+} from "@ferlab/ui/core/data/filters/utils";
+import { STATIC_ROUTES } from "utils/routes";
 import { getQueryBuilderDictionary } from "utils/translation";
 import { Space, Tabs } from "antd";
+import {
+  mapFilterForParticipant,
+  combineExtendedMappings,
+  mapFilterForFiles,
+  mapFilterForBiospecimen,
+} from "views/DataExploration/utils/mapper";
+import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
+import { useParticipants } from "graphql/participants/actions";
+import { useDataFiles } from "graphql/files/actions";
+import { useBiospecimen } from "graphql/biospecimens/actions";
 
 import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
 import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
+import { useState } from "react";
 
 import styles from "./index.module.scss";
-import { STATIC_ROUTES } from "utils/routes";
 
 interface OwnProps {
-  mappingResults: any; // TODO Set a type
+  fileMapping: ExtendedMappingResults;
+  biospecimenMapping: ExtendedMappingResults;
+  participantMapping: ExtendedMappingResults;
   tabId?: string;
 }
 
@@ -34,17 +54,60 @@ export enum TAB_IDS {
   DATA_FILES = "datafiles",
 }
 
-const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
+const DEFAULT_PAGING_CONFIG = {
+  index: DEFAULT_PAGE_INDEX,
+  size: DEFAULT_PAGE_SIZE,
+};
+
+const PageContent = ({
+  fileMapping,
+  biospecimenMapping,
+  participantMapping,
+  tabId = undefined,
+}: OwnProps) => {
   const { filters } = useFilters();
-  const total = 0;
+  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+  const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
+    DEFAULT_PAGING_CONFIG
+  );
+  const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(
+    DEFAULT_PAGING_CONFIG
+  );
+  const [pagingConfigFile, setPagingConfigFile] = useState(
+    DEFAULT_PAGING_CONFIG
+  );
+
+  const participantResults = useParticipants({
+    first: pagingConfigParticipant.size,
+    offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
+    sqon: resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters)),
+    sort: [],
+  });
+
+  const fileResults = useDataFiles({
+    first: pagingConfigFile.size,
+    offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
+    sqon: resolveSyntheticSqon(allSqons, mapFilterForFiles(filters)),
+    sort: [],
+  });
+
+  const biospecimenResults = useBiospecimen({
+    first: pagingConfigBiospecimen.size,
+    offset: pagingConfigBiospecimen.size * (pagingConfigBiospecimen.index - 1),
+    sqon: resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters)),
+    sort: [],
+  });
 
   const facetTransResolver = (key: string) => {
-    const title = intl.get(`filters.group.${key}`);
+    const title = intl.get(`facets.${key}`);
     return title
       ? title
-      : mappingResults?.extendedMapping?.find(
-          (mapping: ExtendedMapping) => key === mapping.field
-        )?.displayName || key;
+      : combineExtendedMappings([
+          participantMapping,
+          fileMapping,
+          biospecimenMapping,
+        ])?.data?.find((mapping: ExtendedMapping) => key === mapping.field)
+          ?.displayName || key;
   };
 
   return (
@@ -67,15 +130,19 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
           history={history}
           cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
           currentQuery={filters?.content?.length ? filters : {}}
-          loading={mappingResults.loading}
-          total={total}
+          loading={participantMapping.loading}
+          total={
+            participantResults.total +
+            fileResults.total +
+            biospecimenResults.total
+          }
           dictionary={getQueryBuilderDictionary(facetTransResolver)}
         />
         <Tabs
           type="card"
           activeKey={tabId}
           onChange={(key) => {
-            if (history.location.hash !== key) {
+            if (!history.location.pathname.includes(key)) {
               history.push(
                 `${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`
               );
@@ -98,39 +165,51 @@ const PageContent = ({ mappingResults, tabId = undefined }: OwnProps) => {
               <span>
                 <UserOutlined />
                 {intl.get("screen.dataExploration.tabs.participants", {
-                  count: 0,
+                  count: participantResults.total,
                 })}
               </span>
             }
             key={TAB_IDS.PARTICIPANTS}
           >
-            <ParticipantsTab />
+            <ParticipantsTab
+              results={participantResults}
+              setPagingConfig={setPagingConfigParticipant}
+              pagingConfig={pagingConfigParticipant}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <ExperimentOutlined />
                 {intl.get("screen.dataExploration.tabs.biospecimens", {
-                  count: 0,
+                  count: biospecimenResults.total,
                 })}
               </span>
             }
             key={TAB_IDS.BIOSPECIMENS}
           >
-            <BiospecimensTab />
+            <BiospecimensTab
+              results={biospecimenResults}
+              setPagingConfig={setPagingConfigBiospecimen}
+              pagingConfig={pagingConfigBiospecimen}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span>
                 <FileTextOutlined />
                 {intl.get("screen.dataExploration.tabs.datafiles", {
-                  count: 0,
+                  count: fileResults.total,
                 })}
               </span>
             }
             key={TAB_IDS.DATA_FILES}
           >
-            <DataFilesTabs />
+            <DataFilesTabs
+              results={fileResults}
+              setPagingConfig={setPagingConfigFile}
+              pagingConfig={pagingConfigFile}
+            />
           </Tabs.TabPane>
         </Tabs>
       </Space>

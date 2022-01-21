@@ -9,19 +9,23 @@ import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
 import { Spin } from "antd";
 import { useEffect } from "react";
 import useGetAggregations from "hooks/graphql/useGetAggregations";
-import { DocumentNode } from "@apollo/client";
+import { ExtendedMappingResults } from "graphql/models";
+import { AGGREGATION_QUERY } from "graphql/queries";
+import { TCustomFilterMapper } from ".";
 
 type OwnProps = FilterSelectorProps & {
   index: string;
-  query: DocumentNode;
   cacheKey: string;
+  filterKey: string;
   onDataLoaded: Function;
+  extendedMappingResults: ExtendedMappingResults;
+  filterMapper?: TCustomFilterMapper;
 };
 
 const CustomFilterSelector = ({
   index,
-  query,
   cacheKey,
+  filterKey,
   dictionary,
   filters,
   filterGroup,
@@ -30,16 +34,21 @@ const CustomFilterSelector = ({
   onChange,
   onDataLoaded,
   searchInputVisible,
+  extendedMappingResults,
+  filterMapper,
 }: OwnProps) => {
   const { filters: queryFilters } = useFilters();
 
   const allSqons = getQueryBuilderCache(cacheKey).state;
 
+  const newQueryFilters = filterMapper
+    ? filterMapper(queryFilters)
+    : queryFilters;
   const results = useGetAggregations(
     {
-      sqon: resolveSyntheticSqon(allSqons, queryFilters),
+      sqon: resolveSyntheticSqon(allSqons, newQueryFilters),
     },
-    query,
+    AGGREGATION_QUERY(index, [filterKey], extendedMappingResults),
     index
   );
 
@@ -47,6 +56,7 @@ const CustomFilterSelector = ({
     if (results.data) {
       onDataLoaded(results);
     }
+    // eslint-disable-next-line
   }, [results.aggregations]);
 
   return (

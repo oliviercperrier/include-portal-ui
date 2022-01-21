@@ -1,9 +1,7 @@
 import intl from "react-intl-universal";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { Router } from "react-router";
 import KeycloakProvider from "provider/KeycloakProvider";
-import history from "utils/history";
 import getStoreConfig from "store";
 import { LANG } from "common/constants";
 import locales from "locales";
@@ -23,9 +21,7 @@ const ContextProvider = ({ children }: any) => {
     <ConfigProvider renderEmpty={() => <Empty imageType="grid" />}>
       <KeycloakProvider>
         <ReduxProvider store={store}>
-          <PersistGate persistor={persistor}>
-            <Router history={history}>{children}</Router>
-          </PersistGate>
+          <PersistGate persistor={persistor}>{children}</PersistGate>
         </ReduxProvider>
       </KeycloakProvider>
     </ConfigProvider>

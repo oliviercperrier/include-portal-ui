@@ -1,7 +1,7 @@
-import { useLocation } from "react-router";
+import history from "utils/history";
 
 const useQueryParams = () => {
-  return new URLSearchParams(useLocation().search);
+  return new URLSearchParams(history.location.search);
 };
 
 export default useQueryParams;

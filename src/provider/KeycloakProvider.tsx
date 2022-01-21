@@ -5,7 +5,7 @@ import {
 } from "@react-keycloak/core/lib/types";
 import EnvVariables from "helpers/EnvVariables";
 import { ReactKeycloakProvider as KeycloakProvider } from "@react-keycloak/web";
-import keycloak from "initKeycloak";
+import keycloak from "auth/keycloak-api/keycloak";
 
 export interface IProvider {
   children: React.ReactNode;

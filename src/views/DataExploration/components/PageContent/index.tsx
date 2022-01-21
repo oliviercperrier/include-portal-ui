@@ -1,4 +1,3 @@
-import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import QueryBuilder from "@ferlab/ui/core/components/QueryBuilder";
 import {
   ExperimentOutlined,
@@ -111,109 +110,113 @@ const PageContent = ({
   };
 
   return (
-    <StackLayout vertical className={styles.dataExplorePageContent}>
-      <Space direction="vertical" size={24}>
-        <QueryBuilder
-          className="data-exploration-repo__query-builder"
-          headerConfig={{
-            showHeader: true,
-            showTools: true,
-            defaultTitle: "My Queries",
-            options: {
-              enableEditTitle: true,
-              enableDuplicate: true,
-            },
-          }}
-          enableCombine
-          enableShowHideLabels
-          IconTotal={<UserOutlined size={18} />}
-          history={history}
-          cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
-          currentQuery={filters?.content?.length ? filters : {}}
-          loading={participantMapping.loading}
-          total={
-            participantResults.total +
-            fileResults.total +
-            biospecimenResults.total
+    <Space
+      direction="vertical"
+      size={24}
+      className={styles.dataExplorePageContent}
+    >
+      <QueryBuilder
+        className="data-exploration-repo__query-builder"
+        headerConfig={{
+          showHeader: true,
+          showTools: true,
+          defaultTitle: "My Queries",
+          options: {
+            enableEditTitle: true,
+            enableDuplicate: true,
+          },
+          savedFilters: [],
+          onSaveFilter: () => {},
+        }}
+        enableCombine
+        enableShowHideLabels
+        IconTotal={<UserOutlined size={18} />}
+        history={history}
+        cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
+        currentQuery={filters?.content?.length ? filters : {}}
+        loading={
+          participantMapping.loading ||
+          fileResults.loading ||
+          biospecimenResults.loading
+        }
+        total={participantResults.total}
+        dictionary={getQueryBuilderDictionary(facetTransResolver)}
+      />
+      <Tabs
+        type="card"
+        activeKey={tabId}
+        onChange={(key) => {
+          if (!history.location.pathname.includes(key)) {
+            history.push(
+              `${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`
+            );
           }
-          dictionary={getQueryBuilderDictionary(facetTransResolver)}
-        />
-        <Tabs
-          type="card"
-          activeKey={tabId}
-          onChange={(key) => {
-            if (!history.location.pathname.includes(key)) {
-              history.push(
-                `${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`
-              );
-            }
-          }}
+        }}
+      >
+        <Tabs.TabPane
+          tab={
+            <span>
+              <PieChartOutlined />
+              {intl.get("screen.dataExploration.tabs.summary")}
+            </span>
+          }
+          key={TAB_IDS.SUMMARY}
         >
-          <Tabs.TabPane
-            tab={
-              <span>
-                <PieChartOutlined />
-                {intl.get("screen.dataExploration.tabs.summary")}
-              </span>
-            }
-            key={TAB_IDS.SUMMARY}
-          >
-            <SummaryTab />
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={
-              <span>
-                <UserOutlined />
-                {intl.get("screen.dataExploration.tabs.participants", {
-                  count: participantResults.total,
-                })}
-              </span>
-            }
-            key={TAB_IDS.PARTICIPANTS}
-          >
-            <ParticipantsTab
-              results={participantResults}
-              setPagingConfig={setPagingConfigParticipant}
-              pagingConfig={pagingConfigParticipant}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={
-              <span>
-                <ExperimentOutlined />
-                {intl.get("screen.dataExploration.tabs.biospecimens", {
-                  count: biospecimenResults.total,
-                })}
-              </span>
-            }
-            key={TAB_IDS.BIOSPECIMENS}
-          >
-            <BiospecimensTab
-              results={biospecimenResults}
-              setPagingConfig={setPagingConfigBiospecimen}
-              pagingConfig={pagingConfigBiospecimen}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={
-              <span>
-                <FileTextOutlined />
-                {intl.get("screen.dataExploration.tabs.datafiles", {
-                  count: fileResults.total,
-                })}
-              </span>
-            }
-            key={TAB_IDS.DATA_FILES}
-          >
-            <DataFilesTabs
-              results={fileResults}
-              setPagingConfig={setPagingConfigFile}
-              pagingConfig={pagingConfigFile}
-            />
-          </Tabs.TabPane>
-        </Tabs>
-      </Space>
-    </StackLayout>
+          <SummaryTab />
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={
+            <span>
+              <UserOutlined />
+              {intl.get("screen.dataExploration.tabs.participants", {
+                count: participantResults.total,
+              })}
+            </span>
+          }
+          key={TAB_IDS.PARTICIPANTS}
+        >
+          <ParticipantsTab
+            results={participantResults}
+            setPagingConfig={setPagingConfigParticipant}
+            pagingConfig={pagingConfigParticipant}
+          />
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={
+            <span>
+              <ExperimentOutlined />
+              {intl.get("screen.dataExploration.tabs.biospecimens", {
+                count: biospecimenResults.total,
+              })}
+            </span>
+          }
+          key={TAB_IDS.BIOSPECIMENS}
+        >
+          <BiospecimensTab
+            results={biospecimenResults}
+            setPagingConfig={setPagingConfigBiospecimen}
+            pagingConfig={pagingConfigBiospecimen}
+          />
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={
+            <span>
+              <FileTextOutlined />
+              {intl.get("screen.dataExploration.tabs.datafiles", {
+                count: fileResults.total,
+              })}
+            </span>
+          }
+          key={TAB_IDS.DATA_FILES}
+        >
+          <DataFilesTabs
+            results={fileResults}
+            setPagingConfig={setPagingConfigFile}
+            pagingConfig={pagingConfigFile}
+          />
+        </Tabs.TabPane>
+      </Tabs>
+    </Space>
   );
 };
 

@@ -2,7 +2,6 @@ import SidebarMenu, {
   ISidebarMenuItem,
 } from "@ferlab/ui/core/components/SidebarMenu";
 import intl from "react-intl-universal";
-import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import ScrollContent from "@ferlab/ui/core/layout/ScrollContent";
 import {
   ExperimentOutlined,
@@ -156,7 +155,7 @@ const DataExploration = (props: OwnProps) => {
   ];
 
   return (
-    <StackLayout horizontal className={styles.dataExplorationLayout}>
+    <div className={styles.dataExplorationLayout}>
       <SidebarMenu
         className={styles.sideMenu}
         menuItems={menuItems}
@@ -170,7 +169,7 @@ const DataExploration = (props: OwnProps) => {
           tabId={tab}
         ></PageContent>
       </ScrollContent>
-    </StackLayout>
+    </div>
   );
 };
 

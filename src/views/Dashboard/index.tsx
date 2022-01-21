@@ -1,4 +1,3 @@
-import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import { Space, Typography } from "antd";
 import { useUser } from "store/user";
 import DataReleaseCard from "./components/DataReleaseCard";
@@ -21,28 +20,22 @@ const Dashboard = () => {
   const { user } = useUser();
 
   return (
-    <StackLayout className={styles.dashboardWrapper} vertical>
-      <Space direction="vertical" size={24}>
-        <Space
-          className={styles.dataIntroWrapper}
-          direction="vertical"
-          size={16}
-        >
-          <NotificationBanner
-            featureToggleKey={FT_FLAG_KEY}
-            type={getFTEnvVarByKey<AlterTypes>(BANNER_TYPE_KEY, "info")}
-            message={getFTEnvVarByKey(BANNER_MSG_KEY)}
-            closable
-            showIcon
-          />
-          <Title level={4} className={styles.greeting}>
-            {intl.get("screen.dashboard.hello")}, {user?.first_name}
-          </Title>
-          <DataReleaseCard />
-        </Space>
-        <SortableGrid items={dashboardCards} gutter={[24, 24]} />
+    <Space direction="vertical" size={24} className={styles.dashboardWrapper}>
+      <Space className={styles.dataIntroWrapper} direction="vertical" size={16}>
+        <NotificationBanner
+          featureToggleKey={FT_FLAG_KEY}
+          type={getFTEnvVarByKey<AlterTypes>(BANNER_TYPE_KEY, "info")}
+          message={getFTEnvVarByKey(BANNER_MSG_KEY)}
+          closable
+          showIcon
+        />
+        <Title level={4} className={styles.greeting}>
+          {intl.get("screen.dashboard.hello")}, {user?.first_name}
+        </Title>
+        <DataReleaseCard />
       </Space>
-    </StackLayout>
+      <SortableGrid items={dashboardCards} gutter={[24, 24]} />
+    </Space>
   );
 };
 

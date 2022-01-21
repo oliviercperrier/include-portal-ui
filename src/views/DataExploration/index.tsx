@@ -2,7 +2,6 @@ import SidebarMenu, {
   ISidebarMenuItem,
 } from "@ferlab/ui/core/components/SidebarMenu";
 import intl from "react-intl-universal";
-import StackLayout from "@ferlab/ui/core/layout/StackLayout";
 import ScrollContent from "@ferlab/ui/core/layout/ScrollContent";
 import {
   ExperimentOutlined,
@@ -13,7 +12,7 @@ import PageContent, {
   TAB_IDS,
 } from "views/DataExploration/components/PageContent";
 import ApolloProvider from "provider/ApolloProvider";
-import { Spin } from "antd";
+import { Space, Spin } from "antd";
 import { ExtendedMappingResults } from "graphql/models";
 import FilterList, { TCustomFilterMapper } from "components/uiKit/FilterList";
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from "views/DataExploration/utils/constant";
@@ -156,7 +155,7 @@ const DataExploration = (props: OwnProps) => {
   ];
 
   return (
-    <StackLayout horizontal className={styles.dataExplorationLayout}>
+    <div className={styles.dataExplorationLayout}>
       <SidebarMenu
         className={styles.sideMenu}
         menuItems={menuItems}
@@ -170,7 +169,7 @@ const DataExploration = (props: OwnProps) => {
           tabId={tab}
         ></PageContent>
       </ScrollContent>
-    </StackLayout>
+    </div>
   );
 };
 

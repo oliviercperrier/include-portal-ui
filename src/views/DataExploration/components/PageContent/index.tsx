@@ -62,7 +62,7 @@ const PageContent = ({
   fileMapping,
   biospecimenMapping,
   participantMapping,
-  tabId = undefined,
+  tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
@@ -144,7 +144,7 @@ const PageContent = ({
       />
       <Tabs
         type="card"
-        activeKey={tabId}
+        activeKey={tabId || TAB_IDS.SUMMARY}
         onChange={(key) => {
           if (!history.location.pathname.includes(key)) {
             history.push(

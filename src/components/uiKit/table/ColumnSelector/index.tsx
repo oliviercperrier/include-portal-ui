@@ -38,7 +38,9 @@ const ColumnSelector = ({
           <div key={index} className={styles.columnCheck}>
             <Checkbox
               defaultChecked={
-                column.defaultHidden === undefined ? true : !column.defaultHidden
+                column.defaultHidden === undefined
+                  ? true
+                  : !column.defaultHidden
               }
               onChange={(e) => {
                 if (!e.target.checked) {
@@ -60,8 +62,9 @@ const ColumnSelector = ({
                   );
                 }
               }}
-            />
-            <span className={styles.title}>{column.title}</span>
+            >
+              {column.title}
+            </Checkbox>
           </div>
         ))}
       </Space>

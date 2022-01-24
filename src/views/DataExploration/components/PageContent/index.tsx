@@ -120,7 +120,9 @@ const PageContent = ({
         headerConfig={{
           showHeader: true,
           showTools: true,
-          defaultTitle: "My Queries",
+          defaultTitle: intl.get(
+            "screen.dataExploration.queryBuilder.defaultTitle"
+          ),
           options: {
             enableEditTitle: true,
             enableDuplicate: true,

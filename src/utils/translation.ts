@@ -34,6 +34,100 @@ export const getFiltersDictionary = (): FiltersDict => ({
 export const getQueryBuilderDictionary = (
   facetResolver: (key: string) => React.ReactNode
 ): QueryBuilderDict => ({
+  queryBuilderHeader: {
+    modal: {
+      edit: {
+        title: intl.get("components.querybuilder.header.modal.edit.title"),
+        okText: intl.get("components.querybuilder.header.modal.edit.okText"),
+        cancelText: intl.get(
+          "components.querybuilder.header.modal.edit.cancelText"
+        ),
+        input: {
+          label: intl.get(
+            "components.querybuilder.header.modal.edit.input.label"
+          ),
+          placeholder: intl.get(
+            "components.querybuilder.header.modal.edit.input.placeholder"
+          ),
+          maximumLength: intl.get(
+            "components.querybuilder.header.modal.edit.input.maximumLength"
+          ),
+        },
+      },
+      confirmUnsaved: {
+        title: intl.get(
+          "components.querybuilder.header.modal.confirmUnsaved.title"
+        ),
+        openSavedFilter: {
+          okText: intl.get(
+            "components.querybuilder.header.modal.confirmUnsaved.openSavedFilter.okText"
+          ),
+          cancelText: intl.get(
+            "components.querybuilder.header.modal.confirmUnsaved.openSavedFilter.cancelText"
+          ),
+          content: intl.get(
+            "components.querybuilder.header.modal.confirmUnsaved.openSavedFilter.content"
+          ),
+        },
+        createNewFilter: {
+          okText: intl.get(
+            "components.querybuilder.header.modal.confirmUnsaved.createNewFilter.okText"
+          ),
+          cancelText: intl.get(
+            "components.querybuilder.header.modal.confirmUnsaved.createNewFilter.cancelText"
+          ),
+          content: intl.get(
+            "components.querybuilder.header.modal.confirmUnsaved.createNewFilter.content"
+          ),
+        },
+      },
+    },
+    popupConfirm: {
+      delete: {
+        title: intl.get(
+          "components.querybuilder.header.popupConfirm.delete.title"
+        ),
+        okText: intl.get(
+          "components.querybuilder.header.popupConfirm.delete.okText"
+        ),
+        cancelText: intl.get(
+          "components.querybuilder.header.popupConfirm.delete.cancelText"
+        ),
+      },
+    },
+    tooltips: {
+      newQueryBuilder: intl.get(
+        "components.querybuilder.header.tooltips.newQueryBuilder"
+      ),
+      save: intl.get("components.querybuilder.header.tooltips.save"),
+      saveChanges: intl.get(
+        "components.querybuilder.header.tooltips.saveChanges"
+      ),
+      delete: intl.get("components.querybuilder.header.tooltips.delete"),
+      duplicateQueryBuilder: intl.get(
+        "components.querybuilder.header.tooltips.duplicateQueryBuilder"
+      ),
+      share: intl.get("components.querybuilder.header.tooltips.share"),
+      setAsDefaultFilter: intl.get(
+        "components.querybuilder.header.tooltips.setAsDefaultFilter"
+      ),
+      usetDefaultFilter: intl.get(
+        "components.querybuilder.header.tooltips.usetDefaultFilter"
+      ),
+      noSavedFilters: intl.get(
+        "components.querybuilder.header.tooltips.noSavedFilters"
+      ),
+    },
+    myFiltersDropdown: {
+      title: intl.get("components.querybuilder.header.myFiltersDropdown.title"),
+      manageMyFilter: intl.get(
+        "components.querybuilder.header.myFiltersDropdown.manageMyFilter"
+      ),
+    },
+    duplicateFilterTitleSuffix: intl.get(
+      "components.querybuilder.header.duplicateFilterTitleSuffix"
+    ),
+  },
   query: {
     combine: {
       and: intl.get("components.querybuilder.query.combine.and"),

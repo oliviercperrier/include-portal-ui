@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { UserApi } from "services/api/user";
 import { TUser, TUserUpdate } from "services/api/user/models";
 
@@ -62,7 +63,7 @@ const completeRegistration = createAsyncThunk<
 });
 
 const handleUserReponse = (
-  error: any,
+  error: AxiosError | undefined,
   data: TUser,
   reject: (error: string) => any,
   callback?: () => void
@@ -75,7 +76,7 @@ const handleUserReponse = (
     callback();
   }
 
-  return data!;
+  return data;
 };
 
 export { fetchUser, updateUser, completeRegistration };

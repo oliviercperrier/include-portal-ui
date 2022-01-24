@@ -40,6 +40,18 @@ const en = {
       404: "Sorry, the page you visited does not exist.",
       500: "Sorry, something went wrong.",
     },
+    notification: {
+      genericError: "An error occured",
+    },
+  },
+  // API
+  riff: {
+    error: {
+      title: "Error",
+      fetchUser: "Unable to fetch Riff user",
+      saveFilter: "Unable to save filter",
+      deleteFilter: "Unable to delete filter"
+    },
   },
   // COMPONENTS
   components: {
@@ -215,7 +227,7 @@ const en = {
     },
     dataExploration: {
       queryBuilder: {
-        defaultTitle: "My Queries"
+        defaultTitle: "My Queries",
       },
       sidemenu: {
         participant: "Participant",

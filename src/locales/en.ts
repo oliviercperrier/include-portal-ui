@@ -56,6 +56,58 @@ const en = {
       },
     },
     querybuilder: {
+      header: {
+        modal: {
+          edit: {
+            title: "Save this query",
+            okText: "Save",
+            cancelText: "Cancel",
+            input: {
+              label: "Query name",
+              placeholder: "Untitled query",
+              maximumLength: "characters maximum",
+            },
+          },
+          confirmUnsaved: {
+            title: "Unsaved changes",
+            openSavedFilter: {
+              okText: "Continue",
+              cancelText: "Cancel",
+              content:
+                "You are about to open a saved filter; all modifications will be lost.",
+            },
+            createNewFilter: {
+              okText: "Create",
+              cancelText: "Cancel",
+              content:
+                "You are about to create a new filter; all modifications will be lost.",
+            },
+          },
+        },
+        popupConfirm: {
+          delete: {
+            title: "Permanently delete this request?",
+            okText: "Delete",
+            cancelText: "Cancel",
+          },
+        },
+        tooltips: {
+          newQueryBuilder: "New query builder",
+          save: "Save filter",
+          saveChanges: "Save changes",
+          delete: "Delete",
+          duplicateQueryBuilder: "Duplicate query builder",
+          share: "Share (Copy url)",
+          setAsDefaultFilter: "Set as default filter",
+          usetDefaultFilter: "Unset default filter",
+          noSavedFilters: "You have no saved filters",
+        },
+        myFiltersDropdown: {
+          title: "My Filters",
+          manageMyFilter: "Manage my filters",
+        },
+        duplicateFilterTitleSuffix: "COPY",
+      },
       query: {
         combine: {
           and: "And",
@@ -162,6 +214,9 @@ const en = {
       },
     },
     dataExploration: {
+      queryBuilder: {
+        defaultTitle: "My Queries"
+      },
       sidemenu: {
         participant: "Participant",
         biospecimen: "Biospecimen",

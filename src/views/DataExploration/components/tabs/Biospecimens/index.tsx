@@ -15,6 +15,7 @@ import ColumnSelector, {
 } from "components/uiKit/table/ColumnSelector";
 
 import styles from "./index.module.scss";
+import { extractNcitTissueTitleAndCode } from "views/DataExploration/utils/helper";
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -27,6 +28,8 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "derived_sample_id",
     title: "Derived Sample ID",
     dataIndex: "derived_sample_id",
+    render: (derived_sample_id: string) =>
+      derived_sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: "sample_id",
@@ -78,8 +81,28 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "ncit_id_tissue_type",
     title: "Tissue Type (NCIT)",
     dataIndex: "ncit_id_tissue_type",
-    render: (ncit_id_tissue_type) =>
-      ncit_id_tissue_type || TABLE_EMPTY_PLACE_HOLDER,
+    className: styles.ncitTissueCell,
+    render: (ncit_id_tissue_type) => {
+      if (!ncit_id_tissue_type) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      const ncitInfo = extractNcitTissueTitleAndCode(ncit_id_tissue_type);
+
+      return (
+        <div>
+          {ncitInfo.title} (NCIT:{" "}
+          <a
+            href={`https://www.ebi.ac.uk/ols/ontologies/ncit/terms?short_form=NCIT_${ncitInfo.code}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {ncitInfo.code}
+          </a>
+          )
+        </div>
+      );
+    },
   },
   {
     key: "bio_repository",

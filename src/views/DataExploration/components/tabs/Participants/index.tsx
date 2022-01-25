@@ -1,7 +1,11 @@
 import { Space, Table } from "antd";
 import TableHeader from "components/uiKit/table/TableHeader";
-import { IParticipantEntity } from "graphql/participants/models";
-import { IQueryResults } from "graphql/models";
+import {
+  IParticipantDiagnosis,
+  IParticipantEntity,
+  IParticipantPhenotype,
+} from "graphql/participants/models";
+import { ArrangerResultsTree, IQueryResults } from "graphql/models";
 import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
 import {
   TPagingConfig,
@@ -12,6 +16,11 @@ import ColumnSelector, {
   ColumnSelectorType,
 } from "components/uiKit/table/ColumnSelector";
 import { useState } from "react";
+import ExpandableCell from "components/uiKit/table/ExpendableCell";
+import {
+  extractMondoTitleAndCode,
+  extractPhenotypeTitleAndCode,
+} from "views/DataExploration/utils/helper";
 
 import styles from "./index.module.scss";
 
@@ -31,6 +40,7 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "study_id",
     title: "Study Code",
     dataIndex: "study_id",
+    className: styles.studyIdCell,
     render: (study_id: string) => (
       <a
         target="_blank"
@@ -82,12 +92,82 @@ const defaultColumns: ColumnSelectorType<any>[] = [
   {
     key: "diagnosis",
     title: "Diagnosis (Mondo)",
-    defaultHidden: true,
+    dataIndex: "diagnosis",
+    className: styles.diagnosisCell,
+    render: (diagnosis: ArrangerResultsTree<IParticipantDiagnosis>) => {
+      const hydratedDiagnosis = diagnosis?.hits?.edges.map(
+        (diagnosis, index) => ({ key: index, ...diagnosis.node })
+      );
+
+      if (!hydratedDiagnosis) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      return (
+        <ExpandableCell
+          nbToShow={1}
+          dataSource={hydratedDiagnosis}
+          renderItem={(item, id): React.ReactNode => {
+            const mondoInfo = extractMondoTitleAndCode(item.mondo_id_diagnosis);
+
+            return (
+              <div>
+                {mondoInfo.title} (MONDO:{" "}
+                <a
+                  href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {mondoInfo.code}
+                </a>
+                )
+              </div>
+            );
+          }}
+        />
+      );
+    },
   },
   {
     key: "phenotype",
     title: "Phenotype (HPO)",
-    defaultHidden: true,
+    dataIndex: "phenotype",
+    className: styles.phenotypeCell,
+    render: (phenotype: ArrangerResultsTree<IParticipantPhenotype>) => {
+      const hydratedPhenotype = phenotype?.hits?.edges.map(
+        (phenotype, index) => ({ key: index, ...phenotype.node })
+      );
+
+      if (!hydratedPhenotype) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      return (
+        <ExpandableCell
+          nbToShow={1}
+          dataSource={hydratedPhenotype}
+          renderItem={(item, id): React.ReactNode => {
+            const phenotypeInfo = extractPhenotypeTitleAndCode(
+              item.hpo_id_phenotype
+            );
+
+            return (
+              <div>
+                {phenotypeInfo.title} (HP:{" "}
+                <a 
+                  href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {phenotypeInfo.code}
+                </a>
+                )
+              </div>
+            );
+          }}
+        />
+      );
+    },
   },
   {
     key: "biospecimen",

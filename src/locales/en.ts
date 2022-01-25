@@ -71,12 +71,12 @@ const en = {
       header: {
         modal: {
           edit: {
-            title: "Save this query",
+            title: "Save this filter",
             okText: "Save",
             cancelText: "Cancel",
             input: {
-              label: "Query name",
-              placeholder: "Untitled query",
+              label: "Filter name",
+              placeholder: "Untitled filter",
               maximumLength: "characters maximum",
             },
           },
@@ -227,7 +227,7 @@ const en = {
     },
     dataExploration: {
       queryBuilder: {
-        defaultTitle: "My Queries",
+        defaultTitle: "My Filter",
       },
       sidemenu: {
         participant: "Participant",

@@ -49,7 +49,7 @@
     "@apollo/client": "^3.4.17",
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/sortable": "^5.1.0",
-    "@ferlab/style": "^1.14.0",
+    "@ferlab/style": "^1.14.1",
     "@ferlab/ui": "^2.8.5",
     "@loadable/component": "^5.15.2",
     "@react-keycloak/web": "^3.4.0",

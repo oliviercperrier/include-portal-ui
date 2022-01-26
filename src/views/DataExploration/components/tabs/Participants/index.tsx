@@ -1,5 +1,3 @@
-import { Space, Table } from "antd";
-import TableHeader from "components/uiKit/table/TableHeader";
 import {
   IParticipantDiagnosis,
   IParticipantEntity,
@@ -12,15 +10,14 @@ import {
   TPagingConfigCb,
 } from "views/DataExploration/utils/types";
 import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
-import ColumnSelector, {
-  ColumnSelectorType,
-} from "components/uiKit/table/ColumnSelector";
-import { useState } from "react";
 import ExpandableCell from "components/uiKit/table/ExpendableCell";
 import {
   extractMondoTitleAndCode,
   extractPhenotypeTitleAndCode,
 } from "views/DataExploration/utils/helper";
+import ProTable from "@ferlab/ui/core/components/ProTable";
+import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
+import { getProTableDictionary } from "utils/translation";
 
 import styles from "./index.module.scss";
 
@@ -30,7 +27,7 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
 }
 
-const defaultColumns: ColumnSelectorType<any>[] = [
+const defaultColumns: ProColumnType<any>[] = [
   {
     key: "participant_id",
     title: "ID",
@@ -154,7 +151,7 @@ const defaultColumns: ColumnSelectorType<any>[] = [
             return (
               <div>
                 {phenotypeInfo.title} (HP:{" "}
-                <a 
+                <a
                   href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}
                   target="_blank"
                   rel="noreferrer"
@@ -186,51 +183,41 @@ const ParticipantsTab = ({
   results,
   setPagingConfig,
   pagingConfig,
-}: OwnProps) => {
-  const [columns, setColumns] = useState<ColumnSelectorType<any>[]>(
-    defaultColumns.filter((column) => !column.defaultHidden)
-  );
-
-  return (
-    <Space
-      size={12}
-      className={styles.participantTabWrapper}
-      direction="vertical"
-    >
-      <TableHeader
-        pageIndex={pagingConfig.index}
-        pageSize={pagingConfig.size}
-        total={results.total}
-        extra={[
-          <ColumnSelector
-            defaultColumns={defaultColumns}
-            columns={columns}
-            onChange={setColumns}
-          />,
-        ]}
-      />
-      <Table
-        bordered
-        loading={results.loading}
-        size="small"
-        pagination={{
-          pageSize: pagingConfig.size,
-          defaultPageSize: DEFAULT_PAGE_SIZE,
-          total: results.total,
-          onChange: (page, size) => {
-            if (pagingConfig.index !== page || pagingConfig.size !== size) {
-              setPagingConfig({
-                index: page,
-                size: size!,
-              });
-            }
-          },
-        }}
-        dataSource={results.data}
-        columns={columns}
-      ></Table>
-    </Space>
-  );
-};
+}: OwnProps) => (
+  <ProTable
+    tableId="data-exploration-participants"
+    columns={defaultColumns}
+    wrapperClassName={styles.participantTabWrapper}
+    loading={results.loading}
+    headerConfig={{
+      itemCount: {
+        pageIndex: pagingConfig.index,
+        pageSize: pagingConfig.size,
+        total: results.total
+      },
+      columnSetting: true,
+      onColumnStateChange: (newState) => {
+        console.log(newState);
+      },
+    }}
+    bordered
+    size="small"
+    pagination={{
+      pageSize: pagingConfig.size,
+      defaultPageSize: DEFAULT_PAGE_SIZE,
+      total: results.total,
+      onChange: (page, size) => {
+        if (pagingConfig.index !== page || pagingConfig.size !== size) {
+          setPagingConfig({
+            index: page,
+            size: size!,
+          });
+        }
+      },
+    }}
+    dataSource={results.data}
+    dictionary={getProTableDictionary()}
+  />
+);
 
 export default ParticipantsTab;

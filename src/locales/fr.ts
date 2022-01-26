@@ -43,6 +43,11 @@ const fr = {
     notification: {
       genericError: "An error occured",
     },
+    proTable: {
+      results: "Results",
+      noResults: "No Results",
+      of: "of"
+    }
   },
   // API
   riff: {

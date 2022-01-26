@@ -1,5 +1,3 @@
-import { Space, Table } from "antd";
-import TableHeader from "components/uiKit/table/TableHeader";
 import { IQueryResults } from "graphql/models";
 import { IBiospecimenEntity } from "graphql/biospecimens/models";
 import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
@@ -9,13 +7,12 @@ import {
 } from "views/DataExploration/utils/types";
 import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
 import { IParticipantEntity } from "graphql/participants/models";
-import { useState } from "react";
-import ColumnSelector, {
-  ColumnSelectorType,
-} from "components/uiKit/table/ColumnSelector";
+import { extractNcitTissueTitleAndCode } from "views/DataExploration/utils/helper";
+import ProTable from "@ferlab/ui/core/components/ProTable";
+import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
+import { getProTableDictionary } from "utils/translation";
 
 import styles from "./index.module.scss";
-import { extractNcitTissueTitleAndCode } from "views/DataExploration/utils/helper";
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -23,7 +20,7 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
 }
 
-const defaultColumns: ColumnSelectorType<any>[] = [
+const defaultColumns: ProColumnType<any>[] = [
   {
     key: "derived_sample_id",
     title: "Derived Sample ID",
@@ -115,51 +112,41 @@ const BioSpecimenTab = ({
   results,
   setPagingConfig,
   pagingConfig,
-}: OwnProps) => {
-  const [columns, setColumns] = useState<ColumnSelectorType<any>[]>(
-    defaultColumns.filter((column) => !column.defaultHidden)
-  );
-
-  return (
-    <Space
-      size={12}
-      className={styles.biospecimenTabWrapper}
-      direction="vertical"
-    >
-      <TableHeader
-        total={results.total}
-        pageIndex={pagingConfig.index}
-        pageSize={pagingConfig.size}
-        extra={[
-          <ColumnSelector
-            defaultColumns={defaultColumns}
-            columns={columns}
-            onChange={setColumns}
-          />,
-        ]}
-      />
-      <Table
-        bordered
-        loading={results.loading}
-        size="small"
-        pagination={{
-          pageSize: pagingConfig.size,
-          defaultPageSize: DEFAULT_PAGE_SIZE,
-          total: results.total,
-          onChange: (page, size) => {
-            if (pagingConfig.index !== page || pagingConfig.size !== size) {
-              setPagingConfig({
-                index: page,
-                size: size!,
-              });
-            }
-          },
-        }}
-        dataSource={results.data}
-        columns={columns}
-      ></Table>
-    </Space>
-  );
-};
+}: OwnProps) => (
+  <ProTable
+    tableId="data-exploration-biospecimen"
+    columns={defaultColumns}
+    wrapperClassName={styles.biospecimenTabWrapper}
+    loading={results.loading}
+    headerConfig={{
+      itemCount: {
+        pageIndex: pagingConfig.index,
+        pageSize: pagingConfig.size,
+        total: results.total
+      },
+      columnSetting: true,
+      onColumnStateChange: (newState) => {
+        console.log(newState);
+      },
+    }}
+    bordered
+    size="small"
+    pagination={{
+      pageSize: pagingConfig.size,
+      defaultPageSize: DEFAULT_PAGE_SIZE,
+      total: results.total,
+      onChange: (page, size) => {
+        if (pagingConfig.index !== page || pagingConfig.size !== size) {
+          setPagingConfig({
+            index: page,
+            size: size!,
+          });
+        }
+      },
+    }}
+    dataSource={results.data}
+    dictionary={getProTableDictionary()}
+  />
+);
 
 export default BioSpecimenTab;

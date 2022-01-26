@@ -1,5 +1,3 @@
-import { Space, Table } from "antd";
-import TableHeader from "components/uiKit/table/TableHeader";
 import { IFileEntity } from "graphql/files/models";
 import { DownloadOutlined, LockOutlined } from "@ant-design/icons";
 import { IQueryResults } from "graphql/models";
@@ -8,11 +6,10 @@ import {
   TPagingConfigCb,
 } from "views/DataExploration/utils/types";
 import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
-import { useState } from "react";
-import ColumnSelector, {
-  ColumnSelectorType,
-} from "components/uiKit/table/ColumnSelector";
 import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
+import ProTable from "@ferlab/ui/core/components/ProTable";
+import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
+import { getProTableDictionary } from "utils/translation";
 
 import styles from "./index.module.scss";
 
@@ -22,7 +19,7 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
 }
 
-const defaultColumns: ColumnSelectorType<any>[] = [
+const defaultColumns: ProColumnType<any>[] = [
   {
     key: "file_id",
     title: "File ID",
@@ -87,51 +84,41 @@ const defaultColumns: ColumnSelectorType<any>[] = [
   },
 ];
 
-const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
-  const [columns, setColumns] = useState<ColumnSelectorType<any>[]>(
-    defaultColumns.filter((column) => !column.defaultHidden)
-  );
-
-  return (
-    <Space
-      size={12}
-      className={styles.dataFilesTabWrapper}
-      direction="vertical"
-    >
-      <TableHeader
-        total={results.total}
-        pageIndex={pagingConfig.index}
-        pageSize={pagingConfig.size}
-        extra={[
-          <ColumnSelector
-            defaultColumns={defaultColumns}
-            columns={columns}
-            onChange={setColumns}
-          />,
-        ]}
-      />
-      <Table
-        bordered
-        loading={results.loading}
-        size="small"
-        pagination={{
-          pageSize: pagingConfig.size,
-          defaultPageSize: DEFAULT_PAGE_SIZE,
-          total: results.total,
-          onChange: (page, size) => {
-            if (pagingConfig.index !== page || pagingConfig.size !== size) {
-              setPagingConfig({
-                index: page,
-                size: size!,
-              });
-            }
-          },
-        }}
-        dataSource={results.data}
-        columns={columns}
-      ></Table>
-    </Space>
-  );
-};
+const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => (
+  <ProTable
+    tableId="data-exploration-datafiles"
+    columns={defaultColumns}
+    wrapperClassName={styles.dataFilesTabWrapper}
+    loading={results.loading}
+    headerConfig={{
+      itemCount: {
+        pageIndex: pagingConfig.index,
+        pageSize: pagingConfig.size,
+        total: results.total,
+      },
+      columnSetting: true,
+      onColumnStateChange: (newState) => {
+        console.log(newState);
+      },
+    }}
+    bordered
+    size="small"
+    pagination={{
+      pageSize: pagingConfig.size,
+      defaultPageSize: DEFAULT_PAGE_SIZE,
+      total: results.total,
+      onChange: (page, size) => {
+        if (pagingConfig.index !== page || pagingConfig.size !== size) {
+          setPagingConfig({
+            index: page,
+            size: size!,
+          });
+        }
+      },
+    }}
+    dataSource={results.data}
+    dictionary={getProTableDictionary()}
+  />
+);
 
 export default DataFilesTab;

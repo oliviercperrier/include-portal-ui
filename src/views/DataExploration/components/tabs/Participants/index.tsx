@@ -19,6 +19,9 @@ import ProTable from "@ferlab/ui/core/components/ProTable";
 import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
 import { getProTableDictionary } from "utils/translation";
 import { Tag } from "antd";
+import { useDispatch } from "react-redux";
+import { updateUserConfig } from "store/user/thunks";
+import { useUser } from "store/user";
 
 import styles from "./index.module.scss";
 
@@ -118,11 +121,11 @@ const defaultColumns: ProColumnType<any>[] = [
         <ExpandableCell
           nbToShow={1}
           dataSource={hydratedDiagnosis}
-          renderItem={(item, id): React.ReactNode => {
+          renderItem={(item, index): React.ReactNode => {
             const mondoInfo = extractMondoTitleAndCode(item.mondo_id_diagnosis);
 
             return (
-              <div>
+              <div key={index}>
                 {mondoInfo.title} (MONDO:{" "}
                 <a
                   href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
@@ -157,13 +160,13 @@ const defaultColumns: ProColumnType<any>[] = [
         <ExpandableCell
           nbToShow={1}
           dataSource={hydratedPhenotype}
-          renderItem={(item, id): React.ReactNode => {
+          renderItem={(item, index): React.ReactNode => {
             const phenotypeInfo = extractPhenotypeTitleAndCode(
               item.hpo_id_phenotype
             );
 
             return (
-              <div>
+              <div key={index}>
                 {phenotypeInfo.title} (HP:{" "}
                 <a
                   href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}
@@ -197,41 +200,52 @@ const ParticipantsTab = ({
   results,
   setPagingConfig,
   pagingConfig,
-}: OwnProps) => (
-  <ProTable
-    tableId="data-exploration-participants"
-    columns={defaultColumns}
-    wrapperClassName={styles.participantTabWrapper}
-    loading={results.loading}
-    headerConfig={{
-      itemCount: {
-        pageIndex: pagingConfig.index,
+}: OwnProps) => {
+  const dispatch = useDispatch();
+  const { user } = useUser();
+
+  return (
+    <ProTable
+      tableId="participants_table"
+      columns={defaultColumns}
+      wrapperClassName={styles.participantTabWrapper}
+      loading={results.loading}
+      initialColumnState={user?.config.data_exploration?.participants_table}
+      headerConfig={{
+        itemCount: {
+          pageIndex: pagingConfig.index,
+          pageSize: pagingConfig.size,
+          total: results.total,
+        },
+        columnSetting: true,
+        onColumnStateChange: (newState) =>
+          dispatch(
+            updateUserConfig({
+              data_exploration: {
+                participants_table: newState,
+              },
+            })
+          ),
+      }}
+      bordered
+      size="small"
+      pagination={{
         pageSize: pagingConfig.size,
+        defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
-      },
-      columnSetting: true,
-      onColumnStateChange: (newState) => {
-        console.log(newState);
-      },
-    }}
-    bordered
-    size="small"
-    pagination={{
-      pageSize: pagingConfig.size,
-      defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: results.total,
-      onChange: (page, size) => {
-        if (pagingConfig.index !== page || pagingConfig.size !== size) {
-          setPagingConfig({
-            index: page,
-            size: size!,
-          });
-        }
-      },
-    }}
-    dataSource={results.data}
-    dictionary={getProTableDictionary()}
-  />
-);
+        onChange: (page, size) => {
+          if (pagingConfig.index !== page || pagingConfig.size !== size) {
+            setPagingConfig({
+              index: page,
+              size: size!,
+            });
+          }
+        },
+      }}
+      dataSource={results.data}
+      dictionary={getProTableDictionary()}
+    />
+  );
+};
 
 export default ParticipantsTab;

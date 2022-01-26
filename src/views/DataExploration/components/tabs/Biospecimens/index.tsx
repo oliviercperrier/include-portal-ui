@@ -11,6 +11,9 @@ import { extractNcitTissueTitleAndCode } from "views/DataExploration/utils/helpe
 import ProTable from "@ferlab/ui/core/components/ProTable";
 import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
 import { getProTableDictionary } from "utils/translation";
+import { useDispatch } from "react-redux";
+import { useUser } from "store/user";
+import { updateUserConfig } from "store/user/thunks";
 
 import styles from "./index.module.scss";
 
@@ -113,41 +116,52 @@ const BioSpecimenTab = ({
   results,
   setPagingConfig,
   pagingConfig,
-}: OwnProps) => (
-  <ProTable
-    tableId="data-exploration-biospecimen"
-    columns={defaultColumns}
-    wrapperClassName={styles.biospecimenTabWrapper}
-    loading={results.loading}
-    headerConfig={{
-      itemCount: {
-        pageIndex: pagingConfig.index,
+}: OwnProps) => {
+  const dispatch = useDispatch();
+  const { user } = useUser();
+
+  return (
+    <ProTable
+      tableId="biospecimen_table"
+      columns={defaultColumns}
+      wrapperClassName={styles.biospecimenTabWrapper}
+      loading={results.loading}
+      initialColumnState={user?.config.data_exploration?.biospecimens_table}
+      headerConfig={{
+        itemCount: {
+          pageIndex: pagingConfig.index,
+          pageSize: pagingConfig.size,
+          total: results.total,
+        },
+        columnSetting: true,
+        onColumnStateChange: (newState) =>
+          dispatch(
+            updateUserConfig({
+              data_exploration: {
+                biospecimens_table: newState,
+              },
+            })
+          ),
+      }}
+      bordered
+      size="small"
+      pagination={{
         pageSize: pagingConfig.size,
+        defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
-      },
-      columnSetting: true,
-      onColumnStateChange: (newState) => {
-        console.log(newState);
-      },
-    }}
-    bordered
-    size="small"
-    pagination={{
-      pageSize: pagingConfig.size,
-      defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: results.total,
-      onChange: (page, size) => {
-        if (pagingConfig.index !== page || pagingConfig.size !== size) {
-          setPagingConfig({
-            index: page,
-            size: size!,
-          });
-        }
-      },
-    }}
-    dataSource={results.data}
-    dictionary={getProTableDictionary()}
-  />
-);
+        onChange: (page, size) => {
+          if (pagingConfig.index !== page || pagingConfig.size !== size) {
+            setPagingConfig({
+              index: page,
+              size: size!,
+            });
+          }
+        },
+      }}
+      dataSource={results.data}
+      dictionary={getProTableDictionary()}
+    />
+  );
+};
 
 export default BioSpecimenTab;

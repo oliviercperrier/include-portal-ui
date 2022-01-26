@@ -6,7 +6,7 @@ import styles from "./index.module.scss";
 type OwnProps<T> = {
   nbToShow?: number;
   dataSource: T[];
-  renderItem?: (item: T, id: number) => React.ReactNode;
+  renderItem?: (item: T, index: number) => React.ReactNode;
 };
 
 const DEFAULT_NUM_COLLAPSED = 3;

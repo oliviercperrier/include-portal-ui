@@ -19,7 +19,7 @@ const Authenticator = ({ children }: Props) => {
   useEffect(() => {
     if (keycloak.authenticated) {
       dispatch(fetchUser());
-      dispatch(fetchRiffUser());
+      //dispatch(fetchRiffUser());
     } else {
       dispatch(userActions.setIsUserLoading(false));
     }

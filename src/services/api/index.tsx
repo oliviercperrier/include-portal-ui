@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import keycloak from "initKeycloak";
+import keycloak from "auth/keycloak-api/keycloak";
 
 const apiInstance = axios.create();
 

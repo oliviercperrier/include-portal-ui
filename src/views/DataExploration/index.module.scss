@@ -1,6 +1,7 @@
 @import "layout";
 
 .dataExplorationLayout {
+  display: flex;
   height: calc(100vh - #{$main-header-height});
 
   .filterLoader {

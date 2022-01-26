@@ -4,24 +4,26 @@ import CustomFilterContainer from "./CustomFilterContainer";
 import intl from "react-intl-universal";
 import { FilterGroup, FilterInfo } from "./types";
 import { ExtendedMappingResults } from "graphql/models";
-import { DocumentNode } from "@apollo/client";
 
 import styles from "./Filters.module.scss";
+import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
+
+export type TCustomFilterMapper = (filters: ISyntheticSqon) => ISyntheticSqon;
 
 type OwnProps = {
   index: string;
-  query: DocumentNode;
   cacheKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filterInfo: FilterInfo;
+  filterMapper?: TCustomFilterMapper
 };
 
 const FilterList = ({
   index,
-  query,
   cacheKey,
   extendedMappingResults,
   filterInfo,
+  filterMapper
 }: OwnProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -59,11 +61,11 @@ const FilterList = ({
                 key={field}
                 index={index}
                 cacheKey={cacheKey}
-                query={query}
                 classname={styles.customFilterContainer}
                 filterKey={field}
                 extendedMappingResults={extendedMappingResults}
                 filtersOpen={filtersOpen}
+                filterMapper={filterMapper}
               />
             ))}
           </div>

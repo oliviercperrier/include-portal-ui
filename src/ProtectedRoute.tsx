@@ -5,14 +5,15 @@ import ConditionalWrapper from "components/utils/ConditionalWrapper";
 import { STATIC_ROUTES } from "utils/routes";
 import { useUser } from "store/user";
 
-type OwnProps = RouteProps & {
+type OwnProps = Omit<RouteProps, "component" | "render" | "children"> & {
   layout?: (children: any) => React.ReactElement;
+  children: React.ReactNode;
 };
 
-const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
+const ProtectedRoute = ({ children, layout, ...routeProps }: OwnProps) => {
   const { user, error } = useUser();
   const { keycloak } = useKeycloak();
-  const Layout = routeProps.layout!;
+  const RouteLayout = layout!;
   const userNeedsToLogin = !user || !keycloak.authenticated;
 
   if (error) {
@@ -20,7 +21,7 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   }
 
   if (userNeedsToLogin) {
-    return <Redirect to={STATIC_ROUTES.HOME} />;
+    return <Redirect to={STATIC_ROUTES.LOGIN} />;
   }
 
   if (
@@ -32,15 +33,16 @@ const ProtectedRoute = ({ ...routeProps }: OwnProps) => {
   }
 
   const currentPath = routeProps.path;
-  if (currentPath === STATIC_ROUTES.HOME) {
+
+  if (currentPath === STATIC_ROUTES.LOGIN) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }
 
   return (
     <ConditionalWrapper
-      condition={Layout !== undefined}
-      children={<Route {...routeProps} />}
-      wrapper={(children) => <Layout>{children}</Layout>}
+      condition={RouteLayout !== undefined}
+      children={<Route {...routeProps}>{children}</Route>}
+      wrapper={(children) => <RouteLayout>{children}</RouteLayout>}
     />
   );
 };

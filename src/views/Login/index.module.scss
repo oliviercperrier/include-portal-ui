@@ -1,6 +1,6 @@
 @import "colors";
 
-.homePageContent {
+.loginPageContent {
   padding: 40px;
 
   .loginContainer {
@@ -120,7 +120,7 @@
 }
 
 @media (max-width: 800px) {
-  .homePageContent {
+  .loginPageContent {
     display: flex;
     flex-direction: column;
     height: 100%;

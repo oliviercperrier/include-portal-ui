@@ -134,7 +134,7 @@ export const getFilterGroup = (
     return {
       field: extendedMapping?.field || "",
       title: intl
-        .get(`filters.group.${extendedMapping?.field}`)
+        .get(`facets.${extendedMapping?.field}`)
         .defaultMessage(extendedMapping?.displayName || ""),
       type: getFilterType(extendedMapping?.type || ""),
       config: {
@@ -151,7 +151,7 @@ export const getFilterGroup = (
   return {
     field: extendedMapping?.field || "",
     title: intl
-      .get(`filters.group.${extendedMapping?.field}`)
+      .get(`facets.${extendedMapping?.field}`)
       .defaultMessage(extendedMapping?.displayName || ""),
     type: getFilterType(extendedMapping?.type || ""),
     config: {

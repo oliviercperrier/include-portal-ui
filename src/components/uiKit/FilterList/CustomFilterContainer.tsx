@@ -16,28 +16,28 @@ import {
 import { getFilterGroup, getFilters } from "graphql/utils/Filters";
 import history from "utils/history";
 import { underscoreToDot } from "@ferlab/ui/core/data/arranger/formatting";
-import { DocumentNode } from "@apollo/client";
 import CustomFilterSelector from "./CustomFilterSelector";
 import { getFiltersDictionary } from "utils/translation";
+import { TCustomFilterMapper } from ".";
 
 type OwnProps = {
   classname: string;
   index: string;
-  query: DocumentNode;
   cacheKey: string;
   filterKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filtersOpen: boolean;
+  filterMapper?: TCustomFilterMapper
 };
 
 const CustomFilterContainer = ({
   classname,
   index,
-  query,
   cacheKey,
   filterKey,
   filtersOpen,
   extendedMappingResults,
+  filterMapper
 }: OwnProps) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [results, setResults] = useState<GqlResults<any>>();
@@ -46,7 +46,7 @@ const CustomFilterContainer = ({
   );
 
   const onChange = (fg: IFilterGroup, f: IFilter[]) => {
-    updateFilters(history, fg, f);
+    updateFilters(history, fg, f, index);
   };
 
   const aggregations = results?.aggregations
@@ -73,8 +73,8 @@ const CustomFilterContainer = ({
         customContent={
           <CustomFilterSelector
             index={index}
-            query={query}
             cacheKey={cacheKey}
+            filterKey={filterKey}
             dictionary={getFiltersDictionary()}
             filters={filters}
             filterGroup={filterGroup}
@@ -83,6 +83,8 @@ const CustomFilterContainer = ({
             selectedFilters={selectedFilters}
             searchInputVisible={isSearchVisible}
             onDataLoaded={setResults}
+            extendedMappingResults={extendedMappingResults}
+            filterMapper={filterMapper}
           />
         }
       />

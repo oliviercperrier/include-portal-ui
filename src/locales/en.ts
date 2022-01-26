@@ -56,6 +56,58 @@ const en = {
       },
     },
     querybuilder: {
+      header: {
+        modal: {
+          edit: {
+            title: "Save this query",
+            okText: "Save",
+            cancelText: "Cancel",
+            input: {
+              label: "Query name",
+              placeholder: "Untitled query",
+              maximumLength: "characters maximum",
+            },
+          },
+          confirmUnsaved: {
+            title: "Unsaved changes",
+            openSavedFilter: {
+              okText: "Continue",
+              cancelText: "Cancel",
+              content:
+                "You are about to open a saved filter; all modifications will be lost.",
+            },
+            createNewFilter: {
+              okText: "Create",
+              cancelText: "Cancel",
+              content:
+                "You are about to create a new filter; all modifications will be lost.",
+            },
+          },
+        },
+        popupConfirm: {
+          delete: {
+            title: "Permanently delete this request?",
+            okText: "Delete",
+            cancelText: "Cancel",
+          },
+        },
+        tooltips: {
+          newQueryBuilder: "New query builder",
+          save: "Save filter",
+          saveChanges: "Save changes",
+          delete: "Delete",
+          duplicateQueryBuilder: "Duplicate query builder",
+          share: "Share (Copy url)",
+          setAsDefaultFilter: "Set as default filter",
+          usetDefaultFilter: "Unset default filter",
+          noSavedFilters: "You have no saved filters",
+        },
+        myFiltersDropdown: {
+          title: "My Filters",
+          manageMyFilter: "Manage my filters",
+        },
+        duplicateFilterTitleSuffix: "COPY",
+      },
       query: {
         combine: {
           and: "And",
@@ -115,17 +167,17 @@ const en = {
   },
   // SCREENS
   screen: {
-    home: {
+    loginPage: {
       title: "INCLUDE Data Hub",
       datarelease: {
         title: "Available Data",
       },
       uncover: "Uncover",
-      newInsights: "new insigths",
+      newInsights: "new insights",
       biologyConditions:
         "into the biology of Down Syndrome and co-occurring conditions.",
       accessLargeScale:
-        "Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and genomic data.",
+        "Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and omics data.",
       login: "Login",
       signup: "Sign up",
     },
@@ -162,6 +214,9 @@ const en = {
       },
     },
     dataExploration: {
+      queryBuilder: {
+        defaultTitle: "My Queries"
+      },
       sidemenu: {
         participant: "Participant",
         biospecimen: "Biospecimen",
@@ -263,6 +318,38 @@ const en = {
         noAffiliationOption: "I do not have an institutional affiliation.",
       },
     },
+  },
+  facets: {
+    // Participant
+    study_id: "Study ID",
+    karyotype: "Karyotype",
+    down_syndrome_diagnosis: "Down Syndrome Diagnosis",
+    diagnosis: {
+      mondo_id_diagnosis: "Mondo ID Diagnosis",
+    },
+    phenotype: {
+      hpo_id_phenotype: "HPO ID Phenotype",
+    },
+    age_at_data_collection: "Age at data collection",
+    family_type: "Family Type",
+    sex: "Sex",
+    ethnicity: "Ethnicity",
+    race: "Race",
+    // Biospecimen
+    biospecimen_type: "Biospecimen Type",
+    sample_type: "Sample Type",
+    derived_sample_type: "Derived Sample Type",
+    ncit_id_tissue_type: "NCIT ID Tissues Type",
+    age_at_biospecimen_collection: "Age at Biospecimen Collection",
+    bio_repository: "Bio Repository",
+    // File
+    type_of_omics: "Type of Omics",
+    experimental_strategy: "Experimental Strategy",
+    data_category: "Data Category",
+    data_type: "Data Type",
+    file_format: "File Format",
+    size: "Size",
+    access: "Access",
   },
 };
 

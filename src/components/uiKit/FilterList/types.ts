@@ -1,3 +1,6 @@
+import { DocumentNode } from "graphql";
+import { ExtendedMappingResults } from "graphql/models";
+
 export interface FilterGroup {
   title?: string;
   fields: string[];
@@ -12,3 +15,9 @@ export interface FilterInfo {
     tooltipTitle: () => string;
   };
 }
+
+export type TAggregationFunction = (
+  index: string,
+  aggList: string[],
+  mappingResults: ExtendedMappingResults
+) => DocumentNode;

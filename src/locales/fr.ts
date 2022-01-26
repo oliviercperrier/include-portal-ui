@@ -72,6 +72,13 @@ const fr = {
           "Résultats <strong>{from}</strong> - <strong>{to}</strong> sur <strong>{total}</strong>",
       },
     },
+    suggester: {
+      error: {
+        title: "Error",
+        description: "An error occurred while fetching suggestions"
+      },
+      noResultsFound: "No results found"
+    },
     querybuilder: {
       header: {
         modal: {

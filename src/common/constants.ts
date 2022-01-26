@@ -3,4 +3,9 @@ export enum LANG {
   FR = "fr",
 }
 
+export enum SEX {
+  FEMALE = "female",
+  MALE = "male"
+}
+
 export const TABLE_EMPTY_PLACE_HOLDER = "-";

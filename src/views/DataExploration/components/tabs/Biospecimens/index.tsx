@@ -32,6 +32,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: "sample_id",
     title: "Sample ID",
     dataIndex: "sample_id",
+    defaultHidden: true,
     render: (sample_id: string) => sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -122,7 +123,7 @@ const BioSpecimenTab = ({
       itemCount: {
         pageIndex: pagingConfig.index,
         pageSize: pagingConfig.size,
-        total: results.total
+        total: results.total,
       },
       columnSetting: true,
       onColumnStateChange: (newState) => {

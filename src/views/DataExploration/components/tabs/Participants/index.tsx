@@ -9,7 +9,7 @@ import {
   TPagingConfig,
   TPagingConfigCb,
 } from "views/DataExploration/utils/types";
-import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
+import { SEX, TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
 import ExpandableCell from "components/uiKit/table/ExpendableCell";
 import {
   extractMondoTitleAndCode,
@@ -18,6 +18,7 @@ import {
 import ProTable from "@ferlab/ui/core/components/ProTable";
 import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
 import { getProTableDictionary } from "utils/translation";
+import { Tag } from "antd";
 
 import styles from "./index.module.scss";
 
@@ -69,6 +70,19 @@ const defaultColumns: ProColumnType<any>[] = [
     key: "sex",
     title: "Sex",
     dataIndex: "sex",
+    render: (sex: string) => (
+      <Tag
+        color={
+          sex.toLowerCase() === SEX.FEMALE
+            ? "magenta"
+            : sex.toLowerCase() === SEX.MALE
+            ? "geekblue"
+            : ""
+        }
+      >
+        {sex}
+      </Tag>
+    ),
   },
   {
     key: "family_type",
@@ -193,7 +207,7 @@ const ParticipantsTab = ({
       itemCount: {
         pageIndex: pagingConfig.index,
         pageSize: pagingConfig.size,
-        total: results.total
+        total: results.total,
       },
       columnSetting: true,
       onColumnStateChange: (newState) => {

@@ -211,11 +211,15 @@ const en = {
           files: "Files",
           dataGroups: "Data use groups: {groups}",
         },
+        savedFilters: {
+          title: "Saved Filters",
+          noSavedFilters: "You have no saved filters",
+        }
       },
     },
     dataExploration: {
       queryBuilder: {
-        defaultTitle: "My Queries"
+        defaultTitle: "My Queries",
       },
       sidemenu: {
         participant: "Participant",

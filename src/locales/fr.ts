@@ -228,6 +228,10 @@ const fr = {
           files: "Fichiers",
           dataGroups: "Groupes d'utilisation des données: {groups}",
         },
+        savedFilters: {
+          title: "Saved Filters",
+          noSavedFilters: "You have no saved filters",
+        }
       },
     },
     dataExploration: {

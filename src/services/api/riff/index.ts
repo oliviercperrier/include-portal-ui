@@ -1,17 +1,8 @@
 import EnvironmentVariables from "helpers/EnvVariables";
 import keycloak from "auth/keycloak-api/keycloak";
 import { sendRequest } from "services/api";
-import {
-  TRiffEntity,
-  TRiffEntityCreate,
-  TRiffEntityUpdate,
-  TUpdateFilterArg,
-} from "./models";
-import {
-  RIFF_TYPES,
-  TRiffContent,
-  TRiffSavedFilterContent,
-} from "store/riff/types";
+import { TRiffEntity, TRiffEntityCreate } from "./models";
+import { TRiffContent } from "store/riff/types";
 
 const url = EnvironmentVariables.configFor("RIFF_API");
 
@@ -41,40 +32,7 @@ const createRiffEntity = <TReturnContent = TRiffContent>(
   });
 };
 
-const updateSavedFilter = (
-  updateData: TUpdateFilterArg & { riffId: string }
-) => {
-  const data: TRiffEntityUpdate<TRiffSavedFilterContent> = {
-    alias: updateData.savedFilter.title,
-    content: {
-      riffType: RIFF_TYPES.FILTER,
-      filterType: updateData.type,
-      filter: updateData.savedFilter,
-    },
-    sharedPublicly: false,
-  };
-  return sendRequest<TRiffEntity<TRiffSavedFilterContent>>({
-    method: "PUT",
-    url: `${url}/${updateData.riffId}`,
-    headers: headers(),
-    data: data,
-  });
-};
-
-const deleteSavedFilter = (riffId: string) => {
-  return sendRequest<boolean>({
-    method: "DELETE",
-    url: `${url}/${riffId}`,
-    headers: headers(),
-    data: {
-      userid: keycloak.tokenParsed?.sub,
-    },
-  });
-};
-
 export const RiffApi = {
   fetchRiffUser,
-  updateSavedFilter,
-  deleteSavedFilter,
   createRiffEntity,
 };

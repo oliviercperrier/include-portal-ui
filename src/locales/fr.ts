@@ -252,9 +252,9 @@ const fr = {
       },
       tabs: {
         summary: "Sommaire",
-        participants: "Participants {count}",
-        biospecimens: "Biospécimens {count}",
-        datafiles: "Fichier de données {count}",
+        participants: "Participants ({count})",
+        biospecimens: "Biospécimens ({count})",
+        datafiles: "Fichier de données ({count})",
       },
     },
     join: {

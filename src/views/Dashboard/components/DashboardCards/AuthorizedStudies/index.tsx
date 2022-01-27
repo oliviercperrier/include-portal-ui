@@ -81,7 +81,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
         />
       }
       content={
-        <div>
+        <div className={styles.authorizedWrapper}>
           <Space
             className={styles.authSection}
             direction="horizontal"

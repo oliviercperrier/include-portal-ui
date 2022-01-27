@@ -60,8 +60,10 @@ const Studies = () => {
   const { loading, data, total } = useStudies();
 
   return (
-    <Space direction="vertical" className={styles.studiesWrapper}>
-      <Title level={3}>Studies</Title>
+    <Space direction="vertical" size={16} className={styles.studiesWrapper}>
+      <Title className={styles.title} level={4}>
+        Studies
+      </Title>
       <GridCard
         content={
           <Space size={12} direction="vertical" className={styles.tableWrapper}>

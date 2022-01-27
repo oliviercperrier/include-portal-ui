@@ -4,6 +4,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import Spinner from "components/uiKit/Spinner";
 import { useUser } from "store/user";
 import { fetchUser } from "store/user/thunks";
+//import { fetchUser as fetchRiffUser } from "store/riff/thunks";
 import { userActions } from "store/user/slice";
 
 type Props = {
@@ -18,6 +19,7 @@ const Authenticator = ({ children }: Props) => {
   useEffect(() => {
     if (keycloak.authenticated) {
       dispatch(fetchUser());
+      //dispatch(fetchRiffUser());
     } else {
       dispatch(userActions.setIsUserLoading(false));
     }

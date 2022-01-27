@@ -1,5 +1,3 @@
-import { Space, Table } from "antd";
-import TableHeader from "components/uiKit/table/TableHeader";
 import { IQueryResults } from "graphql/models";
 import { IBiospecimenEntity } from "graphql/biospecimens/models";
 import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
@@ -9,10 +7,10 @@ import {
 } from "views/DataExploration/utils/types";
 import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
 import { IParticipantEntity } from "graphql/participants/models";
-import { useState } from "react";
-import ColumnSelector, {
-  ColumnSelectorType,
-} from "components/uiKit/table/ColumnSelector";
+import { extractNcitTissueTitleAndCode } from "views/DataExploration/utils/helper";
+import ProTable from "@ferlab/ui/core/components/ProTable";
+import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
+import { getProTableDictionary } from "utils/translation";
 
 import styles from "./index.module.scss";
 
@@ -22,11 +20,13 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
 }
 
-const defaultColumns: ColumnSelectorType<any>[] = [
+const defaultColumns: ProColumnType<any>[] = [
   {
     key: "derived_sample_id",
     title: "Derived Sample ID",
     dataIndex: "derived_sample_id",
+    render: (derived_sample_id: string) =>
+      derived_sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: "sample_id",
@@ -78,8 +78,28 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "ncit_id_tissue_type",
     title: "Tissue Type (NCIT)",
     dataIndex: "ncit_id_tissue_type",
-    render: (ncit_id_tissue_type) =>
-      ncit_id_tissue_type || TABLE_EMPTY_PLACE_HOLDER,
+    className: styles.ncitTissueCell,
+    render: (ncit_id_tissue_type) => {
+      if (!ncit_id_tissue_type) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      const ncitInfo = extractNcitTissueTitleAndCode(ncit_id_tissue_type);
+
+      return (
+        <div>
+          {ncitInfo.title} (NCIT:{" "}
+          <a
+            href={`https://www.ebi.ac.uk/ols/ontologies/ncit/terms?short_form=NCIT_${ncitInfo.code}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {ncitInfo.code}
+          </a>
+          )
+        </div>
+      );
+    },
   },
   {
     key: "bio_repository",
@@ -92,51 +112,41 @@ const BioSpecimenTab = ({
   results,
   setPagingConfig,
   pagingConfig,
-}: OwnProps) => {
-  const [columns, setColumns] = useState<ColumnSelectorType<any>[]>(
-    defaultColumns.filter((column) => !column.defaultHidden)
-  );
-
-  return (
-    <Space
-      size={12}
-      className={styles.biospecimenTabWrapper}
-      direction="vertical"
-    >
-      <TableHeader
-        total={results.total}
-        pageIndex={pagingConfig.index}
-        pageSize={pagingConfig.size}
-        extra={[
-          <ColumnSelector
-            defaultColumns={defaultColumns}
-            columns={columns}
-            onChange={setColumns}
-          />,
-        ]}
-      />
-      <Table
-        bordered
-        loading={results.loading}
-        size="small"
-        pagination={{
-          pageSize: pagingConfig.size,
-          defaultPageSize: DEFAULT_PAGE_SIZE,
-          total: results.total,
-          onChange: (page, size) => {
-            if (pagingConfig.index !== page || pagingConfig.size !== size) {
-              setPagingConfig({
-                index: page,
-                size: size!,
-              });
-            }
-          },
-        }}
-        dataSource={results.data}
-        columns={columns}
-      ></Table>
-    </Space>
-  );
-};
+}: OwnProps) => (
+  <ProTable
+    tableId="data-exploration-biospecimen"
+    columns={defaultColumns}
+    wrapperClassName={styles.biospecimenTabWrapper}
+    loading={results.loading}
+    headerConfig={{
+      itemCount: {
+        pageIndex: pagingConfig.index,
+        pageSize: pagingConfig.size,
+        total: results.total
+      },
+      columnSetting: true,
+      onColumnStateChange: (newState) => {
+        console.log(newState);
+      },
+    }}
+    bordered
+    size="small"
+    pagination={{
+      pageSize: pagingConfig.size,
+      defaultPageSize: DEFAULT_PAGE_SIZE,
+      total: results.total,
+      onChange: (page, size) => {
+        if (pagingConfig.index !== page || pagingConfig.size !== size) {
+          setPagingConfig({
+            index: page,
+            size: size!,
+          });
+        }
+      },
+    }}
+    dataSource={results.data}
+    dictionary={getProTableDictionary()}
+  />
+);
 
 export default BioSpecimenTab;

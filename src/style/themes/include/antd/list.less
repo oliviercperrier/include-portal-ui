@@ -5,6 +5,8 @@
     .@{list-prefix-cls}-header {
       padding: 8px 12px;
     }
+
+    border-color: @gray-4;
   }
 
   .@{list-prefix-cls}-item {
@@ -47,6 +49,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+    }
+  }
+
+  // Empty
+  div[class$="-nested-loading"] {
+    &,
+    .ant-spin-container,
+    .ant-list-empty-text {
+      height: 100%;
     }
   }
 }

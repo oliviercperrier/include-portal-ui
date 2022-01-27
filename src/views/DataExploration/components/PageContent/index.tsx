@@ -128,7 +128,9 @@ const PageContent = ({
             enableDuplicate: true,
           },
           savedFilters: [],
-          onSaveFilter: () => {},
+          onSaveFilter: (filter) => {
+            console.log(JSON.stringify(filter));
+          },
         }}
         enableCombine
         enableShowHideLabels

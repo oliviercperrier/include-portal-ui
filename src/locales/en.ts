@@ -40,6 +40,23 @@ const en = {
       404: "Sorry, the page you visited does not exist.",
       500: "Sorry, something went wrong.",
     },
+    notification: {
+      genericError: "An error occured",
+    },
+    proTable: {
+      results: "Results",
+      noResults: "No Results",
+      of: "of"
+    }
+  },
+  // API
+  riff: {
+    error: {
+      title: "Error",
+      fetchUser: "Unable to fetch Riff user",
+      saveFilter: "Unable to save filter",
+      deleteFilter: "Unable to delete filter"
+    },
   },
   // COMPONENTS
   components: {
@@ -55,16 +72,23 @@ const en = {
           "Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>",
       },
     },
+    suggester: {
+      error: {
+        title: "Error",
+        description: "An error occurred while fetching suggestions"
+      },
+      noResultsFound: "No results found"
+    },
     querybuilder: {
       header: {
         modal: {
           edit: {
-            title: "Save this query",
+            title: "Save this filter",
             okText: "Save",
             cancelText: "Cancel",
             input: {
-              label: "Query name",
-              placeholder: "Untitled query",
+              label: "Filter name",
+              placeholder: "Untitled filter",
               maximumLength: "characters maximum",
             },
           },
@@ -211,11 +235,15 @@ const en = {
           files: "Files",
           dataGroups: "Data use groups: {groups}",
         },
+        savedFilters: {
+          title: "Saved Filters",
+          noSavedFilters: "You have no saved filters",
+        }
       },
     },
     dataExploration: {
       queryBuilder: {
-        defaultTitle: "My Queries"
+        defaultTitle: "My Filter",
       },
       sidemenu: {
         participant: "Participant",

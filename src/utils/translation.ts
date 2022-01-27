@@ -1,6 +1,15 @@
 import intl from "react-intl-universal";
 import { IDictionary as FiltersDict } from "@ferlab/ui/core/components/filters/types";
 import { IDictionary as QueryBuilderDict } from "@ferlab/ui/core/components/QueryBuilder/types";
+import { IProTableDictionary } from "@ferlab/ui/core/components/ProTable/types";
+
+export const getProTableDictionary = (): IProTableDictionary => ({
+  itemCount: {
+    results: intl.get("global.proTable.results"),
+    noResults: intl.get("global.proTable.noResults"),
+    of: intl.get("global.proTable.of"),
+  },
+});
 
 export const getFiltersDictionary = (): FiltersDict => ({
   actions: {

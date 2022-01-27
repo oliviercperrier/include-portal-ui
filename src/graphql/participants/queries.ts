@@ -29,6 +29,26 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
                 total
               }
             }
+
+            diagnosis {
+              hits {
+                edges {
+                  node {
+                    mondo_id_diagnosis
+                  }
+                }
+              }
+            }
+
+            phenotype {
+              hits {
+                edges {
+                  node {
+                    hpo_id_phenotype
+                  }
+                }
+              }
+            }
           }
         }
       }

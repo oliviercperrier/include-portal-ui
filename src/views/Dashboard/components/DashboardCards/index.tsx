@@ -5,6 +5,7 @@ import DataExplorationLinks from "./DataExplorationLinks";
 import cx from "classnames";
 
 import styles from "./index.module.scss";
+import SavedFilters from "./SavedFilters";
 
 export interface DashboardCardProps {
   id: string;
@@ -31,14 +32,7 @@ export const dashboardCards: TSortableItems[] = [
     md: 12,
     xxl: 8,
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: (
-      <GridCard
-        wrapperClassName={styles.dashboardCard}
-        theme="shade"
-        title={""}
-        content="Content.."
-      />
-    ),
+    component: <SavedFilters id="2" className={styles.dashboardCard} />,
   },
   {
     id: "3",

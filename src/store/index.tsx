@@ -8,6 +8,7 @@ import { RootState } from "store/types";
 // Reducers
 import GlobalReducer from "store/global";
 import UserReducer from "store/user";
+import RiffReducer from "store/riff";
 
 const devMode = EnvVariables.configFor("ENV") === "development";
 
@@ -20,6 +21,7 @@ const persistConfig = {
 const rootReducer = combineReducers<RootState>({
   global: GlobalReducer,
   user: UserReducer,
+  riff: RiffReducer,
 });
 
 const store: any = configureStore({

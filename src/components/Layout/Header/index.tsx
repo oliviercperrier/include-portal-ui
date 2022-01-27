@@ -2,12 +2,9 @@
 import { PageHeader, Dropdown, Button, Menu } from "antd";
 import IncludeIcon from "components/Icons/IncludeIcon";
 import {
-  ExperimentOutlined,
-  UserOutlined,
   ReadOutlined,
   HomeOutlined,
   FileSearchOutlined,
-  FileTextOutlined,
 } from "@ant-design/icons";
 import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";
 import { DownOutlined } from "@ant-design/icons";
@@ -70,27 +67,12 @@ const Header = () => {
               to={[
                 STATIC_ROUTES.DATA_EXPLORATION,
                 STATIC_ROUTES.DATA_EXPLORATION_SUMMARY,
+                STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+                STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
+                STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
               ]}
               icon={<FileSearchOutlined />}
               title={intl.get("layout.main.menu.explore")}
-            />
-            <HeaderLink
-              currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
-              icon={<UserOutlined />}
-              title={intl.get("layout.main.menu.participants")}
-            />
-            <HeaderLink
-              currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
-              icon={<ExperimentOutlined />}
-              title={intl.get("layout.main.menu.biospecimen")}
-            />
-            <HeaderLink
-              currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
-              icon={<FileTextOutlined />}
-              title={intl.get("layout.main.menu.datafiles")}
             />
           </nav>
         }

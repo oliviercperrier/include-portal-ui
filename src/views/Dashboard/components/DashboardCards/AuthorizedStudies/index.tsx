@@ -81,7 +81,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
         />
       }
       content={
-        <div>
+        <div className={styles.authorizedWrapper}>
           <Space
             className={styles.authSection}
             direction="horizontal"
@@ -89,12 +89,14 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
           >
             {isConnected ? (
               <>
-                <SafetyOutlined className={styles.safetyIcon} />
-                <Text className={styles.notice}>
-                  {intl.get(
-                    "screen.dashboard.cards.authorizedStudies.connectedNotice"
-                  )}
-                </Text>
+                <Space size={8} direction="horizontal" align="start">
+                  <SafetyOutlined className={styles.safetyIcon} />
+                  <Text className={styles.notice}>
+                    {intl.get(
+                      "screen.dashboard.cards.authorizedStudies.connectedNotice"
+                    )}
+                  </Text>
+                </Space>
                 <Button
                   type="primary"
                   size="small"
@@ -109,12 +111,14 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
               </>
             ) : (
               <>
-                <SafetyOutlined className={styles.safetyIcon} />
-                <Text className={styles.notice}>
-                  {intl.get(
-                    "screen.dashboard.cards.authorizedStudies.disconnectedNotice"
-                  )}
-                </Text>
+                <Space size={8} direction="horizontal" align="start">
+                  <SafetyOutlined className={styles.safetyIcon} />
+                  <Text className={styles.notice}>
+                    {intl.get(
+                      "screen.dashboard.cards.authorizedStudies.disconnectedNotice"
+                    )}
+                  </Text>
+                </Space>
                 <Button
                   type="primary"
                   size="small"

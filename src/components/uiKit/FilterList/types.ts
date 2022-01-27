@@ -1,5 +1,6 @@
 import { DocumentNode } from "graphql";
 import { ExtendedMappingResults } from "graphql/models";
+import { SUGGESTION_TYPES } from "../Suggester";
 
 export interface FilterGroup {
   title?: string;
@@ -11,7 +12,7 @@ export interface FilterInfo {
   suggester?: {
     title: () => string;
     placeholder: () => string;
-    suggestionType: string; // Add enum?
+    suggestionType: SUGGESTION_TYPES;
     tooltipTitle: () => string;
   };
 }

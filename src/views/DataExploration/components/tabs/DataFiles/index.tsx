@@ -10,6 +10,9 @@ import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
 import ProTable from "@ferlab/ui/core/components/ProTable";
 import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
 import { getProTableDictionary } from "utils/translation";
+import { useDispatch } from "react-redux";
+import { useUser } from "store/user";
+import { updateUserConfig } from "store/user/thunks";
 
 import styles from "./index.module.scss";
 
@@ -84,41 +87,52 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => (
-  <ProTable
-    tableId="data-exploration-datafiles"
-    columns={defaultColumns}
-    wrapperClassName={styles.dataFilesTabWrapper}
-    loading={results.loading}
-    headerConfig={{
-      itemCount: {
-        pageIndex: pagingConfig.index,
+const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
+  const dispatch = useDispatch();
+  const { user } = useUser();
+
+  return (
+    <ProTable
+      tableId="datafiles_table"
+      columns={defaultColumns}
+      wrapperClassName={styles.dataFilesTabWrapper}
+      loading={results.loading}
+      initialColumnState={user?.config.data_exploration?.datafiles_table}
+      headerConfig={{
+        itemCount: {
+          pageIndex: pagingConfig.index,
+          pageSize: pagingConfig.size,
+          total: results.total,
+        },
+        columnSetting: true,
+        onColumnStateChange: (newState) =>
+          dispatch(
+            updateUserConfig({
+              data_exploration: {
+                datafiles_table: newState,
+              },
+            })
+          ),
+      }}
+      bordered
+      size="small"
+      pagination={{
         pageSize: pagingConfig.size,
+        defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
-      },
-      columnSetting: true,
-      onColumnStateChange: (newState) => {
-        console.log(newState);
-      },
-    }}
-    bordered
-    size="small"
-    pagination={{
-      pageSize: pagingConfig.size,
-      defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: results.total,
-      onChange: (page, size) => {
-        if (pagingConfig.index !== page || pagingConfig.size !== size) {
-          setPagingConfig({
-            index: page,
-            size: size!,
-          });
-        }
-      },
-    }}
-    dataSource={results.data}
-    dictionary={getProTableDictionary()}
-  />
-);
+        onChange: (page, size) => {
+          if (pagingConfig.index !== page || pagingConfig.size !== size) {
+            setPagingConfig({
+              index: page,
+              size: size!,
+            });
+          }
+        },
+      }}
+      dataSource={results.data}
+      dictionary={getProTableDictionary()}
+    />
+  );
+};
 
 export default DataFilesTab;

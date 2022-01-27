@@ -4,9 +4,11 @@ import CustomFilterContainer from "./CustomFilterContainer";
 import intl from "react-intl-universal";
 import { FilterGroup, FilterInfo } from "./types";
 import { ExtendedMappingResults } from "graphql/models";
+import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
+import SuggesterWrapper from "components/uiKit/Suggester/Wrapper";
+import Suggester from "components/uiKit/Suggester";
 
 import styles from "./Filters.module.scss";
-import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
 
 export type TCustomFilterMapper = (filters: ISyntheticSqon) => ISyntheticSqon;
 
@@ -15,7 +17,7 @@ type OwnProps = {
   cacheKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filterInfo: FilterInfo;
-  filterMapper?: TCustomFilterMapper
+  filterMapper?: TCustomFilterMapper;
 };
 
 const FilterList = ({
@@ -23,13 +25,13 @@ const FilterList = ({
   cacheKey,
   extendedMappingResults,
   filterInfo,
-  filterMapper
+  filterMapper,
 }: OwnProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   return (
     <>
-      {/*filterInfo.suggester && (
+      {filterInfo.suggester && (
         <SuggesterWrapper
           tooltipMessage={filterInfo.suggester.tooltipTitle()}
           title={filterInfo.suggester.title()}
@@ -40,7 +42,7 @@ const FilterList = ({
             placeholderText={filterInfo.suggester.placeholder()}
           />
         </SuggesterWrapper>
-      )*/}
+      )}
       <div className={styles.filterExpandBtnWrapper}>
         <Button onClick={() => setFiltersOpen(!filtersOpen)} type="link">
           {filtersOpen

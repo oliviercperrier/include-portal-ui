@@ -38,8 +38,6 @@ import ParticipantsTab from "views/DataExploration/components/tabs/Participants"
 import { useState } from "react";
 
 import styles from "./index.module.scss";
-import { useSavedFilters } from "store/riff";
-import { SAVED_FILTER_TYPES } from "store/riff/types";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -66,7 +64,6 @@ const PageContent = ({
   participantMapping,
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
-  const savedFilters = useSavedFilters(SAVED_FILTER_TYPES.EXPLORATION);
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
@@ -130,7 +127,7 @@ const PageContent = ({
             enableEditTitle: true,
             enableDuplicate: true,
           },
-          savedFilters: savedFilters,
+          savedFilters: [],
           onSaveFilter: (filter) => {
             console.log(JSON.stringify(filter));
           },

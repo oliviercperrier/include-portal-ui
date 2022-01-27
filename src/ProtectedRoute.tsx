@@ -11,10 +11,10 @@ type OwnProps = Omit<RouteProps, "component" | "render" | "children"> & {
 };
 
 const ProtectedRoute = ({ children, layout, ...routeProps }: OwnProps) => {
-  const { user, error } = useUser();
+  const { userInfo, error } = useUser();
   const { keycloak } = useKeycloak();
   const RouteLayout = layout!;
-  const userNeedsToLogin = !user || !keycloak.authenticated;
+  const userNeedsToLogin = !userInfo || !keycloak.authenticated;
 
   if (error) {
     return <Redirect to={STATIC_ROUTES.ERROR} />;
@@ -25,9 +25,9 @@ const ProtectedRoute = ({ children, layout, ...routeProps }: OwnProps) => {
   }
 
   if (
-    !user.accepted_terms ||
-    !user.understand_disclaimer ||
-    !user.completed_registration
+    !userInfo.accepted_terms ||
+    !userInfo.understand_disclaimer ||
+    !userInfo.completed_registration
   ) {
     return <Redirect to={STATIC_ROUTES.JOIN} />;
   }

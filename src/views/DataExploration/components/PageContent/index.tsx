@@ -38,6 +38,9 @@ import ParticipantsTab from "views/DataExploration/components/tabs/Participants"
 import { useState } from "react";
 
 import styles from "./index.module.scss";
+import { useDispatch } from "react-redux";
+import { createSavedFilter, deleteSavedFilter } from "store/savedFilter/thunks";
+import { useSavedFilter } from "store/savedFilter";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -45,6 +48,8 @@ interface OwnProps {
   participantMapping: ExtendedMappingResults;
   tabId?: string;
 }
+
+const DATA_EPLORATION_FILTER_TAG = "data-exploration";
 
 export enum TAB_IDS {
   SUMMARY = "summary",
@@ -64,6 +69,8 @@ const PageContent = ({
   participantMapping,
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
+  const dispatch = useDispatch();
+  const { savedFilters } = useSavedFilter();
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
@@ -127,10 +134,15 @@ const PageContent = ({
             enableEditTitle: true,
             enableDuplicate: true,
           },
-          savedFilters: [],
-          onSaveFilter: (filter) => {
-            console.log(JSON.stringify(filter));
-          },
+          savedFilters: savedFilters,
+          onSaveFilter: (filter) =>
+            dispatch(
+              createSavedFilter({
+                ...filter,
+                tag: DATA_EPLORATION_FILTER_TAG,
+              })
+            ),
+          onDeleteFilter: (id) => dispatch(deleteSavedFilter(id)),
         }}
         enableCombine
         enableShowHideLabels

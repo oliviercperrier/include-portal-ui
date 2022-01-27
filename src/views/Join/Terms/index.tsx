@@ -25,7 +25,7 @@ enum CHECKBOXES_OPTIONS {
 const { Title, Text } = Typography;
 
 const TermsStep = () => {
-  const { user, isUpdating } = useUser();
+  const { userInfo, isUpdating } = useUser();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
@@ -93,7 +93,7 @@ const TermsStep = () => {
         fields={[
           {
             name: [FORM_FIELDS.CHECKBOXES],
-            value: getInitialValues(user!),
+            value: getInitialValues(userInfo!),
           },
         ]}
         onFinish={() => {
@@ -101,7 +101,7 @@ const TermsStep = () => {
             history.push(STATIC_ROUTES.JOIN_REGISTRATION);
           };
 
-          if (!user?.accepted_terms || !user?.understand_disclaimer) {
+          if (!userInfo?.accepted_terms || !userInfo?.understand_disclaimer) {
             dispatch(
               updateUser({
                 data: {

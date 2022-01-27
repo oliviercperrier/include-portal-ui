@@ -1,30 +1,38 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
 import { UserApi } from "services/api/user";
 import { TUser, TUserConfig, TUserUpdate } from "services/api/user/models";
 import { RootState } from "store/types";
+import { handleApiReponse } from "store/utils";
 import { mergeDeep } from "utils/object";
 
-const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string }>(
+const fetchUser = createAsyncThunk<
+  TUser,
+  void,
+  { rejectValue: string; state: RootState }
+>(
   "user/fetch",
   async (_, thunkAPI) => {
-    const { data, error } = await UserApi.fetchUser();
+    const { data, error } = await UserApi.fetch();
 
     if (!error) {
       return data!;
     }
 
     if (error?.response?.status === 404) {
-      const { data: newUser, error: newUserError } = await UserApi.createUser();
+      const { data: newUser, error: newUserError } = await UserApi.create();
 
-      return handleUserReponse(
-        newUserError,
-        newUser!,
-        thunkAPI.rejectWithValue
-      );
+      return handleApiReponse(newUserError, newUser!, thunkAPI.rejectWithValue);
     } else {
       return thunkAPI.rejectWithValue(error?.message);
     }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { user } = getState();
+      if (user.userInfo) {
+        return false;
+      }
+    },
   }
 );
 
@@ -38,9 +46,9 @@ const updateUser = createAsyncThunk<
 >(
   "user/update",
   async (args, thunkAPI) => {
-    const { data, error } = await UserApi.updateUser(args.data);
+    const { data, error } = await UserApi.update(args.data);
 
-    return handleUserReponse(
+    return handleApiReponse(
       error,
       data!,
       thunkAPI.rejectWithValue,
@@ -65,18 +73,20 @@ const updateUserConfig = createAsyncThunk<
   async (config, thunkAPI) => {
     const { user } = thunkAPI.getState();
 
-    const deepCopyUserConfig = JSON.parse(JSON.stringify(user.user?.config));
+    const deepCopyUserConfig = JSON.parse(
+      JSON.stringify(user.userInfo?.config)
+    );
     const deepCopyNewConfig = JSON.parse(JSON.stringify(config));
     const mergedConfig = mergeDeep<TUserConfig>(
       deepCopyUserConfig,
       deepCopyNewConfig
     );
 
-    const { error } = await UserApi.updateUser({
+    const { error } = await UserApi.update({
       config: mergedConfig,
     });
 
-    return handleUserReponse(error, mergedConfig, thunkAPI.rejectWithValue);
+    return handleApiReponse(error, mergedConfig, thunkAPI.rejectWithValue);
   },
   {
     condition: (config) => {
@@ -99,7 +109,7 @@ const completeRegistration = createAsyncThunk<
   async (args, thunkAPI) => {
     const { data, error } = await UserApi.completeRegistration(args.data);
 
-    return handleUserReponse(
+    return handleApiReponse(
       error,
       data!,
       thunkAPI.rejectWithValue,
@@ -114,22 +124,5 @@ const completeRegistration = createAsyncThunk<
     },
   }
 );
-
-const handleUserReponse = <T>(
-  error: AxiosError | undefined,
-  data: T,
-  reject: (error: string) => any,
-  callback?: () => void
-) => {
-  if (error) {
-    return reject(error?.message);
-  }
-
-  if (callback) {
-    callback();
-  }
-
-  return data;
-};
 
 export { fetchUser, updateUser, completeRegistration, updateUserConfig };

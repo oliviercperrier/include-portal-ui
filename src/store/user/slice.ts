@@ -9,7 +9,7 @@ import {
 } from "store/user/thunks";
 
 export const UserState: initialState = {
-  user: null,
+  userInfo: null,
   isLoading: true,
   isUpdating: false,
 };
@@ -38,8 +38,7 @@ const userSlice = createSlice({
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: action.payload,
+      userInfo: action.payload,
       isLoading: false,
     }));
     builder.addCase(fetchUser.rejected, (state, action) => ({
@@ -54,8 +53,7 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUser.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: action.payload,
+      userInfo: action.payload,
       isUpdating: false,
     }));
     builder.addCase(updateUser.rejected, (state, action) => ({
@@ -70,8 +68,7 @@ const userSlice = createSlice({
     });
     builder.addCase(completeRegistration.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: action.payload,
+      userInfo: action.payload,
       isUpdating: false,
     }));
     builder.addCase(completeRegistration.rejected, (state, action) => ({
@@ -82,9 +79,8 @@ const userSlice = createSlice({
     // Update User Config
     builder.addCase(updateUserConfig.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: {
-        ...state.user!,
+      userInfo: {
+        ...state.userInfo!,
         config: action.payload,
       },
     }));

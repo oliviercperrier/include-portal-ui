@@ -235,6 +235,10 @@ const en = {
           files: "Files",
           dataGroups: "Data use groups: {groups}",
         },
+        savedFilters: {
+          title: "Saved Filters",
+          noSavedFilters: "You have no saved filters",
+        }
       },
     },
     dataExploration: {

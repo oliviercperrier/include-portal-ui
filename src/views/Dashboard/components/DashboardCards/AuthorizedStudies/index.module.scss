@@ -1,32 +1,35 @@
 @import "colors";
 
-.authorizedStudiesList {
-  max-height: 325px;
-  overflow: auto;
-}
+.authorizedWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-.dataAccessBtn {
-  padding: 0;
-  > span {
-    text-decoration: underline;
-    &:hover {
-      text-decoration: none;
+  .authorizedStudiesList {
+    overflow: auto;
+  }
+
+  .dataAccessBtn {
+    padding: 0;
+    > span {
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
-}
 
-.authSection {
-  margin-bottom: 12px;
-  width: 100%;
-  justify-content: space-between;
+  .authSection {
+    margin-bottom: 8px;
 
-  .safetyIcon {
-    font-size: 20px;
-  }
+    .safetyIcon {
+      font-size: 20px;
+    }
 
-  .notice {
-    font-size: 12px;
-    vertical-align: super;
-    line-height: 10px;
+    .notice {
+      font-size: 12px;
+      vertical-align: super;
+      line-height: 10px;
+    }
   }
 }

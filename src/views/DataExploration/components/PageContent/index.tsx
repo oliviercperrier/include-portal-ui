@@ -35,12 +35,17 @@ import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
 import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  createSavedFilter,
+  deleteSavedFilter,
+  fetchSavedFilters,
+  updateSavedFilter,
+} from "store/savedFilter/thunks";
+import { useSavedFilter } from "store/savedFilter";
 
 import styles from "./index.module.scss";
-import { useDispatch } from "react-redux";
-import { createSavedFilter, deleteSavedFilter } from "store/savedFilter/thunks";
-import { useSavedFilter } from "store/savedFilter";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -70,7 +75,7 @@ const PageContent = ({
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
   const dispatch = useDispatch();
-  const { savedFilters } = useSavedFilter();
+  const { savedFilters } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
@@ -82,6 +87,11 @@ const PageContent = ({
   const [pagingConfigFile, setPagingConfigFile] = useState(
     DEFAULT_PAGING_CONFIG
   );
+
+  useEffect(() => {
+    dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
+    // eslint-disable-next-line
+  }, []);
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
@@ -135,6 +145,7 @@ const PageContent = ({
             enableDuplicate: true,
           },
           savedFilters: savedFilters,
+          onUpdateFilter: (filter) => dispatch(updateSavedFilter(filter)),
           onSaveFilter: (filter) =>
             dispatch(
               createSavedFilter({

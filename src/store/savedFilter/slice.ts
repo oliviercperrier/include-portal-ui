@@ -55,7 +55,7 @@ const savedFilterSlice = createSlice({
     });
     builder.addCase(updateSavedFilter.fulfilled, (state, action) => {
       const filters = [
-        ...state.savedFilters.filter(({ id }) => action.payload.id === id),
+        ...state.savedFilters.filter(({ id }) => action.payload.id !== id),
       ];
 
       return {

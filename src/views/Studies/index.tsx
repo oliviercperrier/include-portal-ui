@@ -42,12 +42,14 @@ const columns: ProColumnType<any>[] = [
     ),
   },
   {
-    key: "participants",
+    key: "participant_count",
     title: "Participants",
+    dataIndex: "participant_count",
   },
   {
-    key: "families",
+    key: "family_count",
     title: "Families",
+    dataIndex: "family_count",
   },
   {
     key: "genomic",

@@ -51,6 +51,7 @@ export const getQueryBuilderDictionary = (
         cancelText: intl.get(
           "components.querybuilder.header.modal.edit.cancelText"
         ),
+        content: "",
         input: {
           label: intl.get(
             "components.querybuilder.header.modal.edit.input.label"
@@ -101,6 +102,9 @@ export const getQueryBuilderDictionary = (
         ),
         cancelText: intl.get(
           "components.querybuilder.header.popupConfirm.delete.cancelText"
+        ),
+        content: intl.get(
+          "components.querybuilder.header.popupConfirm.delete.content"
         ),
       },
     },

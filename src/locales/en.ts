@@ -46,8 +46,8 @@ const en = {
     proTable: {
       results: "Results",
       noResults: "No Results",
-      of: "of"
-    }
+      of: "of",
+    },
   },
   // API
   riff: {
@@ -55,7 +55,7 @@ const en = {
       title: "Error",
       fetchUser: "Unable to fetch Riff user",
       saveFilter: "Unable to save filter",
-      deleteFilter: "Unable to delete filter"
+      deleteFilter: "Unable to delete filter",
     },
   },
   // COMPONENTS
@@ -75,9 +75,9 @@ const en = {
     suggester: {
       error: {
         title: "Error",
-        description: "An error occurred while fetching suggestions"
+        description: "An error occurred while fetching suggestions",
       },
-      noResultsFound: "No results found"
+      noResultsFound: "No results found",
     },
     querybuilder: {
       header: {
@@ -110,17 +110,19 @@ const en = {
         },
         popupConfirm: {
           delete: {
-            title: "Permanently delete this request?",
-            okText: "Delete",
+            title: "Permanently delete this filter?",
+            okText: "Delete filter",
             cancelText: "Cancel",
+            content:
+              "You are about to permanently delete this filter and all of its queries.",
           },
         },
         tooltips: {
-          newQueryBuilder: "New query builder",
+          newQueryBuilder: "New filter",
           save: "Save filter",
           saveChanges: "Save changes",
           delete: "Delete",
-          duplicateQueryBuilder: "Duplicate query builder",
+          duplicateQueryBuilder: "Duplicate filter",
           share: "Share (Copy url)",
           setAsDefaultFilter: "Set as default filter",
           usetDefaultFilter: "Unset default filter",
@@ -238,7 +240,8 @@ const en = {
         savedFilters: {
           title: "Saved Filters",
           noSavedFilters: "You have no saved filters",
-        }
+          lastSaved: "Last saved: {date}",
+        },
       },
     },
     dataExploration: {

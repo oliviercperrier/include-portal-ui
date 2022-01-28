@@ -1,32 +1,32 @@
 const fr = {
-  // GLOBAL
+  // Global
   global: {
-    yes: "Oui",
-    no: "Non",
+    yes: "Yes",
+    no: "No",
     filters: {
       actions: {
-        all: "Sélectionner tout",
-        none: "Effacer",
-        clear: "Effacer",
-        less: "Voir -",
-        more: "De plus",
-        apply: "Appliquer",
+        all: "All",
+        none: "None",
+        clear: "Clear",
+        less: "Less",
+        more: "More",
+        apply: "Apply",
       },
       operators: {
-        between: "Entre",
-        lessthan: "Plus petit que",
-        lessthanorequal: "Plus petit ou égale",
-        greaterthan: "Plus grand que",
-        greaterthanorequal: "Plus grand ou égale",
+        between: "Between",
+        lessthan: "Less than",
+        lessthanorequal: "Less than or equal",
+        greaterthan: "Greater than",
+        greaterthanorequal: "Greater than or equal",
       },
       range: {
-        is: "Est",
+        is: "Is",
       },
       messages: {
-        empty: "Aucune valeur trouvée pour cette requête",
+        empty: "No values found",
       },
       checkbox: {
-        placeholder: "Recherche...",
+        placeholder: "Search...",
       },
     },
     forms: {
@@ -46,8 +46,8 @@ const fr = {
     proTable: {
       results: "Results",
       noResults: "No Results",
-      of: "of"
-    }
+      of: "of",
+    },
   },
   // API
   riff: {
@@ -55,29 +55,29 @@ const fr = {
       title: "Error",
       fetchUser: "Unable to fetch Riff user",
       saveFilter: "Unable to save filter",
-      deleteFilter: "Unable to delete filter"
+      deleteFilter: "Unable to delete filter",
     },
   },
   // COMPONENTS
   components: {
     filterList: {
-      collapseAll: "Tout fermer",
-      expandAll: "Tout ouvrir",
+      collapseAll: "Collapse all",
+      expandAll: "Expand all",
     },
     table: {
       itemCount: {
         singlePage:
-          "{count, plural, =0 {Aucun résultat} other {<strong>#</strong> résultats}}",
+          "{count, plural, =0 {No result} other {<strong>#</strong> results}}",
         multiplePages:
-          "Résultats <strong>{from}</strong> - <strong>{to}</strong> sur <strong>{total}</strong>",
+          "Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>",
       },
     },
     suggester: {
       error: {
         title: "Error",
-        description: "An error occurred while fetching suggestions"
+        description: "An error occurred while fetching suggestions",
       },
-      noResultsFound: "No results found"
+      noResultsFound: "No results found",
     },
     querybuilder: {
       header: {
@@ -110,17 +110,19 @@ const fr = {
         },
         popupConfirm: {
           delete: {
-            title: "Permanently delete this request?",
-            okText: "Delete",
+            title: "Permanently delete this filter?",
+            okText: "Delete filter",
             cancelText: "Cancel",
+            content:
+              "You are about to permanently delete this filter and all of its queries.",
           },
         },
         tooltips: {
-          newQueryBuilder: "New query builder",
+          newQueryBuilder: "New filter",
           save: "Save filter",
           saveChanges: "Save changes",
           delete: "Delete",
-          duplicateQueryBuilder: "Duplicate query builder",
+          duplicateQueryBuilder: "Duplicate filter",
           share: "Share (Copy url)",
           setAsDefaultFilter: "Set as default filter",
           usetDefaultFilter: "Unset default filter",
@@ -134,58 +136,58 @@ const fr = {
       },
       query: {
         combine: {
-          and: "Et",
-          or: "Ou",
+          and: "And",
+          or: "Or",
         },
-        noQuery: "Utiliser les filtres pour créer une requête",
+        noQuery: "Use the filters to build a query",
       },
       actions: {
-        new: "Nouvelle",
-        changeOperatorTo: "Changer l'opérateur à",
-        addQuery: "Nouvelle requête",
-        combine: "Combiner",
-        labels: "Champs",
+        new: "New",
+        changeOperatorTo: "Change operator to",
+        addQuery: "New query",
+        combine: "Combine",
+        labels: "Labels",
         delete: {
-          title: "Supprimer cette requête ?",
-          titleSelected: "Supprimer cette requête ?",
-          cancel: "Annuler",
-          confirm: "Supprimer",
+          title: "Delete this query?",
+          titleSelected: "Delete this query?",
+          cancel: "Cancel",
+          confirm: "Delete",
         },
         clear: {
-          title: "Supprimer toutes les requêtes ?",
-          cancel: "Annuler",
-          confirm: "Supprimer",
-          buttonTitle: "Tout effacer",
+          title: "Delete all queries?",
+          cancel: "Cancel",
+          confirm: "Delete",
+          buttonTitle: "Clear all",
           description:
-            "Vous êtes sur le point de supprimer toutes vos requêtes. Ils seront perdus à jamais.",
+            "You are about to delete all your queries. They will be lost forever.",
         },
       },
     },
     dataRelease: {
-      studies: "Études",
+      studies: "Studies",
       participants: "Participants",
-      biospecimens: "Biospécimens",
-      datafiles: "Fichier de données",
+      biospecimens: "Biospecimens",
+      datafiles: "Data Files",
     },
   },
   // LAYOUT
   layout: {
     main: {
       menu: {
-        dashboard: "Tableau de bord",
-        studies: "Études",
-        explore: "Exploration des données",
+        dashboard: "Dashboard",
+        studies: "Studies",
+        explore: "Data Exploration",
         participants: "Participants",
-        biospecimen: "Biospécimen",
-        datafiles: "Fichiers de données",
-        website: "Site internet",
+        biospecimen: "Biospecimen",
+        datafiles: "Data Files",
+        website: "Website",
       },
     },
     user: {
       menu: {
-        myprofile: "Mon Profil",
-        settings: "Réglages",
-        logout: "Se déconnecter",
+        myprofile: "My Profile",
+        settings: "Settings",
+        logout: "Logout",
       },
     },
   },
@@ -194,51 +196,52 @@ const fr = {
     loginPage: {
       title: "INCLUDE Data Hub",
       datarelease: {
-        title: "Données disponibles",
+        title: "Available Data",
       },
-      uncover: "Découvrez de",
-      newInsights: "nouvelles connaissances",
+      uncover: "Uncover",
+      newInsights: "new insights",
       biologyConditions:
-        "sur la biologie du syndrome de Down et des conditions concomitantes.",
+        "into the biology of Down Syndrome and co-occurring conditions.",
       accessLargeScale:
-        "Accédez à des ressources de données à grande échelle et explorez des ensembles de données de cohorte personnalisés basés sur les données des participants, des échantillons biologiques, cliniques et omiques.",
-      login: "Connexion",
-      signup: "S'inscrire",
+        "Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and omics data.",
+      login: "Login",
+      signup: "Sign up",
     },
     dashboard: {
-      hello: "Bonjour",
+      hello: "Hello",
       card: {
         datarelease: {
-          title: "Publication de données {version}",
+          title: "Data release {version}",
         },
       },
       links: {
-        studies: "Études",
+        studies: "Studies",
         participants: "Participants",
-        biospecimens: "Biospécimens",
-        datafiles: "Fichier de données",
-        variantSearch: "Recherche de variants",
+        biospecimens: "Biospecimens",
+        datafiles: "Data Files",
+        variantSearch: "Variant Search",
       },
       cards: {
         authorizedStudies: {
-          title: "Études autorisées",
-          headerBtn: "Accès aux données",
+          title: "Authorized Studies",
+          headerBtn: "Data access",
           connectedNotice:
-            "Votre compte est connecté. Vous avez accès à toutes les données contrôlées par INLCUDE publiées.",
+            "Your account is connected. You have access to all released INLCUDE controlled data.",
           disconnectedNotice:
-            "Accédez à toutes les données contrôlées par INCLUDE publiées en connectant votre compte à l'aide de vos informations d'identification NIH.",
-          connect: "Connecter",
-          disconnect: "Déconnecter",
-          noAvailableStudies: "Aucune étude disponible",
-          authorization: "Autorisation",
-          of: "de",
-          files: "Fichiers",
-          dataGroups: "Groupes d'utilisation des données: {groups}",
+            "Access all released INCLUDE controlled data by connecting your account using your NIH credentials.",
+          connect: "Connect",
+          disconnect: "Disconnect",
+          noAvailableStudies: "No available studies",
+          authorization: "Authorization",
+          of: "of",
+          files: "Files",
+          dataGroups: "Data use groups: {groups}",
         },
         savedFilters: {
           title: "Saved Filters",
           noSavedFilters: "You have no saved filters",
-        }
+          lastSaved: "Last saved: {date}",
+        },
       },
     },
     dataExploration: {
@@ -247,14 +250,14 @@ const fr = {
       },
       sidemenu: {
         participant: "Participant",
-        biospecimen: "Biospécimen",
-        datafiles: "Fichier de données",
+        biospecimen: "Biospecimen",
+        datafiles: "Data Files",
       },
       tabs: {
-        summary: "Sommaire",
+        summary: "Summary",
         participants: "Participants ({count})",
-        biospecimens: "Biospécimens ({count})",
-        datafiles: "Fichier de données ({count})",
+        biospecimens: "Biospecimens ({count})",
+        datafiles: "Data Files ({count})",
       },
     },
     join: {
@@ -336,6 +339,11 @@ const fr = {
           1: "Learn more about Down syndrome and its health outcomes, management, and/or treatment",
           2: "Help me design a new research study",
           3: "Identify datasets that I want to analyze",
+        },
+        userIdOptions: {
+          1: "ERA Commons",
+          2: "NIH NED",
+          3: "I do not have a user ID",
         },
         optionsOther: "Other",
         noAffiliationOption: "I do not have an institutional affiliation.",

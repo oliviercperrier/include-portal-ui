@@ -37,7 +37,6 @@ const SavedFilters = ({ id, className = "" }: DashboardCardProps) => {
         <List<TUserSavedFilter>
           className={styles.savedFiltersList}
           bordered
-          itemLayout="vertical"
           locale={{
             emptyText: (
               <Empty

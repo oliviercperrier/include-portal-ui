@@ -9,6 +9,7 @@ import { RootState } from "store/types";
 import GlobalReducer from "store/global";
 import UserReducer from "store/user";
 import RiffReducer from "store/riff";
+import SavedFilterReducer from "store/savedFilter";
 
 const devMode = EnvVariables.configFor("ENV") === "development";
 
@@ -22,6 +23,7 @@ const rootReducer = combineReducers<RootState>({
   global: GlobalReducer,
   user: UserReducer,
   riff: RiffReducer,
+  savedFilter: SavedFilterReducer
 });
 
 const store: any = configureStore({

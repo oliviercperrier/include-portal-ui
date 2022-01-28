@@ -1,11 +1,7 @@
 import { useSelector } from "react-redux";
 import { TRiffEntity } from "services/api/riff/models";
 import { riffSelector } from "./selector";
-import {
-  RIFF_TYPES,
-  SET_TYPES,
-  TRiffSavedSetContent,
-} from "./types";
+import { RIFF_TYPES, SET_TYPES, TRiffSavedSetContent } from "./types";
 
 export type { initialState as RiffInitialState } from "./types";
 export { default, RiffState } from "./slice";

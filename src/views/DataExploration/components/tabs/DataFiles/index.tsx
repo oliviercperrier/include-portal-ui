@@ -89,7 +89,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
   const dispatch = useDispatch();
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
   return (
     <ProTable
@@ -97,7 +97,9 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
       columns={defaultColumns}
       wrapperClassName={styles.dataFilesTabWrapper}
       loading={results.loading}
-      initialColumnState={user?.config.data_exploration?.datafiles_table}
+      initialColumnState={
+        userInfo?.config.data_exploration?.tables?.datafiles?.columns
+      }
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
@@ -109,7 +111,11 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
           dispatch(
             updateUserConfig({
               data_exploration: {
-                datafiles_table: newState,
+                tables: {
+                  datafiles: {
+                    columns: newState,
+                  },
+                },
               },
             })
           ),

@@ -14,7 +14,7 @@ const filePrefixMap: IFieldPrefixMap = {
 
 const participantPrefixMap: IFieldPrefixMap = {
   index: INDEXES.PARTICIPANT,
-  prefix: "participant.",
+  prefix: "participants.",
 };
 
 //const biospecimenPrefixMap: IFieldPrefixMap = {
@@ -72,7 +72,14 @@ export const mapFilterForFiles = (sqonFilters: ISyntheticSqon) =>
   ]);
 
 export const mapFilterForBiospecimen = (sqonFilters: ISyntheticSqon) =>
-  mapFilters(sqonFilters, [filePrefixMap, participantPrefixMap]);
+  mapFilters(sqonFilters, [
+    filePrefixMap,
+    {
+      // Biospecimen only 1 participant so no 's'
+      index: INDEXES.PARTICIPANT,
+      prefix: "participant.",
+    },
+  ]);
 
 export const combineExtendedMappings = (mappings: ExtendedMappingResults[]) => {
   let concatMappings: ExtendedMapping[] = [];

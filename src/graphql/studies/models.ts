@@ -11,5 +11,7 @@ export interface IStudyEntity {
   study_name: string;
   program: string;
   external_id: string;
-  type_of_omics: string;
+  type_of_omics: string[];
+  family_count: number;
+  participant_count: number;
 }

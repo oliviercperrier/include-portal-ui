@@ -109,20 +109,20 @@ const defaultColumns: ProColumnType<any>[] = [
     dataIndex: "diagnosis",
     className: styles.diagnosisCell,
     render: (diagnosis: ArrangerResultsTree<IParticipantDiagnosis>) => {
-      const hydratedDiagnosis = diagnosis?.hits?.edges.map(
-        (diagnosis, index) => ({ key: index, ...diagnosis.node })
-      );
+      const mondo_ids_diagnosis = diagnosis?.hits?.edges
+        .map((diagnosis) => diagnosis.node.mondo_id_diagnosis)
+        .filter((id) => !!id);
 
-      if (!hydratedDiagnosis) {
+      if (!mondo_ids_diagnosis) {
         return TABLE_EMPTY_PLACE_HOLDER;
       }
 
       return (
         <ExpandableCell
           nbToShow={1}
-          dataSource={hydratedDiagnosis}
-          renderItem={(item, index): React.ReactNode => {
-            const mondoInfo = extractMondoTitleAndCode(item.mondo_id_diagnosis);
+          dataSource={mondo_ids_diagnosis}
+          renderItem={(modo_id, index): React.ReactNode => {
+            const mondoInfo = extractMondoTitleAndCode(modo_id);
 
             return mondoInfo ? (
               <div key={index}>
@@ -150,22 +150,21 @@ const defaultColumns: ProColumnType<any>[] = [
     dataIndex: "phenotype",
     className: styles.phenotypeCell,
     render: (phenotype: ArrangerResultsTree<IParticipantPhenotype>) => {
-      const hydratedPhenotype = phenotype?.hits?.edges.map(
-        (phenotype, index) => ({ key: index, ...phenotype.node })
-      );
+      const hydratedPhenotypeIds = phenotype?.hits?.edges
+        .map((phenotype) => phenotype.node.hpo_id_phenotype)
+        .filter((id) => !!id);
 
-      if (!hydratedPhenotype) {
+      if (!hydratedPhenotypeIds) {
         return TABLE_EMPTY_PLACE_HOLDER;
       }
 
       return (
         <ExpandableCell
           nbToShow={1}
-          dataSource={hydratedPhenotype}
-          renderItem={(item, index): React.ReactNode => {
-            const phenotypeInfo = extractPhenotypeTitleAndCode(
-              item.hpo_id_phenotype
-            );
+          dataSource={hydratedPhenotypeIds}
+          renderItem={(hpo_id_phenotype, index): React.ReactNode => {
+            const phenotypeInfo =
+              extractPhenotypeTitleAndCode(hpo_id_phenotype);
 
             return phenotypeInfo ? (
               <div key={index}>

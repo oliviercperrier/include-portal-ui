@@ -5,34 +5,22 @@ import { DashboardCardProps } from "views/Dashboard/components/DashboardCards";
 import CardHeader from "views/Dashboard/components/CardHeader";
 import Empty from "@ferlab/ui/core/components/Empty";
 import SavedFiltersListItem from "./ListItem";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchSavedFilters } from "store/savedFilter/thunks";
+import { useSavedFilter } from "store/savedFilter";
+import { TUserSavedFilter } from "services/api/savedFilter/models";
 
 import styles from "./index.module.scss";
 
-export interface IListItemData {
-  key: any;
-  title: string;
-  lastSaved: string;
-}
-
 const SavedFilters = ({ id, className = "" }: DashboardCardProps) => {
-  const data: IListItemData[] = [
-    // Add appropriate api call and replace this list with the result
-    {
-      key: "1",
-      title: "Pediatric Brain Tumor Atlas: CBTTC",
-      lastSaved: "Saved 2 hours ago",
-    },
-    {
-      key: "2",
-      title: "Pediatric Brain Tumor Atlas: CBTTC",
-      lastSaved: "Saved 2 hours ago",
-    },
-    {
-      key: "3",
-      title: "Pediatric Brain Tumor Atlas: CBTTC",
-      lastSaved: "Saved 2 hours ago",
-    },
-  ];
+  const dispatch = useDispatch();
+  const { savedFilters, isLoading } = useSavedFilter();
+
+  useEffect(() => {
+    dispatch(fetchSavedFilters());
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <GridCard
@@ -46,7 +34,7 @@ const SavedFilters = ({ id, className = "" }: DashboardCardProps) => {
         />
       }
       content={
-        <List<IListItemData>
+        <List<TUserSavedFilter>
           className={styles.savedFiltersList}
           bordered
           itemLayout="vertical"
@@ -60,9 +48,10 @@ const SavedFilters = ({ id, className = "" }: DashboardCardProps) => {
               />
             ),
           }}
-          dataSource={data}
+          dataSource={savedFilters}
+          loading={isLoading}
           renderItem={(item) => (
-            <SavedFiltersListItem id={item.key} data={item} />
+            <SavedFiltersListItem id={item.id} data={item} />
           )}
         ></List>
       }

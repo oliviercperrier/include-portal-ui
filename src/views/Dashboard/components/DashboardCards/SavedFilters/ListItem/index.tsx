@@ -1,12 +1,12 @@
 import cx from "classnames";
 import { List } from "antd";
+import { TUserSavedFilter } from "services/api/savedFilter/models";
 
 import styles from "./index.module.scss";
-import { IListItemData } from "..";
 
 interface OwnProps {
   id: any;
-  data: IListItemData;
+  data: TUserSavedFilter;
 }
 
 const SavedFiltersListItem = ({ id, data }: OwnProps) => {
@@ -14,7 +14,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
     <List.Item key={id} className={cx("wrapped", styles.SavedFiltersListItem)}>
       <List.Item.Meta
         title={data.title}
-        description={data.lastSaved}
+        description={data.updated_date}
         className={styles.itemMeta}
       />
     </List.Item>

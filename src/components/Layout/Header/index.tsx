@@ -31,7 +31,7 @@ const BANNER_TYPE_KEY = FT_FLAG_KEY + "_TYPE";
 const BANNER_MSG_KEY = FT_FLAG_KEY + "_MSG";
 
 const Header = () => {
-  const { user } = useUser();
+  const { userInfo } = useUser();
   const dispatch = useDispatch();
   const { keycloak } = useKeycloak();
   const currentPathName = history.location.pathname;
@@ -118,7 +118,7 @@ const Header = () => {
                 }
                 size={100}
               />
-              <span className={style.userName}>{user?.first_name}</span>
+              <span className={style.userName}>{userInfo?.first_name}</span>
               <DownOutlined />
             </a>
           </Dropdown>,

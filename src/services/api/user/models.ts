@@ -1,6 +1,7 @@
 import { TColumnStates } from "@ferlab/ui/core/components/ProTable/types";
 
 export type TUser = {
+  id: string;
   keycloak_id: string;
   first_name: string;
   last_name: string;
@@ -21,13 +22,22 @@ export type TUser = {
   config: TUserConfig;
 };
 
+export type TUserTableConfig = {
+  columns: TColumnStates;
+};
+
 export type TUserConfig = {
   data_exploration?: {
-    participants_table?: TColumnStates;
-    biospecimens_table?: TColumnStates;
-    datafiles_table?: TColumnStates;
+    tables?: {
+      participants?: TUserTableConfig;
+      biospecimens?: TUserTableConfig;
+      datafiles?: TUserTableConfig;
+    };
   };
 };
 
-export type TUserInsert = TUser;
-export type TUserUpdate = Partial<Omit<TUser, "id" | "keycloak_id">>;
+export type TUserInsert = Omit<
+  TUser,
+  "id" | "keycloak_id" | "creation_date" | "update_date"
+>;
+export type TUserUpdate = Partial<TUserInsert>;

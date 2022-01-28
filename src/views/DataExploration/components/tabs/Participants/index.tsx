@@ -124,7 +124,7 @@ const defaultColumns: ProColumnType<any>[] = [
           renderItem={(item, index): React.ReactNode => {
             const mondoInfo = extractMondoTitleAndCode(item.mondo_id_diagnosis);
 
-            return (
+            return mondoInfo ? (
               <div key={index}>
                 {mondoInfo.title} (MONDO:{" "}
                 <a
@@ -136,6 +136,8 @@ const defaultColumns: ProColumnType<any>[] = [
                 </a>
                 )
               </div>
+            ) : (
+              TABLE_EMPTY_PLACE_HOLDER
             );
           }}
         />
@@ -165,7 +167,7 @@ const defaultColumns: ProColumnType<any>[] = [
               item.hpo_id_phenotype
             );
 
-            return (
+            return phenotypeInfo ? (
               <div key={index}>
                 {phenotypeInfo.title} (HP:{" "}
                 <a
@@ -177,6 +179,8 @@ const defaultColumns: ProColumnType<any>[] = [
                 </a>
                 )
               </div>
+            ) : (
+              TABLE_EMPTY_PLACE_HOLDER
             );
           }}
         />
@@ -202,7 +206,7 @@ const ParticipantsTab = ({
   pagingConfig,
 }: OwnProps) => {
   const dispatch = useDispatch();
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
   return (
     <ProTable
@@ -210,7 +214,9 @@ const ParticipantsTab = ({
       columns={defaultColumns}
       wrapperClassName={styles.participantTabWrapper}
       loading={results.loading}
-      initialColumnState={user?.config.data_exploration?.participants_table}
+      initialColumnState={
+        userInfo?.config.data_exploration?.tables?.participants?.columns
+      }
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
@@ -222,7 +228,11 @@ const ParticipantsTab = ({
           dispatch(
             updateUserConfig({
               data_exploration: {
-                participants_table: newState,
+                tables: {
+                  participants: {
+                    columns: newState,
+                  },
+                },
               },
             })
           ),

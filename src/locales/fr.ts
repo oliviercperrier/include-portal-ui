@@ -243,7 +243,7 @@ const fr = {
     },
     dataExploration: {
       queryBuilder: {
-        defaultTitle: "My Filter",
+        defaultTitle: "Untitled Filter",
       },
       sidemenu: {
         participant: "Participant",

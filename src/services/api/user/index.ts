@@ -11,14 +11,14 @@ const headers = () => ({
   Authorization: `Bearer ${keycloak.token}`,
 });
 
-const fetchUser = () =>
+const fetch = () =>
   sendRequest<TUser>({
     method: "GET",
     url: `${url}/user`,
     headers: headers(),
   });
 
-const createUser = (body?: Omit<TUserInsert, "keycloak_id">) => {
+const create = (body?: Omit<TUserInsert, "keycloak_id">) => {
   const tokenParsed = keycloak.tokenParsed as IncludeKeycloakTokenParsed;
   return sendRequest<TUser>({
     method: "POST",
@@ -26,14 +26,13 @@ const createUser = (body?: Omit<TUserInsert, "keycloak_id">) => {
     headers: headers(),
     data: {
       ...body,
-      keycloak_id: tokenParsed.sub,
       first_name: body?.first_name || tokenParsed.given_name,
       last_name: body?.last_name || tokenParsed.family_name,
     },
   });
 };
 
-const updateUser = (body: TUserUpdate) =>
+const update = (body: TUserUpdate) =>
   sendRequest<TUser>({
     method: "PUT",
     url: `${url}/user`,
@@ -50,8 +49,8 @@ const completeRegistration = (body: TUserUpdate) =>
   });
 
 export const UserApi = {
-  fetchUser,
-  createUser,
-  updateUser,
+  fetch,
+  create,
+  update,
   completeRegistration,
 };

@@ -90,7 +90,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
       const ncitInfo = extractNcitTissueTitleAndCode(ncit_id_tissue_type);
 
-      return (
+      return ncitInfo ? (
         <div>
           {ncitInfo.title} (NCIT:{" "}
           <a
@@ -102,6 +102,8 @@ const defaultColumns: ProColumnType<any>[] = [
           </a>
           )
         </div>
+      ) : (
+        TABLE_EMPTY_PLACE_HOLDER
       );
     },
   },
@@ -118,7 +120,7 @@ const BioSpecimenTab = ({
   pagingConfig,
 }: OwnProps) => {
   const dispatch = useDispatch();
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
   return (
     <ProTable
@@ -126,7 +128,9 @@ const BioSpecimenTab = ({
       columns={defaultColumns}
       wrapperClassName={styles.biospecimenTabWrapper}
       loading={results.loading}
-      initialColumnState={user?.config.data_exploration?.biospecimens_table}
+      initialColumnState={
+        userInfo?.config.data_exploration?.tables?.biospecimens?.columns
+      }
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
@@ -138,7 +142,11 @@ const BioSpecimenTab = ({
           dispatch(
             updateUserConfig({
               data_exploration: {
-                biospecimens_table: newState,
+                tables: {
+                  biospecimens: {
+                    columns: newState,
+                  },
+                },
               },
             })
           ),

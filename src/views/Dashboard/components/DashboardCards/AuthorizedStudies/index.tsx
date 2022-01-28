@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Button, List, Space } from "antd";
 import intl from "react-intl-universal";

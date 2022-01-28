@@ -5,8 +5,6 @@ import KeycloakProvider from "provider/KeycloakProvider";
 import getStoreConfig from "store";
 import { LANG } from "common/constants";
 import locales from "locales";
-import { ConfigProvider } from "antd";
-import Empty from "@ferlab/ui/core/components/Empty";
 
 const { store, persistor } = getStoreConfig();
 persistor.subscribe(function () {
@@ -18,13 +16,11 @@ persistor.subscribe(function () {
 
 const ContextProvider = ({ children }: any) => {
   return (
-    <ConfigProvider renderEmpty={() => <Empty imageType="grid" />}>
-      <KeycloakProvider>
-        <ReduxProvider store={store}>
-          <PersistGate persistor={persistor}>{children}</PersistGate>
-        </ReduxProvider>
-      </KeycloakProvider>
-    </ConfigProvider>
+    <KeycloakProvider>
+      <ReduxProvider store={store}>
+        <PersistGate persistor={persistor}>{children}</PersistGate>
+      </ReduxProvider>
+    </KeycloakProvider>
   );
 };
 

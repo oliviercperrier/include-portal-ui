@@ -19,6 +19,11 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
   };
 
   useEffect(() => {
+    refresh();
+    // eslint-disable-next-line
+  }, [JSON.stringify(config)]);
+
+  useEffect(() => {
     let cancelled = false;
     if (skip) {
       setLoading(false);

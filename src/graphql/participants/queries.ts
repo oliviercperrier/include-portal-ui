@@ -13,7 +13,6 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
         edges {
           node {
             id
-            age_at_data_collection
             down_syndrome_diagnosis
             participant_id
             study_id
@@ -23,6 +22,8 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             family_type
             is_proband
             age_at_data_collection
+            ethnicity
+            race
 
             files {
               hits {

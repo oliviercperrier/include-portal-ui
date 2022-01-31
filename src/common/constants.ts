@@ -5,7 +5,8 @@ export enum LANG {
 
 export enum SEX {
   FEMALE = "female",
-  MALE = "male"
+  MALE = "male",
+  UNKNOWN = "unknown"
 }
 
 export const TABLE_EMPTY_PLACE_HOLDER = "-";

@@ -1,4 +1,4 @@
-const en = {
+const fr = {
   // Global
   global: {
     yes: "Yes",
@@ -254,10 +254,27 @@ const en = {
         datafiles: "Data Files",
       },
       tabs: {
-        summary: "Summary",
-        participants: "Participants ({count})",
-        biospecimens: "Biospecimens ({count})",
-        datafiles: "Data Files ({count})",
+        summary: {
+          title: "Summary",
+          demographic: {
+            cardTitle: "Demographics",
+            sexTitle: "Sex",
+            raceTitle: "Race",
+            ethnicityTitle: "Ethnicity",
+          },
+          availableData: {
+            cardTitle: "Available Data",
+          },
+        },
+        participants: {
+          title: "Participants ({count})",
+        },
+        biospecimens: {
+          title: "Biospecimens ({count})",
+        },
+        datafiles: {
+          title: "Data Files ({count})",
+        },
       },
     },
     join: {
@@ -384,4 +401,4 @@ const en = {
   },
 };
 
-export default en;
+export default fr;

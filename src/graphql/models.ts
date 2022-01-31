@@ -14,6 +14,14 @@ export type AggregationBuckets = {
   stats: string;
 };
 
+export type RawAggregation = {
+  data: {
+    [key: string]: {
+      aggregations: Aggregations;
+    };
+  };
+};
+
 export type Aggregations = Record<string, AggregationBuckets>;
 
 export interface GqlResults<DataT> {

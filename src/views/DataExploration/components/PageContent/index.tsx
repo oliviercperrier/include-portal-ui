@@ -35,7 +35,7 @@ import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
 import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   createSavedFilter,
@@ -88,15 +88,15 @@ const PageContent = ({
     DEFAULT_PAGING_CONFIG
   );
 
-  useEffect(() => {
-    dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
-    // eslint-disable-next-line
-  }, []);
+  const participantResolvedSqon = resolveSyntheticSqon(
+    allSqons,
+    mapFilterForParticipant(filters)
+  );
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
     offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
-    sqon: resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters)),
+    sqon: participantResolvedSqon,
     sort: [],
   });
 
@@ -113,6 +113,11 @@ const PageContent = ({
     sqon: resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters)),
     sort: [],
   });
+
+  useEffect(() => {
+    dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
+    // eslint-disable-next-line
+  }, []);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
@@ -184,18 +189,18 @@ const PageContent = ({
           tab={
             <span>
               <PieChartOutlined />
-              {intl.get("screen.dataExploration.tabs.summary")}
+              {intl.get("screen.dataExploration.tabs.summary.title")}
             </span>
           }
           key={TAB_IDS.SUMMARY}
         >
-          <SummaryTab />
+          <SummaryTab sqon={participantResolvedSqon} />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab={
             <span>
               <UserOutlined />
-              {intl.get("screen.dataExploration.tabs.participants", {
+              {intl.get("screen.dataExploration.tabs.participants.title", {
                 count: participantResults.total,
               })}
             </span>
@@ -212,7 +217,7 @@ const PageContent = ({
           tab={
             <span>
               <ExperimentOutlined />
-              {intl.get("screen.dataExploration.tabs.biospecimens", {
+              {intl.get("screen.dataExploration.tabs.biospecimens.title", {
                 count: biospecimenResults.total,
               })}
             </span>
@@ -229,7 +234,7 @@ const PageContent = ({
           tab={
             <span>
               <FileTextOutlined />
-              {intl.get("screen.dataExploration.tabs.datafiles", {
+              {intl.get("screen.dataExploration.tabs.datafiles.title", {
                 count: fileResults.total,
               })}
             </span>

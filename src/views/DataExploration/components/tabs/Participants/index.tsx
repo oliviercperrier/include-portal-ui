@@ -42,20 +42,20 @@ const defaultColumns: ProColumnType<any>[] = [
     title: "Study Code",
     dataIndex: "study_id",
     className: styles.studyIdCell,
-    render: (study_id: string) => (
-      <a
-        target="_blank"
-        rel="noreferrer"
-        href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_id}`}
-      >
-        {study_id}
-      </a>
-    ),
   },
   {
     key: "study_external_id",
     title: "dbGaP Accession number",
     dataIndex: "study_external_id",
+    render: (study_external_id: string) => (
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_external_id}`}
+      >
+        {study_external_id}
+      </a>
+    ),
   },
   {
     key: "karyotype",

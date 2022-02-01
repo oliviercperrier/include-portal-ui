@@ -2,6 +2,10 @@
   height: 100%;
   text-align: center;
 
+  *[class$="-typography"] {
+    margin: 0;
+  }
+
   .chartWrapper {
     width: 100%;
   }

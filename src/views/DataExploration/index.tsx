@@ -26,7 +26,6 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from "./utils/mapper";
-import { SUGGESTION_TYPES } from "components/uiKit/Suggester";
 
 import styles from "./index.module.scss";
 
@@ -44,12 +43,12 @@ export const filterGroups: {
   [type: string]: FilterInfo;
 } = {
   [FilterTypes.Participant]: {
-    suggester: {
-      title: () => "Participant ID",
-      placeholder: () => "PT_0002D5K3",
-      suggestionType: SUGGESTION_TYPES.PARTICIPANT,
-      tooltipTitle: () => "Enter a participant ID",
-    },
+    //suggester: {
+    //  title: () => "Participant ID",
+    //  placeholder: () => "PT_0002D5K3",
+    //  suggestionType: SUGGESTION_TYPES.PARTICIPANT,
+    //  tooltipTitle: () => "Enter a participant ID",
+    //},
     groups: [
       {
         fields: [
@@ -68,12 +67,12 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Biospecimen]: {
-    suggester: {
-      title: () => "Biospecimen ID",
-      placeholder: () => "DS02_Q1EE22NN",
-      suggestionType: SUGGESTION_TYPES.BIOSPECIMEN,
-      tooltipTitle: () => "Enter a biospecimen ID",
-    },
+    //suggester: {
+    //  title: () => "Biospecimen ID",
+    //  placeholder: () => "DS02_Q1EE22NN",
+    //  suggestionType: SUGGESTION_TYPES.BIOSPECIMEN,
+    //  tooltipTitle: () => "Enter a biospecimen ID",
+    //},
     groups: [
       {
         fields: [
@@ -88,12 +87,12 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Datafiles]: {
-    suggester: {
-      title: () => "File ID",
-      placeholder: () => "GF_007F1GDE",
-      suggestionType: SUGGESTION_TYPES.FILE,
-      tooltipTitle: () => "Enter a file ID",
-    },
+    //suggester: {
+    //  title: () => "File ID",
+    //  placeholder: () => "GF_007F1GDE",
+    //  suggestionType: SUGGESTION_TYPES.FILE,
+    //  tooltipTitle: () => "Enter a file ID",
+    //},
     groups: [
       {
         fields: [

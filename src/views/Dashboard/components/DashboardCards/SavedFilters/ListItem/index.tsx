@@ -19,6 +19,8 @@ interface OwnProps {
   data: TUserSavedFilter;
 }
 
+const FILTER_NAME_MAX_LENGTH = 50;
+
 const getUpdateDateFormat = (date: string) => {
   const today = new Date();
   const updateDate = new Date(date);
@@ -117,7 +119,9 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
               label={intl.get(
                 "components.querybuilder.header.modal.edit.input.label"
               )}
-              rules={[{ required: true, type: "string" }]}
+              rules={[
+                { required: true, type: "string", max: FILTER_NAME_MAX_LENGTH },
+              ]}
               required={false}
               className={styles.filterEditFormItem}
             >
@@ -128,7 +132,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
               />
             </Form.Item>
             <span>
-              50{" "}
+              {FILTER_NAME_MAX_LENGTH}{" "}
               {intl.get(
                 "components.querybuilder.header.modal.edit.input.maximumLength"
               )}

@@ -30,17 +30,17 @@ import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
 import { useParticipants } from "graphql/participants/actions";
 import { useDataFiles } from "graphql/files/actions";
 import { useBiospecimen } from "graphql/biospecimens/actions";
-
 import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
 import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   createSavedFilter,
   deleteSavedFilter,
   fetchSavedFilters,
+  setSavedFilterAsDefault,
   updateSavedFilter,
 } from "store/savedFilter/thunks";
 import { useSavedFilter } from "store/savedFilter";
@@ -75,7 +75,9 @@ const PageContent = ({
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
   const dispatch = useDispatch();
-  const { savedFilters } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
+  const { savedFilters, defaultFilter } = useSavedFilter(
+    DATA_EPLORATION_FILTER_TAG
+  );
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
@@ -148,7 +150,9 @@ const PageContent = ({
           options: {
             enableEditTitle: true,
             enableDuplicate: true,
+            enableFavoriteFilter: true,
           },
+          selectedSavedFilter: defaultFilter,
           savedFilters: savedFilters,
           onUpdateFilter: (filter) => dispatch(updateSavedFilter(filter)),
           onSaveFilter: (filter) =>
@@ -159,6 +163,8 @@ const PageContent = ({
               })
             ),
           onDeleteFilter: (id) => dispatch(deleteSavedFilter(id)),
+          onSetAsFavorite: (filter) =>
+            dispatch(setSavedFilterAsDefault(filter)),
         }}
         enableCombine
         enableShowHideLabels

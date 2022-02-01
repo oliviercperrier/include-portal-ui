@@ -45,6 +45,14 @@ const update = (id: string, body: TUserSavedFilterUpdate) =>
     data: body,
   });
 
+const setAsDefault = (id: string, body: TUserSavedFilterUpdate) =>
+  sendRequest<TUserSavedFilter>({
+    method: "PUT",
+    url: `${url}/${id}/default`,
+    headers: headers(),
+    data: body,
+  });
+
 const destroy = (id: string) =>
   sendRequest<string>({
     method: "DELETE",
@@ -58,4 +66,5 @@ export const SavedFilterApi = {
   create,
   update,
   destroy,
+  setAsDefault,
 };

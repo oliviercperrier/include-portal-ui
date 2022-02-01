@@ -38,6 +38,17 @@ const updateSavedFilter = createAsyncThunk<
   return handleApiReponse(error, data!, thunkAPI.rejectWithValue);
 });
 
+const setSavedFilterAsDefault = createAsyncThunk<
+  TUserSavedFilter,
+  TUserSavedFilterUpdate & { id: string },
+  { rejectValue: string }
+>("savedfilters/setDefault", async (filter, thunkAPI) => {
+  const { id, ...filterInfo } = filter;
+  const { data, error } = await SavedFilterApi.setAsDefault(id, filterInfo);
+
+  return handleApiReponse(error, data!, thunkAPI.rejectWithValue);
+});
+
 const deleteSavedFilter = createAsyncThunk<
   string,
   string,
@@ -53,4 +64,5 @@ export {
   createSavedFilter,
   updateSavedFilter,
   deleteSavedFilter,
+  setSavedFilterAsDefault,
 };

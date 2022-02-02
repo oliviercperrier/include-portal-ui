@@ -2,11 +2,15 @@ import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Col, Row, Typography } from "antd";
 import useApi from "hooks/useApi";
 import { ARRANGER_API_PROJECT_URL } from "provider/ApolloProvider";
-import { DATATYPE_QUERY, DEMOGRAPHIC_QUERY, TYPE_OF_OMICS_QUERY } from "graphql/summary/queries";
+import {
+  DATATYPE_QUERY,
+  DEMOGRAPHIC_QUERY,
+  TYPE_OF_OMICS_QUERY,
+} from "graphql/summary/queries";
 import { ISqonGroupFilter } from "@ferlab/ui/core/data/sqon/types";
-import DemographicsGraphs from "./DemographicGraphs";
-import AvailableDataGraphs from "./AvailableDataGraphs";
-import intl from "react-intl-universal";
+import DemographicsGraphCard from "./DemographicGraphCard";
+import AvailableDataGraphCard from "./AvailableDataGraphCard";
+import SunburstGraphCard from "./SunburstGraphCard";
 
 import styles from "./index.module.scss";
 
@@ -41,46 +45,21 @@ const SummaryTab = ({ sqon }: OwnProps) => {
   return (
     <Row gutter={[24, 24]}>
       <Col xs={24} md={6}>
-        <GridCard
-          wrapperClassName={styles.summaryGrapCard}
-          theme="shade"
+        <DemographicsGraphCard
           loading={loading}
-          loadingType="spinner"
-          title={
-            <Title level={4}>
-              {intl.get(
-                "screen.dataExploration.tabs.summary.demographic.cardTitle"
-              )}
-            </Title>
-          }
-          content={<DemographicsGraphs data={result ? result[0] : null} />}
+          className={styles.summaryGrapCard}
+          data={result ? result[0] : null}
         />
       </Col>
       <Col xs={24} md={18}>
-        <GridCard
-          wrapperClassName={styles.summaryGrapCard}
-          theme="shade"
-          title={<Title level={4}>Chart title 2</Title>}
-          content="Chart.."
-        />
+        <SunburstGraphCard className={styles.summaryGrapCard} sqon={sqon} />
       </Col>
       <Col span={24}>
-        <GridCard
-          wrapperClassName={styles.summaryGrapCard}
-          theme="shade"
-          title={
-            <Title level={4}>
-              {intl.get(
-                "screen.dataExploration.tabs.summary.availableData.cardTitle"
-              )}
-            </Title>
-          }
-          content={
-            <AvailableDataGraphs
-              dataTypeData={result ? result[1] : null}
-              typeOfOmicsData={result ? result[2] : null}
-            />
-          }
+        <AvailableDataGraphCard
+          loading={loading}
+          className={styles.summaryGrapCard}
+          dataTypeData={result ? result[1] : null}
+          typeOfOmicsData={result ? result[2] : null}
         />
       </Col>
       <Col xs={24} md={12}>

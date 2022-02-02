@@ -23,6 +23,8 @@ export default class EnvironmentVariables {
     KC_REALM: process.env.REACT_APP_KC_REALM,
     // USERSNAP
     USER_SNAP_API_KEY: process.env.REACT_APP_USER_SNAP_API_KEY,
+    //REPORT
+    REPORTS_API_URL: process.env.REACT_APP_REPORTS_API_URL,
   };
 
   static configFor(key: string): string {

@@ -18,10 +18,12 @@ import {
 import ProTable from "@ferlab/ui/core/components/ProTable";
 import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
 import { getProTableDictionary } from "utils/translation";
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
 import { useDispatch } from "react-redux";
 import { updateUserConfig } from "store/user/thunks";
 import { useUser } from "store/user";
+import { Menu, Dropdown } from "antd";
+import { MenuInfo } from "rc-menu/lib/interface";
 
 import styles from "./index.module.scss";
 
@@ -207,6 +209,20 @@ const ParticipantsTab = ({
   const dispatch = useDispatch();
   const { userInfo } = useUser();
 
+  const handleMenuClick = async (e: MenuInfo) => {
+    const reportName = e.key as string;
+    console.log("click", e);
+    // await fetchReportIfNeeded({ sqon, name: reportName });
+  };
+
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="1">Participant Only</Menu.Item>
+      <Menu.Item key="2">Participant & Family Members</Menu.Item>
+    </Menu>
+  );
+
   return (
     <ProTable
       tableId="participants_table"
@@ -235,6 +251,11 @@ const ParticipantsTab = ({
               },
             })
           ),
+        extra: [
+          <Dropdown overlay={menu} placement="bottomLeft">
+            <Button>Download clinical data</Button>
+          </Dropdown>,
+        ],
       }}
       bordered
       size="small"

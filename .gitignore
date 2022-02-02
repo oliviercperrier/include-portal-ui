@@ -105,6 +105,9 @@ dist
 # TernJS port file
 .tern-port
 
+# intellij
+.idea/
+
 .DS_Store
 
 build/

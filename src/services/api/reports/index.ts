@@ -34,21 +34,13 @@ const generateReport = (config: ReportConfig) => {
   } else {
     reportSqon = config.sqon;
   }
-  
+
   return downloader({
     // @ts-ignore
     url: REPORTS_ROUTES[name],
     method: "POST",
     data: {
-      sqon: {
-        op: "and",
-        content: [
-          {
-            op: "in",
-            content: { field: "study.study_id", value: ["SD_Z6MWD3H0"] },
-          },
-        ],
-      },
+      sqon: reportSqon,
       projectId: arrangerProjectId,
       filename: format(new Date(), `[${name}_]YYYYMMDD[.xlsx]`),
     },

@@ -19,7 +19,7 @@ import {
 } from "@ferlab/ui/core/data/filters/utils";
 import { STATIC_ROUTES } from "utils/routes";
 import { getQueryBuilderDictionary } from "utils/translation";
-import { Space, Tabs, notification } from "antd";
+import { Space, Tabs } from "antd";
 import {
   mapFilterForParticipant,
   combineExtendedMappings,
@@ -47,7 +47,6 @@ import { useSavedFilter } from "store/savedFilter";
 
 import styles from "./index.module.scss";
 import { fetchReport } from "store/report/thunks";
-import { useReport } from "store/report";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;

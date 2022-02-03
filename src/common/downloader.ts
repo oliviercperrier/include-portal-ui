@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { saveAs } from "file-saver";
-// import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 const getDefaultContentType = (responseType: string) => {
   const fallbackContentType = "text/plain;charset=utf-8";
@@ -72,7 +72,7 @@ const downloader = async (opts: any = {}) => {
 
     // Try to determine the filename from the `content-disposition` header,
     //  fallback to a UUID if it fails.
-    let filename = null;
+    let filename;
     const disposition = response.headers["content-disposition"];
     if (disposition) {
       try {
@@ -85,8 +85,7 @@ const downloader = async (opts: any = {}) => {
         // @ts-ignore
         filename = /filename="(.*)"/i.exec(filenameFromContentDisposition)[1];
       } catch (err) {
-        // @ts-ignore
-        filename = uuid();
+        filename = uuidv4();
         console.warn(
           "failed to parse filename, will fallback to an UUID",
           disposition

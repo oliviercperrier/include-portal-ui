@@ -70,7 +70,6 @@ const AvailableDataGraphCard = ({
                 legendPosition: "middle",
                 legendOffset: 35,
               }}
-              colors={["rgb(45, 163, 220)"]}
               {...graphSetting}
             />
           </Col>
@@ -90,7 +89,6 @@ const AvailableDataGraphCard = ({
                 legendPosition: "middle",
                 legendOffset: 35,
               }}
-              colors={["rgb(45, 163, 220)"]}
               {...graphSetting}
             />
           </Col>

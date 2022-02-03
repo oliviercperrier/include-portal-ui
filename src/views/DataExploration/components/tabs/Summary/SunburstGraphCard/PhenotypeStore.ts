@@ -22,7 +22,7 @@ interface IPhenotypeQueryPayload {
 
 export class PhenotypeStore {
   phenotypes: IPhenotypeSource[] = [];
-  tree: TreeNode[] = [];
+  tree: TreeNode | undefined = undefined;
 
   fetch = (
     field: string,
@@ -30,7 +30,7 @@ export class PhenotypeStore {
     filterThemselves?: boolean
   ) => {
     this.phenotypes = [];
-    this.tree = [];
+    this.tree = undefined;
 
     return this.getPhenotypes(field, sqon, filterThemselves).then(
       (data: IPhenotypeSource[]) => {
@@ -44,10 +44,7 @@ export class PhenotypeStore {
     );
   };
 
-  getTree = () => {
-    if (this.tree.length === 0) return [];
-    return [...this.tree];
-  };
+  getRootNode = () => this.tree;
 
   getPhenotypes = async (
     field: string,

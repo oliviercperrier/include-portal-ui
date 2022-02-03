@@ -74,7 +74,6 @@ const DemographicsGraphCard = ({
                 "screen.dataExploration.tabs.summary.demographic.sexTitle"
               )}
               data={data ? transformData(data).sex : []}
-              colors={{ datum: "data.color" }}
               {...graphSetting}
             />
           </Col>

@@ -1,4 +1,4 @@
-const fr = {
+const en = {
   // Global
   global: {
     yes: "Yes",
@@ -265,6 +265,9 @@ const fr = {
           availableData: {
             cardTitle: "Available Data",
           },
+          observedPhenotype: {
+            cardTitle: "Observed Phenotypes"
+          }
         },
         participants: {
           title: "Participants ({count})",
@@ -383,6 +386,9 @@ const fr = {
     sex: "Sex",
     ethnicity: "Ethnicity",
     race: "Race",
+    observed_phenotype: {
+      name: "Observed Phenotype Name"
+    },
     // Biospecimen
     biospecimen_type: "Biospecimen Type",
     sample_type: "Sample Type",
@@ -401,4 +407,4 @@ const fr = {
   },
 };
 
-export default fr;
+export default en;

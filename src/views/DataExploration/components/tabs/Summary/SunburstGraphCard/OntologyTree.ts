@@ -1,10 +1,8 @@
 import { IPhenotypeSource } from "graphql/summary/models";
 
-
 export type TreeNode = {
   id: string;
   title: React.ReactElement | string;
-  text: string;
   key: string;
   hasChildren?: boolean;
   children: TreeNode[];
@@ -19,9 +17,18 @@ export type TreeNode = {
   name?: string;
 };
 
+export const emptyNode: TreeNode = {
+  id: "",
+  key: "",
+  title: "",
+  value: 0,
+  valueText: 0,
+  children: [],
+};
+
 export default class OntologyTree {
   phenotypes: IPhenotypeSource[] = [];
-  tree: TreeNode[] = [];
+  tree: TreeNode | undefined = undefined;
 
   constructor(data: IPhenotypeSource[], field: string) {
     this.phenotypes = data;
@@ -64,7 +71,7 @@ export default class OntologyTree {
   };
 
   generateTree = (field: string) => {
-    const workingTree: TreeNode[] = [];
+    let rootNode: TreeNode | undefined = undefined;
     const workingPhenotypes = [...this.phenotypes];
     workingPhenotypes.forEach((sourcePhenotype) => {
       let phenotype: TreeNode;
@@ -81,10 +88,10 @@ export default class OntologyTree {
         );
         phenotype = this.createNodeFromSource(sourcePhenotype, children);
         phenotype.children = children;
-        workingTree.push(phenotype);
+        rootNode = phenotype;
       }
     });
-    return workingTree;
+    return rootNode;
   };
 
   createNodeFromSource = (
@@ -96,10 +103,9 @@ export default class OntologyTree {
     const value = this.getChildrenValue(children, source.doc_count);
 
     const result: TreeNode = {
-      id: source.key,
+      id: parentKey ? `${parentKey}-${source.key}` : source.key,
       title: source.key,
-      text: source.key,
-      key: parentKey ? `${parentKey}-${source.key}` : source.key,
+      key: source.key,
       children,
       results: source.doc_count,
       exactTagCount: source.filter_by_term?.doc_count || 0,
@@ -110,7 +116,6 @@ export default class OntologyTree {
     };
 
     if (value < source.doc_count) {
-      result.value = source.doc_count - value;
       result.valueText = source.doc_count;
     } else if (children.length === 0) {
       result.value = value;

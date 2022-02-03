@@ -59,6 +59,16 @@ const fr = {
       deleteFilter: "Unable to delete filter",
     },
   },
+  report: {
+    error: {
+      title: "Error",
+      fetchReport: "Unable to fetch Report",
+    },
+    inProgress: {
+      title: "Processing",
+      fetchReport: "Fetching Report",
+    },
+  },
   // COMPONENTS
   components: {
     filterList: {

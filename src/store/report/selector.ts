@@ -3,6 +3,6 @@ import { initialState } from "store/user/types";
 
 export type UserProps = initialState;
 
-export const userSelector = (state: RootState) => {
-  return state.user;
+export const reportSelector = (state: RootState) => {
+  return state.report;
 };

@@ -1,36 +1,27 @@
-import {
-  IParticipantDiagnosis,
-  IParticipantEntity,
-  IParticipantPhenotype,
-} from "graphql/participants/models";
-import { ArrangerResultsTree, IQueryResults } from "graphql/models";
-import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
-import {
-  TPagingConfig,
-  TPagingConfigCb,
-} from "views/DataExploration/utils/types";
-import { SEX, TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
+import {IParticipantDiagnosis, IParticipantEntity, IParticipantPhenotype,} from "graphql/participants/models";
+import {ArrangerResultsTree, IQueryResults} from "graphql/models";
+import {DEFAULT_PAGE_SIZE} from "views/DataExploration/utils/constant";
+import {TPagingConfig, TPagingConfigCb,} from "views/DataExploration/utils/types";
+import {SEX, TABLE_EMPTY_PLACE_HOLDER} from "common/constants";
 import ExpandableCell from "components/uiKit/table/ExpendableCell";
-import {
-  extractMondoTitleAndCode,
-  extractPhenotypeTitleAndCode,
-} from "views/DataExploration/utils/helper";
+import {extractMondoTitleAndCode, extractPhenotypeTitleAndCode,} from "views/DataExploration/utils/helper";
 import ProTable from "@ferlab/ui/core/components/ProTable";
-import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
-import { getProTableDictionary } from "utils/translation";
-import { Button, Tag } from "antd";
-import { useDispatch } from "react-redux";
-import { updateUserConfig } from "store/user/thunks";
-import { useUser } from "store/user";
-import { Menu, Dropdown } from "antd";
-import { MenuInfo } from "rc-menu/lib/interface";
+import {ProColumnType} from "@ferlab/ui/core/components/ProTable/types";
+import {getProTableDictionary} from "utils/translation";
+import {Button, Dropdown, Menu, Tag} from "antd";
+import {useDispatch} from "react-redux";
+import {updateUserConfig} from "store/user/thunks";
+import {useUser} from "store/user";
 
 import styles from "./index.module.scss";
+import {ReportType} from "services/api/reports/models";
+import {DownloadOutlined} from "@ant-design/icons";
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
+  downloadReport: (e: string) => void;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -205,21 +196,17 @@ const ParticipantsTab = ({
   results,
   setPagingConfig,
   pagingConfig,
+  downloadReport,
 }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
 
-  const handleMenuClick = async (e: MenuInfo) => {
-    const reportName = e.key as string;
-    console.log("click", e);
-    // await fetchReportIfNeeded({ sqon, name: reportName });
-  };
-
-
   const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">Participant Only</Menu.Item>
-      <Menu.Item key="2">Participant & Family Members</Menu.Item>
+    <Menu onClick={(e) => downloadReport(e.key)}>
+      <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
+      <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>
+        Participant & Family Members
+      </Menu.Item>
     </Menu>
   );
 
@@ -253,7 +240,7 @@ const ParticipantsTab = ({
           ),
         extra: [
           <Dropdown overlay={menu} placement="bottomLeft">
-            <Button>Download clinical data</Button>
+            <Button><DownloadOutlined />Download clinical data </Button>
           </Dropdown>,
         ],
       }}

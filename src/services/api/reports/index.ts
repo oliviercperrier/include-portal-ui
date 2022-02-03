@@ -1,27 +1,17 @@
 import EnvironmentVariables from "helpers/EnvVariables";
 import keycloak from "auth/keycloak-api/keycloak";
-import { ReportConfig } from "./models";
-import { sendRequest } from "services/api";
+import {ReportConfig, ReportType} from "./models";
 import isEmpty from "lodash/isEmpty";
-import { format } from 'date-fns';
+import { format } from "date-fns";
+import downloader from "common/downloader";
 
 const url = EnvironmentVariables.configFor("REPORTS_API_URL");
 const arrangerProjectId = EnvironmentVariables.configFor("ARRANGER_PROJECT_ID");
 
-export const RP_PARTICIPANT_FILE_REPO_KEY = 'clinicalDataFileRepo';
-export const RP_CLINICAL_DATA_KEY = 'clinicalData';
-export const RP_FAM_CLINICAL_DATA_KEY = 'familyClinicalData';
-export const RP_FAM_CLINICAL_DATA_FILE_REPO_KEY = 'familyClinicalDataFileRepo';
-export const RP_BIOSPECIMEN_DATA_KEY = 'biospecimenData';
-export const RP_BIOSPECIMEN_FILE_REPO_DATA_KEY = 'biospecimenDataFileRepo';
-
 const REPORTS_ROUTES = {
-  [RP_PARTICIPANT_FILE_REPO_KEY]: `${url}/reports/clinical-data`,
-  [RP_CLINICAL_DATA_KEY]: `${url}/reports/clinical-data`,
-  [RP_FAM_CLINICAL_DATA_KEY]: `${url}/reports/family-clinical-data`,
-  [RP_FAM_CLINICAL_DATA_FILE_REPO_KEY]: `${url}/reports/family-clinical-data`,
-  [RP_BIOSPECIMEN_DATA_KEY]: `${url}/reports/biospecimen-data`,
-  [RP_BIOSPECIMEN_FILE_REPO_DATA_KEY]: `${url}/reports/biospecimen-data`,
+  [ReportType.CLINICAL_DATA]: `${url}/reports/clinical-data`,
+  [ReportType.CLINICAL_DATA_FAM]: `${url}/reports/family-clinical-data`,
+  [ReportType.BIOSEPCIMEN_DATA]: `${url}/reports/biospecimen-data`,
 };
 
 const headers = () => ({
@@ -41,19 +31,24 @@ const generateReport = (config: ReportConfig) => {
       op: "and",
       content: [],
     };
-    //TODO - do we support for files?
-  // } else if (isSqonFromFileRepo(name)) {
-  //   reportSqon = await buildSqonFromFileRepoForReport(name, config.sqon);
   } else {
     reportSqon = config.sqon;
   }
-
-  return sendRequest({
+  
+  return downloader({
     // @ts-ignore
     url: REPORTS_ROUTES[name],
     method: "POST",
     data: {
-      sqon: reportSqon,
+      sqon: {
+        op: "and",
+        content: [
+          {
+            op: "in",
+            content: { field: "study.study_id", value: ["SD_Z6MWD3H0"] },
+          },
+        ],
+      },
       projectId: arrangerProjectId,
       filename: format(new Date(), `[${name}_]YYYYMMDD[.xlsx]`),
     },

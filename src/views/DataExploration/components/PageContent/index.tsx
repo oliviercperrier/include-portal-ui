@@ -19,7 +19,7 @@ import {
 } from "@ferlab/ui/core/data/filters/utils";
 import { STATIC_ROUTES } from "utils/routes";
 import { getQueryBuilderDictionary } from "utils/translation";
-import { Space, Tabs } from "antd";
+import { Space, Tabs, notification } from "antd";
 import {
   mapFilterForParticipant,
   combineExtendedMappings,
@@ -46,6 +46,8 @@ import {
 import { useSavedFilter } from "store/savedFilter";
 
 import styles from "./index.module.scss";
+import { fetchReport } from "store/report/thunks";
+import { useReport } from "store/report";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -133,6 +135,23 @@ const PageContent = ({
           ?.displayName || key;
   };
 
+  const handleDownloadReport = async (reportName: string) => {
+    const sqon =
+      reportName === "biospecimen"
+        ? resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters))
+        : participantResolvedSqon;
+
+    dispatch(
+      fetchReport({
+        data: {
+          sqon,
+          name: reportName,
+        },
+      })
+    );
+    // await fetchReportIfNeeded({ sqon, name: reportName });
+  };
+
   return (
     <Space
       direction="vertical"
@@ -217,6 +236,7 @@ const PageContent = ({
             results={participantResults}
             setPagingConfig={setPagingConfigParticipant}
             pagingConfig={pagingConfigParticipant}
+            downloadReport={handleDownloadReport}
           />
         </Tabs.TabPane>
         <Tabs.TabPane

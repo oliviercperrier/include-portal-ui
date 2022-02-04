@@ -1,8 +1,7 @@
 import { IPhenotypeSource } from "graphql/summary/models";
 
 export type TreeNode = {
-  id: string;
-  title: React.ReactElement | string;
+  title: string;
   key: string;
   hasChildren?: boolean;
   children: TreeNode[];
@@ -17,13 +16,16 @@ export type TreeNode = {
   name?: string;
 };
 
-export const emptyNode: TreeNode = {
-  id: "",
-  key: "",
-  title: "",
-  value: 0,
-  valueText: 0,
-  children: [],
+export const lightTreeNodeConstructor = (
+  key: string,
+  children: TreeNode[] = []
+): TreeNode => {
+  return {
+    title: key,
+    key: key,
+    children,
+    valueText: 0,
+  };
 };
 
 export default class OntologyTree {
@@ -103,9 +105,8 @@ export default class OntologyTree {
     const value = this.getChildrenValue(children, source.doc_count);
 
     const result: TreeNode = {
-      id: parentKey ? `${parentKey}-${source.key}` : source.key,
       title: source.key,
-      key: source.key,
+      key: parentKey ? `${parentKey}-${source.key}` : source.key,
       children,
       results: source.doc_count,
       exactTagCount: source.filter_by_term?.doc_count || 0,
@@ -116,6 +117,7 @@ export default class OntologyTree {
     };
 
     if (value < source.doc_count) {
+      result.value = source.doc_count - value;
       result.valueText = source.doc_count;
     } else if (children.length === 0) {
       result.value = value;

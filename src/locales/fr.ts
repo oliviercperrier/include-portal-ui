@@ -139,7 +139,7 @@ const fr = {
           and: "And",
           or: "Or",
         },
-        noQuery: "Use the filters to build a query",
+        noQuery: "Use the facets on the left to build a query",
       },
       actions: {
         new: "New",
@@ -266,7 +266,12 @@ const fr = {
             cardTitle: "Available Data",
           },
           observedPhenotype: {
-            cardTitle: "Observed Phenotypes"
+            cardTitle: "Observed Phenotypes (HPO)",
+            phenotypeTree: {
+              nbParticipant: "{count} participants (including descendant terms on this path)",
+              addTermToQuery: "Add term to active query",
+              currentPath: "Current Path"
+            }
           }
         },
         participants: {

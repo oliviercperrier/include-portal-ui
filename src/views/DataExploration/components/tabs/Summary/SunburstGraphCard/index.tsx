@@ -1,15 +1,13 @@
 import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Badge, Button, Col, Row, Space, Tree, Typography } from "antd";
+import { Button, Col, Row, Space, Tree, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { emptyNode, TreeNode } from "./OntologyTree";
-import { PhenotypeStore } from "./PhenotypeStore";
-import { ResponsiveSunburst, ComputedDatum } from "@nivo/sunburst";
-import { useTheme } from "@nivo/core";
+import { lightTreeNodeConstructor, TreeNode } from "./OntologyTree";
+import { generateNavTreeFormKey, PhenotypeStore } from "./PhenotypeStore";
 import intl from "react-intl-universal";
 import { VisualType } from "@ferlab/ui/core/components/filters/types";
 import { addFieldToActiveQuery } from "utils/sqons";
-import { getCommonColors } from "common/charts";
+import SunburstD3 from "./sunburst-d3";
 
 import styles from "./index.module.scss";
 
@@ -19,74 +17,71 @@ interface OwnProps {
 }
 
 const { Title, Text } = Typography;
+const width = 335;
+const height = 335;
 const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, "g");
+
+const getExpandedNode = (currentNode: TreeNode): string[] =>
+  currentNode?.key.match(RegexExtractPhenotype) || [];
+
+const getSelectedKeys = (currentNode: TreeNode): string[] =>
+  [currentNode?.key.match(RegexExtractPhenotype)?.reverse()[0]!] || [];
+
+const getPath = (
+  node: string,
+  treeNodes: TreeNode[],
+  path: string[] = []
+): string[] => {
+  const updatePath = [...path];
+  const currentNodeText = treeNodes[0].key;
+  updatePath.push(currentNodeText);
+  if (node !== currentNodeText) {
+    return getPath(node, treeNodes[0].children, updatePath);
+  }
+  return updatePath;
+};
 
 const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [rootNode, setRootNode] = useState<TreeNode>();
-  const [currentNode, setCurrentNone] = useState<TreeNode>();
+  const [treeData, setTreeData] = useState<TreeNode[]>();
+  const [currentNode, setCurrentNode] = useState<TreeNode>();
   const phenotypeStore = useRef(new PhenotypeStore());
+  const sunburstRef = useRef<SVGSVGElement>(null);
+  const updateSunburst = useRef<(key: any) => void>();
 
   useEffect(() => {
     setIsLoading(true);
     phenotypeStore.current.fetch("observed_phenotype", sqon).then(() => {
-      setCurrentNone(phenotypeStore.current.getRootNode()!);
-      setRootNode(phenotypeStore.current.getRootNode()!);
+      const rootNode = phenotypeStore.current.getRootNode()!;
+      setCurrentNode(rootNode);
+      setTreeData([lightTreeNodeConstructor(rootNode?.key)]);
       setIsLoading(false);
+
+      updateSunburst.current = SunburstD3(
+        sunburstRef,
+        phenotypeStore.current.getRootNode(),
+        {
+          depth: 2,
+          width: width,
+          height: height,
+        },
+        getSelectedPhenotype,
+        {
+          centerTextFormatter: (data: TreeNode) => `${data.results}`,
+          tooltipFormatter: (data: TreeNode) =>
+            `${data.results}\n\n${data.title}`,
+        }
+      );
     });
     // eslint-disable-next-line
   }, [JSON.stringify(sqon)]);
 
-  const CustomTooltip = ({
-    id,
-    value,
-    color,
-    data,
-    ...rest
-  }: ComputedDatum<TreeNode>) => {
-    const theme = useTheme();
-    return (
-      <div style={{ ...theme.tooltip.container, display: "flex" }}>
-        <Badge color={color} />
-        <Space direction="vertical" size={3}>
-          {data.name}
-          <strong>{data.results}</strong>
-        </Space>
-      </div>
-    );
-  };
-
-  const flatten = (data: TreeNode[]): TreeNode[] =>
-    data.reduce((acc: TreeNode[], item: TreeNode) => {
-      if (item.children) {
-        return [...acc, item, ...flatten(item.children)];
-      }
-      return [...acc, item];
-    }, []);
-
-  const findObject = (data: TreeNode[], name: string) =>
-    data.find((searchedName) => searchedName.name === name);
-
-  const CenteredMetric = ({ nodes, centerX, centerY }: any) => {
-    return (
-      <foreignObject
-        textAnchor="middle"
-        dominantBaseline="central"
-        style={{ textAlign: "center" }}
-        x={centerX - 50}
-        y={centerY - 11}
-        width="100"
-        height="22"
-      >
-        <strong>{currentNode?.results}</strong>
-      </foreignObject>
-    );
-  };
-
-  const getExpandedNode = (currentNode: TreeNode) => {
-    const keys = currentNode?.id.match(RegexExtractPhenotype) || [];
-    keys.pop();
-    return keys;
+  const getSelectedPhenotype = (node: TreeNode) => {
+    const phenoReversed = (
+      node.key.match(RegexExtractPhenotype) || []
+    ).reverse();
+    setCurrentNode(node);
+    setTreeData(generateNavTreeFormKey(phenoReversed));
   };
 
   return (
@@ -105,31 +100,13 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
       content={
         <Row gutter={24}>
           <Col lg={8} xl={10}>
-            <div style={{ height: "335px" }}>
-              <ResponsiveSunburst
-                id="id"
-                data={currentNode || emptyNode}
-                transitionMode="pushIn"
-                value={"value"}
-                tooltip={CustomTooltip}
-                colors={getCommonColors()}
-                childColor={{
-                  from: "color",
-                  modifiers: [["brighter", 0.1]],
-                }}
-                onClick={(clickedData) => {
-                  const foundObject = findObject(
-                    flatten(currentNode!.children),
-                    (clickedData.data as TreeNode).key as string
-                  );
-
-                  if (foundObject && foundObject.children.length) {
-                    setCurrentNone(foundObject);
-                  }
-                }}
-                layers={["arcs", "arcLabels", CenteredMetric]}
-              />
-            </div>
+            <svg
+              className={styles.sunburstChart}
+              width={width}
+              height={height}
+              viewBox={`0 0 ${width} ${height}`}
+              ref={sunburstRef}
+            />
           </Col>
           <Col lg={16} xl={14}>
             <Space
@@ -138,8 +115,12 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
             >
               <Title level={5}>{currentNode?.name}</Title>
               <Text>
-                {currentNode?.results} participants (including descendant terms
-                on this path)
+                {intl.get(
+                  "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.nbParticipant",
+                  {
+                    count: currentNode?.results,
+                  }
+                )}
               </Text>
               <Button
                 className={styles.addTermBtn}
@@ -156,23 +137,43 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
                   );
                 }}
               >
-                Add term to active query
+                {intl.get(
+                  "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.addTermToQuery"
+                )}
               </Button>
               <Space
                 className={styles.treeWrapper}
                 direction="vertical"
                 size={5}
               >
-                <Text type="secondary">Current Path</Text>
+                <Text type="secondary">
+                  {intl.get(
+                    "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.currentPath"
+                  )}
+                </Text>
+                {console.log(treeData)}
                 <Tree
                   height={213}
                   switcherIcon={<div />}
-                  selectedKeys={[currentNode?.key!]}
+                  selectedKeys={getSelectedKeys(currentNode!)}
                   expandedKeys={getExpandedNode(currentNode!)}
                   className={styles.phenotypeTree}
-                  treeData={rootNode ? [rootNode] : []}
-                  onSelect={(keys, { node }: any) => {
-                    setCurrentNone(node);
+                  treeData={treeData!}
+                  onSelect={(keys) => {
+                    if (keys.length) {
+                      const key = getPath(keys[0] as string, treeData!).join(
+                        "-"
+                      );
+                      getSelectedPhenotype({
+                        title: keys[0] as string,
+                        key,
+                        children: [],
+                        valueText: 0,
+                      });
+                      updateSunburst.current!(key);
+                    } else {
+                      return {};
+                    }
                   }}
                 ></Tree>
               </Space>

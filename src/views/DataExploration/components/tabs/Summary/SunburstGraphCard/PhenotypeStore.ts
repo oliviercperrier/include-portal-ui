@@ -3,7 +3,10 @@ import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
 import { IPhenotypeSource } from "graphql/summary/models";
 import { ARRANGER_API_PROJECT_URL } from "provider/ApolloProvider";
 import { sendRequest } from "services/api";
-import OntologyTree, { TreeNode } from "./OntologyTree";
+import OntologyTree, {
+  lightTreeNodeConstructor,
+  TreeNode,
+} from "./OntologyTree";
 
 const ROOT_PHENO = "All (HP:0000001)";
 
@@ -19,6 +22,28 @@ interface IPhenotypeQueryPayload {
     };
   };
 }
+
+export const generateNavTreeFormKey = (phenotypes: string[]): TreeNode[] => {
+  if (!phenotypes.length) {
+    return [];
+  }
+
+  if (phenotypes.length === 1) {
+    const leafPheno = phenotypes.pop();
+
+    if (!leafPheno) {
+      return [];
+    }
+
+    return [lightTreeNodeConstructor(leafPheno)];
+  }
+
+  const rootPheno = phenotypes.pop();
+
+  return rootPheno
+    ? [lightTreeNodeConstructor(rootPheno, generateNavTreeFormKey(phenotypes))]
+    : [];
+};
 
 export class PhenotypeStore {
   phenotypes: IPhenotypeSource[] = [];

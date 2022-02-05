@@ -39,6 +39,7 @@ const fr = {
       403: "Sorry, you are not authorized to access this page.",
       404: "Sorry, the page you visited does not exist.",
       500: "Sorry, something went wrong.",
+      backHome: "Back home"
     },
     notification: {
       genericError: "An error occured",

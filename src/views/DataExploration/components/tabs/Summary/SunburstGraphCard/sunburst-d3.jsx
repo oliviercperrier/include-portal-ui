@@ -19,7 +19,7 @@ const SunburstD3 = (
   const height = config.height || 300;
   const depth = config.depth;
   const radius = Math.min(width, height) / 6;
-  const colorScheme = config.colorScheme || "schemeSet1";
+  const colors = config.colors;
   let selectedPhenotype = null;
 
   const addBackArrow = () => {
@@ -69,7 +69,7 @@ const SunburstD3 = (
   };
 
   const root = partition(data);
-  const color = d3.scaleOrdinal(d3[colorScheme]);
+  const color = d3.scaleOrdinal(colors ? colors : d3["schemeSet1"]);
   root.each((d) => (d.current = d));
 
   const svg = d3

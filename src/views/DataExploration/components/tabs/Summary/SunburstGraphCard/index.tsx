@@ -10,6 +10,7 @@ import { addFieldToActiveQuery } from "utils/sqons";
 import SunburstD3 from "./sunburst-d3";
 
 import styles from "./index.module.scss";
+import { getCommonColors } from "common/charts";
 
 interface OwnProps {
   className?: string;
@@ -64,6 +65,7 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
           depth: 2,
           width: width,
           height: height,
+          colors: getCommonColors(),
         },
         getSelectedPhenotype,
         {
@@ -98,7 +100,7 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
         </Title>
       }
       content={
-        <Row gutter={24}>
+        <Row gutter={[24, 24]}>
           <Col lg={8} xl={10}>
             <svg
               className={styles.sunburstChart}
@@ -151,7 +153,6 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
                     "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.currentPath"
                   )}
                 </Text>
-                {console.log(treeData)}
                 <Tree
                   height={213}
                   switcherIcon={<div />}

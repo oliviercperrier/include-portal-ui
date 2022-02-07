@@ -24,6 +24,7 @@ import { ConfigProvider } from "antd";
 import { LANG } from "common/constants";
 import frFR from "antd/lib/locale/fr_FR";
 import enUS from "antd/lib/locale/en_US";
+import ErrorBoundary from "components/ErrorBoundary";
 
 const loadableProps = { fallback: <Spinner size="large" /> };
 const Dashboard = loadable(() => import("views/Dashboard"), loadableProps);
@@ -123,11 +124,11 @@ const App = () => {
 
 const EnhanceApp = () => {
   return (
-    //<ErrorBoundary>
-    <ContextProvider>
-      <App />
-    </ContextProvider>
-    //</ErrorBoundary>
+    <ErrorBoundary>
+      <ContextProvider>
+        <App />
+      </ContextProvider>
+    </ErrorBoundary>
   );
 };
 

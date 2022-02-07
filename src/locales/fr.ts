@@ -39,6 +39,7 @@ const fr = {
       403: "Sorry, you are not authorized to access this page.",
       404: "Sorry, the page you visited does not exist.",
       500: "Sorry, something went wrong.",
+      backHome: "Back home"
     },
     notification: {
       genericError: "An error occured",
@@ -139,7 +140,7 @@ const fr = {
           and: "And",
           or: "Or",
         },
-        noQuery: "Use the filters to build a query",
+        noQuery: "Use the facets on the left to build a query",
       },
       actions: {
         new: "New",
@@ -265,6 +266,14 @@ const fr = {
           availableData: {
             cardTitle: "Available Data",
           },
+          observedPhenotype: {
+            cardTitle: "Observed Phenotypes (HPO)",
+            phenotypeTree: {
+              nbParticipant: "{count} participants (including descendant terms on this path)",
+              addTermToQuery: "Add term to active query",
+              currentPath: "Current Path"
+            }
+          }
         },
         participants: {
           title: "Participants ({count})",
@@ -383,6 +392,9 @@ const fr = {
     sex: "Sex",
     ethnicity: "Ethnicity",
     race: "Race",
+    observed_phenotype: {
+      name: "Observed Phenotype Name"
+    },
     // Biospecimen
     biospecimen_type: "Biospecimen Type",
     sample_type: "Sample Type",

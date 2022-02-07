@@ -54,3 +54,20 @@ export const TYPE_OF_OMICS_QUERY = `
     }
   }
 `;
+
+export const SUNBURST_QUERY = `
+  query ($sqon: JSON, $term_filters: JSON) {
+    participant {
+      aggregations(filters: $sqon, aggregations_filter_themselves: true) {
+        observed_phenotype__name {
+          buckets {
+            key
+            doc_count
+            top_hits(_source: ["observed_phenotype.parents"], size: 1)
+            filter_by_term(filter: $term_filters)
+          }
+        }
+      }
+    }
+  }
+`;

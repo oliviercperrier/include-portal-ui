@@ -1,5 +1,6 @@
 import { ResponsivePie, PieSvgProps, DefaultRawDatum } from "@nivo/pie";
 import { Typography } from "antd";
+import { getCommonColors } from "common/charts";
 
 import styles from "./index.module.scss";
 
@@ -22,6 +23,7 @@ const PieChart = ({
       {title && <Title level={5}>{title}</Title>}
       <div className={styles.chartWrapper} style={{ height: height }}>
         <ResponsivePie
+          colors={rest.colors || getCommonColors()}
           enableArcLabels={enableArcLabels}
           enableArcLinkLabels={enableArcLinkLabels}
           {...rest}

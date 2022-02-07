@@ -1,5 +1,6 @@
 import { ResponsiveBar, BarSvgProps, BarDatum } from "@nivo/bar";
 import { Typography } from "antd";
+import { getCommonColors } from "common/charts";
 
 import styles from "./index.module.scss";
 
@@ -15,7 +16,11 @@ const BarChart = ({ title, height, ...rest }: OwnProps) => {
     <div className={styles.barChartWrapper}>
       {title && <Title level={5}>{title}</Title>}
       <div className={styles.chartWrapper} style={{ height: height }}>
-        <ResponsiveBar {...rest} />
+        <ResponsiveBar
+          colors={rest.colors || getCommonColors()}
+          colorBy="indexValue"
+          {...rest}
+        />
       </div>
     </div>
   );

@@ -86,7 +86,6 @@ const TreePanel = ({
           className={styles.phenotypeTree}
           treeData={treeData!}
           onSelect={(keys) => {
-            console.log(keys);
             if (keys.length) {
               const key = getPath(keys[0] as string, treeData!).join("-");
               getSelectedPhenotype({

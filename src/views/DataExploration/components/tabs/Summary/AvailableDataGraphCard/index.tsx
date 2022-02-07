@@ -4,6 +4,7 @@ import { toChartData } from "utils/charts";
 import BarChart from "components/uiKit/charts/Bar";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import intl from "react-intl-universal";
+import { truncateString } from "utils/string";
 
 interface OwnProps {
   className?: string;
@@ -63,8 +64,7 @@ const AvailableDataGraphCard = ({
                 legend: "Type of Omics",
                 legendPosition: "middle",
                 legendOffset: -120,
-                format: (title: string) =>
-                  `${title.substring(0, 15)}${title.length > 15 ? "..." : ""}`,
+                format: (title: string) => truncateString(title, 15),
               }}
               axisBottom={{
                 legend: "# of participants",
@@ -82,8 +82,7 @@ const AvailableDataGraphCard = ({
                 legend: "Data Types",
                 legendPosition: "middle",
                 legendOffset: -120,
-                format: (title: string) =>
-                  `${title.substring(0, 15)}${title.length > 15 ? "..." : ""}`,
+                format: (title: string) => truncateString(title, 15),
               }}
               axisBottom={{
                 legend: "# of participants",

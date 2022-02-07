@@ -49,7 +49,10 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
         {
           centerTextFormatter: (data: TreeNode) => `${data.results}`,
           tooltipFormatter: (data: TreeNode) =>
-            `${data.results}\n\n${data.title}`,
+            `<div>
+              ${data.title}<br/><br/>
+              Participants: <strong>${data.results}</strong>
+            </div>`,
         }
       );
     });
@@ -78,7 +81,7 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
         </Title>
       }
       content={
-        <Row gutter={[24, 24]}>
+        <Row gutter={[24, 24]} id="tooltip-wrapper">
           <Col lg={8} xl={10}>
             <svg
               className={styles.sunburstChart}

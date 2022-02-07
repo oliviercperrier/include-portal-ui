@@ -102,6 +102,31 @@ const SunburstD3 = (
         : 0
     );
 
+  const Tooltip = d3
+    .select("#tooltip-wrapper")
+    .append("div")
+    .style("position", "absolute")
+    .style("opacity", 0)
+    .style("box-shadow", "1px 1px 7px -4px #000000")
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border-radius", "2px")
+    .style("padding", "8px")
+    .style("max-width", "250px");
+
+  const mouseoverTooltip = function (d) {
+    Tooltip.style("opacity", 1);
+    d3.select(this).style("stroke", "black").style("opacity", 1);
+  };
+  const mousemoveTooltip = function (d) {
+    Tooltip.html(formatters.tooltipFormatter(d.data))
+      .style("left", d3.event.offsetX + 25 + "px")
+      .style("top", d3.event.offsetY + 25 + "px");
+  };
+  const mouseoutTooltip = function (d) {
+    Tooltip.style("opacity", 0);
+  };
+
   path
     .filter((d) => d)
     .style("cursor", (d) => (arcVisible(d.current) ? "pointer" : "node"))
@@ -117,8 +142,8 @@ const SunburstD3 = (
       const data = d3.select(this).datum().current;
       return arcVisible(data) ? clicked(p) : () => {};
     })
-    .append("title")
-    .text((d) => (arcVisible(d.current) ? tooltipFormatter(d.data) : ""));
+    .on("mousemove", mousemoveTooltip)
+    .on("mouseout", mouseoutTooltip);
 
   const parent = g
     .append("circle")
@@ -299,6 +324,7 @@ const SunburstD3 = (
 
   const onMouseover = (d) => {
     updateCenterText(d);
+    mouseoverTooltip(d);
   };
 
   const onMouseout = () => {

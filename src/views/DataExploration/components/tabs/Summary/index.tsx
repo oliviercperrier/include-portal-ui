@@ -48,8 +48,8 @@ const SummaryTab = ({ sqon }: OwnProps) => {
           data={result ? result[0] : null}
         />
       </Col>
-      <Col xs={24} md={18}>
-        <SunburstGraphCard className={styles.summaryGrapCard} sqon={sqon} />
+      <Col xs={24} md={18}>      
+      <SunburstGraphCard className={styles.summaryGrapCard} sqon={sqon} />
       </Col>
       <Col span={24}>
         <AvailableDataGraphCard

@@ -18,7 +18,6 @@ const SavedFilters = ({ id, className = "" }: DashboardCardProps) => {
   const { savedFilters, isLoading } = useSavedFilter();
 
   useEffect(() => {
-    console.log("FUCK")
     dispatch(fetchSavedFilters());
     // eslint-disable-next-line
   }, []);

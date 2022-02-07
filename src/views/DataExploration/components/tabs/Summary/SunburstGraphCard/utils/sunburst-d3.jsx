@@ -112,7 +112,8 @@ const SunburstD3 = (
     .style("background-color", "white")
     .style("border-radius", "2px")
     .style("padding", "8px")
-    .style("max-width", "250px");
+    .style("max-width", "250px")
+    .style("z-index", "1000");
 
   const mouseoverTooltip = function (d) {
     Tooltip.style("opacity", 1);

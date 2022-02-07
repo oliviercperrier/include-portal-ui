@@ -3,8 +3,8 @@ import * as d3 from "d3";
 const WITH_FONT_COMPENSATION = 20;
 
 const regexTermNumber = /^[(]HP:\d+\)$/;
-const fillOpacityWithChild = 0.8;
-const fillOpacityWithoutChild = 0.4;
+const fillOpacityWithChild = 1;
+const fillOpacityWithoutChild = 0.8;
 
 const SunburstD3 = (
   ref,
@@ -106,7 +106,7 @@ const SunburstD3 = (
     .select("#tooltip-wrapper")
     .append("div")
     .style("position", "absolute")
-    .style("opacity", 0)
+    .style("display", "none")
     .style("box-shadow", "0.5px 0.5px 2px 0.5px rgba(0,0,0,0.2)")
     .attr("class", "tooltip")
     .style("background-color", "white")
@@ -116,7 +116,7 @@ const SunburstD3 = (
     .style("z-index", "1000");
 
   const mouseoverTooltip = function (d) {
-    Tooltip.style("opacity", 1);
+    Tooltip.style("display", "block");
     d3.select(this).style("stroke", "black").style("opacity", 1);
   };
   const mousemoveTooltip = function (d) {
@@ -125,7 +125,7 @@ const SunburstD3 = (
       .style("top", d3.event.offsetY + 25 + "px");
   };
   const mouseoutTooltip = function (d) {
-    Tooltip.style("opacity", 0);
+    Tooltip.style("display", "none");
   };
 
   path
@@ -178,7 +178,7 @@ const SunburstD3 = (
     .datum(root)
     .lower()
     .attr("r", radius * 1.5)
-    .attr("fill", "#F9F9FB")
+    .attr("fill", "white")
     .attr("text-anchor", "middle");
 
   // ACTIONS
@@ -222,12 +222,18 @@ const SunburstD3 = (
           line.pop();
           centerText
             .append("tspan")
-            .text("participants")
+            .text("Participants in query")
             .attr("x", 0)
             .attr("y", 10)
             .attr("fill", "#5a77a0")
             .style("font-size", "14px")
             .style("font-weight", "400");
+          centerText
+            .append("foreignObject")
+            .attr("x", 0)
+            .attr("y", 40)
+            .append("xhtml:button")
+            .html("lol");
         }
 
         //** - 20 ** with compensation for font size

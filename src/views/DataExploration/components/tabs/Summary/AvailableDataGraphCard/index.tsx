@@ -66,6 +66,7 @@ const AvailableDataGraphCard = ({
                 legendOffset: -120,
                 format: (title: string) => truncateString(title, 15),
               }}
+              tooltipLabel={(node) => node.data.id}
               axisBottom={{
                 legend: "# of participants",
                 legendPosition: "middle",
@@ -84,6 +85,7 @@ const AvailableDataGraphCard = ({
                 legendOffset: -120,
                 format: (title: string) => truncateString(title, 15),
               }}
+              tooltipLabel={(node) => node.data.id}
               axisBottom={{
                 legend: "# of participants",
                 legendPosition: "middle",

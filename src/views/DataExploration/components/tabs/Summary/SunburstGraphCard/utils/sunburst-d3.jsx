@@ -107,7 +107,7 @@ const SunburstD3 = (
     .append("div")
     .style("position", "absolute")
     .style("opacity", 0)
-    .style("box-shadow", "1px 1px 7px -4px #000000")
+    .style("box-shadow", "0.5px 0.5px 2px 0.5px rgba(0,0,0,0.2)")
     .attr("class", "tooltip")
     .style("background-color", "white")
     .style("border-radius", "2px")

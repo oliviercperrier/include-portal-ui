@@ -12,11 +12,23 @@ const fetchReport = createAsyncThunk<
   },
   { rejectValue: string }
 >("report/generateReport", async (args, thunkAPI) => {
-  notification.info({
-    message: intl.get("report.inProgress.title"),
-    description: intl.get("report.inProgress.fetchReport"),
-  });
-  await ReportApi.generateReport(args.data);
+  try {
+    notification.info({
+      message: intl.get("report.inProgress.title"),
+      description: intl.get("report.inProgress.fetchReport"),
+    });
+    await ReportApi.generateReport(args.data).then((_) =>
+      notification.success({
+        message: intl.get("report.inProgress.title"),
+        description: intl.get("report.inProgress.fetchReport"),
+      })
+    );
+  } catch (e) {
+    notification.error({
+      message: intl.get("report.inProgress.title"),
+      description: intl.get("report.inProgress.fetchReport"),
+    });
+  }
 });
 
 export { fetchReport };

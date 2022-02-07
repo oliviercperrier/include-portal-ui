@@ -16,8 +16,10 @@ const REPORTS_ROUTES = {
 
 const headers = () => ({
   "Content-Type": "application/json",
-  Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  Accept: "*/*",
   Authorization: `Bearer ${keycloak.token}`,
+  "Accept-Encoding": "gzip, deflate, br",
+
 });
 
 const generateReport = (config: ReportConfig) => {

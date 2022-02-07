@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { saveAs } from "file-saver";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const getDefaultContentType = (responseType: string) => {
   const fallbackContentType = "text/plain;charset=utf-8";

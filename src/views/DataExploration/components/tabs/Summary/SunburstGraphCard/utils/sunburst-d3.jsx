@@ -3,6 +3,8 @@ import * as d3 from "d3";
 const WITH_FONT_COMPENSATION = 20;
 
 const regexTermNumber = /^[(]HP:\d+\)$/;
+const fillOpacityWithChild = 0.8;
+const fillOpacityWithoutChild = 0.4;
 
 const SunburstD3 = (
   ref,
@@ -76,6 +78,9 @@ const SunburstD3 = (
     .select(ref.current)
     .style("width", width)
     .style("height", height);
+
+  svg.selectAll("*").remove();
+
   const g = svg
     .append("g")
     .attr("transform", () => `translate(${[width / 2, width / 2]})`);
@@ -90,7 +95,11 @@ const SunburstD3 = (
       return color(d.data.title);
     })
     .attr("fill-opacity", (d) =>
-      arcVisible(d.current) ? (d.children ? 0.8 : 0.4) : 0
+      arcVisible(d.current)
+        ? d.children
+          ? fillOpacityWithChild
+          : fillOpacityWithoutChild
+        : 0
     );
 
   path
@@ -265,7 +274,11 @@ const SunburstD3 = (
       )
       .attrTween("d", (d) => () => arc(d.current))
       .attr("fill-opacity", (d) =>
-        arcVisible(d.target) ? (d.children ? 0.7 : 0.4) : 0
+        arcVisible(d.target)
+          ? d.children
+            ? fillOpacityWithChild
+            : fillOpacityWithoutChild
+          : 0
       );
 
     selectedPhenotype = p;

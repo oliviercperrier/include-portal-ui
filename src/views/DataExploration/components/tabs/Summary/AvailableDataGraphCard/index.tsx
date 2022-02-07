@@ -45,6 +45,7 @@ const AvailableDataGraphCard = ({
       wrapperClassName={className}
       theme="shade"
       loading={loading}
+      loadingType="spinner"
       title={
         <Title level={4}>
           {intl.get(

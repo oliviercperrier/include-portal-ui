@@ -1,46 +1,24 @@
 import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Button, Col, Row, Space, Tree, Typography } from "antd";
+import { Col, Row, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { lightTreeNodeConstructor, TreeNode } from "./OntologyTree";
-import { generateNavTreeFormKey, PhenotypeStore } from "./PhenotypeStore";
+import { lightTreeNodeConstructor, TreeNode } from "./utils/OntologyTree";
+import { generateNavTreeFormKey, PhenotypeStore } from "./utils/PhenotypeStore";
 import intl from "react-intl-universal";
-import { VisualType } from "@ferlab/ui/core/components/filters/types";
-import { addFieldToActiveQuery } from "utils/sqons";
-import SunburstD3 from "./sunburst-d3";
+import SunburstD3 from "./utils/sunburst-d3";
+import { getCommonColors } from "common/charts";
+import TreePanel from "views/DataExploration/components/tabs/Summary/SunburstGraphCard/TreePanel";
 
 import styles from "./index.module.scss";
-import { getCommonColors } from "common/charts";
 
 interface OwnProps {
   className?: string;
   sqon: ISyntheticSqon;
 }
-
-const { Title, Text } = Typography;
+export const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, "g");
+const { Title } = Typography;
 const width = 335;
 const height = 335;
-const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, "g");
-
-const getExpandedNode = (currentNode: TreeNode): string[] =>
-  currentNode?.key.match(RegexExtractPhenotype) || [];
-
-const getSelectedKeys = (currentNode: TreeNode): string[] =>
-  [currentNode?.key.match(RegexExtractPhenotype)?.reverse()[0]!] || [];
-
-const getPath = (
-  node: string,
-  treeNodes: TreeNode[],
-  path: string[] = []
-): string[] => {
-  const updatePath = [...path];
-  const currentNodeText = treeNodes[0].key;
-  updatePath.push(currentNodeText);
-  if (node !== currentNodeText) {
-    return getPath(node, treeNodes[0].children, updatePath);
-  }
-  return updatePath;
-};
 
 const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -111,74 +89,12 @@ const SunburstGraphCard = ({ className = "", sqon }: OwnProps) => {
             />
           </Col>
           <Col lg={16} xl={14}>
-            <Space
-              direction="vertical"
-              className={styles.phenotypeSunburstTree}
-            >
-              <Title level={5}>{currentNode?.name}</Title>
-              <Text>
-                {intl.get(
-                  "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.nbParticipant",
-                  {
-                    count: currentNode?.results,
-                  }
-                )}
-              </Text>
-              <Button
-                className={styles.addTermBtn}
-                type="link"
-                size="small"
-                onClick={() => {
-                  addFieldToActiveQuery(
-                    "observed_phenotype.name",
-                    {
-                      count: 1,
-                      key: currentNode?.name!,
-                    },
-                    VisualType.Checkbox
-                  );
-                }}
-              >
-                {intl.get(
-                  "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.addTermToQuery"
-                )}
-              </Button>
-              <Space
-                className={styles.treeWrapper}
-                direction="vertical"
-                size={5}
-              >
-                <Text type="secondary">
-                  {intl.get(
-                    "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.currentPath"
-                  )}
-                </Text>
-                <Tree
-                  height={213}
-                  switcherIcon={<div />}
-                  selectedKeys={getSelectedKeys(currentNode!)}
-                  expandedKeys={getExpandedNode(currentNode!)}
-                  className={styles.phenotypeTree}
-                  treeData={treeData!}
-                  onSelect={(keys) => {
-                    if (keys.length) {
-                      const key = getPath(keys[0] as string, treeData!).join(
-                        "-"
-                      );
-                      getSelectedPhenotype({
-                        title: keys[0] as string,
-                        key,
-                        children: [],
-                        valueText: 0,
-                      });
-                      updateSunburst.current!(key);
-                    } else {
-                      return {};
-                    }
-                  }}
-                ></Tree>
-              </Space>
-            </Space>
+            <TreePanel
+              currentNode={currentNode!}
+              treeData={treeData!}
+              getSelectedPhenotype={getSelectedPhenotype}
+              updateSunburst={updateSunburst.current!}
+            />
           </Col>
         </Row>
       }

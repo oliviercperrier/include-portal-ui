@@ -1,5 +1,4 @@
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Col, Row, Typography } from "antd";
+import { Col, Row } from "antd";
 import useApi from "hooks/useApi";
 import { ARRANGER_API_PROJECT_URL } from "provider/ApolloProvider";
 import {
@@ -17,8 +16,6 @@ import styles from "./index.module.scss";
 interface OwnProps {
   sqon: ISqonGroupFilter;
 }
-
-const { Title } = Typography;
 
 const SummaryTab = ({ sqon }: OwnProps) => {
   const { loading, result } = useApi<any>({
@@ -60,22 +57,6 @@ const SummaryTab = ({ sqon }: OwnProps) => {
           className={styles.summaryGrapCard}
           dataTypeData={result ? result[1] : null}
           typeOfOmicsData={result ? result[2] : null}
-        />
-      </Col>
-      <Col xs={24} md={12}>
-        <GridCard
-          wrapperClassName={styles.summaryGrapCard}
-          theme="shade"
-          title={<Title level={4}>Chart title 4</Title>}
-          content="Chart.."
-        />
-      </Col>
-      <Col xs={24} md={12}>
-        <GridCard
-          wrapperClassName={styles.summaryGrapCard}
-          theme="shade"
-          title={<Title level={4}>Chart title 5</Title>}
-          content="Chart.."
         />
       </Col>
     </Row>

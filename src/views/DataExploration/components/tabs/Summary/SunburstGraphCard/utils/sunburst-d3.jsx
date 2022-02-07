@@ -119,7 +119,7 @@ const SunburstD3 = (
     d3.select(this).style("stroke", "black").style("opacity", 1);
   };
   const mousemoveTooltip = function (d) {
-    Tooltip.html(formatters.tooltipFormatter(d.data))
+    Tooltip.html(tooltipFormatter(d.data))
       .style("left", d3.event.offsetX + 25 + "px")
       .style("top", d3.event.offsetY + 25 + "px");
   };

@@ -1,9 +1,3 @@
-// export interface ReportState {
-//   isLoading: boolean;
-//   error?: Error | null;
-//   message?: Message | null;
-// }
-//
 export type Message = {
   content: string;
   duration: number;

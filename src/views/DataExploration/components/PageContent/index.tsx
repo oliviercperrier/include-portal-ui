@@ -47,6 +47,7 @@ import { useSavedFilter } from "store/savedFilter";
 
 import styles from "./index.module.scss";
 import { fetchReport } from "store/report/thunks";
+import { ReportType } from "services/api/reports/models";
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -96,6 +97,11 @@ const PageContent = ({
     mapFilterForParticipant(filters)
   );
 
+  const biospecimenResolvedSqon = resolveSyntheticSqon(
+    allSqons,
+    mapFilterForBiospecimen(filters)
+  );
+
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
     offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
@@ -113,7 +119,7 @@ const PageContent = ({
   const biospecimenResults = useBiospecimen({
     first: pagingConfigBiospecimen.size,
     offset: pagingConfigBiospecimen.size * (pagingConfigBiospecimen.index - 1),
-    sqon: resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters)),
+    sqon: biospecimenResolvedSqon,
     sort: [],
   });
 
@@ -136,8 +142,8 @@ const PageContent = ({
 
   const handleDownloadReport = async (reportName: string) => {
     const sqon =
-      reportName === "biospecimen"
-        ? resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters))
+      reportName === ReportType.BIOSEPCIMEN_DATA
+        ? biospecimenResolvedSqon
         : participantResolvedSqon;
 
     dispatch(
@@ -148,7 +154,6 @@ const PageContent = ({
         },
       })
     );
-    // await fetchReportIfNeeded({ sqon, name: reportName });
   };
 
   return (
@@ -253,6 +258,7 @@ const PageContent = ({
             results={biospecimenResults}
             setPagingConfig={setPagingConfigBiospecimen}
             pagingConfig={pagingConfigBiospecimen}
+            downloadReport={handleDownloadReport}
           />
         </Tabs.TabPane>
         <Tabs.TabPane

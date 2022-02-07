@@ -16,11 +16,15 @@ import { useUser } from "store/user";
 import { updateUserConfig } from "store/user/thunks";
 
 import styles from "./index.module.scss";
+import { Button } from "antd";
+import { ReportType } from "services/api/reports/models";
+import { DownloadOutlined } from "@ant-design/icons";
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
+  downloadReport: (e: string) => void;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -118,6 +122,7 @@ const BioSpecimenTab = ({
   results,
   setPagingConfig,
   pagingConfig,
+  downloadReport,
 }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
@@ -150,6 +155,12 @@ const BioSpecimenTab = ({
               },
             })
           ),
+        extra: [
+          <Button onClick={(e) => downloadReport(ReportType.BIOSEPCIMEN_DATA)}>
+            <DownloadOutlined />
+            Download sample data
+          </Button>,
+        ],
       }}
       bordered
       size="small"

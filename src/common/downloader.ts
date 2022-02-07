@@ -67,11 +67,8 @@ const downloader = async (opts: any = {}) => {
   }
 
   return axios(opts).then((response) => {
-    // Make a Blob from the response
     const blob = getBlobFromResponse(response, opts.responseType);
 
-    // Try to determine the filename from the `content-disposition` header,
-    //  fallback to a UUID if it fails.
     let filename;
     const disposition = response.headers["content-disposition"];
     if (disposition) {
@@ -93,7 +90,6 @@ const downloader = async (opts: any = {}) => {
       }
     }
 
-    // Let the user download the file.
     saveAs(blob, filename);
   });
 };

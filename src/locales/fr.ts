@@ -66,7 +66,11 @@ const fr = {
     },
     inProgress: {
       title: "Processing",
-      fetchReport: "Fetching Report",
+      fetchReport: "Fetching Report, please wait",
+    },
+    onSuccess: {
+      title: "Success",
+      fetchReport: "The report was successfully generated",
     },
   },
   // COMPONENTS

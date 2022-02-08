@@ -3,6 +3,10 @@
 .CavaticaListItem {
   .itemMeta {
     margin-bottom: 0px;
+
+    *[class$="-meta-title"] {
+      font-size: 14px;
+    }
   }
 
   .members {

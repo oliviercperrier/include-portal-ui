@@ -1,6 +1,7 @@
 .savedFiltersList {
     height: 100%;
     overflow: auto;
+    min-height: 200px;
 
     div[class$="-item-meta"] {
         margin-bottom: 0;

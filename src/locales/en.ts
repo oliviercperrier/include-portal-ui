@@ -1,4 +1,4 @@
-const en = {
+const fr = {
   // Global
   global: {
     yes: "Yes",
@@ -39,7 +39,7 @@ const en = {
       403: "Sorry, you are not authorized to access this page.",
       404: "Sorry, the page you visited does not exist.",
       500: "Sorry, something went wrong.",
-      backHome: "Back home"
+      backHome: "Back home",
     },
     notification: {
       genericError: "An error occured",
@@ -225,7 +225,6 @@ const en = {
       cards: {
         authorizedStudies: {
           title: "Authorized Studies {count, plural, =0 {} other {(#)}}",
-          headerBtn: "Data access",
           connectedNotice:
             "You have access to all released INLCUDE controlled data through your NIH credentials.",
           disconnectedNotice:
@@ -236,6 +235,12 @@ const en = {
           of: "of",
           files: "Files",
           dataGroups: "Data use groups: {groups}",
+          infoPopover: {
+            title: "Accessing Data",
+            content:
+              "Users requesting access to controlled data are required to have an eRA Commons account. Read more on",
+            applyingForDataAccess: "applying for data access",
+          },
         },
         cavatica: {
           title: "Cavatica Projects",
@@ -253,7 +258,7 @@ const en = {
               "CAVATICA is a cloud-based data analysis platform where data, results, and workflows are shared among the world’s research community.",
             readMore: "Read more",
           },
-          newProject: "New projet"
+          newProject: "New projet",
         },
         savedFilters: {
           title: "Saved Filters",
@@ -286,11 +291,12 @@ const en = {
           observedPhenotype: {
             cardTitle: "Observed Phenotypes (HPO)",
             phenotypeTree: {
-              nbParticipant: "{count} participants (including descendant terms on this path)",
+              nbParticipant:
+                "{count} participants (including descendant terms on this path)",
               addTermToQuery: "Add term to active query",
-              currentPath: "Current Path"
-            }
-          }
+              currentPath: "Current Path",
+            },
+          },
         },
         participants: {
           title: "Participants ({count})",
@@ -410,7 +416,7 @@ const en = {
     ethnicity: "Ethnicity",
     race: "Race",
     observed_phenotype: {
-      name: "Observed Phenotype Name"
+      name: "Observed Phenotype Name",
     },
     // Biospecimen
     biospecimen_type: "Biospecimen Type",
@@ -430,4 +436,4 @@ const en = {
   },
 };
 
-export default en;
+export default fr;

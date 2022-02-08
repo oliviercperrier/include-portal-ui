@@ -2,11 +2,7 @@ import { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Button, List, Space } from "antd";
 import intl from "react-intl-universal";
-import {
-  DisconnectOutlined,
-  QuestionCircleOutlined,
-  SafetyOutlined,
-} from "@ant-design/icons";
+import { DisconnectOutlined, SafetyOutlined } from "@ant-design/icons";
 import { DashboardCardProps } from "views/Dashboard/components/DashboardCards";
 import CardHeader from "views/Dashboard/components/CardHeader";
 import Text from "antd/lib/typography/Text";
@@ -76,18 +72,33 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
           title={intl.get("screen.dashboard.cards.authorizedStudies.title", {
             count: isConnected ? data.length : 0,
           })}
+          infoPopover={{
+            title: intl.get(
+              "screen.dashboard.cards.authorizedStudies.infoPopover.title"
+            ),
+            overlayClassName: styles.authorizedStudiesInfoPopover,
+            content: (
+              <Space direction="vertical" className={styles.content} size={0}>
+                <Text>
+                  {intl.getHTML(
+                    "screen.dashboard.cards.authorizedStudies.infoPopover.content"
+                  )}{" "}
+                  <a href="https://google.com" target="_blank" rel="noreferrer">
+                    <Button
+                      type="link"
+                      size="small"
+                      className={styles.applyForAccessBtn}
+                    >
+                      {intl.get(
+                        "screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess"
+                      )}
+                    </Button>
+                  </a>.
+                </Text>
+              </Space>
+            ),
+          }}
           withHandle
-          extra={[
-            <Button
-              key="1"
-              type="link"
-              className={styles.dataAccessBtn}
-              size="small"
-            >
-              {intl.get("screen.dashboard.cards.authorizedStudies.headerBtn")}{" "}
-              <QuestionCircleOutlined />
-            </Button>,
-          ]}
         />
       }
       content={
@@ -97,24 +108,26 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
               className={styles.authenticatedHeader}
               direction="horizontal"
             >
-              <SafetyOutlined className={styles.safetyIcon} />
-              <Text className={styles.notice}>
-                {intl.get(
-                  "screen.dashboard.cards.authorizedStudies.connectedNotice"
-                )}
-              </Text>
-              <Button
-                type="link"
-                size="small"
-                danger
-                icon={<DisconnectOutlined />}
-                onClick={() => setIsConnected(false)}
-                className={styles.disconnectBtn}
-              >
-                {intl.get(
-                  "screen.dashboard.cards.authorizedStudies.disconnect"
-                )}
-              </Button>
+              <Space align="start">
+                <SafetyOutlined className={styles.safetyIcon} />
+                <Text className={styles.notice}>
+                  {intl.get(
+                    "screen.dashboard.cards.authorizedStudies.connectedNotice"
+                  )}{" "}
+                  <Button
+                    type="link"
+                    size="small"
+                    danger
+                    icon={<DisconnectOutlined />}
+                    onClick={() => setIsConnected(false)}
+                    className={styles.disconnectBtn}
+                  >
+                    {intl.get(
+                      "screen.dashboard.cards.authorizedStudies.disconnect"
+                    )}
+                  </Button>
+                </Text>
+              </Space>
             </Space>
           )}
           <List<IListItemData>

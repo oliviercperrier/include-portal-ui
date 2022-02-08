@@ -7,7 +7,7 @@ import ApolloProvider from 'provider/ApolloProvider';
 import { Spin } from 'antd';
 import { ExtendedMappingResults } from 'graphql/models';
 import FilterList, { TCustomFilterMapper } from 'components/uiKit/FilterList';
-import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
+import { DATA_EXPLORATION_REPO_CACHE_KEY, TAB_IDS } from 'views/DataExploration/utils/constant';
 import { FilterInfo } from 'components/uiKit/FilterList/types';
 import { GraphqlBackend } from 'provider/types';
 import useGetExtendedMappings from 'hooks/graphql/useGetExtendedMappings';
@@ -20,7 +20,6 @@ import {
 } from './utils/mapper';
 
 import styles from './index.module.scss';
-import { TAB_IDS } from './components/PageContent/utils';
 
 interface OwnProps {
   tab?: string;

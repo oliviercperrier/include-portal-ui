@@ -6,7 +6,12 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import history from 'utils/history';
-import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
+import {
+  DATA_EPLORATION_FILTER_TAG,
+  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DEFAULT_PAGING_CONFIG,
+  TAB_IDS,
+} from 'views/DataExploration/utils/constant';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
 import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
@@ -41,12 +46,7 @@ import { useSavedFilter } from 'store/savedFilter';
 import styles from './index.module.scss';
 import { fetchReport } from 'store/report/thunks';
 import { ReportType } from 'services/api/reports/models';
-import {
-  DATA_EPLORATION_FILTER_TAG,
-  DEFAULT_PAGING_CONFIG,
-  generateSelectionSqon,
-  TAB_IDS,
-} from './utils';
+import { generateSelectionSqon } from 'utils/sqons';
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -142,8 +142,6 @@ const PageContent = ({
     } else {
       sqon = generateSelectionSqon(selectType, selectedRows);
     }
-
-    console.log(sqon, 'SQON');
 
     dispatch(
       fetchReport({

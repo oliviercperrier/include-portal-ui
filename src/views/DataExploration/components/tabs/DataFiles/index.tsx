@@ -1,8 +1,8 @@
 import { IFileEntity } from 'graphql/files/models';
 import { DownloadOutlined, LockOutlined } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
-import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
+import { RowSelection, TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -12,7 +12,6 @@ import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
 
 import styles from './index.module.scss';
-import { RowSelection, TAB_IDS } from '../../PageContent/utils';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;

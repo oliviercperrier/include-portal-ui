@@ -4,8 +4,8 @@ import {
   IParticipantPhenotype,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
-import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
-import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import { RowSelection, TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ExpandableCell from 'components/uiKit/table/ExpendableCell';
 import {
@@ -19,11 +19,10 @@ import { Button, Dropdown, Menu, Tag } from 'antd';
 import { useDispatch } from 'react-redux';
 import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
-
-import styles from './index.module.scss';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
-import { RowSelection, TAB_IDS } from '../../PageContent/utils';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
@@ -260,7 +259,7 @@ const ParticipantsTab = ({
           <Dropdown overlay={menu} placement="bottomLeft">
             <Button>
               <DownloadOutlined />
-              Download clinical data{' '}
+              Download clinical data
             </Button>
           </Dropdown>,
         ],

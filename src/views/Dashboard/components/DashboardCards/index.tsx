@@ -1,11 +1,11 @@
 import { TSortableItems } from "@ferlab/ui/core/layout/SortableGrid/SortableItem";
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import AuthorizedStudies from "./AuthorizedStudies";
 import DataExplorationLinks from "./DataExplorationLinks";
 import cx from "classnames";
 
 import styles from "./index.module.scss";
 import SavedFilters from "./SavedFilters";
+import Cavatica from "./Cavatica";
 
 export interface DashboardCardProps {
   id: string;
@@ -32,7 +32,7 @@ export const dashboardCards: TSortableItems[] = [
     md: 12,
     xxl: 8,
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: <SavedFilters id="2" className={styles.dashboardCard} />,
+    component: <Cavatica id="2" className={styles.dashboardCard} />,
   },
   {
     id: "3",
@@ -40,43 +40,6 @@ export const dashboardCards: TSortableItems[] = [
     md: 12,
     xxl: 8,
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: (
-      <GridCard
-        wrapperClassName={styles.dashboardCard}
-        theme="shade"
-        title={""}
-        content="Content.."
-      />
-    ),
-  },
-  {
-    id: "4",
-    xs: 24,
-    md: 12,
-    xxl: 8,
-    className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: (
-      <GridCard
-        wrapperClassName={styles.dashboardCard}
-        theme="shade"
-        title={""}
-        content="Content.."
-      />
-    ),
-  },
-  {
-    id: "5",
-    xs: 24,
-    md: 12,
-    xxl: 8,
-    className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: (
-      <GridCard
-        wrapperClassName={styles.dashboardCard}
-        theme="shade"
-        title={""}
-        content="Content.."
-      />
-    ),
+    component: <SavedFilters id="3" className={styles.dashboardCard} />,
   },
 ];

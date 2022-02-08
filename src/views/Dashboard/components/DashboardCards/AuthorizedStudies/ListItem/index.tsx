@@ -22,12 +22,12 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
           <div className={styles.filesCount}>
             {intl.get("screen.dashboard.cards.authorizedStudies.authorization")}
             :{" "}
-            <Button className={styles.fileLink} type="text">
-              {data.nbFiles}
+            <Button className={styles.fileLink} type="link">
+              <span>{data.nbFiles}</span>
             </Button>{" "}
             {intl.get("screen.dashboard.cards.authorizedStudies.of")}{" "}
-            <Button className={styles.fileLink} type="text">
-              {data.totalFiles}
+            <Button className={styles.fileLink} type="link">
+              <span>{data.totalFiles}</span>
             </Button>{" "}
             {intl.get("screen.dashboard.cards.authorizedStudies.files")}
           </div>

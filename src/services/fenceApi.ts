@@ -110,17 +110,22 @@ const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {
   return token;
 };
 
-export const getFenceConnection = async (fenceName: FENCE_NAMES) => {
+export const getFenceConnection = async (
+  fenceName: FENCE_NAMES
+): Promise<{ data: any; error: any }> => {
   const token = await fetchTokenThenRefreshIfNeeded(fenceName);
   const { fenceUri } = PROVIDERS[fenceName];
-  const { data } = await sendRequest({
-    url: `${fenceUri}user/user`,
+  const { data, error } = await sendRequest({
+    url: `${fenceUri}/user/user`,
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
 
   /** @namespace data.project_access*/
-  return { ...data, projects: data.project_access }; //Backward compatibility.
+  return {
+    data: { ...data, projects: data.project_access, error },
+    error,
+  }; //Backward compatibility.
 };
 
 /*

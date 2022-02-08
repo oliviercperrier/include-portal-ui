@@ -29,9 +29,14 @@ const fetchFenceConnection = createAsyncThunk<
   { state: RootState }
 >(
   "fence/fetch/connection",
-  async (fenceName) => {
-    const connection = await getFenceConnection(fenceName);
-    return connection;
+  async (fenceName, thunkApi) => {
+    const { data, error } = await getFenceConnection(fenceName);
+
+    if (error) {
+      return thunkApi.rejectWithValue("error");
+    }
+
+    return data;
   },
   {
     condition: (fenceName, { getState }) => {
@@ -53,10 +58,17 @@ const connectFence = createAsyncThunk<any, FENCE_NAMES>(
   async (fenceName, thunkAPI) => {
     try {
       await fenceConnect(fenceName);
-      const connection = await getFenceConnection(fenceName);
-      return connection;
+      const { data, error } = await getFenceConnection(fenceName);
+
+      if (error) {
+        return thunkAPI.rejectWithValue(
+          `An error occured while trying to connect to ${fenceName}`
+        );
+      }
+
+      return data;
     } catch {
-      thunkAPI.rejectWithValue("error");
+      return thunkAPI.rejectWithValue("error");
     }
   }
 );
@@ -67,7 +79,7 @@ const disconnectFence = createAsyncThunk<any, FENCE_NAMES>(
     try {
       await deleteFenceTokens(fenceName);
     } catch {
-      thunkAPI.rejectWithValue("error");
+      return thunkAPI.rejectWithValue("error");
     }
   }
 );

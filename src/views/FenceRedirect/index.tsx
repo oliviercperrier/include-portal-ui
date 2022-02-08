@@ -21,18 +21,16 @@ const FenceRedirect = ({ fence }: OwnProps) => {
     const code = new URLSearchParams(window.location.search).get("code");
     if (code) {
       sendRequest({
-        method: "GET",
+        method: "POST",
         url: `${FENCE_AUTH_TOKENS_URI}?fence=${fence}&code=${code}`,
-      }).then(({ error, data }) => {
+      }).then(({ error }) => {
         if (!error) {
           window.close();
+        } else {
+          console.error(error);
+          window.alert(JSON.stringify(error));
+          window.close();
         }
-
-        console.error(error);
-        window.alert(
-          "Something went wrong, please refresh your window and try again."
-        );
-        window.close();
       });
     } else {
       window.alert(

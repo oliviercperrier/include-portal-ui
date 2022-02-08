@@ -12,6 +12,8 @@ export interface DashboardCardProps {
   className?: string;
 }
 
+// Important do not change the ID
+// Its is used for user config
 export const dashboardCards: TSortableItems[] = [
   {
     id: "0",

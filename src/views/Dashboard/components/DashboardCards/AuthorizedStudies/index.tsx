@@ -1,4 +1,3 @@
-import { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
 import { Button, List, Space } from "antd";
 import intl from "react-intl-universal";
@@ -12,8 +11,8 @@ import CardConnectPlaceholder from "views/Dashboard/components/CardConnectPlaceh
 
 import styles from "./index.module.scss";
 import useFenceConnections from "hooks/useFenceConnection";
-import { connectFence } from "store/fence/thunks";
-import { FENCE_NAMES } from "common/fenceTypes";
+import { connectFence, disconnectFence } from "store/fence/thunks";
+import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from "common/fenceTypes";
 import { useDispatch } from "react-redux";
 
 export interface IListItemData {
@@ -25,9 +24,11 @@ export interface IListItemData {
   groups: string[];
 }
 
+const isGen3Connected = (connectionStatus: any) =>
+  connectionStatus[FENCE_NAMES.gen3] === FENCE_CONNECTION_STATUSES.connected;
+
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   const dispatch = useDispatch();
-  const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
   const { loadingFences, connectionStatus } = useFenceConnections();
 
   const data: IListItemData[] = [
@@ -74,7 +75,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
         <CardHeader
           id={id}
           title={intl.get("screen.dashboard.cards.authorizedStudies.title", {
-            count: isConnected ? data.length : 0,
+            count: isGen3Connected(connectionStatus) ? data.length : 0,
           })}
           infoPopover={{
             title: intl.get(
@@ -108,7 +109,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       }
       content={
         <div className={styles.authorizedWrapper}>
-          {isConnected && (
+          {isGen3Connected(connectionStatus) && (
             <Space
               className={styles.authenticatedHeader}
               direction="horizontal"
@@ -124,7 +125,8 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                     size="small"
                     danger
                     icon={<DisconnectOutlined />}
-                    onClick={() => setIsConnected(false)}
+                    loading={loadingFences.includes(FENCE_NAMES.gen3)}
+                    onClick={() => dispatch(disconnectFence(FENCE_NAMES.gen3))}
                     className={styles.disconnectBtn}
                   >
                     {intl.get(
@@ -140,7 +142,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
             bordered
             itemLayout="vertical"
             locale={{
-              emptyText: isConnected ? (
+              emptyText: isGen3Connected(connectionStatus) ? (
                 <Empty
                   imageType="grid"
                   description={intl.get(
@@ -160,7 +162,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                 />
               ),
             }}
-            dataSource={isConnected ? data : []} // just for testing before implementing real data
+            dataSource={isGen3Connected(connectionStatus) ? data : []} // just for testing before implementing real data
             renderItem={(item) => (
               <AuthorizedStudiesListItem id={item.key} data={item} />
             )}

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Button, List, Popover, Space } from "antd";
+import { Button, List, Space } from "antd";
 import intl from "react-intl-universal";
 import {
   DisconnectOutlined,
-  InfoCircleOutlined,
   PlusOutlined,
   SafetyOutlined,
 } from "@ant-design/icons";
@@ -65,36 +64,36 @@ const Cavatica = ({ id, className = "" }: DashboardCardProps) => {
           title={intl.get("screen.dashboard.cards.cavatica.title", {
             count: isConnected ? data.length : 0,
           })}
-          extra={[
-            <Popover
-              title={intl.get(
-                "screen.dashboard.cards.cavatica.infoPopover.title"
-              )}
-              overlayClassName={styles.cavaticaInfoPopover}
-              content={
-                <Space direction="vertical" className={styles.content} size={0}>
-                  <Text>
-                    {intl.get(
-                      "screen.dashboard.cards.cavatica.infoPopover.content"
-                    )}
-                  </Text>
+          infoPopover={{
+            title: intl.get(
+              "screen.dashboard.cards.cavatica.infoPopover.title"
+            ),
+            overlayClassName: styles.cavaticaInfoPopover,
+            content: (
+              <Space direction="vertical" className={styles.content} size={0}>
+                <Text>
+                  {intl.get(
+                    "screen.dashboard.cards.cavatica.infoPopover.content"
+                  )}{" "}
                   <a
                     href="https://www.cavatica.org/"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Button type="link" className={styles.readMoreBtn}>
+                    <Button
+                      type="link"
+                      size="small"
+                      className={styles.readMoreBtn}
+                    >
                       {intl.get(
                         "screen.dashboard.cards.cavatica.infoPopover.readMore"
                       )}
                     </Button>
                   </a>
-                </Space>
-              }
-            >
-              <InfoCircleOutlined className={styles.cavaticaInfoIcon} />
-            </Popover>,
-          ]}
+                </Text>
+              </Space>
+            ),
+          }}
           withHandle
         />
       }
@@ -105,20 +104,22 @@ const Cavatica = ({ id, className = "" }: DashboardCardProps) => {
               className={styles.authenticatedHeader}
               direction="horizontal"
             >
-              <SafetyOutlined className={styles.safetyIcon} />
-              <Text className={styles.notice}>
-                {intl.get("screen.dashboard.cards.cavatica.connectedNotice")}
-              </Text>
-              <Button
-                type="link"
-                size="small"
-                danger
-                icon={<DisconnectOutlined />}
-                onClick={() => setIsConnected(false)}
-                className={styles.disconnectBtn}
-              >
-                {intl.get("screen.dashboard.cards.cavatica.disconnect")}
-              </Button>
+              <Space align="start">
+                <SafetyOutlined className={styles.safetyIcon} />
+                <Text className={styles.notice}>
+                  {intl.get("screen.dashboard.cards.cavatica.connectedNotice")}{" "}
+                  <Button
+                    type="link"
+                    size="small"
+                    danger
+                    icon={<DisconnectOutlined />}
+                    onClick={() => setIsConnected(false)}
+                    className={styles.disconnectBtn}
+                  >
+                    {intl.get("screen.dashboard.cards.cavatica.disconnect")}
+                  </Button>
+                </Text>
+              </Space>
             </Space>
           )}
           <List<IListItemData>

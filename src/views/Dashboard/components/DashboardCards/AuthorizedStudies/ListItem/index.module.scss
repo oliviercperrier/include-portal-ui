@@ -19,6 +19,10 @@
 
   .itemMeta {
     margin-bottom: 2px;
+
+    *[class$="-meta-title"] {
+      font-size: 14px;
+    }
   }
 
   .progress {

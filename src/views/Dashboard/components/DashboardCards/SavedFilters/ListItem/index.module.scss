@@ -12,6 +12,14 @@
     }
   }
 
+  .itemMeta {
+    margin-bottom: 0px;
+
+    *[class$="-meta-description"] {
+      color: $gray-7;
+    }
+  }
+
   .editFilterAction {
     &:hover,
     &:focus {

@@ -63,7 +63,7 @@ export const fenceConnect = async (fence: FENCE_NAMES) => {
   const { fenceUri } = PROVIDERS[fence];
   const scope = getScope(fence);
   // eslint-disable-next-line max-len
-  const url = `${fenceUri}user/oauth2/authorize?client_id=${clientId}&response_type=${RESPONSE_TYPE}&scope=${scope}&redirect_uri=${redirectUri}&idp=${IDP}`;
+  const url = `${fenceUri}/user/oauth2/authorize?client_id=${clientId}&response_type=${RESPONSE_TYPE}&scope=${scope}&redirect_uri=${redirectUri}&idp=${IDP}`;
   const authWindow = window.open(url)!;
   return new Promise((resolve, reject) => {
     const interval = setInterval(async () => {

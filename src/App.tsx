@@ -25,6 +25,8 @@ import { LANG } from "common/constants";
 import frFR from "antd/lib/locale/fr_FR";
 import enUS from "antd/lib/locale/en_US";
 import ErrorBoundary from "components/ErrorBoundary";
+import FenceRedirect from "views/FenceRedirect";
+import { FENCE_NAMES } from "common/fenceTypes";
 
 const loadableProps = { fallback: <Spinner size="large" /> };
 const Dashboard = loadable(() => import("views/Dashboard"), loadableProps);
@@ -52,6 +54,16 @@ const App = () => {
           <Authenticator>
             <Router history={history}>
               <Switch>
+                <Route
+                  path={STATIC_ROUTES.GEN3_REDIRECT}
+                  exact
+                  render={() => <FenceRedirect fence={FENCE_NAMES.gen3} />}
+                />
+                <Route
+                  path={STATIC_ROUTES.DCF_REDIRECT}
+                  exact
+                  render={() => <FenceRedirect fence={FENCE_NAMES.dcf} />}
+                />
                 <Route exact path={STATIC_ROUTES.LOGIN}>
                   <SideImageLayout sideImgSrc={MainSideImage}>
                     <Login />

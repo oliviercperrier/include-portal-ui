@@ -5,10 +5,15 @@
     padding: 0;
     height: unset;
     color: $gray-8;
-    text-decoration: underline;
-    &:hover {
-      color: $gray-8;
-      text-decoration: none;
+  }
+
+  &:hover {
+    .filterLink {
+      text-decoration: underline;
+      &:hover {
+        color: $gray-8;
+        text-decoration: none;
+      }
     }
   }
 

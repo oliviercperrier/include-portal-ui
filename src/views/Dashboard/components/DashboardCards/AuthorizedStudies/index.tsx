@@ -8,12 +8,13 @@ import Text from "antd/lib/typography/Text";
 import AuthorizedStudiesListItem from "./ListItem";
 import Empty from "@ferlab/ui/core/components/Empty";
 import CardConnectPlaceholder from "views/Dashboard/components/CardConnectPlaceholder";
-
-import styles from "./index.module.scss";
 import useFenceConnections from "hooks/useFenceConnection";
 import { connectFence, disconnectFence } from "store/fence/thunks";
-import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from "common/fenceTypes";
+import { FENCE_NAMES } from "common/fenceTypes";
 import { useDispatch } from "react-redux";
+import { isEmpty } from "lodash";
+
+import styles from "./index.module.scss";
 
 export interface IListItemData {
   key: any;
@@ -24,12 +25,9 @@ export interface IListItemData {
   groups: string[];
 }
 
-const isGen3Connected = (connectionStatus: any) =>
-  connectionStatus[FENCE_NAMES.gen3] === FENCE_CONNECTION_STATUSES.connected;
-
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
   const dispatch = useDispatch();
-  const { loadingFences, connectionStatus } = useFenceConnections();
+  const { loadingFences, fenceConnections } = useFenceConnections();
 
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
@@ -75,7 +73,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
         <CardHeader
           id={id}
           title={intl.get("screen.dashboard.cards.authorizedStudies.title", {
-            count: isGen3Connected(connectionStatus) ? data.length : 0,
+            count: isEmpty(fenceConnections) ? 0 : data.length,
           })}
           infoPopover={{
             title: intl.get(
@@ -109,7 +107,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       }
       content={
         <div className={styles.authorizedWrapper}>
-          {isGen3Connected(connectionStatus) && (
+          {!isEmpty(fenceConnections) && (
             <Space
               className={styles.authenticatedHeader}
               direction="horizontal"
@@ -142,7 +140,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
             bordered
             itemLayout="vertical"
             locale={{
-              emptyText: isGen3Connected(connectionStatus) ? (
+              emptyText: !isEmpty(fenceConnections) ? (
                 <Empty
                   imageType="grid"
                   description={intl.get(
@@ -162,7 +160,7 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                 />
               ),
             }}
-            dataSource={isGen3Connected(connectionStatus) ? data : []} // just for testing before implementing real data
+            dataSource={isEmpty(fenceConnections) ? [] : data} // just for testing before implementing real data
             renderItem={(item) => (
               <AuthorizedStudiesListItem id={item.key} data={item} />
             )}

@@ -21,3 +21,32 @@ export type RowSelection = {
   onAllRowSelection: (selectedRowKeys: Key[], type: TAB_IDS, selected: boolean) => void;
   allRowSelected: boolean;
 };
+
+export const generateSelectionSqon = (type: string, ids: Key[]) => {
+  let field;
+
+  switch (type) {
+    case TAB_IDS.BIOSPECIMENS:
+      field = 'files.biospecimens.biospecimen_id';
+      break;
+    case TAB_IDS.DATA_FILES:
+      field = 'files.file_id';
+      break;
+    default:
+      field = 'participant_id';
+      break;
+  }
+
+  return {
+    op: 'and',
+    content: [
+      {
+        op: 'in',
+        content: {
+          field,
+          value: ids,
+        },
+      },
+    ],
+  };
+};

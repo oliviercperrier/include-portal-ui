@@ -1,42 +1,52 @@
 import QueryBuilder from '@ferlab/ui/core/components/QueryBuilder';
-import {ExperimentOutlined, FileTextOutlined, PieChartOutlined, UserOutlined,} from '@ant-design/icons';
-import history from 'utils/history';
-import {DATA_EXPLORATION_REPO_CACHE_KEY} from 'views/DataExploration/utils/constant';
-import intl from 'react-intl-universal';
-import {ExtendedMapping, ExtendedMappingResults} from 'graphql/models';
-import {getQueryBuilderCache, useFilters} from '@ferlab/ui/core/data/filters/utils';
-import {STATIC_ROUTES} from 'utils/routes';
-import {getQueryBuilderDictionary} from 'utils/translation';
-import {Space, Tabs} from 'antd';
 import {
-    combineExtendedMappings,
-    mapFilterForBiospecimen,
-    mapFilterForFiles,
-    mapFilterForParticipant,
+  ExperimentOutlined,
+  FileTextOutlined,
+  PieChartOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import history from 'utils/history';
+import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
+import intl from 'react-intl-universal';
+import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
+import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
+import { STATIC_ROUTES } from 'utils/routes';
+import { getQueryBuilderDictionary } from 'utils/translation';
+import { Space, Tabs } from 'antd';
+import {
+  combineExtendedMappings,
+  mapFilterForBiospecimen,
+  mapFilterForFiles,
+  mapFilterForParticipant,
 } from 'views/DataExploration/utils/mapper';
-import {resolveSyntheticSqon} from '@ferlab/ui/core/data/sqon/utils';
-import {useParticipants} from 'graphql/participants/actions';
-import {useDataFiles} from 'graphql/files/actions';
-import {useBiospecimen} from 'graphql/biospecimens/actions';
+import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
+import { useParticipants } from 'graphql/participants/actions';
+import { useDataFiles } from 'graphql/files/actions';
+import { useBiospecimen } from 'graphql/biospecimens/actions';
 import SummaryTab from 'views/DataExploration/components/tabs/Summary';
 import BiospecimensTab from 'views/DataExploration/components/tabs/Biospecimens';
 import DataFilesTabs from 'views/DataExploration/components/tabs/DataFiles';
 import ParticipantsTab from 'views/DataExploration/components/tabs/Participants';
-import {Key, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { Key, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
-    createSavedFilter,
-    deleteSavedFilter,
-    fetchSavedFilters,
-    setSavedFilterAsDefault,
-    updateSavedFilter,
+  createSavedFilter,
+  deleteSavedFilter,
+  fetchSavedFilters,
+  setSavedFilterAsDefault,
+  updateSavedFilter,
 } from 'store/savedFilter/thunks';
-import {useSavedFilter} from 'store/savedFilter';
+import { useSavedFilter } from 'store/savedFilter';
 
 import styles from './index.module.scss';
-import {fetchReport} from 'store/report/thunks';
-import {ReportType} from 'services/api/reports/models';
-import {DATA_EPLORATION_FILTER_TAG, DEFAULT_PAGING_CONFIG, TAB_IDS} from './types';
+import { fetchReport } from 'store/report/thunks';
+import { ReportType } from 'services/api/reports/models';
+import {
+  DATA_EPLORATION_FILTER_TAG,
+  DEFAULT_PAGING_CONFIG,
+  generateSelectionSqon,
+  TAB_IDS,
+} from './utils';
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -123,10 +133,17 @@ const PageContent = ({
   };
 
   const handleDownloadReport = async (reportName: string) => {
-    const sqon =
-      reportName === ReportType.BIOSEPCIMEN_DATA
-        ? biospecimenResolvedSqon
-        : participantResolvedSqon;
+    let sqon;
+    if (selectAll || !selectedRows.length) {
+      sqon =
+        reportName === ReportType.BIOSEPCIMEN_DATA
+          ? biospecimenResolvedSqon
+          : participantResolvedSqon;
+    } else {
+      sqon = generateSelectionSqon(selectType, selectedRows);
+    }
+
+    console.log(sqon, 'SQON');
 
     dispatch(
       fetchReport({
@@ -137,8 +154,6 @@ const PageContent = ({
       }),
     );
   };
-
-  console.log(selectedRows, 'selectedRows');
 
   return (
     <Space direction="vertical" size={24} className={styles.dataExplorePageContent}>
@@ -260,10 +275,10 @@ const PageContent = ({
             setPagingConfig={setPagingConfigFile}
             pagingConfig={pagingConfigFile}
             rowSelection={{
-                selectedRows: selectedRows,
-                onRowSelection: onRowSelection,
-                onAllRowSelection: onAllRowSelection,
-                allRowSelected: selectAll,
+              selectedRows: selectedRows,
+              onRowSelection: onRowSelection,
+              onAllRowSelection: onAllRowSelection,
+              allRowSelected: selectAll,
             }}
           />
         </Tabs.TabPane>

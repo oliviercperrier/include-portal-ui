@@ -12,7 +12,7 @@ import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
 
 import styles from './index.module.scss';
-import { RowSelection, TAB_IDS } from '../../PageContent/types';
+import { RowSelection, TAB_IDS } from '../../PageContent/utils';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -149,7 +149,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, rowSelection }: 
           }
         },
       }}
-      dataSource={results.data}
+      dataSource={results.data.map((i) => ({ ...i, key: i.file_id }))}
       dictionary={getProTableDictionary()}
     />
   );

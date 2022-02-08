@@ -20,7 +20,7 @@ import {
 } from './utils/mapper';
 
 import styles from './index.module.scss';
-import { TAB_IDS } from './components/PageContent/types';
+import { TAB_IDS } from './components/PageContent/utils';
 
 interface OwnProps {
   tab?: string;

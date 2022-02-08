@@ -16,7 +16,7 @@ import styles from './index.module.scss';
 import { Button } from 'antd';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
-import { RowSelection, TAB_IDS } from '../../PageContent/types';
+import { RowSelection, TAB_IDS } from '../../PageContent/utils';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -191,7 +191,7 @@ const BioSpecimenTab = ({
           }
         },
       }}
-      // dataSource={results.data.map((i) => ({ ...i, key: i.biospecimen_id }))} //FIXME missing the ids from data
+      // dataSource={results.data.map((i) => ({ ...i, key: i.biospecimen_id }))} //FIXME missing biospecimen_id from data
       dataSource={results.data}
       dictionary={getProTableDictionary()}
     />

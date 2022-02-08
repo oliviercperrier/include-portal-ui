@@ -23,7 +23,7 @@ import { useUser } from 'store/user';
 import styles from './index.module.scss';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
-import { RowSelection, TAB_IDS } from '../../PageContent/types';
+import { RowSelection, TAB_IDS } from '../../PageContent/utils';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;

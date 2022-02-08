@@ -41,6 +41,7 @@ const generateReport = (config: ReportConfig) => {
     // @ts-ignore
     url: REPORTS_ROUTES[name],
     method: "POST",
+    responseType: 'blob',
     data: {
       sqon: reportSqon,
       projectId: arrangerProjectId,

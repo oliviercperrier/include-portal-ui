@@ -21,6 +21,7 @@ export interface IListItemData {
   key: any;
   title: string;
   nbMember: number;
+  projectUrl: string;
 }
 
 const Cavatica = ({ id, className = "" }: DashboardCardProps) => {
@@ -31,26 +32,31 @@ const Cavatica = ({ id, className = "" }: DashboardCardProps) => {
       key: "1",
       title: "PNOC008-Annovar-Annotation",
       nbMember: 1,
+      projectUrl: "https://google.com"
     },
     {
       key: "2",
       title: "Project Title",
       nbMember: 7,
+      projectUrl: "https://google.com"
     },
     {
       key: "3",
       title: "Project Title",
       nbMember: 2,
+      projectUrl: "https://google.com"
     },
     {
       key: "4",
       title: "Project Title",
       nbMember: 9,
+      projectUrl: "https://google.com"
     },
     {
       key: "5",
       title: "Project Title",
       nbMember: 3,
+      projectUrl: "https://google.com"
     },
   ];
 

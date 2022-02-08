@@ -1,32 +1,37 @@
+import ProTable from "@ferlab/ui/core/components/ProTable";
 import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Space, Table, Typography } from "antd";
-import { ColumnsType } from "antd/lib/table";
-import TableHeader from "components/uiKit/table/TableHeader";
+import { Space, Typography } from "antd";
+import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
 import { useStudies } from "graphql/studies/actions";
 import ApolloProvider from "provider/ApolloProvider";
 import { GraphqlBackend } from "provider/types";
+import { getProTableDictionary } from "utils/translation";
 
 import styles from "./index.module.scss";
 
 const { Title } = Typography;
 
-const columns: ColumnsType<any> = [
+const columns: ProColumnType<any>[] = [
   {
+    key: "study_id",
     title: "Study Code",
     dataIndex: "study_id",
   },
   {
+    key: "study_name",
     title: "Name",
     dataIndex: "study_name",
   },
   {
+    key: "program",
     title: "Program",
     dataIndex: "program",
   },
   {
+    key: "external_id",
     title: "dbGaP",
     dataIndex: "external_id",
-    render: (external_id) => (
+    render: (external_id: string) => (
       <a
         target="_blank"
         rel="noreferrer"
@@ -37,21 +42,29 @@ const columns: ColumnsType<any> = [
     ),
   },
   {
+    key: "participant_count",
     title: "Participants",
+    dataIndex: "participant_count",
   },
   {
+    key: "family_count",
     title: "Families",
+    dataIndex: "family_count",
   },
   {
+    key: "genomic",
     title: "Genomic",
   },
   {
+    key: "proteomic",
     title: "Proteomic",
   },
   {
+    key: "immune_map",
     title: "Immune Map",
   },
   {
+    key: "metabolic",
     title: "Metabolomic",
   },
 ];
@@ -60,21 +73,31 @@ const Studies = () => {
   const { loading, data, total } = useStudies();
 
   return (
-    <Space direction="vertical" className={styles.studiesWrapper}>
-      <Title level={3}>Studies</Title>
+    <Space direction="vertical" size={16} className={styles.studiesWrapper}>
+      <Title className={styles.title} level={4}>
+        Studies
+      </Title>
       <GridCard
         content={
-          <Space size={12} direction="vertical" className={styles.tableWrapper}>
-            <TableHeader pageIndex={1} pageSize={15} total={total} />
-            <Table
-              size="small"
-              bordered
-              columns={columns}
-              dataSource={data}
-              loading={loading}
-              pagination={false}
-            ></Table>
-          </Space>
+          <ProTable
+            tableId="studies"
+            wrapperClassName={styles.tableWrapper}
+            size="small"
+            bordered
+            columns={columns}
+            dataSource={data}
+            loading={loading}
+            pagination={false}
+            headerConfig={{
+              columnSetting: false,
+              itemCount: {
+                pageIndex: 1,
+                pageSize: 20,
+                total,
+              },
+            }}
+            dictionary={getProTableDictionary()}
+          />
         }
       ></GridCard>
     </Space>

@@ -17,7 +17,7 @@ const BANNER_TYPE_KEY = FT_FLAG_KEY + "_TYPE";
 const BANNER_MSG_KEY = FT_FLAG_KEY + "_MSG";
 
 const Dashboard = () => {
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
   return (
     <Space direction="vertical" size={24} className={styles.dashboardWrapper}>
@@ -30,7 +30,7 @@ const Dashboard = () => {
           showIcon
         />
         <Title level={4} className={styles.greeting}>
-          {intl.get("screen.dashboard.hello")}, {user?.first_name}
+          {intl.get("screen.dashboard.hello")}, {userInfo?.first_name}
         </Title>
         <DataReleaseCard />
       </Space>

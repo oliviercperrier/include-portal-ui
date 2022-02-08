@@ -1,0 +1,29 @@
+@import "colors";
+
+.SavedFiltersListItem {
+  .filterLink {
+    padding: 0;
+    height: unset;
+    color: $gray-8;
+    text-decoration: underline;
+    &:hover {
+      color: $gray-8;
+      text-decoration: none;
+    }
+  }
+
+  .editFilterAction {
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+}
+
+.filterEditFormItem {
+  margin: 0;
+
+  div[class$="-explain-connected"] {
+    display: none;
+  }
+}

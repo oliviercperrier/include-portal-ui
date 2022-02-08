@@ -1,0 +1,14 @@
+@import 'colors';
+
+.suggesterTitleWrapper {
+  margin-bottom: 2px;
+  .searchTitle {
+    margin: 0;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 22px;
+  }
+  .searchIconsDisabled {
+    color: $gray-7;
+  }
+}

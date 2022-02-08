@@ -21,13 +21,13 @@ import { GraphqlBackend } from "provider/types";
 import useGetExtendedMappings from "hooks/graphql/useGetExtendedMappings";
 import { INDEXES } from "graphql/constants";
 import { useParams } from "react-router";
-
-import styles from "./index.module.scss";
 import {
   mapFilterForBiospecimen,
   mapFilterForFiles,
   mapFilterForParticipant,
 } from "./utils/mapper";
+
+import styles from "./index.module.scss";
 
 interface OwnProps {
   tab?: string;
@@ -43,6 +43,12 @@ export const filterGroups: {
   [type: string]: FilterInfo;
 } = {
   [FilterTypes.Participant]: {
+    //suggester: {
+    //  title: () => "Participant ID",
+    //  placeholder: () => "PT_0002D5K3",
+    //  suggestionType: SUGGESTION_TYPES.PARTICIPANT,
+    //  tooltipTitle: () => "Enter a participant ID",
+    //},
     groups: [
       {
         fields: [
@@ -61,6 +67,12 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Biospecimen]: {
+    //suggester: {
+    //  title: () => "Biospecimen ID",
+    //  placeholder: () => "DS02_Q1EE22NN",
+    //  suggestionType: SUGGESTION_TYPES.BIOSPECIMEN,
+    //  tooltipTitle: () => "Enter a biospecimen ID",
+    //},
     groups: [
       {
         fields: [
@@ -75,6 +87,12 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Datafiles]: {
+    //suggester: {
+    //  title: () => "File ID",
+    //  placeholder: () => "GF_007F1GDE",
+    //  suggestionType: SUGGESTION_TYPES.FILE,
+    //  tooltipTitle: () => "Enter a file ID",
+    //},
     groups: [
       {
         fields: [

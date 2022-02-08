@@ -4,4 +4,12 @@
     :global(.ant-pagination) {
         margin-bottom: 0;
     }
+
+    .diagnosisCell, .phenotypeCell {
+        min-width: 300px;
+    }
+
+    .studyIdCell {
+        min-width: 85px
+    }
 }

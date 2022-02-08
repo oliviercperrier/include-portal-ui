@@ -2,12 +2,9 @@
 import { PageHeader, Dropdown, Button, Menu } from "antd";
 import IncludeIcon from "components/Icons/IncludeIcon";
 import {
-  ExperimentOutlined,
-  UserOutlined,
   ReadOutlined,
   HomeOutlined,
   FileSearchOutlined,
-  FileTextOutlined,
 } from "@ant-design/icons";
 import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";
 import { DownOutlined } from "@ant-design/icons";
@@ -34,7 +31,7 @@ const BANNER_TYPE_KEY = FT_FLAG_KEY + "_TYPE";
 const BANNER_MSG_KEY = FT_FLAG_KEY + "_MSG";
 
 const Header = () => {
-  const { user } = useUser();
+  const { userInfo } = useUser();
   const dispatch = useDispatch();
   const { keycloak } = useKeycloak();
   const currentPathName = history.location.pathname;
@@ -70,27 +67,12 @@ const Header = () => {
               to={[
                 STATIC_ROUTES.DATA_EXPLORATION,
                 STATIC_ROUTES.DATA_EXPLORATION_SUMMARY,
+                STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+                STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
+                STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
               ]}
               icon={<FileSearchOutlined />}
               title={intl.get("layout.main.menu.explore")}
-            />
-            <HeaderLink
-              currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
-              icon={<UserOutlined />}
-              title={intl.get("layout.main.menu.participants")}
-            />
-            <HeaderLink
-              currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
-              icon={<ExperimentOutlined />}
-              title={intl.get("layout.main.menu.biospecimen")}
-            />
-            <HeaderLink
-              currentPathName={currentPathName}
-              to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
-              icon={<FileTextOutlined />}
-              title={intl.get("layout.main.menu.datafiles")}
             />
           </nav>
         }
@@ -136,7 +118,7 @@ const Header = () => {
                 }
                 size={100}
               />
-              <span className={style.userName}>{user?.first_name}</span>
+              <span className={style.userName}>{userInfo?.first_name}</span>
               <DownOutlined />
             </a>
           </Dropdown>,

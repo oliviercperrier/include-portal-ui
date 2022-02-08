@@ -8,10 +8,7 @@
       padding: 0;
       height: unset;
       font-size: 12px;
-      text-decoration: underline;
-      &:hover {
-        text-decoration: none;
-      }
+      color: $gray-8;
     }
   }
 

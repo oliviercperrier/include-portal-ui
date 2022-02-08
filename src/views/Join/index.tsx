@@ -8,9 +8,9 @@ import { STATIC_ROUTES } from "utils/routes";
 import styles from "./index.module.scss";
 
 const JoinPage = () => {
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
-  if (user?.completed_registration) {
+  if (userInfo?.completed_registration) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }
 
@@ -31,7 +31,7 @@ const JoinPage = () => {
           <Redirect
             from="*"
             to={
-              user?.accepted_terms && user.understand_disclaimer
+              userInfo?.accepted_terms && userInfo.understand_disclaimer
                 ? STATIC_ROUTES.JOIN_REGISTRATION
                 : STATIC_ROUTES.JOIN_TERMS
             }

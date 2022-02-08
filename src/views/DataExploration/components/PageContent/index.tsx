@@ -30,12 +30,20 @@ import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
 import { useParticipants } from "graphql/participants/actions";
 import { useDataFiles } from "graphql/files/actions";
 import { useBiospecimen } from "graphql/biospecimens/actions";
-
 import SummaryTab from "views/DataExploration/components/tabs/Summary";
 import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
 import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
 import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  createSavedFilter,
+  deleteSavedFilter,
+  fetchSavedFilters,
+  setSavedFilterAsDefault,
+  updateSavedFilter,
+} from "store/savedFilter/thunks";
+import { useSavedFilter } from "store/savedFilter";
 
 import styles from "./index.module.scss";
 
@@ -45,6 +53,8 @@ interface OwnProps {
   participantMapping: ExtendedMappingResults;
   tabId?: string;
 }
+
+const DATA_EPLORATION_FILTER_TAG = "data-exploration";
 
 export enum TAB_IDS {
   SUMMARY = "summary",
@@ -64,6 +74,10 @@ const PageContent = ({
   participantMapping,
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
+  const dispatch = useDispatch();
+  const { savedFilters, defaultFilter } = useSavedFilter(
+    DATA_EPLORATION_FILTER_TAG
+  );
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
@@ -76,10 +90,15 @@ const PageContent = ({
     DEFAULT_PAGING_CONFIG
   );
 
+  const participantResolvedSqon = resolveSyntheticSqon(
+    allSqons,
+    mapFilterForParticipant(filters)
+  );
+
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
     offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
-    sqon: resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters)),
+    sqon: participantResolvedSqon,
     sort: [],
   });
 
@@ -96,6 +115,11 @@ const PageContent = ({
     sqon: resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters)),
     sort: [],
   });
+
+  useEffect(() => {
+    dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
+    // eslint-disable-next-line
+  }, []);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
@@ -126,9 +150,21 @@ const PageContent = ({
           options: {
             enableEditTitle: true,
             enableDuplicate: true,
+            enableFavoriteFilter: true,
           },
-          savedFilters: [],
-          onSaveFilter: () => {},
+          selectedSavedFilter: defaultFilter,
+          savedFilters: savedFilters,
+          onUpdateFilter: (filter) => dispatch(updateSavedFilter(filter)),
+          onSaveFilter: (filter) =>
+            dispatch(
+              createSavedFilter({
+                ...filter,
+                tag: DATA_EPLORATION_FILTER_TAG,
+              })
+            ),
+          onDeleteFilter: (id) => dispatch(deleteSavedFilter(id)),
+          onSetAsFavorite: (filter) =>
+            dispatch(setSavedFilterAsDefault(filter)),
         }}
         enableCombine
         enableShowHideLabels
@@ -159,18 +195,18 @@ const PageContent = ({
           tab={
             <span>
               <PieChartOutlined />
-              {intl.get("screen.dataExploration.tabs.summary")}
+              {intl.get("screen.dataExploration.tabs.summary.title")}
             </span>
           }
           key={TAB_IDS.SUMMARY}
         >
-          <SummaryTab />
+          <SummaryTab sqon={participantResolvedSqon} />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab={
             <span>
               <UserOutlined />
-              {intl.get("screen.dataExploration.tabs.participants", {
+              {intl.get("screen.dataExploration.tabs.participants.title", {
                 count: participantResults.total,
               })}
             </span>
@@ -187,7 +223,7 @@ const PageContent = ({
           tab={
             <span>
               <ExperimentOutlined />
-              {intl.get("screen.dataExploration.tabs.biospecimens", {
+              {intl.get("screen.dataExploration.tabs.biospecimens.title", {
                 count: biospecimenResults.total,
               })}
             </span>
@@ -204,7 +240,7 @@ const PageContent = ({
           tab={
             <span>
               <FileTextOutlined />
-              {intl.get("screen.dataExploration.tabs.datafiles", {
+              {intl.get("screen.dataExploration.tabs.datafiles.title", {
                 count: fileResults.total,
               })}
             </span>

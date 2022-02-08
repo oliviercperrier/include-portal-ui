@@ -1,10 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState } from "store/user/types";
 import keycloak from "auth/keycloak-api/keycloak";
-import { completeRegistration, fetchUser, updateUser } from "store/user/thunks";
+import {
+  completeRegistration,
+  fetchUser,
+  updateUser,
+  updateUserConfig,
+} from "store/user/thunks";
 
 export const UserState: initialState = {
-  user: null,
+  userInfo: null,
   isLoading: true,
   isUpdating: false,
 };
@@ -33,8 +38,7 @@ const userSlice = createSlice({
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: action.payload,
+      userInfo: action.payload,
       isLoading: false,
     }));
     builder.addCase(fetchUser.rejected, (state, action) => ({
@@ -49,8 +53,7 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUser.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: action.payload,
+      userInfo: action.payload,
       isUpdating: false,
     }));
     builder.addCase(updateUser.rejected, (state, action) => ({
@@ -58,21 +61,32 @@ const userSlice = createSlice({
       error: action.payload,
       isUpdating: false,
     }));
-    // Update User
+    // Complete Registration
     builder.addCase(completeRegistration.pending, (state) => {
       state.isUpdating = true;
       state.error = undefined;
     });
     builder.addCase(completeRegistration.fulfilled, (state, action) => ({
       ...state,
-      error: undefined,
-      user: action.payload,
+      userInfo: action.payload,
       isUpdating: false,
     }));
     builder.addCase(completeRegistration.rejected, (state, action) => ({
       ...state,
       error: action.payload,
       isUpdating: false,
+    }));
+    // Update User Config
+    builder.addCase(updateUserConfig.fulfilled, (state, action) => ({
+      ...state,
+      userInfo: {
+        ...state.userInfo!,
+        config: action.payload,
+      },
+    }));
+    builder.addCase(updateUserConfig.rejected, (state, action) => ({
+      ...state,
+      error: action.payload,
     }));
   },
 });

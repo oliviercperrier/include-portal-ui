@@ -39,6 +39,24 @@ const en = {
       403: "Sorry, you are not authorized to access this page.",
       404: "Sorry, the page you visited does not exist.",
       500: "Sorry, something went wrong.",
+      backHome: "Back home"
+    },
+    notification: {
+      genericError: "An error occured",
+    },
+    proTable: {
+      results: "Results",
+      noResults: "No Results",
+      of: "of",
+    },
+  },
+  // API
+  riff: {
+    error: {
+      title: "Error",
+      fetchUser: "Unable to fetch Riff user",
+      saveFilter: "Unable to save filter",
+      deleteFilter: "Unable to delete filter",
     },
   },
   // COMPONENTS
@@ -55,16 +73,23 @@ const en = {
           "Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>",
       },
     },
+    suggester: {
+      error: {
+        title: "Error",
+        description: "An error occurred while fetching suggestions",
+      },
+      noResultsFound: "No results found",
+    },
     querybuilder: {
       header: {
         modal: {
           edit: {
-            title: "Save this query",
+            title: "Save this filter",
             okText: "Save",
             cancelText: "Cancel",
             input: {
-              label: "Query name",
-              placeholder: "Untitled query",
+              label: "Filter name",
+              placeholder: "Untitled filter",
               maximumLength: "characters maximum",
             },
           },
@@ -86,17 +111,19 @@ const en = {
         },
         popupConfirm: {
           delete: {
-            title: "Permanently delete this request?",
-            okText: "Delete",
+            title: "Permanently delete this filter?",
+            okText: "Delete filter",
             cancelText: "Cancel",
+            content:
+              "You are about to permanently delete this filter and all of its queries.",
           },
         },
         tooltips: {
-          newQueryBuilder: "New query builder",
+          newQueryBuilder: "New filter",
           save: "Save filter",
           saveChanges: "Save changes",
           delete: "Delete",
-          duplicateQueryBuilder: "Duplicate query builder",
+          duplicateQueryBuilder: "Duplicate filter",
           share: "Share (Copy url)",
           setAsDefaultFilter: "Set as default filter",
           usetDefaultFilter: "Unset default filter",
@@ -113,7 +140,7 @@ const en = {
           and: "And",
           or: "Or",
         },
-        noQuery: "Use the filters to build a query",
+        noQuery: "Use the facets on the left to build a query",
       },
       actions: {
         new: "New",
@@ -197,13 +224,12 @@ const en = {
       },
       cards: {
         authorizedStudies: {
-          title: "Authorized Studies",
+          title: "Authorized Studies {count, plural, =0 {} other {(#)}}",
           headerBtn: "Data access",
           connectedNotice:
-            "Your account is connected. You have access to all released INLCUDE controlled data.",
+            "You have access to all released INLCUDE controlled data through your NIH credentials.",
           disconnectedNotice:
             "Access all released INCLUDE controlled data by connecting your account using your NIH credentials.",
-          connect: "Connect",
           disconnect: "Disconnect",
           noAvailableStudies: "No available studies",
           authorization: "Authorization",
@@ -211,11 +237,34 @@ const en = {
           files: "Files",
           dataGroups: "Data use groups: {groups}",
         },
+        cavatica: {
+          title: "Cavatica Projects",
+          connectedNotice: "You are connected the Cavatica cloud environment.",
+          disconnectedNotice:
+            "To analyze INCLUDE data on the cloud, connect to Cavatica.",
+          disconnect: "Disconnect",
+          noProjects: "You do not have any Cavatica projects.",
+          createNewProject: "Create your first project",
+          membersCount:
+            "{count, plural, =0 {member} =1 {# member} other {# members}}",
+          infoPopover: {
+            title: "CAVATICA compute cloud platform",
+            content:
+              "CAVATICA is a cloud-based data analysis platform where data, results, and workflows are shared among the world’s research community.",
+            readMore: "Read more",
+          },
+          newProject: "New projet"
+        },
+        savedFilters: {
+          title: "Saved Filters",
+          noSavedFilters: "You have no saved filters",
+          lastSaved: "Last saved: {date}",
+        },
       },
     },
     dataExploration: {
       queryBuilder: {
-        defaultTitle: "My Queries"
+        defaultTitle: "Untitled Filter",
       },
       sidemenu: {
         participant: "Participant",
@@ -223,10 +272,35 @@ const en = {
         datafiles: "Data Files",
       },
       tabs: {
-        summary: "Summary",
-        participants: "Participants ({count})",
-        biospecimens: "Biospecimens ({count})",
-        datafiles: "Data Files ({count})",
+        summary: {
+          title: "Summary",
+          demographic: {
+            cardTitle: "Demographics",
+            sexTitle: "Sex",
+            raceTitle: "Race",
+            ethnicityTitle: "Ethnicity",
+          },
+          availableData: {
+            cardTitle: "Available Data",
+          },
+          observedPhenotype: {
+            cardTitle: "Observed Phenotypes (HPO)",
+            phenotypeTree: {
+              nbParticipant: "{count} participants (including descendant terms on this path)",
+              addTermToQuery: "Add term to active query",
+              currentPath: "Current Path"
+            }
+          }
+        },
+        participants: {
+          title: "Participants ({count})",
+        },
+        biospecimens: {
+          title: "Biospecimens ({count})",
+        },
+        datafiles: {
+          title: "Data Files ({count})",
+        },
       },
     },
     join: {
@@ -335,6 +409,9 @@ const en = {
     sex: "Sex",
     ethnicity: "Ethnicity",
     race: "Race",
+    observed_phenotype: {
+      name: "Observed Phenotype Name"
+    },
     // Biospecimen
     biospecimen_type: "Biospecimen Type",
     sample_type: "Sample Type",

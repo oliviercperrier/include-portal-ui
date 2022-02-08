@@ -5,12 +5,13 @@
     .@{list-prefix-cls}-header {
       padding: 8px 12px;
     }
+
+    border-color: @gray-4;
   }
 
   .@{list-prefix-cls}-item {
     &:hover {
       background-color: @gray-3;
-      cursor: pointer;
     }
 
     &-action {
@@ -39,14 +40,23 @@
     }
   }
 
-  .@{list-prefix-cls}-item.wrapped {
-    .@{list-prefix-cls}-item-meta {
-      &-description,
-      &-title {
-        white-space: pre;
-        overflow: hidden;
-        text-overflow: ellipsis;
+  .@{list-prefix-cls}-item {
+    // custom class action on hover
+    &.with-action-on-hover {
+      &:not(:hover) {
+        .@{list-prefix-cls}-item-action {
+          display: none;
+        }
       }
+    }
+  }
+
+  // Empty
+  div[class$="-nested-loading"] {
+    &,
+    .ant-spin-container,
+    .ant-list-empty-text {
+      height: 100%;
     }
   }
 }

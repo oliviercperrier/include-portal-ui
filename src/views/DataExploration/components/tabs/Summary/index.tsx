@@ -1,48 +1,66 @@
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Col, Row, Typography } from "antd";
+import { Col, Row } from "antd";
+import useApi from "hooks/useApi";
+import { ARRANGER_API_PROJECT_URL } from "provider/ApolloProvider";
+import {
+  DATATYPE_QUERY,
+  DEMOGRAPHIC_QUERY,
+  TYPE_OF_OMICS_QUERY,
+} from "graphql/summary/queries";
+import { ISqonGroupFilter } from "@ferlab/ui/core/data/sqon/types";
+import DemographicsGraphCard from "./DemographicGraphCard";
+import AvailableDataGraphCard from "./AvailableDataGraphCard";
+import SunburstGraphCard from "./SunburstGraphCard";
 
-//import styles from "./index.module.scss";
+import styles from "./index.module.scss";
 
-const { Title } = Typography;
+interface OwnProps {
+  sqon: ISqonGroupFilter;
+}
 
-const SummaryTab = () => (
-  <Row gutter={[24, 24]}>
-    <Col xs={24} md={8}>
-      <GridCard
-        theme="shade"
-        title={<Title level={4}>Chart title 1</Title>}
-        content="Chart.."
-      />
-    </Col>
-    <Col xs={24} md={16}>
-      <GridCard
-        theme="shade"
-        title={<Title level={4}>Chart title 2</Title>}
-        content="Chart.."
-      />
-    </Col>
-    <Col span={24}>
-      <GridCard
-        theme="shade"
-        title={<Title level={4}>Chart title 3</Title>}
-        content="Chart.."
-      />
-    </Col>
-    <Col xs={24} md={12}>
-      <GridCard
-        theme="shade"
-        title={<Title level={4}>Chart title 4</Title>}
-        content="Chart.."
-      />
-    </Col>
-    <Col xs={24} md={12}>
-      <GridCard
-        theme="shade"
-        title={<Title level={4}>Chart title 5</Title>}
-        content="Chart.."
-      />
-    </Col>
-  </Row>
-);
+const SummaryTab = ({ sqon }: OwnProps) => {
+  const { loading, result } = useApi<any>({
+    config: {
+      url: ARRANGER_API_PROJECT_URL,
+      method: "POST",
+      data: [
+        {
+          query: DEMOGRAPHIC_QUERY,
+          variables: { sqon },
+        },
+        {
+          query: DATATYPE_QUERY,
+          variables: { sqon },
+        },
+        {
+          query: TYPE_OF_OMICS_QUERY,
+          variables: { sqon },
+        },
+      ],
+    },
+  });
+
+  return (
+    <Row gutter={[24, 24]}>
+      <Col xs={24} md={6}>
+        <DemographicsGraphCard
+          loading={loading}
+          className={styles.summaryGrapCard}
+          data={result ? result[0] : null}
+        />
+      </Col>
+      <Col xs={24} md={18}>      
+      <SunburstGraphCard className={styles.summaryGrapCard} sqon={sqon} />
+      </Col>
+      <Col span={24}>
+        <AvailableDataGraphCard
+          loading={loading}
+          className={styles.summaryGrapCard}
+          dataTypeData={result ? result[1] : null}
+          typeOfOmicsData={result ? result[2] : null}
+        />
+      </Col>
+    </Row>
+  );
+};
 
 export default SummaryTab;

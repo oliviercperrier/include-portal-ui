@@ -1,17 +1,27 @@
-import { Space, Table } from "antd";
-import TableHeader from "components/uiKit/table/TableHeader";
-import { IParticipantEntity } from "graphql/participants/models";
-import { IQueryResults } from "graphql/models";
+import {
+  IParticipantDiagnosis,
+  IParticipantEntity,
+  IParticipantPhenotype,
+} from "graphql/participants/models";
+import { ArrangerResultsTree, IQueryResults } from "graphql/models";
 import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
 import {
   TPagingConfig,
   TPagingConfigCb,
 } from "views/DataExploration/utils/types";
-import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
-import ColumnSelector, {
-  ColumnSelectorType,
-} from "components/uiKit/table/ColumnSelector";
-import { useState } from "react";
+import { SEX, TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
+import ExpandableCell from "components/uiKit/table/ExpendableCell";
+import {
+  extractMondoTitleAndCode,
+  extractPhenotypeTitleAndCode,
+} from "views/DataExploration/utils/helper";
+import ProTable from "@ferlab/ui/core/components/ProTable";
+import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
+import { getProTableDictionary } from "utils/translation";
+import { Tag } from "antd";
+import { useDispatch } from "react-redux";
+import { updateUserConfig } from "store/user/thunks";
+import { useUser } from "store/user";
 
 import styles from "./index.module.scss";
 
@@ -21,7 +31,7 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
 }
 
-const defaultColumns: ColumnSelectorType<any>[] = [
+const defaultColumns: ProColumnType<any>[] = [
   {
     key: "participant_id",
     title: "ID",
@@ -31,20 +41,21 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "study_id",
     title: "Study Code",
     dataIndex: "study_id",
-    render: (study_id: string) => (
-      <a
-        target="_blank"
-        rel="noreferrer"
-        href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_id}`}
-      >
-        {study_id}
-      </a>
-    ),
+    className: styles.studyIdCell,
   },
   {
     key: "study_external_id",
     title: "dbGaP Accession number",
     dataIndex: "study_external_id",
+    render: (study_external_id: string) => (
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_external_id}`}
+      >
+        {study_external_id}
+      </a>
+    ),
   },
   {
     key: "karyotype",
@@ -62,6 +73,19 @@ const defaultColumns: ColumnSelectorType<any>[] = [
     key: "sex",
     title: "Sex",
     dataIndex: "sex",
+    render: (sex: string) => (
+      <Tag
+        color={
+          sex.toLowerCase() === SEX.FEMALE
+            ? "magenta"
+            : sex.toLowerCase() === SEX.MALE
+            ? "geekblue"
+            : ""
+        }
+      >
+        {sex}
+      </Tag>
+    ),
   },
   {
     key: "family_type",
@@ -82,12 +106,85 @@ const defaultColumns: ColumnSelectorType<any>[] = [
   {
     key: "diagnosis",
     title: "Diagnosis (Mondo)",
-    defaultHidden: true,
+    dataIndex: "diagnosis",
+    className: styles.diagnosisCell,
+    render: (diagnosis: ArrangerResultsTree<IParticipantDiagnosis>) => {
+      const mondo_ids_diagnosis = diagnosis?.hits?.edges
+        .map((diagnosis) => diagnosis.node.mondo_id_diagnosis)
+        .filter((id) => !!id);
+
+      if (!mondo_ids_diagnosis) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      return (
+        <ExpandableCell
+          nbToShow={1}
+          dataSource={mondo_ids_diagnosis}
+          renderItem={(modo_id, index): React.ReactNode => {
+            const mondoInfo = extractMondoTitleAndCode(modo_id);
+
+            return mondoInfo ? (
+              <div key={index}>
+                {mondoInfo.title} (MONDO:{" "}
+                <a
+                  href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {mondoInfo.code}
+                </a>
+                )
+              </div>
+            ) : (
+              TABLE_EMPTY_PLACE_HOLDER
+            );
+          }}
+        />
+      );
+    },
   },
   {
     key: "phenotype",
     title: "Phenotype (HPO)",
-    defaultHidden: true,
+    dataIndex: "phenotype",
+    className: styles.phenotypeCell,
+    render: (phenotype: ArrangerResultsTree<IParticipantPhenotype>) => {
+      const hydratedPhenotypeIds = phenotype?.hits?.edges
+        .map((phenotype) => phenotype.node.hpo_id_phenotype)
+        .filter((id) => !!id);
+
+      if (!hydratedPhenotypeIds) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      return (
+        <ExpandableCell
+          nbToShow={1}
+          dataSource={hydratedPhenotypeIds}
+          renderItem={(hpo_id_phenotype, index): React.ReactNode => {
+            const phenotypeInfo =
+              extractPhenotypeTitleAndCode(hpo_id_phenotype);
+
+            return phenotypeInfo ? (
+              <div key={index}>
+                {phenotypeInfo.title} (HP:{" "}
+                <a
+                  href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {phenotypeInfo.code}
+                </a>
+                )
+              </div>
+            ) : (
+              TABLE_EMPTY_PLACE_HOLDER
+            );
+          }}
+        />
+      );
+    },
   },
   {
     key: "biospecimen",
@@ -107,49 +204,56 @@ const ParticipantsTab = ({
   setPagingConfig,
   pagingConfig,
 }: OwnProps) => {
-  const [columns, setColumns] = useState<ColumnSelectorType<any>[]>(
-    defaultColumns.filter((column) => !column.defaultHidden)
-  );
+  const dispatch = useDispatch();
+  const { userInfo } = useUser();
 
   return (
-    <Space
-      size={12}
-      className={styles.participantTabWrapper}
-      direction="vertical"
-    >
-      <TableHeader
-        pageIndex={pagingConfig.index}
-        pageSize={pagingConfig.size}
-        total={results.total}
-        extra={[
-          <ColumnSelector
-            defaultColumns={defaultColumns}
-            columns={columns}
-            onChange={setColumns}
-          />,
-        ]}
-      />
-      <Table
-        bordered
-        loading={results.loading}
-        size="small"
-        pagination={{
+    <ProTable
+      tableId="participants_table"
+      columns={defaultColumns}
+      wrapperClassName={styles.participantTabWrapper}
+      loading={results.loading}
+      initialColumnState={
+        userInfo?.config.data_exploration?.tables?.participants?.columns
+      }
+      headerConfig={{
+        itemCount: {
+          pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
-          defaultPageSize: DEFAULT_PAGE_SIZE,
           total: results.total,
-          onChange: (page, size) => {
-            if (pagingConfig.index !== page || pagingConfig.size !== size) {
-              setPagingConfig({
-                index: page,
-                size: size!,
-              });
-            }
-          },
-        }}
-        dataSource={results.data}
-        columns={columns}
-      ></Table>
-    </Space>
+        },
+        columnSetting: true,
+        onColumnStateChange: (newState) =>
+          dispatch(
+            updateUserConfig({
+              data_exploration: {
+                tables: {
+                  participants: {
+                    columns: newState,
+                  },
+                },
+              },
+            })
+          ),
+      }}
+      bordered
+      size="small"
+      pagination={{
+        pageSize: pagingConfig.size,
+        defaultPageSize: DEFAULT_PAGE_SIZE,
+        total: results.total,
+        onChange: (page, size) => {
+          if (pagingConfig.index !== page || pagingConfig.size !== size) {
+            setPagingConfig({
+              index: page,
+              size: size!,
+            });
+          }
+        },
+      }}
+      dataSource={results.data}
+      dictionary={getProTableDictionary()}
+    />
   );
 };
 

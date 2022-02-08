@@ -1,12 +1,10 @@
 import DataRelease from "components/uiKit/DataRelease";
-import { Button, Card, Space, Typography } from "antd";
-import ExternalLinkIcon from "components/Icons/ExternalLinkIcon";
+import { Card, Space, Typography } from "antd";
 import intl from "react-intl-universal";
 
 import styles from "./index.module.scss";
 
 const { Title } = Typography;
-const iconSize = { width: 14, height: 14 };
 
 const DataReleaseCard = () => {
   return (
@@ -18,9 +16,6 @@ const DataReleaseCard = () => {
               version: "1.0",
             })}
           </Title>
-          <Button type="link" className={styles.externalLink}>
-            August 4th, 2021 <ExternalLinkIcon {...iconSize} />
-          </Button>
         </Space>
         <DataRelease itemSpacing={40} />
       </Space>

@@ -26,7 +26,7 @@ export interface IListItemData {
 }
 
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
-  const [isConnected, setIsConnected] = useState(true); // Add appropriate auth
+  const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
     {

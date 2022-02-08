@@ -4,7 +4,7 @@ import keycloak from "auth/keycloak-api/keycloak";
 const apiInstance = axios.create();
 
 interface ApiResponse<T = any> {
-  data: T | undefined;
+  data: T | any;
   error: AxiosError | undefined;
 }
 

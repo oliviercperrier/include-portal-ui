@@ -8,6 +8,7 @@ import { RootState } from "store/types";
 // Reducers
 import GlobalReducer from "store/global";
 import UserReducer from "store/user";
+import FenceReducer from "store/fence";
 import RiffReducer from "store/riff";
 import SavedFilterReducer from "store/savedFilter";
 
@@ -22,8 +23,9 @@ const persistConfig = {
 const rootReducer = combineReducers<RootState>({
   global: GlobalReducer,
   user: UserReducer,
+  fence: FenceReducer,
   riff: RiffReducer,
-  savedFilter: SavedFilterReducer
+  savedFilter: SavedFilterReducer,
 });
 
 const store: any = configureStore({

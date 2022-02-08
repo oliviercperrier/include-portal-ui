@@ -11,6 +11,10 @@ import Empty from "@ferlab/ui/core/components/Empty";
 import CardConnectPlaceholder from "views/Dashboard/components/CardConnectPlaceholder";
 
 import styles from "./index.module.scss";
+import useFenceConnections from "hooks/useFenceConnection";
+import { connectFence } from "store/fence/thunks";
+import { FENCE_NAMES } from "common/fenceTypes";
+import { useDispatch } from "react-redux";
 
 export interface IListItemData {
   key: any;
@@ -22,7 +26,10 @@ export interface IListItemData {
 }
 
 const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
+  const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
+  const { loadingFences, connectionStatus } = useFenceConnections();
+
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
     {
@@ -90,7 +97,8 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                         "screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess"
                       )}
                     </Button>
-                  </a>.
+                  </a>
+                  .
                 </Text>
               </Space>
             ),
@@ -146,7 +154,8 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
                     "screen.dashboard.cards.authorizedStudies.disconnectedNotice"
                   )}
                   btnProps={{
-                    onClick: () => setIsConnected(true),
+                    loading: loadingFences.includes(FENCE_NAMES.gen3),
+                    onClick: () => dispatch(connectFence(FENCE_NAMES.gen3)),
                   }}
                 />
               ),

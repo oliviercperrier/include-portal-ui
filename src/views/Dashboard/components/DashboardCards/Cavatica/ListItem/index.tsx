@@ -17,7 +17,7 @@ const CavaticaListItem = ({ id, data }: OwnProps) => {
     <List.Item key={id} className={cx("wrapped", styles.CavaticaListItem)}>
       <List.Item.Meta
         title={
-          <a href={data.projectUrl} className={styles.projectLink}>
+          <a href={data.projectUrl} target="_blank" rel="noreferrer" className={styles.projectLink}>
             {data.title}<ExternalLinkIcon className={styles.externalIcon} height={14} width={14} />
           </a>
         }

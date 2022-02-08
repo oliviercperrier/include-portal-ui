@@ -224,19 +224,36 @@ const en = {
       },
       cards: {
         authorizedStudies: {
-          title: "Authorized Studies",
+          title: "Authorized Studies {count, plural, =0 {} other {(#)}}",
           headerBtn: "Data access",
           connectedNotice:
-            "Your account is connected. You have access to all released INLCUDE controlled data.",
+            "You have access to all released INLCUDE controlled data through your NIH credentials.",
           disconnectedNotice:
             "Access all released INCLUDE controlled data by connecting your account using your NIH credentials.",
-          connect: "Connect",
           disconnect: "Disconnect",
           noAvailableStudies: "No available studies",
           authorization: "Authorization",
           of: "of",
           files: "Files",
           dataGroups: "Data use groups: {groups}",
+        },
+        cavatica: {
+          title: "Cavatica Projects",
+          connectedNotice: "You are connected the Cavatica cloud environment.",
+          disconnectedNotice:
+            "To analyze INCLUDE data on the cloud, connect to Cavatica.",
+          disconnect: "Disconnect",
+          noProjects: "You do not have any Cavatica projects.",
+          createNewProject: "Create your first project",
+          membersCount:
+            "{count, plural, =0 {member} =1 {# member} other {# members}}",
+          infoPopover: {
+            title: "CAVATICA compute cloud platform",
+            content:
+              "CAVATICA is a cloud-based data analysis platform where data, results, and workflows are shared among the world’s research community.",
+            readMore: "Read more",
+          },
+          newProject: "New projet"
         },
         savedFilters: {
           title: "Saved Filters",

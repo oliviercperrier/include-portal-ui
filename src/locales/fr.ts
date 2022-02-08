@@ -62,7 +62,9 @@ const fr = {
   report: {
     error: {
       title: "Error",
-      fetchReport: "Unable to fetch Report",
+      message:
+          "We were unable to generate the report at this time. Please try again later or ",
+      support: "contact support"
     },
     inProgress: {
       title: "Processing",
@@ -70,7 +72,7 @@ const fr = {
     },
     onSuccess: {
       title: "Success",
-      fetchReport: "The report was successfully generated",
+      fetchReport: "The report was successfully downloaded",
     },
   },
   // COMPONENTS

@@ -40,6 +40,11 @@
     "eject": "react-scripts eject",
     "prepare": "npm run theme"
   },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "all",
+    "singleQuote": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/include-dcc/include-portal-ui.git"

@@ -1,53 +1,42 @@
-import QueryBuilder from "@ferlab/ui/core/components/QueryBuilder";
+import QueryBuilder from '@ferlab/ui/core/components/QueryBuilder';
+import {ExperimentOutlined, FileTextOutlined, PieChartOutlined, UserOutlined,} from '@ant-design/icons';
+import history from 'utils/history';
+import {DATA_EXPLORATION_REPO_CACHE_KEY} from 'views/DataExploration/utils/constant';
+import intl from 'react-intl-universal';
+import {ExtendedMapping, ExtendedMappingResults} from 'graphql/models';
+import {getQueryBuilderCache, useFilters} from '@ferlab/ui/core/data/filters/utils';
+import {STATIC_ROUTES} from 'utils/routes';
+import {getQueryBuilderDictionary} from 'utils/translation';
+import {Space, Tabs} from 'antd';
 import {
-  ExperimentOutlined,
-  FileTextOutlined,
-  PieChartOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import history from "utils/history";
+    combineExtendedMappings,
+    mapFilterForBiospecimen,
+    mapFilterForFiles,
+    mapFilterForParticipant,
+} from 'views/DataExploration/utils/mapper';
+import {resolveSyntheticSqon} from '@ferlab/ui/core/data/sqon/utils';
+import {useParticipants} from 'graphql/participants/actions';
+import {useDataFiles} from 'graphql/files/actions';
+import {useBiospecimen} from 'graphql/biospecimens/actions';
+import SummaryTab from 'views/DataExploration/components/tabs/Summary';
+import BiospecimensTab from 'views/DataExploration/components/tabs/Biospecimens';
+import DataFilesTabs from 'views/DataExploration/components/tabs/DataFiles';
+import ParticipantsTab from 'views/DataExploration/components/tabs/Participants';
+import {Key, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {
-  DATA_EXPLORATION_REPO_CACHE_KEY,
-  DEFAULT_PAGE_INDEX,
-  DEFAULT_PAGE_SIZE,
-} from "views/DataExploration/utils/constant";
-import intl from "react-intl-universal";
-import { ExtendedMapping, ExtendedMappingResults } from "graphql/models";
-import {
-  getQueryBuilderCache,
-  useFilters,
-} from "@ferlab/ui/core/data/filters/utils";
-import { STATIC_ROUTES } from "utils/routes";
-import { getQueryBuilderDictionary } from "utils/translation";
-import { Space, Tabs } from "antd";
-import {
-  mapFilterForParticipant,
-  combineExtendedMappings,
-  mapFilterForFiles,
-  mapFilterForBiospecimen,
-} from "views/DataExploration/utils/mapper";
-import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
-import { useParticipants } from "graphql/participants/actions";
-import { useDataFiles } from "graphql/files/actions";
-import { useBiospecimen } from "graphql/biospecimens/actions";
-import SummaryTab from "views/DataExploration/components/tabs/Summary";
-import BiospecimensTab from "views/DataExploration/components/tabs/Biospecimens";
-import DataFilesTabs from "views/DataExploration/components/tabs/DataFiles";
-import ParticipantsTab from "views/DataExploration/components/tabs/Participants";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  createSavedFilter,
-  deleteSavedFilter,
-  fetchSavedFilters,
-  setSavedFilterAsDefault,
-  updateSavedFilter,
-} from "store/savedFilter/thunks";
-import { useSavedFilter } from "store/savedFilter";
+    createSavedFilter,
+    deleteSavedFilter,
+    fetchSavedFilters,
+    setSavedFilterAsDefault,
+    updateSavedFilter,
+} from 'store/savedFilter/thunks';
+import {useSavedFilter} from 'store/savedFilter';
 
-import styles from "./index.module.scss";
-import { fetchReport } from "store/report/thunks";
-import { ReportType } from "services/api/reports/models";
+import styles from './index.module.scss';
+import {fetchReport} from 'store/report/thunks';
+import {ReportType} from 'services/api/reports/models';
+import {DATA_EPLORATION_FILTER_TAG, DEFAULT_PAGING_CONFIG, TAB_IDS} from './types';
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -56,20 +45,6 @@ interface OwnProps {
   tabId?: string;
 }
 
-const DATA_EPLORATION_FILTER_TAG = "data-exploration";
-
-export enum TAB_IDS {
-  SUMMARY = "summary",
-  PARTICIPANTS = "participants",
-  BIOSPECIMENS = "biospecimens",
-  DATA_FILES = "datafiles",
-}
-
-const DEFAULT_PAGING_CONFIG = {
-  index: DEFAULT_PAGE_INDEX,
-  size: DEFAULT_PAGE_SIZE,
-};
-
 const PageContent = ({
   fileMapping,
   biospecimenMapping,
@@ -77,30 +52,19 @@ const PageContent = ({
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
   const dispatch = useDispatch();
-  const { savedFilters, defaultFilter } = useSavedFilter(
-    DATA_EPLORATION_FILTER_TAG
-  );
+  const [selectedRows, setSelectedRows] = useState<Key[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [selectType, setSelectType] = useState<TAB_IDS>(TAB_IDS.PARTICIPANTS);
+  const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
-  const [pagingConfigParticipant, setPagingConfigParticipant] = useState(
-    DEFAULT_PAGING_CONFIG
-  );
-  const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(
-    DEFAULT_PAGING_CONFIG
-  );
-  const [pagingConfigFile, setPagingConfigFile] = useState(
-    DEFAULT_PAGING_CONFIG
-  );
+  const [pagingConfigParticipant, setPagingConfigParticipant] = useState(DEFAULT_PAGING_CONFIG);
+  const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
+  const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
 
-  const participantResolvedSqon = resolveSyntheticSqon(
-    allSqons,
-    mapFilterForParticipant(filters)
-  );
+  const participantResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters));
 
-  const biospecimenResolvedSqon = resolveSyntheticSqon(
-    allSqons,
-    mapFilterForBiospecimen(filters)
-  );
+  const biospecimenResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters));
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
@@ -123,6 +87,27 @@ const PageContent = ({
     sort: [],
   });
 
+  const onRowSelection = (selectedRowKey: Key, type: TAB_IDS) => {
+    selectedRows.includes(selectedRowKey)
+      ? setSelectedRows(selectedRows.filter((e) => e !== selectedRowKey))
+      : setSelectedRows([...selectedRows, selectedRowKey]);
+
+    setSelectType(type);
+  };
+
+  const onAllRowSelection = (selectedRowKeys: Key[], type: TAB_IDS, selected: boolean) => {
+    //todo fix this
+    if (selected) {
+      setSelectedRows(selectedRowKeys);
+      setSelectType(type);
+      setSelectAll(selected);
+    } else {
+      setSelectedRows([]);
+      setSelectType(type);
+      setSelectAll(selected);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
     // eslint-disable-next-line
@@ -132,12 +117,9 @@ const PageContent = ({
     const title = intl.get(`facets.${key}`);
     return title
       ? title
-      : combineExtendedMappings([
-          participantMapping,
-          fileMapping,
-          biospecimenMapping,
-        ])?.data?.find((mapping: ExtendedMapping) => key === mapping.field)
-          ?.displayName || key;
+      : combineExtendedMappings([participantMapping, fileMapping, biospecimenMapping])?.data?.find(
+          (mapping: ExtendedMapping) => key === mapping.field,
+        )?.displayName || key;
   };
 
   const handleDownloadReport = async (reportName: string) => {
@@ -152,24 +134,20 @@ const PageContent = ({
           sqon,
           name: reportName,
         },
-      })
+      }),
     );
   };
 
+  console.log(selectedRows, 'selectedRows');
+
   return (
-    <Space
-      direction="vertical"
-      size={24}
-      className={styles.dataExplorePageContent}
-    >
+    <Space direction="vertical" size={24} className={styles.dataExplorePageContent}>
       <QueryBuilder
         className="data-exploration-repo__query-builder"
         headerConfig={{
           showHeader: true,
           showTools: true,
-          defaultTitle: intl.get(
-            "screen.dataExploration.queryBuilder.defaultTitle"
-          ),
+          defaultTitle: intl.get('screen.dataExploration.queryBuilder.defaultTitle'),
           options: {
             enableEditTitle: true,
             enableDuplicate: true,
@@ -183,11 +161,10 @@ const PageContent = ({
               createSavedFilter({
                 ...filter,
                 tag: DATA_EPLORATION_FILTER_TAG,
-              })
+              }),
             ),
           onDeleteFilter: (id) => dispatch(deleteSavedFilter(id)),
-          onSetAsFavorite: (filter) =>
-            dispatch(setSavedFilterAsDefault(filter)),
+          onSetAsFavorite: (filter) => dispatch(setSavedFilterAsDefault(filter)),
         }}
         enableCombine
         enableShowHideLabels
@@ -195,11 +172,7 @@ const PageContent = ({
         history={history}
         cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
         currentQuery={filters?.content?.length ? filters : {}}
-        loading={
-          participantMapping.loading ||
-          fileResults.loading ||
-          biospecimenResults.loading
-        }
+        loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}
         total={participantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}
       />
@@ -208,9 +181,7 @@ const PageContent = ({
         activeKey={tabId || TAB_IDS.SUMMARY}
         onChange={(key) => {
           if (!history.location.pathname.includes(key)) {
-            history.push(
-              `${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`
-            );
+            history.push(`${STATIC_ROUTES.DATA_EXPLORATION}/${key}${window.location.search}`);
           }
         }}
       >
@@ -218,7 +189,7 @@ const PageContent = ({
           tab={
             <span>
               <PieChartOutlined />
-              {intl.get("screen.dataExploration.tabs.summary.title")}
+              {intl.get('screen.dataExploration.tabs.summary.title')}
             </span>
           }
           key={TAB_IDS.SUMMARY}
@@ -229,7 +200,7 @@ const PageContent = ({
           tab={
             <span>
               <UserOutlined />
-              {intl.get("screen.dataExploration.tabs.participants.title", {
+              {intl.get('screen.dataExploration.tabs.participants.title', {
                 count: participantResults.total,
               })}
             </span>
@@ -241,13 +212,19 @@ const PageContent = ({
             setPagingConfig={setPagingConfigParticipant}
             pagingConfig={pagingConfigParticipant}
             downloadReport={handleDownloadReport}
+            rowSelection={{
+              selectedRows: selectedRows,
+              onRowSelection: onRowSelection,
+              onAllRowSelection: onAllRowSelection,
+              allRowSelected: selectAll,
+            }}
           />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab={
             <span>
               <ExperimentOutlined />
-              {intl.get("screen.dataExploration.tabs.biospecimens.title", {
+              {intl.get('screen.dataExploration.tabs.biospecimens.title', {
                 count: biospecimenResults.total,
               })}
             </span>
@@ -259,13 +236,19 @@ const PageContent = ({
             setPagingConfig={setPagingConfigBiospecimen}
             pagingConfig={pagingConfigBiospecimen}
             downloadReport={handleDownloadReport}
+            rowSelection={{
+              selectedRows: selectedRows,
+              onRowSelection: onRowSelection,
+              onAllRowSelection: onAllRowSelection,
+              allRowSelected: selectAll,
+            }}
           />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab={
             <span>
               <FileTextOutlined />
-              {intl.get("screen.dataExploration.tabs.datafiles.title", {
+              {intl.get('screen.dataExploration.tabs.datafiles.title', {
                 count: fileResults.total,
               })}
             </span>
@@ -276,6 +259,12 @@ const PageContent = ({
             results={fileResults}
             setPagingConfig={setPagingConfigFile}
             pagingConfig={pagingConfigFile}
+            rowSelection={{
+                selectedRows: selectedRows,
+                onRowSelection: onRowSelection,
+                onAllRowSelection: onAllRowSelection,
+                allRowSelected: selectAll,
+            }}
           />
         </Tabs.TabPane>
       </Tabs>

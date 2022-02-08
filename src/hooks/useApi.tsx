@@ -19,11 +19,6 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
   };
 
   useEffect(() => {
-    refresh();
-    // eslint-disable-next-line
-  }, [JSON.stringify(config)]);
-
-  useEffect(() => {
     let cancelled = false;
     if (skip) {
       setLoading(false);
@@ -48,7 +43,7 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
       cancelled = true;
     };
     // eslint-disable-next-line
-  }, [config.url, refreshIndex]);
+  }, [JSON.stringify(config), refreshIndex]);
 
   return { result, loading, error, refresh };
 };

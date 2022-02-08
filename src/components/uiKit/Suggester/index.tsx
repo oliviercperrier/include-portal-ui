@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { IFilter, VisualType } from "@ferlab/ui/core/components/filters/types";
+import {
+  IFilter,
+  IFilterCount,
+  VisualType,
+} from "@ferlab/ui/core/components/filters/types";
 import { updateFilters } from "@ferlab/ui/core/data/filters/utils";
 import { AutoComplete, Input, notification, Spin } from "antd";
 import { sendRequest } from "services/api";
@@ -75,7 +79,7 @@ const Suggester = ({ suggestionType, placeholderText }: SuggesterProps) => {
       };
     }
 
-    const f: IFilter[] = [
+    const f: IFilter<IFilterCount>[] = [
       {
         data: {
           count: 1,

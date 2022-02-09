@@ -257,10 +257,7 @@ const ParticipantsTab = ({
           ),
         extra: [
           <Dropdown overlay={menu} placement="bottomLeft">
-            <Button>
-              <DownloadOutlined />
-              Download clinical data
-            </Button>
+            <Button icon={<DownloadOutlined />}>Download clinical data</Button>
           </Dropdown>,
         ],
       }}

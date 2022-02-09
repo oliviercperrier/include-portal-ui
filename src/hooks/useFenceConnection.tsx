@@ -1,16 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useFence } from "store/fence";
-import { fetchAllFenceConnections } from "store/fence/thunks";
-import { concatAllFencesAcls } from "store/fence/utils";
-import {
-  FENCE_CONNECTION_STATUSES,
-  FENCE_NAMES,
-  TFenceConnections,
-} from "common/fenceTypes";
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useFenceConnection } from 'store/fenceConnection';
+import { fetchAllFenceConnections } from 'store/fenceConnection/thunks';
+import { concatAllFencesAcls } from 'store/fenceConnection/utils';
+import { FENCE_CONNECTION_STATUSES, FENCE_NAMES, TFenceConnections } from 'common/fenceTypes';
 
 type Output = {
-  fenceConnections: TFenceConnections;
+  connections: TFenceConnections;
   fencesAllAcls: string[];
   connectionStatus: { [fenceName: string]: FENCE_CONNECTION_STATUSES };
   loadingFences: FENCE_NAMES[];
@@ -18,7 +14,7 @@ type Output = {
 
 const useFenceConnections = (): Output => {
   const dispatch = useDispatch();
-  const { fenceConnections, connectionStatus, loadingFences } = useFence();
+  const { connections, connectionStatus, loadingFences } = useFenceConnection();
 
   useEffect(() => {
     dispatch(fetchAllFenceConnections());
@@ -27,8 +23,8 @@ const useFenceConnections = (): Output => {
 
   return {
     loadingFences,
-    fenceConnections,
-    fencesAllAcls: concatAllFencesAcls(fenceConnections),
+    connections,
+    fencesAllAcls: concatAllFencesAcls(connections),
     connectionStatus,
   };
 };

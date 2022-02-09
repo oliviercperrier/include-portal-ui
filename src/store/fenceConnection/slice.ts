@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { omit } from "lodash";
-import { initialState } from "store/fence/types";
-import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from "common/fenceTypes";
-import { connectFence, disconnectFence, fetchFenceConnection } from "./thunks";
+import { createSlice } from '@reduxjs/toolkit';
+import { omit } from 'lodash';
+import { initialState } from 'store/fenceConnection/types';
+import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
+import { connectFence, disconnectFence, fetchFenceConnection } from './thunks';
 
-export const FenceState: initialState = {
+export const FenceConnectionState: initialState = {
   loadingFences: [],
   connectionStatus: {
     [FENCE_NAMES.gen3]: FENCE_CONNECTION_STATUSES.unknown,
@@ -12,7 +12,7 @@ export const FenceState: initialState = {
   },
   fencesConnectError: [],
   fencesDisconnectError: [],
-  fenceConnections: {},
+  connections: {},
 };
 
 const removeLoadingFences = (state: initialState, fenceName: FENCE_NAMES) =>
@@ -23,26 +23,24 @@ const addLoadingFences = (state: initialState, fenceName: FENCE_NAMES) =>
     ? state.loadingFences
     : [...state.loadingFences, fenceName];
 
-const fenceSlice = createSlice({
-  name: "fence",
-  initialState: FenceState,
+const fenceConnectionSlice = createSlice({
+  name: 'fence',
+  initialState: FenceConnectionState,
   reducers: {},
   extraReducers: (builder) => {
-    // FETCH FENCE
+    // FETCH FENCE CONNECTION
     builder.addCase(fetchFenceConnection.pending, (state, action) => {
       state.loadingFences = addLoadingFences(state, action.meta.arg);
     });
     builder.addCase(fetchFenceConnection.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
-      state.connectionStatus[action.meta.arg] =
-        FENCE_CONNECTION_STATUSES.connected;
-      state.fenceConnections[action.meta.arg] = action.payload;
+      state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
+      state.connections[action.meta.arg] = action.payload;
     });
     builder.addCase(fetchFenceConnection.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
-      state.connectionStatus[action.meta.arg] =
-        FENCE_CONNECTION_STATUSES.disconnected;
+      state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
     });
 
     // CONNECT FENCE
@@ -51,16 +49,14 @@ const fenceSlice = createSlice({
     });
     builder.addCase(connectFence.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
-      state.connectionStatus[action.meta.arg] =
-        FENCE_CONNECTION_STATUSES.connected;
-      state.fenceConnections[action.meta.arg] = action.payload;
+      state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
+      state.connections[action.meta.arg] = action.payload;
     });
     builder.addCase(connectFence.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
-      state.fenceConnections = omit(state.fenceConnections, [action.meta.arg]);
-      state.connectionStatus[action.meta.arg] =
-        FENCE_CONNECTION_STATUSES.disconnected;
+      state.connections = omit(state.connections, [action.meta.arg]);
+      state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
     });
 
     // DISCONNECT FENCE
@@ -69,21 +65,16 @@ const fenceSlice = createSlice({
     });
     builder.addCase(disconnectFence.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
-      state.connectionStatus[action.meta.arg] =
-        FENCE_CONNECTION_STATUSES.disconnected;
-      state.fenceConnections = omit(state.fenceConnections, [action.meta.arg]);
+      state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
+      state.connections = omit(state.connections, [action.meta.arg]);
     });
     builder.addCase(disconnectFence.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
-      state.fencesDisconnectError = [
-        ...state.fencesDisconnectError,
-        action.meta.arg,
-      ];
-      state.connectionStatus[action.meta.arg] =
-        FENCE_CONNECTION_STATUSES.disconnected;
-      state.fenceConnections = omit(state.fenceConnections, [action.meta.arg]);
+      state.fencesDisconnectError = [...state.fencesDisconnectError, action.meta.arg];
+      state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
+      state.connections = omit(state.connections, [action.meta.arg]);
     });
   },
 });
 
-export default fenceSlice.reducer;
+export default fenceConnectionSlice.reducer;

@@ -8,7 +8,7 @@ import { RootState } from "store/types";
 // Reducers
 import GlobalReducer from "store/global";
 import UserReducer from "store/user";
-import FenceReducer from "store/fence";
+import FenceConnectionReducer from "store/fenceConnection";
 import RiffReducer from "store/riff";
 import ReportReducer from "store/report";
 import SavedFilterReducer from "store/savedFilter";
@@ -25,7 +25,7 @@ const rootReducer = combineReducers<RootState>({
   global: GlobalReducer,
   user: UserReducer,
   report: ReportReducer,
-  fence: FenceReducer,
+  fenceConnection: FenceConnectionReducer,
   riff: RiffReducer,
   savedFilter: SavedFilterReducer,
 });

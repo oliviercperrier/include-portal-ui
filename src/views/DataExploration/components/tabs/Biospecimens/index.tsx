@@ -165,8 +165,10 @@ const BioSpecimenTab = ({
             }),
           ),
         extra: [
-          <Button onClick={(e) => downloadReport(ReportType.BIOSEPCIMEN_DATA)}>
-            <DownloadOutlined />
+          <Button
+            icon={<DownloadOutlined />}
+            onClick={(e) => downloadReport(ReportType.BIOSEPCIMEN_DATA)}
+          >
             Download sample data
           </Button>,
         ],

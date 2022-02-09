@@ -106,16 +106,9 @@ const PageContent = ({
   };
 
   const onAllRowSelection = (selectedRowKeys: Key[], type: TAB_IDS, selected: boolean) => {
-    //todo fix this
-    if (selected) {
-      setSelectedRows(selectedRowKeys);
-      setSelectType(type);
-      setSelectAll(selected);
-    } else {
-      setSelectedRows([]);
-      setSelectType(type);
-      setSelectAll(selected);
-    }
+    selected ? setSelectedRows(selectedRowKeys) : setSelectedRows([]);
+    setSelectType(type);
+    setSelectAll(selected);
   };
 
   useEffect(() => {

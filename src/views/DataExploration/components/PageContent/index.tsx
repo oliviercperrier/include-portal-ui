@@ -42,11 +42,12 @@ import {
   updateSavedFilter,
 } from 'store/savedFilter/thunks';
 import { useSavedFilter } from 'store/savedFilter';
-
-import styles from './index.module.scss';
 import { fetchReport } from 'store/report/thunks';
 import { ReportType } from 'services/api/reports/models';
-import { generateSelectionSqon } from 'utils/sqons';
+import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
+import { generateSelectionSqon } from 'views/DataExploration/utils/report';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   fileMapping: ExtendedMappingResults;
@@ -55,6 +56,11 @@ interface OwnProps {
   tabId?: string;
 }
 
+const addTagToFilter = (filter: ISavedFilter) => ({
+  ...filter,
+  tag: DATA_EPLORATION_FILTER_TAG,
+});
+
 const PageContent = ({
   fileMapping,
   biospecimenMapping,
@@ -62,19 +68,16 @@ const PageContent = ({
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
   const dispatch = useDispatch();
-  const [selectedRows, setSelectedRows] = useState<Key[]>([]);
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectType, setSelectType] = useState<TAB_IDS>(TAB_IDS.PARTICIPANTS);
-  const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const { filters } = useFilters();
+  const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
 
   const participantResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters));
-
   const biospecimenResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters));
+  const fileResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForFiles(filters));
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
@@ -86,7 +89,7 @@ const PageContent = ({
   const fileResults = useDataFiles({
     first: pagingConfigFile.size,
     offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
-    sqon: resolveSyntheticSqon(allSqons, mapFilterForFiles(filters)),
+    sqon: fileResolvedSqon,
     sort: [],
   });
 
@@ -96,20 +99,6 @@ const PageContent = ({
     sqon: biospecimenResolvedSqon,
     sort: [],
   });
-
-  const onRowSelection = (selectedRowKey: Key, type: TAB_IDS) => {
-    selectedRows.includes(selectedRowKey)
-      ? setSelectedRows(selectedRows.filter((e) => e !== selectedRowKey))
-      : setSelectedRows([...selectedRows, selectedRowKey]);
-
-    setSelectType(type);
-  };
-
-  const onAllRowSelection = (selectedRowKeys: Key[], type: TAB_IDS, selected: boolean) => {
-    selected ? setSelectedRows(selectedRowKeys) : setSelectedRows([]);
-    setSelectType(type);
-    setSelectAll(selected);
-  };
 
   useEffect(() => {
     dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
@@ -125,22 +114,26 @@ const PageContent = ({
         )?.displayName || key;
   };
 
-  const handleDownloadReport = async (reportName: string) => {
+  const handleDownloadReport = async (
+    reportType: ReportType,
+    selectedKeys: Key[],
+    selectAll: boolean,
+  ) => {
     let sqon;
-    if (selectAll || !selectedRows.length) {
+    if (selectAll || !selectedKeys.length) {
       sqon =
-        reportName === ReportType.BIOSEPCIMEN_DATA
+        reportType === ReportType.BIOSEPCIMEN_DATA
           ? biospecimenResolvedSqon
           : participantResolvedSqon;
     } else {
-      sqon = generateSelectionSqon(selectType, selectedRows);
+      sqon = generateSelectionSqon(reportType, selectedKeys);
     }
 
     dispatch(
       fetchReport({
         data: {
           sqon,
-          name: reportName,
+          name: reportType,
         },
       }),
     );
@@ -162,15 +155,9 @@ const PageContent = ({
           selectedSavedFilter: defaultFilter,
           savedFilters: savedFilters,
           onUpdateFilter: (filter) => dispatch(updateSavedFilter(filter)),
-          onSaveFilter: (filter) =>
-            dispatch(
-              createSavedFilter({
-                ...filter,
-                tag: DATA_EPLORATION_FILTER_TAG,
-              }),
-            ),
+          onSaveFilter: (filter) => dispatch(createSavedFilter(addTagToFilter(filter))),
           onDeleteFilter: (id) => dispatch(deleteSavedFilter(id)),
-          onSetAsFavorite: (filter) => dispatch(setSavedFilterAsDefault(filter)),
+          onSetAsFavorite: (filter) => dispatch(setSavedFilterAsDefault(addTagToFilter(filter))),
         }}
         enableCombine
         enableShowHideLabels
@@ -218,12 +205,6 @@ const PageContent = ({
             setPagingConfig={setPagingConfigParticipant}
             pagingConfig={pagingConfigParticipant}
             downloadReport={handleDownloadReport}
-            rowSelection={{
-              selectedRows: selectedRows,
-              onRowSelection: onRowSelection,
-              onAllRowSelection: onAllRowSelection,
-              allRowSelected: selectAll,
-            }}
           />
         </Tabs.TabPane>
         <Tabs.TabPane
@@ -242,12 +223,6 @@ const PageContent = ({
             setPagingConfig={setPagingConfigBiospecimen}
             pagingConfig={pagingConfigBiospecimen}
             downloadReport={handleDownloadReport}
-            rowSelection={{
-              selectedRows: selectedRows,
-              onRowSelection: onRowSelection,
-              onAllRowSelection: onAllRowSelection,
-              allRowSelected: selectAll,
-            }}
           />
         </Tabs.TabPane>
         <Tabs.TabPane
@@ -265,12 +240,6 @@ const PageContent = ({
             results={fileResults}
             setPagingConfig={setPagingConfigFile}
             pagingConfig={pagingConfigFile}
-            rowSelection={{
-              selectedRows: selectedRows,
-              onRowSelection: onRowSelection,
-              onAllRowSelection: onAllRowSelection,
-              allRowSelected: selectAll,
-            }}
           />
         </Tabs.TabPane>
       </Tabs>

@@ -7,6 +7,7 @@ export interface IBiospecimenResultTree {
 }
 
 export interface IBiospecimenEntity {
+  key?: string;
   id: string;
   score: number;
   age_at_biospecimen_collection: number;

@@ -1,8 +1,12 @@
 import { IQueryResults } from 'graphql/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
-import { RowSelection, TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import {
+  THandleReportDownload,
+  TPagingConfig,
+  TPagingConfigCb,
+} from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
 import { IParticipantEntity } from 'graphql/participants/models';
 import { extractNcitTissueTitleAndCode } from 'views/DataExploration/utils/helper';
 import ProTable from '@ferlab/ui/core/components/ProTable';
@@ -14,6 +18,7 @@ import { updateUserConfig } from 'store/user/thunks';
 import { Button } from 'antd';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 import styles from './index.module.scss';
 
@@ -21,8 +26,7 @@ interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
-  downloadReport: (e: string) => void;
-  rowSelection: RowSelection;
+  downloadReport: THandleReportDownload;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -114,30 +118,23 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const BioSpecimenTab = ({
-  results,
-  setPagingConfig,
-  pagingConfig,
-  downloadReport,
-  rowSelection,
-}: OwnProps) => {
+const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, downloadReport }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const { selectedRows, onAllRowSelection, onRowSelection, allRowSelected } = rowSelection;
+  const [selectedAll, setSelectedAll] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<IBiospecimenEntity[]>([]);
 
   return (
     <ProTable
       rowSelection={{
-        selectedRowKeys: selectedRows,
-        onSelect: (selectedRowKey) => {
-          onRowSelection(selectedRowKey.key, TAB_IDS.BIOSPECIMENS);
-        },
-        onSelectAll: (selected, selectedRows, changeRows) => {
-          onAllRowSelection(
-            selectedRows.filter(Boolean).map((e) => e.key),
-            TAB_IDS.BIOSPECIMENS,
-            selected,
-          );
+        selectedRowKeys: selectedRows.map(({ key }) => key!),
+        onSelect: (row, selected) =>
+          setSelectedRows((prev) =>
+            selected ? [...prev, row] : prev.filter(({ key }) => key !== row.key!),
+          ),
+        onSelectAll: (select, selectedRows) => {
+          setSelectedAll(select);
+          setSelectedRows(selectedRows.filter(Boolean));
         },
       }}
       tableId="biospecimen_table"
@@ -150,8 +147,13 @@ const BioSpecimenTab = ({
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
+          selectedRowCount: selectedRows.length,
         },
         columnSetting: true,
+        onClearSelection: () => {
+          setSelectedRows([]);
+          setSelectedAll(false);
+        },
         onColumnStateChange: (newState) =>
           dispatch(
             updateUserConfig({
@@ -167,7 +169,13 @@ const BioSpecimenTab = ({
         extra: [
           <Button
             icon={<DownloadOutlined />}
-            onClick={(e) => downloadReport(ReportType.BIOSEPCIMEN_DATA)}
+            onClick={() =>
+              downloadReport(
+                ReportType.BIOSEPCIMEN_DATA,
+                selectedRows.map(({ key }) => key!),
+                selectedAll,
+              )
+            }
           >
             Download sample data
           </Button>,
@@ -180,9 +188,9 @@ const BioSpecimenTab = ({
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
-          //TODO make a reset function?
-          if (allRowSelected) {
-            onAllRowSelection([], TAB_IDS.BIOSPECIMENS, false);
+          if (selectedAll) {
+            setSelectedAll(false);
+            setSelectedRows([]);
           }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({
@@ -192,8 +200,7 @@ const BioSpecimenTab = ({
           }
         },
       }}
-      // dataSource={results.data.map((i) => ({ ...i, key: i.biospecimen_id }))} //FIXME missing biospecimen_id from data
-      dataSource={results.data}
+      dataSource={results.data.map((i) => ({ ...i, key: i.id }))} //FIXME use biospecimen_id from data
       dictionary={getProTableDictionary()}
     />
   );

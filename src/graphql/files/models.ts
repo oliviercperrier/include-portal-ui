@@ -6,6 +6,7 @@ export interface IFileResultTree {
 }
 
 export interface IFileEntity {
+  key?: string;
   id: string;
   score: number;
   access: string;

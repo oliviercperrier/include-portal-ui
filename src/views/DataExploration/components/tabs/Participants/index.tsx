@@ -4,8 +4,12 @@ import {
   IParticipantPhenotype,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
-import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
-import { RowSelection, TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
+import {
+  THandleReportDownload,
+  TPagingConfig,
+  TPagingConfigCb,
+} from 'views/DataExploration/utils/types';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ExpandableCell from 'components/uiKit/table/ExpendableCell';
 import {
@@ -21,6 +25,7 @@ import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 import styles from './index.module.scss';
 
@@ -28,8 +33,7 @@ interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
-  downloadReport: (e: string) => void;
-  rowSelection: RowSelection;
+  downloadReport: THandleReportDownload;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -198,38 +202,39 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const ParticipantsTab = ({
-  results,
-  setPagingConfig,
-  pagingConfig,
-  downloadReport,
-  rowSelection,
-}: OwnProps) => {
+const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, downloadReport }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const { selectedRows, onAllRowSelection, onRowSelection, allRowSelected } = rowSelection;
+  const [selectedAll, setSelectedAll] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<IParticipantEntity[]>([]);
 
   const menu = (
-    <Menu onClick={(e) => downloadReport(e.key)}>
+    <Menu
+      onClick={(e) =>
+        downloadReport(
+          e.key as ReportType,
+          selectedRows.map(({ key }) => key!),
+          selectedAll,
+        )
+      }
+    >
       <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
       <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Participant & Family Members</Menu.Item>
     </Menu>
   );
 
   return (
-    <ProTable
+    <ProTable<IParticipantEntity>
       tableId="participants_table"
       rowSelection={{
-        selectedRowKeys: selectedRows,
-        onSelect: (selectedRowKey) => {
-          onRowSelection(selectedRowKey.key, TAB_IDS.PARTICIPANTS);
-        },
-        onSelectAll: (selected, selectedRows, changeRows) => {
-          onAllRowSelection(
-            selectedRows.filter(Boolean).map((e) => e.key),
-            TAB_IDS.PARTICIPANTS,
-            selected,
-          );
+        selectedRowKeys: selectedRows.map(({ key }) => key!),
+        onSelect: (row, selected) =>
+          setSelectedRows((prev) =>
+            selected ? [...prev, row] : prev.filter(({ key }) => key !== row.key!),
+          ),
+        onSelectAll: (selected, selectedRows) => {
+          setSelectedAll(selected);
+          setSelectedRows(selectedRows.filter(Boolean));
         },
       }}
       columns={defaultColumns}
@@ -241,8 +246,13 @@ const ParticipantsTab = ({
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
+          selectedRowCount: selectedRows.length,
         },
         columnSetting: true,
+        onClearSelection: () => {
+          setSelectedRows([]);
+          setSelectedAll(false);
+        },
         onColumnStateChange: (newState) =>
           dispatch(
             updateUserConfig({
@@ -268,9 +278,9 @@ const ParticipantsTab = ({
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
-          //TODO make a reset function?
-          if (allRowSelected) {
-            onAllRowSelection([], TAB_IDS.PARTICIPANTS, false);
+          if (selectedAll) {
+            setSelectedAll(false);
+            setSelectedRows([]);
           }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({

@@ -1,4 +1,5 @@
 import { Key } from 'react';
+import { ReportType } from 'services/api/reports/models';
 import { TAB_IDS } from './constant';
 
 export type TPagingConfig = {
@@ -8,9 +9,8 @@ export type TPagingConfig = {
 
 export type TPagingConfigCb = (config: TPagingConfig) => void;
 
-export type RowSelection = {
-  selectedRows: Key[];
-  onRowSelection: (selectedKey: Key, type: TAB_IDS) => void;
-  onAllRowSelection: (selectedRowKeys: Key[], type: TAB_IDS, selected: boolean) => void;
-  allRowSelected: boolean;
-};
+export type THandleReportDownload = (
+  reportType: ReportType,
+  selectedKeys: Key[],
+  selectAll: boolean,
+) => void;

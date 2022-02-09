@@ -1,23 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { initialState } from "store/savedFilter/types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { initialState } from 'store/savedFilter/types';
 import {
   createSavedFilter,
   deleteSavedFilter,
   fetchSavedFilters,
   setSavedFilterAsDefault,
   updateSavedFilter,
-} from "./thunks";
+} from './thunks';
 
 export const SavedFilterState: initialState = {
   savedFilters: [],
   isLoading: true,
   isUpdating: false,
+  selectedId: undefined,
 };
 
 const savedFilterSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: SavedFilterState,
-  reducers: {},
+  reducers: {
+    setSelectedId: (state, action: PayloadAction<string>) => ({
+      ...state,
+      selectedId: action.payload,
+    }),
+  },
   extraReducers: (builder) => {
     // Fetch
     builder.addCase(fetchSavedFilters.pending, (state) => {
@@ -55,9 +61,7 @@ const savedFilterSlice = createSlice({
       state.error = undefined;
     });
     builder.addCase(updateSavedFilter.fulfilled, (state, action) => {
-      const filters = [
-        ...state.savedFilters.filter(({ id }) => action.payload.id !== id),
-      ];
+      const filters = [...state.savedFilters.filter(({ id }) => action.payload.id !== id)];
 
       return {
         ...state,
@@ -91,9 +95,7 @@ const savedFilterSlice = createSlice({
     // Delete
     builder.addCase(deleteSavedFilter.fulfilled, (state, action) => ({
       ...state,
-      savedFilters: state.savedFilters.filter(
-        ({ id }) => id !== action.payload
-      ),
+      savedFilters: state.savedFilters.filter(({ id }) => id !== action.payload),
     }));
     builder.addCase(deleteSavedFilter.rejected, (state, action) => ({
       ...state,

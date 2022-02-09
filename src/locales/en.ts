@@ -48,6 +48,8 @@ const fr = {
       results: "Results",
       noResults: "No Results",
       of: "of",
+      selected: "items selected",
+      selectedPlural: "items selected"
     },
   },
   // API

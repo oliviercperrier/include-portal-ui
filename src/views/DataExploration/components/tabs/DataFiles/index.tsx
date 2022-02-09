@@ -1,8 +1,8 @@
 import { IFileEntity } from 'graphql/files/models';
 import { DownloadOutlined, LockOutlined } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
-import { RowSelection, TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -10,6 +10,7 @@ import { getProTableDictionary } from 'utils/translation';
 import { useDispatch } from 'react-redux';
 import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
+import { useState } from 'react';
 
 import styles from './index.module.scss';
 
@@ -17,7 +18,6 @@ interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
-  rowSelection: RowSelection;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -85,24 +85,23 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const DataFilesTab = ({ results, setPagingConfig, pagingConfig, rowSelection }: OwnProps) => {
-  const { selectedRows, onAllRowSelection, onRowSelection, allRowSelected } = rowSelection;
+const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const [selectedAll, setSelectedAll] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<IFileEntity[]>([]);
 
   return (
     <ProTable
       rowSelection={{
-        selectedRowKeys: selectedRows,
-        onSelect: (selectedRowKey) => {
-          onRowSelection(selectedRowKey.key, TAB_IDS.DATA_FILES);
-        },
-        onSelectAll: (selected, selectedRows, changeRows) => {
-          onAllRowSelection(
-            selectedRows.filter(Boolean).map((e) => e.key),
-            TAB_IDS.DATA_FILES,
-            selected,
-          );
+        selectedRowKeys: selectedRows.map(({ key }) => key!),
+        onSelect: (row, selected) =>
+          setSelectedRows((prev) =>
+            selected ? [...prev, row] : prev.filter(({ key }) => key !== row.key!),
+          ),
+        onSelectAll: (select, selectedRows) => {
+          setSelectedAll(select);
+          setSelectedRows(selectedRows.filter(Boolean));
         },
       }}
       tableId="datafiles_table"
@@ -115,8 +114,13 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, rowSelection }: 
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
+          selectedRowCount: selectedRows.length,
         },
         columnSetting: true,
+        onClearSelection: () => {
+          setSelectedRows([]);
+          setSelectedAll(false);
+        },
         onColumnStateChange: (newState) =>
           dispatch(
             updateUserConfig({
@@ -137,8 +141,9 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, rowSelection }: 
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
-          if (allRowSelected) {
-            onAllRowSelection([], TAB_IDS.BIOSPECIMENS, false);
+          if (selectedAll) {
+            setSelectedAll(false);
+            setSelectedRows([]);
           }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({

@@ -16,7 +16,7 @@ export const useSavedFilter = (tag?: string, selectedId?: string | null) => {
     const favoriteFilter = filters.find(({ favorite }) => !!favorite);
 
     // HACK ask olivier
-    if (tag === DATA_EPLORATION_FILTER_TAG) {
+    if (selectedFilterById || (favoriteFilter && tag === DATA_EPLORATION_FILTER_TAG)) {
       localStorage.removeItem(`query-builder-cache-${DATA_EXPLORATION_REPO_CACHE_KEY}`);
     }
 

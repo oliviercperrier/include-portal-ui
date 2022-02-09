@@ -7,11 +7,8 @@ import intl from 'react-intl-universal';
 import { useDispatch } from 'react-redux';
 import { deleteSavedFilter, updateSavedFilter } from 'store/savedFilter/thunks';
 import { datesAreOnSameDay } from 'utils/dates';
-import { FILTER_TAG_PAGE_MAPPING } from 'views/DataExploration/utils/constant';
-import { Link } from 'react-router-dom';
 
 import styles from './index.module.scss';
-import { savedFilterActions } from 'store/savedFilter/slice';
 
 interface OwnProps {
   id: any;
@@ -70,13 +67,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
         <List.Item.Meta
           title={
             // eslint-disable-next-line
-            <Link
-              className={styles.filterLink}
-              to={FILTER_TAG_PAGE_MAPPING[data.tag]}
-              onClick={() => dispatch(savedFilterActions.setSelectedId(data.id))}
-            >
-              {data.title}
-            </Link>
+           <a>{data.title}</a>
           }
           description={intl.get('screen.dashboard.cards.savedFilters.lastSaved', {
             date: getUpdateDateFormat(data.updated_date),

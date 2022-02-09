@@ -1,87 +1,87 @@
-import { IQueryResults } from "graphql/models";
-import { IBiospecimenEntity } from "graphql/biospecimens/models";
-import { TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
-import {
-  TPagingConfig,
-  TPagingConfigCb,
-} from "views/DataExploration/utils/types";
-import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
-import { IParticipantEntity } from "graphql/participants/models";
-import { extractNcitTissueTitleAndCode } from "views/DataExploration/utils/helper";
-import ProTable from "@ferlab/ui/core/components/ProTable";
-import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
-import { getProTableDictionary } from "utils/translation";
-import { useDispatch } from "react-redux";
-import { useUser } from "store/user";
-import { updateUserConfig } from "store/user/thunks";
+import { IQueryResults } from 'graphql/models';
+import { IBiospecimenEntity } from 'graphql/biospecimens/models';
+import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
+import { RowSelection, TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import { IParticipantEntity } from 'graphql/participants/models';
+import { extractNcitTissueTitleAndCode } from 'views/DataExploration/utils/helper';
+import ProTable from '@ferlab/ui/core/components/ProTable';
+import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
+import { getProTableDictionary } from 'utils/translation';
+import { useDispatch } from 'react-redux';
+import { useUser } from 'store/user';
+import { updateUserConfig } from 'store/user/thunks';
+import { Button } from 'antd';
+import { ReportType } from 'services/api/reports/models';
+import { DownloadOutlined } from '@ant-design/icons';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
+  downloadReport: (e: string) => void;
+  rowSelection: RowSelection;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
   {
-    key: "derived_sample_id",
-    title: "Derived Sample ID",
-    dataIndex: "derived_sample_id",
-    render: (derived_sample_id: string) =>
-      derived_sample_id || TABLE_EMPTY_PLACE_HOLDER,
+    key: 'derived_sample_id',
+    title: 'Derived Sample ID',
+    dataIndex: 'derived_sample_id',
+    render: (derived_sample_id: string) => derived_sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: "sample_id",
-    title: "Sample ID",
-    dataIndex: "sample_id",
+    key: 'sample_id',
+    title: 'Sample ID',
+    dataIndex: 'sample_id',
     defaultHidden: true,
     render: (sample_id: string) => sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: "biospecimen_id",
-    title: "Biospecimen ID",
-    dataIndex: "biospecimen_id",
+    key: 'biospecimen_id',
+    title: 'Biospecimen ID',
+    dataIndex: 'biospecimen_id',
   },
   {
-    key: "participant",
-    title: "Participant ID",
-    dataIndex: "participant",
+    key: 'participant',
+    title: 'Participant ID',
+    dataIndex: 'participant',
     render: (participant: IParticipantEntity) => participant.participant_id,
   },
   {
-    key: "biospecimen_type",
-    title: "Biospecimen Type",
-    dataIndex: "biospecimen_type",
+    key: 'biospecimen_type',
+    title: 'Biospecimen Type',
+    dataIndex: 'biospecimen_type',
   },
   {
-    key: "sample_type",
-    title: "Sample Type",
-    dataIndex: "sample_type",
+    key: 'sample_type',
+    title: 'Sample Type',
+    dataIndex: 'sample_type',
     render: (sample_type: string) => sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: "derived_sample_type",
-    title: "Derived Sample Type",
-    dataIndex: "derived_sample_type",
-    render: (derived_sample_type) =>
-      derived_sample_type || TABLE_EMPTY_PLACE_HOLDER,
+    key: 'derived_sample_type',
+    title: 'Derived Sample Type',
+    dataIndex: 'derived_sample_type',
+    render: (derived_sample_type) => derived_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: "age_at_biospecimen_collection",
-    title: "Age at Biospecimen Collection",
-    dataIndex: "age_at_biospecimen_collection",
+    key: 'age_at_biospecimen_collection',
+    title: 'Age at Biospecimen Collection',
+    dataIndex: 'age_at_biospecimen_collection',
   },
   {
-    key: "anatomical_site",
-    title: "Anatomical Site (NCIT)",
-    dataIndex: "",
+    key: 'anatomical_site',
+    title: 'Anatomical Site (NCIT)',
+    dataIndex: '',
     defaultHidden: true,
   },
   {
-    key: "ncit_id_tissue_type",
-    title: "Tissue Type (NCIT)",
-    dataIndex: "ncit_id_tissue_type",
+    key: 'ncit_id_tissue_type',
+    title: 'Tissue Type (NCIT)',
+    dataIndex: 'ncit_id_tissue_type',
     className: styles.ncitTissueCell,
     render: (ncit_id_tissue_type) => {
       if (!ncit_id_tissue_type) {
@@ -92,7 +92,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
       return ncitInfo ? (
         <div>
-          {ncitInfo.title} (NCIT:{" "}
+          {ncitInfo.title} (NCIT:{' '}
           <a
             href={`https://www.ebi.ac.uk/ols/ontologies/ncit/terms?short_form=NCIT_${ncitInfo.code}`}
             target="_blank"
@@ -108,9 +108,9 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: "bio_repository",
-    title: "Biorepository Name",
-    dataIndex: "bio_repository",
+    key: 'bio_repository',
+    title: 'Biorepository Name',
+    dataIndex: 'bio_repository',
   },
 ];
 
@@ -118,19 +118,33 @@ const BioSpecimenTab = ({
   results,
   setPagingConfig,
   pagingConfig,
+  downloadReport,
+  rowSelection,
 }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const { selectedRows, onAllRowSelection, onRowSelection, allRowSelected } = rowSelection;
 
   return (
     <ProTable
+      rowSelection={{
+        selectedRowKeys: selectedRows,
+        onSelect: (selectedRowKey) => {
+          onRowSelection(selectedRowKey.key, TAB_IDS.BIOSPECIMENS);
+        },
+        onSelectAll: (selected, selectedRows, changeRows) => {
+          onAllRowSelection(
+            selectedRows.filter(Boolean).map((e) => e.key),
+            TAB_IDS.BIOSPECIMENS,
+            selected,
+          );
+        },
+      }}
       tableId="biospecimen_table"
       columns={defaultColumns}
       wrapperClassName={styles.biospecimenTabWrapper}
       loading={results.loading}
-      initialColumnState={
-        userInfo?.config.data_exploration?.tables?.biospecimens?.columns
-      }
+      initialColumnState={userInfo?.config.data_exploration?.tables?.biospecimens?.columns}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
@@ -148,8 +162,14 @@ const BioSpecimenTab = ({
                   },
                 },
               },
-            })
+            }),
           ),
+        extra: [
+          <Button onClick={(e) => downloadReport(ReportType.BIOSEPCIMEN_DATA)}>
+            <DownloadOutlined />
+            Download sample data
+          </Button>,
+        ],
       }}
       bordered
       size="small"
@@ -158,6 +178,10 @@ const BioSpecimenTab = ({
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
+          //TODO make a reset function?
+          if (allRowSelected) {
+            onAllRowSelection([], TAB_IDS.BIOSPECIMENS, false);
+          }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({
               index: page,
@@ -166,6 +190,7 @@ const BioSpecimenTab = ({
           }
         },
       }}
+      // dataSource={results.data.map((i) => ({ ...i, key: i.biospecimen_id }))} //FIXME missing biospecimen_id from data
       dataSource={results.data}
       dictionary={getProTableDictionary()}
     />

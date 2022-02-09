@@ -10,6 +10,7 @@ import GlobalReducer from "store/global";
 import UserReducer from "store/user";
 import FenceReducer from "store/fence";
 import RiffReducer from "store/riff";
+import ReportReducer from "store/report";
 import SavedFilterReducer from "store/savedFilter";
 
 const devMode = EnvVariables.configFor("ENV") === "development";
@@ -23,6 +24,7 @@ const persistConfig = {
 const rootReducer = combineReducers<RootState>({
   global: GlobalReducer,
   user: UserReducer,
+  report: ReportReducer,
   fence: FenceReducer,
   riff: RiffReducer,
   savedFilter: SavedFilterReducer,

@@ -59,6 +59,22 @@ const fr = {
       deleteFilter: "Unable to delete filter",
     },
   },
+  report: {
+    error: {
+      title: "Error",
+      message:
+          "We were unable to generate the report at this time. Please try again later or ",
+      support: "contact support"
+    },
+    inProgress: {
+      title: "Processing",
+      fetchReport: "Fetching Report, please wait",
+    },
+    onSuccess: {
+      title: "Success",
+      fetchReport: "The report was successfully downloaded",
+    },
+  },
   // COMPONENTS
   components: {
     filterList: {

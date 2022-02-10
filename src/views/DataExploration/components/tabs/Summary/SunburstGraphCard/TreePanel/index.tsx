@@ -1,11 +1,12 @@
-import { Button, Space, Tree, Typography } from "antd";
-import { addFieldToActiveQuery } from "utils/sqons";
-import { TreeNode } from "../utils/OntologyTree";
-import intl from "react-intl-universal";
-import { VisualType } from "@ferlab/ui/core/components/filters/types";
-import { RegexExtractPhenotype } from "..";
+import { Button, Space, Tree, Typography } from 'antd';
+import { addFieldToActiveQuery } from 'utils/sqons';
+import { TreeNode } from '../utils/OntologyTree';
+import intl from 'react-intl-universal';
+import { VisualType } from '@ferlab/ui/core/components/filters/types';
+import { RegexExtractPhenotype } from '..';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
+import { INDEXES } from 'graphql/constants';
 
 interface OwnProps {
   currentNode: TreeNode;
@@ -22,11 +23,7 @@ const getExpandedNode = (currentNode: TreeNode): string[] =>
 const getSelectedKeys = (currentNode: TreeNode): string[] =>
   [currentNode?.key.match(RegexExtractPhenotype)?.reverse()[0]!] || [];
 
-const getPath = (
-  node: string,
-  treeNodes: TreeNode[],
-  path: string[] = []
-): string[] => {
+const getPath = (node: string, treeNodes: TreeNode[], path: string[] = []): string[] => {
   const updatePath = [...path];
   const currentNodeText = treeNodes[0].key;
   updatePath.push(currentNodeText);
@@ -36,21 +33,16 @@ const getPath = (
   return updatePath;
 };
 
-const TreePanel = ({
-  currentNode,
-  treeData,
-  getSelectedPhenotype,
-  updateSunburst,
-}: OwnProps) => {
+const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst }: OwnProps) => {
   return (
     <Space direction="vertical" className={styles.phenotypeSunburstTree}>
       <Title level={5}>{currentNode?.name}</Title>
       <Text>
         {intl.get(
-          "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.nbParticipant",
+          'screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.nbParticipant',
           {
             count: currentNode?.results,
-          }
+          },
         )}
       </Text>
       <Button
@@ -59,23 +51,24 @@ const TreePanel = ({
         size="small"
         onClick={() => {
           addFieldToActiveQuery(
-            "observed_phenotype.name",
+            'observed_phenotype.name',
             {
               count: 1,
               key: currentNode?.name!,
             },
-            VisualType.Checkbox
+            VisualType.Checkbox,
+            INDEXES.PARTICIPANT,
           );
         }}
       >
         {intl.get(
-          "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.addTermToQuery"
+          'screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.addTermToQuery',
         )}
       </Button>
       <Space className={styles.treeWrapper} direction="vertical" size={5}>
         <Text type="secondary">
           {intl.get(
-            "screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.currentPath"
+            'screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.currentPath',
           )}
         </Text>
         <Tree
@@ -87,7 +80,7 @@ const TreePanel = ({
           treeData={treeData!}
           onSelect={(keys) => {
             if (keys.length) {
-              const key = getPath(keys[0] as string, treeData!).join("-");
+              const key = getPath(keys[0] as string, treeData!).join('-');
               getSelectedPhenotype({
                 title: keys[0] as string,
                 key,

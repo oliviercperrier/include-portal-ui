@@ -42,7 +42,7 @@ const addToQuery = (field: string, key: string) =>
       key,
     },
     VisualType.Checkbox,
-    INDEXES.PARTICIPANT,
+    INDEXES.FILE,
   );
 
 const AvailableDataGraphCard = ({
@@ -99,7 +99,7 @@ const AvailableDataGraphCard = ({
                 legendPosition: 'middle',
                 legendOffset: 35,
               }}
-              onClick={(datum) => addToQuery('files.data_type', datum.indexValue as string)}
+              onClick={(datum) => addToQuery('data_type', datum.indexValue as string)}
               {...graphSetting}
             />
           </Col>

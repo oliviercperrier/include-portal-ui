@@ -1,10 +1,13 @@
-import { Col, Row, Typography } from "antd";
-import { RawAggregation } from "graphql/models";
-import { toChartData } from "utils/charts";
-import BarChart from "components/uiKit/charts/Bar";
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import intl from "react-intl-universal";
-import { truncateString } from "utils/string";
+import { Col, Row, Typography } from 'antd';
+import { RawAggregation } from 'graphql/models';
+import { toChartData } from 'utils/charts';
+import BarChart from 'components/uiKit/charts/Bar';
+import GridCard from '@ferlab/ui/core/view/v2/GridCard';
+import intl from 'react-intl-universal';
+import { truncateString } from 'utils/string';
+import { addFieldToActiveQuery } from 'utils/sqons';
+import { VisualType } from '@ferlab/ui/core/components/filters/types';
+import { INDEXES } from 'graphql/constants';
 
 interface OwnProps {
   className?: string;
@@ -14,14 +17,10 @@ interface OwnProps {
 }
 
 const transformDataType = (results: RawAggregation) =>
-  (
-    results?.data?.participant?.aggregations?.files__data_type.buckets || []
-  ).map(toChartData);
+  (results?.data?.participant?.aggregations?.files__data_type.buckets || []).map(toChartData);
 
 const transformTypeOfOmics = (results: RawAggregation) =>
-  (
-    results?.data?.participant?.aggregations?.files__type_of_omics.buckets || []
-  ).map(toChartData);
+  (results?.data?.participant?.aggregations?.files__type_of_omics.buckets || []).map(toChartData);
 
 const graphSetting: any = {
   height: 300,
@@ -30,13 +29,24 @@ const graphSetting: any = {
     left: 125,
   },
   enableLabel: false,
-  layout: "horizontal",
+  layout: 'horizontal',
 };
 
 const { Title } = Typography;
 
+const addToQuery = (field: string, key: string) =>
+  addFieldToActiveQuery(
+    field,
+    {
+      count: 1,
+      key,
+    },
+    VisualType.Checkbox,
+    INDEXES.PARTICIPANT,
+  );
+
 const AvailableDataGraphCard = ({
-  className = "",
+  className = '',
   loading = false,
   dataTypeData,
   typeOfOmicsData,
@@ -49,9 +59,7 @@ const AvailableDataGraphCard = ({
       loadingType="spinner"
       title={
         <Title level={4}>
-          {intl.get(
-            "screen.dataExploration.tabs.summary.availableData.cardTitle"
-          )}
+          {intl.get('screen.dataExploration.tabs.summary.availableData.cardTitle')}
         </Title>
       }
       content={
@@ -61,15 +69,15 @@ const AvailableDataGraphCard = ({
               title="Participants by Type of Omics"
               data={transformTypeOfOmics(typeOfOmicsData)}
               axisLeft={{
-                legend: "Type of Omics",
-                legendPosition: "middle",
+                legend: 'Type of Omics',
+                legendPosition: 'middle',
                 legendOffset: -120,
                 format: (title: string) => truncateString(title, 15),
               }}
               tooltipLabel={(node) => node.data.id}
               axisBottom={{
-                legend: "# of participants",
-                legendPosition: "middle",
+                legend: '# of participants',
+                legendPosition: 'middle',
                 legendOffset: 35,
               }}
               {...graphSetting}
@@ -80,17 +88,18 @@ const AvailableDataGraphCard = ({
               title="Participants by Data Type"
               data={transformDataType(dataTypeData)}
               axisLeft={{
-                legend: "Data Types",
-                legendPosition: "middle",
+                legend: 'Data Types',
+                legendPosition: 'middle',
                 legendOffset: -120,
                 format: (title: string) => truncateString(title, 15),
               }}
               tooltipLabel={(node) => node.data.id}
               axisBottom={{
-                legend: "# of participants",
-                legendPosition: "middle",
+                legend: '# of participants',
+                legendPosition: 'middle',
                 legendOffset: 35,
               }}
+              onClick={(datum) => addToQuery('files.data_type', datum.indexValue as string)}
               {...graphSetting}
             />
           </Col>

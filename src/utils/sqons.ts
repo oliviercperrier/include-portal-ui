@@ -2,7 +2,12 @@ import { TFilterData, VisualType } from '@ferlab/ui/core/components/filters/type
 import { updateFilters } from '@ferlab/ui/core/data/filters/utils';
 import history from 'utils/history';
 
-export const addFieldToActiveQuery = (fieldName: string, value: TFilterData, type: VisualType) => {
+export const addFieldToActiveQuery = (
+  fieldName: string,
+  value: TFilterData,
+  type: VisualType,
+  index?: string,
+) => {
   updateFilters(
     history,
     {
@@ -17,5 +22,6 @@ export const addFieldToActiveQuery = (fieldName: string, value: TFilterData, typ
         id: fieldName,
       },
     ],
+    index,
   );
 };

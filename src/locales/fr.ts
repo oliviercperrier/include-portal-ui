@@ -444,13 +444,15 @@ const fr = {
     age_at_biospecimen_collection: "Age at Biospecimen Collection",
     bio_repository: "Bio Repository",
     // File
-    type_of_omics: "Type of Omics",
-    experimental_strategy: "Experimental Strategy",
-    data_category: "Data Category",
-    data_type: "Data Type",
-    file_format: "File Format",
-    size: "Size",
-    access: "Access",
+    files: {
+      type_of_omics: 'Type of Omics',
+      experimental_strategy: 'Experimental Strategy',
+      data_category: 'Data Category',
+      data_type: 'Data Type',
+      file_format: 'File Format',
+      size: 'Size',
+      access: 'Access',
+    },
   },
 };
 

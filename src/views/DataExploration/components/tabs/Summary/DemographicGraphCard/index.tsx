@@ -1,10 +1,13 @@
-import { Col, Row, Typography } from "antd";
-import { RawAggregation } from "graphql/models";
-import PieChart from "components/uiKit/charts/Pie";
-import { toChartData } from "utils/charts";
-import { SEX } from "common/constants";
-import intl from "react-intl-universal";
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
+import { Col, Row, Typography } from 'antd';
+import { RawAggregation } from 'graphql/models';
+import PieChart from 'components/uiKit/charts/Pie';
+import { toChartData } from 'utils/charts';
+import { SEX } from 'common/constants';
+import intl from 'react-intl-universal';
+import GridCard from '@ferlab/ui/core/view/v2/GridCard';
+import { addFieldToActiveQuery } from 'utils/sqons';
+import { VisualType } from '@ferlab/ui/core/components/filters/types';
+import { INDEXES } from 'graphql/constants';
 
 interface OwnProps {
   className?: string;
@@ -15,11 +18,11 @@ interface OwnProps {
 const getSexColor = (sex: SEX) => {
   switch (sex.toLowerCase()) {
     case SEX.FEMALE:
-      return "#ffadd2";
+      return '#ffadd2';
     case SEX.MALE:
-      return "#adc6ff";
+      return '#adc6ff';
     default:
-      return "gray";
+      return 'gray';
   }
 };
 
@@ -48,11 +51,18 @@ const graphSetting = {
 
 const { Title } = Typography;
 
-const DemographicsGraphCard = ({
-  className = "",
-  loading = false,
-  data,
-}: OwnProps) => {
+const addToQuery = (field: string, key: string) =>
+  addFieldToActiveQuery(
+    field,
+    {
+      count: 1,
+      key,
+    },
+    VisualType.Checkbox,
+    INDEXES.PARTICIPANT,
+  );
+
+const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
   return (
     <GridCard
       wrapperClassName={className}
@@ -61,37 +71,32 @@ const DemographicsGraphCard = ({
       loadingType="spinner"
       title={
         <Title level={4}>
-          {intl.get(
-            "screen.dataExploration.tabs.summary.demographic.cardTitle"
-          )}
+          {intl.get('screen.dataExploration.tabs.summary.demographic.cardTitle')}
         </Title>
       }
       content={
         <Row gutter={[12, 24]}>
           <Col span={12}>
             <PieChart
-              title={intl.get(
-                "screen.dataExploration.tabs.summary.demographic.sexTitle"
-              )}
+              title={intl.get('screen.dataExploration.tabs.summary.demographic.sexTitle')}
               data={data ? transformData(data).sex : []}
+              onClick={(datum) => addToQuery('sex', datum.id as string)}
               {...graphSetting}
             />
           </Col>
           <Col span={12}>
             <PieChart
-              title={intl.get(
-                "screen.dataExploration.tabs.summary.demographic.raceTitle"
-              )}
+              title={intl.get('screen.dataExploration.tabs.summary.demographic.raceTitle')}
               data={data ? transformData(data).race : []}
+              onClick={(datum) => addToQuery('race', datum.id as string)}
               {...graphSetting}
             />
           </Col>
           <Col span={12}>
             <PieChart
-              title={intl.get(
-                "screen.dataExploration.tabs.summary.demographic.ethnicityTitle"
-              )}
+              title={intl.get('screen.dataExploration.tabs.summary.demographic.ethnicityTitle')}
               data={data ? transformData(data).ethnicity : []}
+              onClick={(datum) => addToQuery('ethnicity', datum.id as string)}
               {...graphSetting}
             />
           </Col>

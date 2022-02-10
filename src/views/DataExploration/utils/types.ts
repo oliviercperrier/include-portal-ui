@@ -1,6 +1,5 @@
 import { Key } from 'react';
 import { ReportType } from 'services/api/reports/models';
-import { TAB_IDS } from './constant';
 
 export type TPagingConfig = {
   index: number;

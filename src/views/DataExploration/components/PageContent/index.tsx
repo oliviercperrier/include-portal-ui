@@ -49,12 +49,12 @@ import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
 
-interface OwnProps {
+type OwnProps = {
   fileMapping: ExtendedMappingResults;
   biospecimenMapping: ExtendedMappingResults;
   participantMapping: ExtendedMappingResults;
   tabId?: string;
-}
+};
 
 const addTagToFilter = (filter: ISavedFilter) => ({
   ...filter,

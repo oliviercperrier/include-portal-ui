@@ -68,7 +68,7 @@ const SunburstD3 = (
     return d3.partition().size([2.0 * Math.PI, root.height + 1])(root);
   };
 
-  const root = partition(data);
+  const root = partition(data || {});
   const color = d3.scaleOrdinal(colors ? colors : d3['schemeSet1']);
   root.each((d) => (d.current = d));
 

@@ -416,6 +416,7 @@ const fr = {
   },
   facets: {
     // Participant
+    participant_id: "Participant ID",
     study_id: 'Study ID',
     karyotype: 'Karyotype',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',

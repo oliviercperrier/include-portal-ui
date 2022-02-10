@@ -1,6 +1,6 @@
-import { IValueContent, ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
-import { INDEXES } from "graphql/constants";
-import { ExtendedMapping, ExtendedMappingResults } from "graphql/models";
+import { IValueContent, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { INDEXES } from 'graphql/constants';
+import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
 
 interface IFieldPrefixMap {
   index: string;
@@ -9,12 +9,12 @@ interface IFieldPrefixMap {
 
 const filePrefixMap: IFieldPrefixMap = {
   index: INDEXES.FILE,
-  prefix: "files.",
+  prefix: 'files.',
 };
 
 const participantPrefixMap: IFieldPrefixMap = {
   index: INDEXES.PARTICIPANT,
-  prefix: "participants.",
+  prefix: 'participants.',
 };
 
 //const biospecimenPrefixMap: IFieldPrefixMap = {
@@ -22,26 +22,21 @@ const participantPrefixMap: IFieldPrefixMap = {
 //  prefix: "biospecimen.",
 //};
 
-const getPrefix = (
-  field: IValueContent,
-  fieldPrefixMaps: IFieldPrefixMap[]
-) => {
-  const fieldPrefixMap = fieldPrefixMaps.find(
-    (config) => config.index === field.index
-  );
-  return fieldPrefixMap ? fieldPrefixMap.prefix : "";
+const getPrefix = (field: IValueContent, fieldPrefixMaps: IFieldPrefixMap[]) => {
+  const fieldPrefixMap = fieldPrefixMaps.find((config) => config.index === field.index);
+  return fieldPrefixMap ? fieldPrefixMap.prefix : '';
 };
 
 const mapFilters = (
   sqonFilters: ISyntheticSqon,
-  fieldPrefixMaps: IFieldPrefixMap[]
+  fieldPrefixMaps: IFieldPrefixMap[],
 ): ISyntheticSqon => {
   const sqonToMap = {
     ...sqonFilters,
   };
 
-  const newContent = sqonToMap.content.map((c) => {
-    if (typeof c !== "object") {
+  const newContent = (sqonToMap.content || []).map((c) => {
+    if (typeof c !== 'object') {
       return c;
     }
 
@@ -77,7 +72,7 @@ export const mapFilterForBiospecimen = (sqonFilters: ISyntheticSqon) =>
     {
       // Biospecimen only 1 participant so no 's'
       index: INDEXES.PARTICIPANT,
-      prefix: "participant.",
+      prefix: 'participant.',
     },
   ]);
 

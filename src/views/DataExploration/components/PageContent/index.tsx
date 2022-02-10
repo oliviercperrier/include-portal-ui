@@ -77,6 +77,7 @@ const PageContent = ({
 
   const participantResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters));
   const biospecimenResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters));
+  const fileResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForFiles(filters));
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
@@ -88,7 +89,7 @@ const PageContent = ({
   const fileResults = useDataFiles({
     first: pagingConfigFile.size,
     offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
-    sqon: resolveSyntheticSqon(allSqons, mapFilterForFiles(filters)),
+    sqon: fileResolvedSqon,
     sort: [],
   });
 

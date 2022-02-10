@@ -1,12 +1,13 @@
-import EnvironmentVariables from "helpers/EnvVariables";
-import keycloak from "auth/keycloak-api/keycloak";
-import {ReportConfig, ReportType} from "./models";
-import isEmpty from "lodash/isEmpty";
-import { format } from "date-fns";
-import downloader from "common/downloader";
+import EnvironmentVariables from 'helpers/EnvVariables';
+import keycloak from 'auth/keycloak-api/keycloak';
+import { ReportConfig, ReportType } from './models';
+import isEmpty from 'lodash/isEmpty';
+import { format } from 'date-fns';
+import downloader from 'common/downloader';
+import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
 
-const url = EnvironmentVariables.configFor("REPORTS_API_URL");
-const arrangerProjectId = EnvironmentVariables.configFor("ARRANGER_PROJECT_ID");
+const url = EnvironmentVariables.configFor('REPORTS_API_URL');
+const arrangerProjectId = EnvironmentVariables.configFor('ARRANGER_PROJECT_ID');
 
 const REPORTS_ROUTES = {
   [ReportType.CLINICAL_DATA]: `${url}/reports/clinical-data`,
@@ -15,11 +16,10 @@ const REPORTS_ROUTES = {
 };
 
 const headers = () => ({
-  "Content-Type": "application/json",
-  Accept: "*/*",
+  'Content-Type': 'application/json',
+  Accept: '*/*',
   Authorization: `Bearer ${keycloak.token}`,
-  "Accept-Encoding": "gzip, deflate, br",
-
+  'Accept-Encoding': 'gzip, deflate, br',
 });
 
 const generateReport = (config: ReportConfig) => {
@@ -30,7 +30,7 @@ const generateReport = (config: ReportConfig) => {
 
   if (!config.sqon || isEmpty(config.sqon)) {
     reportSqon = {
-      op: "and",
+      op: BooleanOperators.and,
       content: [],
     };
   } else {
@@ -40,7 +40,7 @@ const generateReport = (config: ReportConfig) => {
   return downloader({
     // @ts-ignore
     url: REPORTS_ROUTES[name],
-    method: "POST",
+    method: 'POST',
     responseType: 'blob',
     data: {
       sqon: reportSqon,

@@ -1,3 +1,4 @@
+import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { Key } from 'react';
 import { TAB_IDS } from 'views/DataExploration/utils/constant';
 
@@ -17,10 +18,10 @@ export const generateSelectionSqon = (type: string, ids: Key[]) => {
   }
 
   return {
-    op: 'and',
+    op: BooleanOperators.and,
     content: [
       {
-        op: 'in',
+        op: TermOperators.in,
         content: {
           field,
           value: ids,

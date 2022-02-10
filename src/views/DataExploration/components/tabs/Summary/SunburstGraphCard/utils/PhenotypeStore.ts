@@ -1,14 +1,12 @@
-import { dotToUnderscore } from "@ferlab/ui/core/data/arranger/formatting";
-import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
-import { IPhenotypeSource } from "graphql/summary/models";
-import { ARRANGER_API_PROJECT_URL } from "provider/ApolloProvider";
-import { sendRequest } from "services/api";
-import OntologyTree, {
-  lightTreeNodeConstructor,
-  TreeNode,
-} from "./OntologyTree";
+import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
+import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
+import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { IPhenotypeSource } from 'graphql/summary/models';
+import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
+import { sendRequest } from 'services/api';
+import OntologyTree, { lightTreeNodeConstructor, TreeNode } from './OntologyTree';
 
-const ROOT_PHENO = "All (HP:0000001)";
+const ROOT_PHENO = 'All (HP:0000001)';
 
 interface IPhenotypeQueryPayload {
   data: {
@@ -21,6 +19,7 @@ interface IPhenotypeQueryPayload {
       >;
     };
   };
+  errors?: any[];
 }
 
 export const generateNavTreeFormKey = (phenotypes: string[]): TreeNode[] => {
@@ -40,51 +39,39 @@ export const generateNavTreeFormKey = (phenotypes: string[]): TreeNode[] => {
 
   const rootPheno = phenotypes.pop();
 
-  return rootPheno
-    ? [lightTreeNodeConstructor(rootPheno, generateNavTreeFormKey(phenotypes))]
-    : [];
+  return rootPheno ? [lightTreeNodeConstructor(rootPheno, generateNavTreeFormKey(phenotypes))] : [];
 };
 
 export class PhenotypeStore {
   phenotypes: IPhenotypeSource[] = [];
   tree: TreeNode | undefined = undefined;
 
-  fetch = (
-    field: string,
-    sqon?: ISyntheticSqon,
-    filterThemselves?: boolean
-  ) => {
+  fetch = (field: string, sqon?: ISyntheticSqon, filterThemselves?: boolean) => {
     this.phenotypes = [];
     this.tree = undefined;
 
-    return this.getPhenotypes(field, sqon, filterThemselves).then(
-      (data: IPhenotypeSource[]) => {
-        const ontologyTree = new OntologyTree(
-          this.removeSingleRootNode(data),
-          field
-        );
-        this.phenotypes = ontologyTree.phenotypes;
-        this.tree = ontologyTree.tree;
-      }
-    );
+    return this.getPhenotypes(field, sqon, filterThemselves).then((data: IPhenotypeSource[]) => {
+      const ontologyTree = new OntologyTree(this.removeSingleRootNode(data), field);
+      this.phenotypes = ontologyTree.phenotypes;
+      this.tree = ontologyTree.tree;
+    });
   };
 
   getRootNode = () => this.tree;
 
-  getPhenotypes = async (
-    field: string,
-    sqon?: ISyntheticSqon,
-    filterThemselves = false
-  ) => {
+  getPhenotypes = async (field: string, sqon?: ISyntheticSqon, filterThemselves = false) => {
     const body = {
       query: this.buildPhenotypeQuery(field, filterThemselves),
       variables: {
-        sqon: sqon,
+        sqon: {
+          ...sqon,
+          op: sqon?.op || BooleanOperators.and,
+        },
         term_filters: {
-          op: "and",
+          op: BooleanOperators.and,
           content: [
             {
-              op: "in",
+              op: TermOperators.in,
               content: { field: `${field}.is_tagged`, value: [true] },
             },
           ],
@@ -94,23 +81,20 @@ export class PhenotypeStore {
 
     const { data, error } = await sendRequest<IPhenotypeQueryPayload>({
       url: ARRANGER_API_PROJECT_URL,
-      method: "POST",
+      method: 'POST',
       data: body,
     });
 
-    if (error) {
+    if (error || data?.data.errors) {
       return [];
     }
 
-    return (
-      data?.data.participant.aggregations[dotToUnderscore(field) + "__name"]
-        .buckets || []
-    );
+    return data?.data.participant.aggregations[dotToUnderscore(field) + '__name'].buckets || [];
   };
 
   buildPhenotypeQuery = (
     field: string,
-    filterThemselves: boolean
+    filterThemselves: boolean,
   ) => `query($sqon: JSON, $term_filters: JSON) {
     participant {
       aggregations(

@@ -160,10 +160,10 @@ const fr = {
       },
       query: {
         combine: {
-          and: 'And',
-          or: 'Or',
+          and: 'and',
+          or: 'or',
         },
-        noQuery: 'Use the facets on the left to build a query',
+        noQuery: 'Use the search tools & facets on the left to build a query',
       },
       actions: {
         new: 'New',
@@ -282,7 +282,7 @@ const fr = {
         savedFilters: {
           title: 'Saved Filters',
           noSavedFilters: 'You have no saved filters',
-          lastSaved: 'Last saved: {date}',
+          lastSaved: 'Last saved: {date} ago',
         },
       },
     },

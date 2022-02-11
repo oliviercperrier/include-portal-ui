@@ -1,10 +1,10 @@
-import { ResponsivePie, PieSvgProps, DefaultRawDatum } from "@nivo/pie";
-import { Typography } from "antd";
-import { getCommonColors } from "common/charts";
+import { ResponsivePie, PieSvgProps, DefaultRawDatum } from '@nivo/pie';
+import { Typography } from 'antd';
+import { getCommonColors } from 'common/charts';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
-type OwnProps = Omit<PieSvgProps<DefaultRawDatum>, "width" | "height"> & {
+type OwnProps = Omit<PieSvgProps<DefaultRawDatum>, 'width' | 'height'> & {
   title?: string;
   height: number;
 };
@@ -23,10 +23,16 @@ const PieChart = ({
       {title && <Title level={5}>{title}</Title>}
       <div className={styles.chartWrapper} style={{ height: height }}>
         <ResponsivePie
+          {...rest}
           colors={rest.colors || getCommonColors()}
           enableArcLabels={enableArcLabels}
           enableArcLinkLabels={enableArcLinkLabels}
-          {...rest}
+          onMouseEnter={(_, e: any) => {
+            if (rest.onMouseEnter) {
+              rest.onMouseEnter(_, e);
+            }
+            e.target.style.cursor = 'pointer';
+          }}
         />
       </div>
     </div>

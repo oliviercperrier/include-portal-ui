@@ -8,6 +8,7 @@ import intl from 'react-intl-universal';
 import SunburstD3 from './utils/sunburst-d3';
 import { getCommonColors } from 'common/charts';
 import TreePanel from 'views/DataExploration/components/tabs/Summary/SunburstGraphCard/TreePanel';
+import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper';
 
 import styles from './index.module.scss';
 
@@ -47,7 +48,10 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
         },
         getSelectedPhenotype,
         {
-          centerTextFormatter: (data: TreeNode) => `${data.results}`,
+          centerTitleFormatter: (data: TreeNode) => data.results,
+          centerSubtitleFormatter: (data: TreeNode) => 'Participants with',
+          centerDescriptionFormatter: (data: TreeNode) =>
+            `HP:${extractPhenotypeTitleAndCode(data.name!)?.code}`,
           tooltipFormatter: (data: TreeNode) =>
             `<div>
               ${data.title}<br/><br/>

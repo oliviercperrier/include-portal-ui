@@ -6,12 +6,12 @@ import { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useDispatch } from 'react-redux';
 import { deleteSavedFilter, updateSavedFilter } from 'store/savedFilter/thunks';
-import { datesAreOnSameDay } from 'utils/dates';
 import { FILTER_TAG_PAGE_MAPPING } from 'views/DataExploration/utils/constant';
 import { Link } from 'react-router-dom';
 import { savedFilterActions } from 'store/savedFilter/slice';
 
 import styles from './index.module.scss';
+import { distanceInWords } from 'date-fns';
 
 interface OwnProps {
   id: any;
@@ -19,15 +19,6 @@ interface OwnProps {
 }
 
 const FILTER_NAME_MAX_LENGTH = 50;
-
-const getUpdateDateFormat = (date: string) => {
-  const today = new Date();
-  const updateDate = new Date(date);
-
-  return `${updateDate.toLocaleDateString()} ${
-    datesAreOnSameDay(today, updateDate) ? updateDate.toLocaleTimeString() : ''
-  }`;
-};
 
 const SavedFiltersListItem = ({ id, data }: OwnProps) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,7 +70,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
             </Link>
           }
           description={intl.get('screen.dashboard.cards.savedFilters.lastSaved', {
-            date: getUpdateDateFormat(data.updated_date),
+            date: distanceInWords(new Date(), new Date(data.updated_date)),
           })}
           className={styles.itemMeta}
         />

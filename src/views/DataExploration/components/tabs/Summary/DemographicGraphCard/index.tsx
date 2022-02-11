@@ -6,7 +6,6 @@ import { SEX } from 'common/constants';
 import intl from 'react-intl-universal';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { addFieldToActiveQuery } from 'utils/sqons';
-import { VisualType } from '@ferlab/ui/core/components/filters/types';
 import { INDEXES } from 'graphql/constants';
 
 interface OwnProps {
@@ -52,15 +51,7 @@ const graphSetting = {
 const { Title } = Typography;
 
 const addToQuery = (field: string, key: string) =>
-  addFieldToActiveQuery(
-    field,
-    {
-      count: 1,
-      key,
-    },
-    VisualType.Checkbox,
-    INDEXES.PARTICIPANT,
-  );
+  addFieldToActiveQuery(field, [key], INDEXES.PARTICIPANT);
 
 const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
   return (

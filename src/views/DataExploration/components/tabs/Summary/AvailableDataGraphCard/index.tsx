@@ -6,7 +6,6 @@ import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import intl from 'react-intl-universal';
 import { truncateString } from 'utils/string';
 import { addFieldToActiveQuery } from 'utils/sqons';
-import { VisualType } from '@ferlab/ui/core/components/filters/types';
 import { INDEXES } from 'graphql/constants';
 
 interface OwnProps {
@@ -35,15 +34,7 @@ const graphSetting: any = {
 const { Title } = Typography;
 
 const addToQuery = (field: string, key: string) =>
-  addFieldToActiveQuery(
-    field,
-    {
-      count: 1,
-      key,
-    },
-    VisualType.Checkbox,
-    INDEXES.FILE,
-  );
+  addFieldToActiveQuery(field, [key], INDEXES.FILE);
 
 const AvailableDataGraphCard = ({
   className = '',

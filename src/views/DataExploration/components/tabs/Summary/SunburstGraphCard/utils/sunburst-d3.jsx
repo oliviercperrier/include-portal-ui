@@ -13,10 +13,17 @@ const SunburstD3 = (
   getSelectedPhenotype,
   formatters = {
     tooltipFormatter: (node) => {},
-    centerTextFormatter: (node) => {},
+    centerTitleFormatter: (node) => {},
+    centerSubtitleFormatter: (node) => {},
+    centerDescriptionFormatter: (node) => {},
   },
 ) => {
-  const { tooltipFormatter, centerTextFormatter } = formatters;
+  const {
+    tooltipFormatter,
+    centerTitleFormatter,
+    centerSubtitleFormatter,
+    centerDescriptionFormatter,
+  } = formatters;
   const width = config.width || 300;
   const height = config.height || 300;
   const depth = config.depth;
@@ -68,7 +75,7 @@ const SunburstD3 = (
     return d3.partition().size([2.0 * Math.PI, root.height + 1])(root);
   };
 
-  const root = partition(data || {});
+  const root = partition(data || {});
   const color = d3.scaleOrdinal(colors ? colors : d3['schemeSet1']);
   root.each((d) => (d.current = d));
 
@@ -87,11 +94,12 @@ const SunburstD3 = (
       while (d.depth > 1) d = d.parent;
       return color(d.data.title);
     })
+    .style('cursor', 'pointer')
     .attr('fill-opacity', (d) =>
       arcVisible(d.current) ? (d.children ? fillOpacityWithChild : fillOpacityWithoutChild) : 0,
     );
 
-  [...document.getElementsByClassName("tooltipsunburst")].map(n => n && n.remove());
+  [...document.getElementsByClassName('tooltipsunburst')].map((n) => n && n.remove());
 
   const Tooltip = d3
     .select('#tooltip-wrapper')
@@ -115,7 +123,7 @@ const SunburstD3 = (
       .style('left', d3.event.offsetX + 25 + 'px')
       .style('top', d3.event.offsetY + 25 + 'px');
   };
-  const mouseoutTooltip = function (d) {
+  const mouseoutTooltip = function () {
     Tooltip.style('display', 'none');
   };
 
@@ -128,14 +136,17 @@ const SunburstD3 = (
     })
     .on('mouseout', function () {
       const data = d3.select(this).datum().current;
-      return arcVisible(data) ? onMouseout() : () => {};
+
+      if (arcVisible(data)) {
+        onMouseout();
+        mouseoutTooltip();
+      }
     })
     .on('click', function (p) {
       const data = d3.select(this).datum().current;
       return arcVisible(data) ? clicked(p) : () => {};
     })
-    .on('mousemove', mousemoveTooltip)
-    .on('mouseout', mouseoutTooltip);
+    .on('mousemove', mousemoveTooltip);
 
   const parent = g
     .append('circle')
@@ -149,14 +160,14 @@ const SunburstD3 = (
 
   // center text
   // Only create the node if we have something to display
-  if (centerTextFormatter) {
+  if (centerTitleFormatter) {
     var centerText = g
       .append('text')
       .lower()
       .datum(root)
       .text((d) => {
         selectedPhenotype = d;
-        return centerTextFormatter(d.data);
+        return centerTitleFormatter(d.data);
       })
       .attr('x', (d) => d.x0)
       .attr('y', (d) => d.y0)
@@ -173,7 +184,7 @@ const SunburstD3 = (
     .attr('text-anchor', 'middle');
 
   // ACTIONS
-  function wrap(selection) {
+  function wrap(selection, data) {
     // there is no centering of text with svg, need to do it manually
     selection.each(function () {
       let centerText = d3.select(this),
@@ -193,6 +204,8 @@ const SunburstD3 = (
         .attr('y', y)
         .attr('dy', dy + 'em');
 
+      const currentNode = data || centerText.datum().current.data;
+
       while ((word = words.pop())) {
         if (!regexTermNumber.test(word)) {
           line.push(word);
@@ -205,7 +218,7 @@ const SunburstD3 = (
             .append('tspan')
             .text(word)
             .attr('x', 0)
-            .attr('y', -10)
+            .attr('y', -15)
             .attr('fill', '#072550')
             .style('font-size', '20px')
             .style('font-weight', '600');
@@ -213,18 +226,27 @@ const SunburstD3 = (
           line.pop();
           centerText
             .append('tspan')
-            .text('Participants in query')
+            .text(() => {
+              if (centerSubtitleFormatter) {
+                return centerSubtitleFormatter(currentNode);
+              }
+            })
             .attr('x', 0)
-            .attr('y', 10)
+            .attr('y', 5)
             .attr('fill', '#5a77a0')
             .style('font-size', '14px')
-            .style('font-weight', '400');
-          centerText
-            .append('foreignObject')
+            .style('font-weight', '400')
+            .append('tspan')
+            .text(() => {
+              if (centerSubtitleFormatter) {
+                return centerDescriptionFormatter(currentNode);
+              }
+            })
             .attr('x', 0)
-            .attr('y', 40)
-            .append('xhtml:button')
-            .html('lol');
+            .attr('y', 25)
+            .attr('fill', '#5a77a0')
+            .style('font-size', '12px')
+            .style('font-weight', '400');
         }
 
         //** - 20 ** with compensation for font size
@@ -284,6 +306,7 @@ const SunburstD3 = (
       })
       .tween('data', (d) => (t) => (d.current = d3.interpolate(d.current, d.target)(t)))
       .attrTween('d', (d) => () => arc(d.current))
+      .style('cursor', 'pointer')
       .attr('fill-opacity', (d) =>
         arcVisible(d.target) ? (d.children ? fillOpacityWithChild : fillOpacityWithoutChild) : 0,
       );
@@ -314,9 +337,13 @@ const SunburstD3 = (
   };
 
   const updateCenterText = (p) => {
-    if (!centerTextFormatter) return;
+    if (!centerTitleFormatter) return;
     const textData = p || selectedPhenotype;
-    centerText.text(() => centerTextFormatter(textData.data)).call(wrap);
+    centerText
+      .text(() => centerTitleFormatter(textData.data))
+      .call((selection) => {
+        wrap(selection, textData.data);
+      });
   };
 
   const findNodeByKey = (key, node, returnNode) => {

@@ -1,36 +1,37 @@
-import ProTable from "@ferlab/ui/core/components/ProTable";
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Space, Typography } from "antd";
-import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
-import { useStudies } from "graphql/studies/actions";
-import ApolloProvider from "provider/ApolloProvider";
-import { GraphqlBackend } from "provider/types";
-import { getProTableDictionary } from "utils/translation";
+import ProTable from '@ferlab/ui/core/components/ProTable';
+import GridCard from '@ferlab/ui/core/view/v2/GridCard';
+import { Space, Typography } from 'antd';
+import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
+import { useStudies } from 'graphql/studies/actions';
+import ApolloProvider from 'provider/ApolloProvider';
+import { GraphqlBackend } from 'provider/types';
+import { getProTableDictionary } from 'utils/translation';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 const { Title } = Typography;
 
 const columns: ProColumnType<any>[] = [
   {
-    key: "study_id",
-    title: "Study Code",
-    dataIndex: "study_id",
+    key: 'study_id',
+    title: 'Study Code',
+    dataIndex: 'study_id',
   },
   {
-    key: "study_name",
-    title: "Name",
-    dataIndex: "study_name",
+    key: 'study_name',
+    title: 'Name',
+    dataIndex: 'study_name',
+    width: 500,
   },
   {
-    key: "program",
-    title: "Program",
-    dataIndex: "program",
+    key: 'program',
+    title: 'Program',
+    dataIndex: 'program',
   },
   {
-    key: "external_id",
-    title: "dbGaP",
-    dataIndex: "external_id",
+    key: 'external_id',
+    title: 'dbGaP',
+    dataIndex: 'external_id',
     render: (external_id: string) => (
       <a
         target="_blank"
@@ -42,30 +43,30 @@ const columns: ProColumnType<any>[] = [
     ),
   },
   {
-    key: "participant_count",
-    title: "Participants",
-    dataIndex: "participant_count",
+    key: 'participant_count',
+    title: 'Participants',
+    dataIndex: 'participant_count',
   },
   {
-    key: "family_count",
-    title: "Families",
-    dataIndex: "family_count",
+    key: 'family_count',
+    title: 'Families',
+    dataIndex: 'family_count',
   },
   {
-    key: "genomic",
-    title: "Genomic",
+    key: 'genomic',
+    title: 'Genomic',
   },
   {
-    key: "proteomic",
-    title: "Proteomic",
+    key: 'proteomic',
+    title: 'Proteomic',
   },
   {
-    key: "immune_map",
-    title: "Immune Map",
+    key: 'immune_map',
+    title: 'Immune Map',
   },
   {
-    key: "metabolic",
-    title: "Metabolomic",
+    key: 'metabolic',
+    title: 'Metabolomic',
   },
 ];
 

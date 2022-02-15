@@ -8,6 +8,7 @@ import { DocumentNode } from "@apollo/client";
 import { generateFilters } from "graphql/utils/Filters";
 import useGetAggregations from "hooks/graphql/useGetAggregations";
 import { ExtendedMappingResults } from "graphql/models";
+import { useHistory } from "react-router-dom";
 
 import styles from "./Filters.module.scss";
 
@@ -24,6 +25,7 @@ const GenericFilters = ({
   cacheKey,
   extendedMappingResults,
 }: OwnProps) => {
+  const history = useHistory();
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(cacheKey).state;
   const results = useGetAggregations(
@@ -49,7 +51,8 @@ const GenericFilters = ({
           true,
           true,
           true,
-          true
+          true,
+          history
         )}
       </Layout>
     </Spin>

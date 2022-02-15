@@ -7,6 +7,7 @@ import intl from 'react-intl-universal';
 import { truncateString } from 'utils/string';
 import { addFieldToActiveQuery } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
+import { useHistory } from 'react-router-dom';
 
 interface OwnProps {
   className?: string;
@@ -33,8 +34,8 @@ const graphSetting: any = {
 
 const { Title } = Typography;
 
-const addToQuery = (field: string, key: string) =>
-  addFieldToActiveQuery(field, [key], INDEXES.FILE);
+const addToQuery = (field: string, key: string, history: any) =>
+  addFieldToActiveQuery(field, [key], INDEXES.FILE, history);
 
 const AvailableDataGraphCard = ({
   className = '',
@@ -42,6 +43,8 @@ const AvailableDataGraphCard = ({
   dataTypeData,
   typeOfOmicsData,
 }: OwnProps) => {
+  const history = useHistory();
+
   return (
     <GridCard
       wrapperClassName={className}
@@ -90,7 +93,7 @@ const AvailableDataGraphCard = ({
                 legendPosition: 'middle',
                 legendOffset: 35,
               }}
-              onClick={(datum) => addToQuery('data_type', datum.indexValue as string)}
+              onClick={(datum) => addToQuery('data_type', datum.indexValue as string, history)}
               {...graphSetting}
             />
           </Col>

@@ -2,12 +2,12 @@ import { Button, Checkbox, Form, Input, Radio, Space, Typography } from "antd";
 import cx from "classnames";
 import { ArrowLeftOutlined, MailOutlined } from "@ant-design/icons";
 import intl from "react-intl-universal";
-import history from "utils/history";
 import { STATIC_ROUTES } from "utils/routes";
 import { useDispatch } from "react-redux";
 import { completeRegistration } from "store/user/thunks";
 import { useUser } from "store/user";
 import { userActions } from "store/user/slice";
+import { useHistory } from "react-router-dom";
 
 import styles from "./index.module.scss";
 
@@ -39,6 +39,7 @@ const RegistrationStep = () => {
   const { isUpdating } = useUser();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const history = useHistory();
 
   const validateMessages = {
     required: intl.get("global.forms.errors.requiredField"),

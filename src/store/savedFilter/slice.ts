@@ -19,7 +19,7 @@ const savedFilterSlice = createSlice({
   name: 'user',
   initialState: SavedFilterState,
   reducers: {
-    setSelectedId: (state, action: PayloadAction<string>) => ({
+    setSelectedId: (state, action: PayloadAction<string | undefined>) => ({
       ...state,
       selectedId: action.payload,
     }),

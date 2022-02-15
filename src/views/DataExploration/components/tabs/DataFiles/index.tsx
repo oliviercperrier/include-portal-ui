@@ -13,6 +13,7 @@ import { updateUserConfig } from 'store/user/thunks';
 import { useState } from 'react';
 
 import styles from './index.module.scss';
+import { formatFileSize } from 'utils/formatFileSize';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -65,9 +66,9 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'size',
-    title: 'Size (bytes)',
+    title: 'Size',
     dataIndex: 'size',
-    render: (data_type) => data_type || 0,
+    render: (size) => formatFileSize(size, { output: 'string' }),
   },
   {
     key: 'access',

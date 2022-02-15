@@ -7,6 +7,7 @@ import intl from 'react-intl-universal';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { addFieldToActiveQuery } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
+import { useHistory } from 'react-router-dom';
 
 interface OwnProps {
   className?: string;
@@ -50,10 +51,12 @@ const graphSetting = {
 
 const { Title } = Typography;
 
-const addToQuery = (field: string, key: string) =>
-  addFieldToActiveQuery(field, [key], INDEXES.PARTICIPANT);
+const addToQuery = (field: string, key: string, history: any) =>
+  addFieldToActiveQuery(field, [key], INDEXES.PARTICIPANT, history);
 
 const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
+  const history = useHistory();
+
   return (
     <GridCard
       wrapperClassName={className}
@@ -71,7 +74,7 @@ const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnPro
             <PieChart
               title={intl.get('screen.dataExploration.tabs.summary.demographic.sexTitle')}
               data={data ? transformData(data).sex : []}
-              onClick={(datum) => addToQuery('sex', datum.id as string)}
+              onClick={(datum) => addToQuery('sex', datum.id as string, history)}
               {...graphSetting}
             />
           </Col>
@@ -79,7 +82,7 @@ const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnPro
             <PieChart
               title={intl.get('screen.dataExploration.tabs.summary.demographic.raceTitle')}
               data={data ? transformData(data).race : []}
-              onClick={(datum) => addToQuery('race', datum.id as string)}
+              onClick={(datum) => addToQuery('race', datum.id as string, history)}
               {...graphSetting}
             />
           </Col>
@@ -87,7 +90,7 @@ const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnPro
             <PieChart
               title={intl.get('screen.dataExploration.tabs.summary.demographic.ethnicityTitle')}
               data={data ? transformData(data).ethnicity : []}
-              onClick={(datum) => addToQuery('ethnicity', datum.id as string)}
+              onClick={(datum) => addToQuery('ethnicity', datum.id as string, history)}
               {...graphSetting}
             />
           </Col>

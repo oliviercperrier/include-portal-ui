@@ -5,7 +5,6 @@ import {
   PieChartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import history from 'utils/history';
 import {
   DATA_EPLORATION_FILTER_TAG,
   DATA_EXPLORATION_REPO_CACHE_KEY,
@@ -14,7 +13,10 @@ import {
 } from 'views/DataExploration/utils/constant';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
+import {
+  getQueryBuilderCache,
+  useFilters,
+} from '@ferlab/ui/core/data/filters/utils';
 import { STATIC_ROUTES } from 'utils/routes';
 import { getQueryBuilderDictionary } from 'utils/translation';
 import { Space, Tabs } from 'antd';
@@ -46,6 +48,7 @@ import { fetchReport } from 'store/report/thunks';
 import { ReportType } from 'services/api/reports/models';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
+import { useHistory } from 'react-router-dom';
 
 import styles from './index.module.scss';
 
@@ -68,6 +71,7 @@ const PageContent = ({
   tabId = TAB_IDS.SUMMARY,
 }: OwnProps) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { filters } = useFilters();
   const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
@@ -139,6 +143,13 @@ const PageContent = ({
     );
   };
 
+  const handleOnUpdateFilter = (filter: ISavedFilter) => dispatch(updateSavedFilter(filter));
+  const handleOnSaveFilter = (filter: ISavedFilter) =>
+    dispatch(createSavedFilter(addTagToFilter(filter)));
+  const handleOnDeleteFilter = (id: string) => dispatch(deleteSavedFilter(id));
+  const handleOnSaveAsFavorite = (filter: ISavedFilter) =>
+    dispatch(setSavedFilterAsDefault(addTagToFilter(filter)));
+
   return (
     <Space direction="vertical" size={24} className={styles.dataExplorePageContent}>
       <QueryBuilder
@@ -154,15 +165,15 @@ const PageContent = ({
           },
           selectedSavedFilter: defaultFilter,
           savedFilters: savedFilters,
-          onUpdateFilter: (filter) => dispatch(updateSavedFilter(filter)),
-          onSaveFilter: (filter) => dispatch(createSavedFilter(addTagToFilter(filter))),
-          onDeleteFilter: (id) => dispatch(deleteSavedFilter(id)),
-          onSetAsFavorite: (filter) => dispatch(setSavedFilterAsDefault(addTagToFilter(filter))),
+          onUpdateFilter: handleOnUpdateFilter,
+          onSaveFilter: handleOnSaveFilter,
+          onDeleteFilter: handleOnDeleteFilter,
+          onSetAsFavorite: handleOnSaveAsFavorite,
         }}
+        history={history}
         enableCombine
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
-        history={history}
         cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
         currentQuery={filters?.content?.length ? filters : {}}
         loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}

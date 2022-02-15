@@ -4,11 +4,11 @@ import { IFilter, IFilterGroup } from '@ferlab/ui/core/components/filters/types'
 import { getSelectedFilters, updateFilters } from '@ferlab/ui/core/data/filters/utils';
 import { ExtendedMapping, ExtendedMappingResults, GqlResults } from 'graphql/models';
 import { getFilterGroup, getFilters } from 'graphql/utils/Filters';
-import history from 'utils/history';
 import { underscoreToDot } from '@ferlab/ui/core/data/arranger/formatting';
 import CustomFilterSelector from './CustomFilterSelector';
 import { getFiltersDictionary } from 'utils/translation';
 import { TCustomFilterMapper } from '.';
+import { useHistory } from "react-router-dom";
 
 type OwnProps = {
   classname: string;
@@ -29,6 +29,7 @@ const CustomFilterContainer = ({
   extendedMappingResults,
   filterMapper,
 }: OwnProps) => {
+  const history = useHistory();
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [results, setResults] = useState<GqlResults<any>>();
   const found = (extendedMappingResults?.data || []).find(

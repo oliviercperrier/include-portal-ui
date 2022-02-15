@@ -4,6 +4,7 @@ import { TreeNode } from '../utils/OntologyTree';
 import intl from 'react-intl-universal';
 import { RegexExtractPhenotype } from '..';
 import { INDEXES } from 'graphql/constants';
+import { useHistory } from 'react-router-dom';
 
 import styles from './index.module.scss';
 
@@ -33,6 +34,8 @@ const getPath = (node: string, treeNodes: TreeNode[], path: string[] = []): stri
 };
 
 const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst }: OwnProps) => {
+  const history = useHistory();
+
   return (
     <Space direction="vertical" className={styles.phenotypeSunburstTree}>
       <Title level={5}>{currentNode?.name}</Title>
@@ -53,6 +56,7 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
             'observed_phenotype.name',
             [currentNode?.name!],
             INDEXES.PARTICIPANT,
+            history,
           );
         }}
       >

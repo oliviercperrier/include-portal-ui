@@ -26,6 +26,11 @@ import { useUser } from 'store/user';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { STATIC_ROUTES } from 'utils/routes';
+import { addFilter } from 'utils/sqons';
+import { INDEXES } from 'graphql/constants';
+import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 
 import styles from './index.module.scss';
 
@@ -193,12 +198,50 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'biospecimen',
     title: 'Biospecimen',
-    render: (record: IParticipantEntity) => record?.biospecimen?.hits?.total || 0,
+    render: (record: IParticipantEntity) => {
+      const total = record?.biospecimen?.hits?.total;
+
+      return total ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+            search: createQueryParams({
+              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
+                record.participant_id,
+              ]),
+            }),
+          }}
+        >
+          {total}
+        </Link>
+      ) : (
+        total || 0
+      );
+    },
   },
   {
     key: 'files',
     title: 'Files',
-    render: (record: IParticipantEntity) => record?.files?.hits?.total || 0,
+    render: (record: IParticipantEntity) => {
+      const total = record?.files?.hits?.total;
+
+      return total ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
+            search: createQueryParams({
+              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
+                record.participant_id,
+              ]),
+            }),
+          }}
+        >
+          {total}
+        </Link>
+      ) : (
+        total || 0
+      );
+    },
   },
 ];
 

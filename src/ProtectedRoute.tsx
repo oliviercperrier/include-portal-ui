@@ -37,7 +37,7 @@ const ProtectedRoute = ({ children, layout, ...routeProps }: OwnProps) => {
   if (currentPath === STATIC_ROUTES.LOGIN) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }
-
+  
   return (
     <ConditionalWrapper
       condition={RouteLayout !== undefined}

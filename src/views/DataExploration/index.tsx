@@ -179,12 +179,10 @@ const DataExploration = (props: OwnProps) => {
   );
 };
 
-const DataExplorationWrapper = (props: OwnProps) => {
-  return (
-    <ApolloProvider backend={GraphqlBackend.ARRANGER}>
-      <DataExploration {...props} />
-    </ApolloProvider>
-  );
-};
+const DataExplorationWrapper = (props: OwnProps) => (
+  <ApolloProvider backend={GraphqlBackend.ARRANGER}>
+    <DataExploration {...props}/>
+  </ApolloProvider>
+);
 
 export default DataExplorationWrapper;

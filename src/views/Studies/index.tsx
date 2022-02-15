@@ -6,6 +6,12 @@ import { useStudies } from 'graphql/studies/actions';
 import ApolloProvider from 'provider/ApolloProvider';
 import { GraphqlBackend } from 'provider/types';
 import { getProTableDictionary } from 'utils/translation';
+import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
+import { Link } from 'react-router-dom';
+import { STATIC_ROUTES } from 'utils/routes';
+import { IStudyEntity } from 'graphql/studies/models';
+import { addFilter } from 'utils/sqons';
+import { INDEXES } from 'graphql/constants';
 
 import styles from './index.module.scss';
 
@@ -45,7 +51,24 @@ const columns: ProColumnType<any>[] = [
   {
     key: 'participant_count',
     title: 'Participants',
-    dataIndex: 'participant_count',
+    render: (record: IStudyEntity) => {
+      const participantCount = record.participant_count;
+
+      return participantCount ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
+            search: createQueryParams({
+              filters: addFilter(null, 'study_id', INDEXES.PARTICIPANT, [record.study_id]),
+            }),
+          }}
+        >
+          {participantCount}
+        </Link>
+      ) : (
+        participantCount || 0
+      );
+    },
   },
   {
     key: 'family_count',

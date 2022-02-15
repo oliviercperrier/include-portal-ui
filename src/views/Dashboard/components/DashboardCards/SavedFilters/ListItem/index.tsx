@@ -8,10 +8,9 @@ import { useDispatch } from 'react-redux';
 import { deleteSavedFilter, updateSavedFilter } from 'store/savedFilter/thunks';
 import { FILTER_TAG_PAGE_MAPPING } from 'views/DataExploration/utils/constant';
 import { Link } from 'react-router-dom';
-import { savedFilterActions } from 'store/savedFilter/slice';
+import { distanceInWords } from 'date-fns';
 
 import styles from './index.module.scss';
-import { distanceInWords } from 'date-fns';
 
 interface OwnProps {
   id: any;
@@ -63,8 +62,11 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
             // eslint-disable-next-line
             <Link
               className={styles.filterLink}
-              to={FILTER_TAG_PAGE_MAPPING[data.tag]}
-              onClick={() => dispatch(savedFilterActions.setSelectedId(data.id))}
+              to={{
+                pathname: FILTER_TAG_PAGE_MAPPING[data.tag],
+                search: `?filterId=${data.id}`
+              }}
+              //onClick={() => dispatch(savedFilterActions.setSelectedId(data.id))}
             >
               {data.title}
             </Link>

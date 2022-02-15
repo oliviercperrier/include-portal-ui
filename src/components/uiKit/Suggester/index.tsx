@@ -7,9 +7,9 @@ import {
 import { updateFilters } from "@ferlab/ui/core/data/filters/utils";
 import { AutoComplete, Input, notification, Spin } from "antd";
 import { sendRequest } from "services/api";
-import history from "utils/history";
 import EnvironmentVariables from "helpers/EnvVariables";
 import intl from "react-intl-universal";
+import { useHistory } from "react-router-dom";
 
 import styles from "./index.module.scss";
 
@@ -38,6 +38,7 @@ const Suggester = ({ suggestionType, placeholderText }: SuggesterProps) => {
   const [options, setOptions] = useState<Option[]>([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const handleSearch = async (
     userRawInput: string,

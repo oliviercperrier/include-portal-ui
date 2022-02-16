@@ -12,6 +12,5 @@ export enum MessageType {
 
 export type initialState = {
   isLoading: boolean;
-  error?: Error | null;
-  message?: Message | null;
+  error?: any;
 };

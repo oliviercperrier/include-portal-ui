@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { saveAs } from "file-saver";
 import { v4 as uuidv4 } from "uuid";
 
-const getDefaultContentType = (responseType: string) => {
+export const getDefaultContentType = (responseType: string) => {
   const fallbackContentType = "text/plain;charset=utf-8";
 
   switch (responseType) {
@@ -59,7 +59,7 @@ const getBlobFromResponse = (
  *
  * @returns {Promise<void>} a promise that resolve to `void` once the request is done.
  */
-const downloader = async (opts: any = {}) => {
+const downloader = async (opts: AxiosRequestConfig = {}) => {
   if (opts.responseType && ["stream", "document"].includes(opts.responseType)) {
     throw new Error(
       `Unsupported responseType "${opts.responseType}" provided.`

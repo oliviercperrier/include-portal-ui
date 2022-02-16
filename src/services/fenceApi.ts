@@ -1,30 +1,24 @@
-import jwtDecode from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 
-import { isDecodedJwtExpired } from "utils/jwt";
-import { FENCE_NAMES } from "common/fenceTypes";
-import { DecodedJwt } from "common/tokenTypes";
-import EnvironmentVariables from "helpers/EnvVariables";
-import { sendRequest } from "./api";
+import { isDecodedJwtExpired } from 'utils/jwt';
+import { FENCE_NAMES } from 'common/fenceTypes';
+import { DecodedJwt } from 'common/tokenTypes';
+import EnvironmentVariables from 'helpers/EnvVariables';
+import { sendRequest } from './api';
 
 const DCF = FENCE_NAMES.dcf;
 const GEN3 = FENCE_NAMES.gen3;
 
-const RESPONSE_TYPE = "code";
+const RESPONSE_TYPE = 'code';
 
-const GEN3_SCOPE = "openid+data+user";
-const DCF_SCOPE = "openid+user";
-const FENCE_AUTH_CLIENT_URI = EnvironmentVariables.configFor(
-  "FENCE_AUTH_CLIENT_URI"
-);
-const FENCE_AUTH_REFRESH_URI = EnvironmentVariables.configFor(
-  "FENCE_AUTH_REFRESH_URI"
-);
-const FENCE_AUTH_TOKENS_URI = EnvironmentVariables.configFor(
-  "FENCE_AUTH_TOKENS_URI"
-);
-const GEN3_API_ROOT = EnvironmentVariables.configFor("GEN3_API");
-const DCF_API_ROOT = EnvironmentVariables.configFor("DCF_API");
-const IDP = EnvironmentVariables.configFor("IDP");
+const GEN3_SCOPE = 'openid+data+user';
+const DCF_SCOPE = 'openid+user';
+const FENCE_AUTH_CLIENT_URI = EnvironmentVariables.configFor('FENCE_AUTH_CLIENT_URI');
+const FENCE_AUTH_REFRESH_URI = EnvironmentVariables.configFor('FENCE_AUTH_REFRESH_URI');
+const FENCE_AUTH_TOKENS_URI = EnvironmentVariables.configFor('FENCE_AUTH_TOKENS_URI');
+const GEN3_API_ROOT = EnvironmentVariables.configFor('GEN3_API');
+const DCF_API_ROOT = EnvironmentVariables.configFor('DCF_API');
+const IDP = EnvironmentVariables.configFor('IDP');
 
 const getScope = (fenceName: FENCE_NAMES) => {
   switch (fenceName) {
@@ -33,7 +27,7 @@ const getScope = (fenceName: FENCE_NAMES) => {
     case DCF:
       return DCF_SCOPE;
     default:
-      return "";
+      return '';
   }
 };
 
@@ -74,28 +68,28 @@ export const fenceConnect = async (fence: FENCE_NAMES) => {
           resolve(token);
         } catch (e) {
           clearInterval(interval);
-          reject({ msg: "Error occurred while fetching Fence Access Token." });
+          reject({ msg: 'Error occurred while fetching Fence Access Token.' });
         }
       }
     }, 1000);
     setTimeout(() => {
       clearInterval(interval);
-      reject("nothing");
+      reject('nothing');
     }, TEN_MINUTES_IN_MS);
   });
 };
 
 export const fetchAccessToken = async (fenceName: FENCE_NAMES) => {
-  const { data } = await sendRequest({
-    method: "GET",
+  const { data } = await sendRequest<any>({
+    method: 'GET',
     url: `${FENCE_AUTH_TOKENS_URI}?fence=${fenceName}`,
   });
   return data.access_token;
 };
 
 export const fetchRefreshedAccessToken = async (fenceName: FENCE_NAMES) => {
-  const { data } = await sendRequest({
-    method: "POST",
+  const { data } = await sendRequest<any>({
+    method: 'POST',
     url: `${FENCE_AUTH_REFRESH_URI}?fence=${fenceName}`,
   });
   return data.access_token;
@@ -111,13 +105,13 @@ const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {
 };
 
 export const getFenceConnection = async (
-  fenceName: FENCE_NAMES
+  fenceName: FENCE_NAMES,
 ): Promise<{ data: any; error: any }> => {
   const token = await fetchTokenThenRefreshIfNeeded(fenceName);
   const { fenceUri } = PROVIDERS[fenceName];
-  const { data, error } = await sendRequest({
+  const { data, error } = await sendRequest<any>({
     url: `${fenceUri}/user/user`,
-    method: "GET",
+    method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -132,8 +126,8 @@ export const getFenceConnection = async (
  * Delete Tokens (Disconnect)
  */
 export const deleteFenceTokens = async (fenceName: FENCE_NAMES) => {
-  await sendRequest({
-    method: "DELETE",
+  await sendRequest<any>({
+    method: 'DELETE',
     url: `${FENCE_AUTH_TOKENS_URI}?fence=${fenceName}`,
   });
 };

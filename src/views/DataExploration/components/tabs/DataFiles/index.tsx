@@ -15,6 +15,7 @@ import { formatFileSize } from 'utils/formatFileSize';
 import { Button, Tag, Tooltip } from 'antd';
 
 import styles from './index.module.scss';
+import { fetchTsvReport } from 'store/report/thunks';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -128,6 +129,21 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
         enableTableExport: true,
         onSelectAllResultsChange: setSelectedAllResults,
         onSelectedRowsChange: (keys) => setSelectedKeys(keys),
+        onTableExportClick: () => {
+          dispatch(
+            fetchTsvReport({
+              columnStates:
+                userInfo?.config.data_exploration?.tables?.datafiles?.columns ||
+                defaultColumns.map((column, index) => ({
+                  index,
+                  key: column.key,
+                  visible: true,
+                })),
+              index: 'file',
+              sqon: undefined,
+            }),
+          );
+        },
         onColumnSortChange: (newState) =>
           dispatch(
             updateUserConfig({

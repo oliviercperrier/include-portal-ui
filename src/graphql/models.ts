@@ -9,7 +9,7 @@ export type AggregationBuckets = {
     {
       key: string;
       doc_count: number;
-    }
+    },
   ];
   stats: string;
 };
@@ -60,17 +60,43 @@ export type ExtendedMappingResults = {
 };
 
 export const hydrateResults = <resultType extends ArrangerNodeData>(
-  results: ArrangerEdge<resultType>[]
+  results: ArrangerEdge<resultType>[],
 ): resultType[] =>
   results.map(
     (edge: ArrangerEdge<resultType>, index): resultType => ({
       ...edge.node,
       key: edge.node?.id || index,
-    })
+    }),
   );
 
 export interface IQueryResults<T> {
   data: T;
   loading: boolean;
   total: number;
+}
+
+// COLUMN STATE
+export interface ArrangerSingleColumnState {
+  accessor: string;
+  canChangeShow: boolean;
+  field: string;
+  jsonPath: string | null;
+  query: string | null;
+  show: boolean;
+  sortable: boolean;
+  type: string;
+}
+
+export interface ArrangerColumnStateResults {
+  data: {
+    [index: string]: {
+      columnsState: {
+        state: {
+          columns: ArrangerSingleColumnState[];
+          keyField?: string;
+          type: string;
+        };
+      };
+    };
+  };
 }

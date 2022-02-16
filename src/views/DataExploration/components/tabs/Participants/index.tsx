@@ -1,7 +1,8 @@
 import {
-  IParticipantDiagnosis,
+  ITableParticipantEntity,
   IParticipantEntity,
-  IParticipantPhenotype,
+  IParticipantMondo,
+  IParticipantObservedPhenotype,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
 import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
@@ -55,7 +56,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'study_external_id',
-    title: 'dbGaP Accession number',
+    title: 'dbGaP',
     dataIndex: 'study_external_id',
     render: (study_external_id: string) => (
       <a
@@ -71,13 +72,6 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'karyotype',
     title: 'Karyotype',
     dataIndex: 'karyotype',
-  },
-  {
-    key: 'down_syndrome_diagnosis',
-    title: 'Down Syndrome Diagnosis',
-    dataIndex: 'down_syndrome_diagnosis',
-    render: (down_syndrome_diagnosis: string) =>
-      down_syndrome_diagnosis || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'sex',
@@ -104,33 +98,26 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'is_proband',
-    title: 'Proband Status',
+    title: 'Proband',
     dataIndex: 'is_proband',
     defaultHidden: true,
   },
   {
-    key: 'age_at_data_collection',
-    title: 'Age at Data Collection',
-    dataIndex: 'age_at_data_collection',
-  },
-  {
-    key: 'diagnosis',
+    key: 'mondo',
     title: 'Diagnosis (Mondo)',
-    dataIndex: 'diagnosis',
+    dataIndex: 'mondo',
     className: styles.diagnosisCell,
-    render: (diagnosis: ArrangerResultsTree<IParticipantDiagnosis>) => {
-      const mondo_ids_diagnosis = diagnosis?.hits?.edges
-        .map((diagnosis) => diagnosis.node.mondo_id_diagnosis)
-        .filter((id) => !!id);
+    render: (mondo: ArrangerResultsTree<IParticipantMondo>) => {
+      const mondoNames = mondo?.hits?.edges.filter((m) => m.node.is_tagged).map((m) => m.node.name);
 
-      if (!mondo_ids_diagnosis) {
+      if (!mondoNames || mondoNames.length === 0) {
         return TABLE_EMPTY_PLACE_HOLDER;
       }
 
       return (
         <ExpandableCell
           nbToShow={1}
-          dataSource={mondo_ids_diagnosis}
+          dataSource={mondoNames}
           renderItem={(modo_id, index): React.ReactNode => {
             const mondoInfo = extractMondoTitleAndCode(modo_id);
 
@@ -155,23 +142,23 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'phenotype',
+    key: 'observed_phenotype',
     title: 'Phenotype (HPO)',
-    dataIndex: 'phenotype',
+    dataIndex: 'observed_phenotype',
     className: styles.phenotypeCell,
-    render: (phenotype: ArrangerResultsTree<IParticipantPhenotype>) => {
-      const hydratedPhenotypeIds = phenotype?.hits?.edges
-        .map((phenotype) => phenotype.node.hpo_id_phenotype)
-        .filter((id) => !!id);
+    render: (observed_phenotype: ArrangerResultsTree<IParticipantObservedPhenotype>) => {
+      const phenotypeNames = observed_phenotype?.hits?.edges
+        .filter((p) => p.node.is_tagged)
+        .map((p) => p.node.name);
 
-      if (!hydratedPhenotypeIds) {
+      if (!phenotypeNames || phenotypeNames.length === 0) {
         return TABLE_EMPTY_PLACE_HOLDER;
       }
 
       return (
         <ExpandableCell
           nbToShow={1}
-          dataSource={hydratedPhenotypeIds}
+          dataSource={phenotypeNames}
           renderItem={(hpo_id_phenotype, index): React.ReactNode => {
             const phenotypeInfo = extractPhenotypeTitleAndCode(hpo_id_phenotype);
 
@@ -198,7 +185,7 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'biospecimen',
     title: 'Biospecimen',
-    render: (record: IParticipantEntity) => {
+    render: (record: ITableParticipantEntity) => {
       const total = record?.biospecimen?.hits?.total;
 
       return total ? (
@@ -215,14 +202,14 @@ const defaultColumns: ProColumnType<any>[] = [
           {total}
         </Link>
       ) : (
-        total || 0
+        total || 0
       );
     },
   },
   {
     key: 'files',
     title: 'Files',
-    render: (record: IParticipantEntity) => {
+    render: (record: ITableParticipantEntity) => {
       const total = record?.files?.hits?.total;
 
       return total ? (
@@ -248,55 +235,33 @@ const defaultColumns: ProColumnType<any>[] = [
 const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, downloadReport }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const [selectedAll, setSelectedAll] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<IParticipantEntity[]>([]);
+  const [selectedAllResults, setSelectedAllResults] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const menu = (
-    <Menu
-      onClick={(e) =>
-        downloadReport(
-          e.key as ReportType,
-          selectedRows.map(({ key }) => key!),
-          selectedAll,
-        )
-      }
-    >
+    <Menu onClick={(e) => downloadReport(e.key as ReportType, selectedKeys, selectedAllResults)}>
       <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
       <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Participant & Family Members</Menu.Item>
     </Menu>
   );
 
   return (
-    <ProTable<IParticipantEntity>
+    <ProTable<ITableParticipantEntity>
       tableId="participants_table"
-      rowSelection={{
-        selectedRowKeys: selectedRows.map(({ key }) => key!),
-        onSelect: (row, selected) =>
-          setSelectedRows((prev) =>
-            selected ? [...prev, row] : prev.filter(({ key }) => key !== row.key!),
-          ),
-        onSelectAll: (selected, selectedRows) => {
-          setSelectedAll(selected);
-          setSelectedRows(selectedRows.filter(Boolean));
-        },
-      }}
       columns={defaultColumns}
       wrapperClassName={styles.participantTabWrapper}
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.participants?.columns}
+      enableRowSelection={true}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
-          selectedRowCount: selectedRows.length,
         },
-        columnSetting: true,
-        onClearSelection: () => {
-          setSelectedRows([]);
-          setSelectedAll(false);
-        },
-        onColumnStateChange: (newState) =>
+        enableColumnSort: true,
+        enableTableExport: true,
+        onColumnSortChange: (newState) =>
           dispatch(
             updateUserConfig({
               data_exploration: {
@@ -308,8 +273,10 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, downloadRepor
               },
             }),
           ),
+        onSelectAllResultsChange: setSelectedAllResults,
+        onSelectedRowsChange: (keys) => setSelectedKeys(keys),
         extra: [
-          <Dropdown overlay={menu} placement="bottomLeft">
+          <Dropdown disabled={selectedKeys.length === 0} overlay={menu} placement="bottomLeft">
             <Button icon={<DownloadOutlined />}>Download clinical data</Button>
           </Dropdown>,
         ],
@@ -321,10 +288,6 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, downloadRepor
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
-          if (selectedAll) {
-            setSelectedAll(false);
-            setSelectedRows([]);
-          }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({
               index: page,

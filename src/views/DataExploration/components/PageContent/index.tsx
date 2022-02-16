@@ -13,10 +13,7 @@ import {
 } from 'views/DataExploration/utils/constant';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
-import {
-  getQueryBuilderCache,
-  useFilters,
-} from '@ferlab/ui/core/data/filters/utils';
+import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { STATIC_ROUTES } from 'utils/routes';
 import { getQueryBuilderDictionary } from 'utils/translation';
 import { Space, Tabs } from 'antd';
@@ -121,10 +118,10 @@ const PageContent = ({
   const handleDownloadReport = async (
     reportType: ReportType,
     selectedKeys: Key[],
-    selectAll: boolean,
+    selectedAllResults: boolean,
   ) => {
     let sqon;
-    if (selectAll || !selectedKeys.length) {
+    if (selectedAllResults || !selectedKeys.length) {
       sqon =
         reportType === ReportType.BIOSEPCIMEN_DATA
           ? biospecimenResolvedSqon

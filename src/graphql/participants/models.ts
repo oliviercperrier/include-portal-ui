@@ -19,8 +19,19 @@ export interface IParticipantPhenotype {
   hpo_id_phenotype: string;
 }
 
+export interface IParticipantMondo {
+  id: any;
+  name: string;
+  is_tagged: boolean;
+}
+
+export interface IParticipantObservedPhenotype {
+  id: any;
+  name: string;
+  is_tagged: boolean;
+}
+
 export interface IParticipantEntity {
-  key?: string | undefined;
   id: string;
   score: number;
   age_at_data_collection: number;
@@ -34,8 +45,14 @@ export interface IParticipantEntity {
   sex: string;
   study_external_id: string;
   study_id: string;
+  mondo: ArrangerResultsTree<IParticipantMondo>;
+  observed_phenotype: ArrangerResultsTree<IParticipantObservedPhenotype>;
   diagnosis: ArrangerResultsTree<IParticipantDiagnosis>;
   files: ArrangerResultsTree<IFileEntity>;
   biospecimen: ArrangerResultsTree<IBiospecimenEntity>;
   phenotype: ArrangerResultsTree<IParticipantPhenotype>;
+}
+
+export type ITableParticipantEntity = IParticipantEntity & {
+  key: string;
 }

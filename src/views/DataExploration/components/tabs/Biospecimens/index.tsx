@@ -79,12 +79,14 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'anatomical_site',
     title: 'Anatomical Site (NCIT)',
+    displayTitle: 'Anatomical Site (NCIT)',
     dataIndex: '',
     defaultHidden: true,
   },
   {
     key: 'ncit_id_tissue_type',
     title: 'Tissue Type (NCIT)',
+    displayTitle: 'Tissue Type (NCIT)',
     dataIndex: 'ncit_id_tissue_type',
     className: styles.ncitTissueCell,
     render: (ncit_id_tissue_type) => {
@@ -113,7 +115,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'bio_repository',
-    title: 'Biorepository Name',
+    title: 'Biorepository',
     dataIndex: 'bio_repository',
   },
 ];
@@ -121,40 +123,28 @@ const defaultColumns: ProColumnType<any>[] = [
 const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, downloadReport }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const [selectedAll, setSelectedAll] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<IBiospecimenEntity[]>([]);
+  const [selectedAllResults, setSelectedAllResults] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   return (
     <ProTable
-      rowSelection={{
-        selectedRowKeys: selectedRows.map(({ key }) => key!),
-        onSelect: (row, selected) =>
-          setSelectedRows((prev) =>
-            selected ? [...prev, row] : prev.filter(({ key }) => key !== row.key!),
-          ),
-        onSelectAll: (select, selectedRows) => {
-          setSelectedAll(select);
-          setSelectedRows(selectedRows.filter(Boolean));
-        },
-      }}
       tableId="biospecimen_table"
       columns={defaultColumns}
       wrapperClassName={styles.biospecimenTabWrapper}
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.biospecimens?.columns}
+      enableRowSelection={true}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
-          selectedRowCount: selectedRows.length,
         },
-        columnSetting: true,
-        onClearSelection: () => {
-          setSelectedRows([]);
-          setSelectedAll(false);
-        },
-        onColumnStateChange: (newState) =>
+        enableColumnSort: true,
+        enableTableExport: true,
+        onSelectAllResultsChange: setSelectedAllResults,
+        onSelectedRowsChange: (keys) => setSelectedKeys(keys),
+        onColumnSortChange: (newState) =>
           dispatch(
             updateUserConfig({
               data_exploration: {
@@ -170,12 +160,9 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, downloadReport
           <Button
             icon={<DownloadOutlined />}
             onClick={() =>
-              downloadReport(
-                ReportType.BIOSEPCIMEN_DATA,
-                selectedRows.map(({ key }) => key!),
-                selectedAll,
-              )
+              downloadReport(ReportType.BIOSEPCIMEN_DATA, selectedKeys, selectedAllResults)
             }
+            disabled={selectedKeys.length === 0}
           >
             Download sample data
           </Button>,
@@ -188,10 +175,6 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, downloadReport
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
-          if (selectedAll) {
-            setSelectedAll(false);
-            setSelectedRows([]);
-          }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({
               index: page,

@@ -113,7 +113,6 @@ const Studies = () => {
             loading={loading}
             pagination={false}
             headerConfig={{
-              columnSetting: false,
               itemCount: {
                 pageIndex: 1,
                 pageSize: 20,

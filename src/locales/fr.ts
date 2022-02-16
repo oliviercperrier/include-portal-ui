@@ -1,5 +1,5 @@
 const filesFacets = {
-  type_of_omics: 'Type of Omics',
+  type_of_omics: 'Data Category',
   experimental_strategy: 'Experimental Strategy',
   data_category: 'Data Category',
   data_type: 'Data Type',
@@ -58,7 +58,7 @@ const fr = {
       results: 'Results',
       noResults: 'No Results',
       of: 'of',
-      selected: 'item selected',
+      selected: 'items selected',
       selectedPlural: 'items selected',
     },
   },
@@ -160,8 +160,8 @@ const fr = {
       },
       query: {
         combine: {
-          and: 'And',
-          or: 'Or',
+          and: 'and',
+          or: 'or',
         },
         noQuery: 'Use the search tools & facets on the left to build a query',
       },
@@ -417,17 +417,17 @@ const fr = {
   facets: {
     // Participant
     participant_id: "Participant ID",
-    study_id: 'Study ID',
-    karyotype: 'Karyotype',
+    study_id: 'Study Code',
+    karyotype: 'DS Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',
     diagnosis: {
-      mondo_id_diagnosis: 'Mondo ID Diagnosis',
+      mondo_id_diagnosis: 'Diagnosis (MONDO)',
     },
     phenotype: {
-      hpo_id_phenotype: 'HPO ID Phenotype',
+      hpo_id_phenotype: 'Phenotype (HPO)',
     },
     age_at_data_collection: 'Age at data collection',
-    family_type: 'Family Type',
+    family_type: 'Family Unit',
     sex: 'Sex',
     ethnicity: 'Ethnicity',
     race: 'Race',
@@ -438,9 +438,9 @@ const fr = {
     biospecimen_type: 'Biospecimen Type',
     sample_type: 'Sample Type',
     derived_sample_type: 'Derived Sample Type',
-    ncit_id_tissue_type: 'NCIT ID Tissues Type',
+    ncit_id_tissue_type: 'Tissue Type (NCIT)',
     age_at_biospecimen_collection: 'Age at Biospecimen Collection',
-    bio_repository: 'Bio Repository',
+    bio_repository: 'Biorepository',
     // File
     files: filesFacets,
     ...filesFacets,

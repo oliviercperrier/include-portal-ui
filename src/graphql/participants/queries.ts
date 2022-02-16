@@ -1,12 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const SEARCH_PARTICIPANT_QUERY = gql`
-  query searchParticipant(
-    $sqon: JSON
-    $first: Int
-    $offset: Int
-    $sort: [Sort]
-  ) {
+  query searchParticipant($sqon: JSON, $first: Int, $offset: Int, $sort: [Sort]) {
     participant {
       hits(filters: $sqon, first: $first, offset: $offset, sort: $sort) {
         total
@@ -31,21 +26,23 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
               }
             }
 
-            diagnosis {
+            mondo {
               hits {
                 edges {
                   node {
-                    mondo_id_diagnosis
+                    name
+                    is_tagged
                   }
                 }
               }
             }
 
-            phenotype {
+            observed_phenotype {
               hits {
                 edges {
                   node {
-                    hpo_id_phenotype
+                    name
+                    is_tagged
                   }
                 }
               }

@@ -46,10 +46,8 @@ export const filterGroups: {
         fields: [
           'study_id',
           'karyotype',
-          'down_syndrome_diagnosis',
           'diagnosis__mondo_id_diagnosis',
           'phenotype__hpo_id_phenotype',
-          'age_at_data_collection',
           'family_type',
           'sex',
           'race',
@@ -90,10 +88,8 @@ export const filterGroups: {
         fields: [
           'type_of_omics',
           'experimental_strategy',
-          'data_category',
           'data_type',
           'file_format',
-          'size',
           'access',
         ],
       },
@@ -181,7 +177,7 @@ const DataExploration = (props: OwnProps) => {
 
 const DataExplorationWrapper = (props: OwnProps) => (
   <ApolloProvider backend={GraphqlBackend.ARRANGER}>
-    <DataExploration {...props}/>
+    <DataExploration {...props} />
   </ApolloProvider>
 );
 

@@ -1,5 +1,5 @@
 import { IFileEntity } from 'graphql/files/models';
-import { DownloadOutlined, LockOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, LockOutlined } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
 import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
@@ -11,9 +11,10 @@ import { useDispatch } from 'react-redux';
 import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
 import { useState } from 'react';
+import { formatFileSize } from 'utils/formatFileSize';
+import { Button, Tag, Tooltip } from 'antd';
 
 import styles from './index.module.scss';
-import { formatFileSize } from 'utils/formatFileSize';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -22,6 +23,24 @@ interface OwnProps {
 }
 
 const defaultColumns: ProColumnType<any>[] = [
+  {
+    key: 'lock',
+    title: (
+      <Tooltip title="File Authorization">
+        <LockOutlined />
+      </Tooltip>
+    ),
+    dataIndex: 'lock',
+    displayTitle: 'File Authorization',
+    align: 'center',
+    render: () => {
+      return (
+        <Tooltip title="Unauthorized">
+          <LockOutlined className={styles.lockLoggedOut} />
+        </Tooltip>
+      );
+    },
+  },
   {
     key: 'file_id',
     title: 'File ID',
@@ -34,24 +53,37 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'study_id',
-    title: 'Study Code',
+    title: 'Study',
     dataIndex: 'study_id',
   },
   {
+    key: 'access',
+    title: 'Access',
+    dataIndex: 'access',
+    align: 'center',
+    width: 75,
+    render: (access: string) =>
+      !access ? (
+        '-'
+      ) : access.toLowerCase() === 'controlled' ? (
+        <Tooltip title="Controlled">
+          <Tag color="geekblue">C</Tag>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Registered">
+          <Tag color="green">R</Tag>
+        </Tooltip>
+      ),
+  },
+  {
     key: 'type_of_omics',
-    title: 'Type of Omics',
+    title: 'Data Category',
     dataIndex: 'type_of_omics',
   },
   {
     key: 'experimental_strategy',
     title: 'Experimental Strategy',
     dataIndex: 'experimental_strategy',
-  },
-  {
-    key: 'data_category',
-    title: 'Data Categories',
-    dataIndex: 'data_category',
-    render: (data_category) => data_category || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'data_type',
@@ -70,59 +102,33 @@ const defaultColumns: ProColumnType<any>[] = [
     dataIndex: 'size',
     render: (size) => formatFileSize(size, { output: 'string' }),
   },
-  {
-    key: 'access',
-    title: 'Actions',
-    dataIndex: 'access',
-    align: 'center',
-    render: (access: string) =>
-      !access ? (
-        '-'
-      ) : access.toLowerCase() === 'controlled' ? (
-        <LockOutlined />
-      ) : (
-        <DownloadOutlined />
-      ),
-  },
 ];
 
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const [selectedAll, setSelectedAll] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<IFileEntity[]>([]);
+  const [selectedAllResults, setSelectedAllResults] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   return (
     <ProTable
-      rowSelection={{
-        selectedRowKeys: selectedRows.map(({ key }) => key!),
-        onSelect: (row, selected) =>
-          setSelectedRows((prev) =>
-            selected ? [...prev, row] : prev.filter(({ key }) => key !== row.key!),
-          ),
-        onSelectAll: (select, selectedRows) => {
-          setSelectedAll(select);
-          setSelectedRows(selectedRows.filter(Boolean));
-        },
-      }}
       tableId="datafiles_table"
       columns={defaultColumns}
       wrapperClassName={styles.dataFilesTabWrapper}
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.datafiles?.columns}
+      enableRowSelection={true}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
-          selectedRowCount: selectedRows.length,
         },
-        columnSetting: true,
-        onClearSelection: () => {
-          setSelectedRows([]);
-          setSelectedAll(false);
-        },
-        onColumnStateChange: (newState) =>
+        enableColumnSort: true,
+        enableTableExport: true,
+        onSelectAllResultsChange: setSelectedAllResults,
+        onSelectedRowsChange: (keys) => setSelectedKeys(keys),
+        onColumnSortChange: (newState) =>
           dispatch(
             updateUserConfig({
               data_exploration: {
@@ -134,6 +140,15 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
               },
             }),
           ),
+        extra: [
+          <Button
+            disabled={selectedKeys.length === 0}
+            type="primary"
+            icon={<CloudUploadOutlined />}
+          >
+            Analyze in Cavatica
+          </Button>,
+        ],
       }}
       bordered
       size="small"
@@ -142,10 +157,6 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
         onChange: (page, size) => {
-          if (selectedAll) {
-            setSelectedAll(false);
-            setSelectedRows([]);
-          }
           if (pagingConfig.index !== page || pagingConfig.size !== size) {
             setPagingConfig({
               index: page,

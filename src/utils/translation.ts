@@ -10,6 +10,8 @@ export const getProTableDictionary = (): IProTableDictionary => ({
     of: intl.get('global.proTable.of'),
     selected: intl.get('global.proTable.selected'),
     selectedPlural: intl.get('global.proTable.selectedPlural'),
+    selectAllResults: 'Select all results',
+    clear: 'Clear',
   },
 });
 

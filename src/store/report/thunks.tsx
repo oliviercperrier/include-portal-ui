@@ -22,7 +22,12 @@ const showErrorReportNotif = () =>
     description: (
       <div>
         {intl.get('report.error.message')}
-        <a href="mailto:support@includedrc.org">{intl.get('report.error.support')}</a>
+        <a
+          style={{ color: 'unset', textDecoration: 'underline' }}
+          href="mailto:support@includedrc.org"
+        >
+          {intl.get('report.error.support')}
+        </a>
       </div>
     ),
     duration: 5,
@@ -36,6 +41,7 @@ const fetchReport = createAsyncThunk<
   },
   { rejectValue: string }
 >('report/generateReport', async (args, thunkAPI) => {
+  showErrorReportNotif();
   try {
     message.loading({
       content: 'Please wait while we generate your report',

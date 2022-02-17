@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Button, Layout } from "antd";
-import CustomFilterContainer from "./CustomFilterContainer";
-import intl from "react-intl-universal";
-import { FilterGroup, FilterInfo } from "./types";
-import { ExtendedMappingResults } from "graphql/models";
-import { ISyntheticSqon } from "@ferlab/ui/core/data/sqon/types";
-import SuggesterWrapper from "components/uiKit/Suggester/Wrapper";
-import Suggester from "components/uiKit/Suggester";
+import { useState } from 'react';
+import { Button, Layout, Typography } from 'antd';
+import CustomFilterContainer from './CustomFilterContainer';
+import intl from 'react-intl-universal';
+import { FilterGroup, FilterInfo } from './types';
+import { ExtendedMappingResults } from 'graphql/models';
+import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import SuggesterWrapper from 'components/uiKit/Suggester/Wrapper';
+import Suggester from 'components/uiKit/Suggester';
 
-import styles from "./Filters.module.scss";
+import styles from './Filters.module.scss';
 
 export type TCustomFilterMapper = (filters: ISyntheticSqon) => ISyntheticSqon;
 
@@ -19,6 +19,8 @@ type OwnProps = {
   filterInfo: FilterInfo;
   filterMapper?: TCustomFilterMapper;
 };
+
+const { Text } = Typography;
 
 const FilterList = ({
   index,
@@ -46,17 +48,17 @@ const FilterList = ({
       <div className={styles.filterExpandBtnWrapper}>
         <Button onClick={() => setFiltersOpen(!filtersOpen)} type="link">
           {filtersOpen
-            ? intl.get("components.filterList.collapseAll")
-            : intl.get("components.filterList.expandAll")}
+            ? intl.get('components.filterList.collapseAll')
+            : intl.get('components.filterList.expandAll')}
         </Button>
       </div>
       <Layout className={styles.filterWrapper}>
         {filterInfo.groups.map((group: FilterGroup, i) => (
           <div key={index}>
             {group.title ? (
-              <div className={styles.filterGroupTitle}>
-                {intl.get(group.title)}
-              </div>
+              <Text type="secondary" className={styles.filterGroupTitle}>
+                {group.title}
+              </Text>
             ) : null}
             {group.fields.map((field) => (
               <CustomFilterContainer

@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { Button, List, Form, Input, Modal } from 'antd';
+import { Button, List, Form, Input, Modal, Typography } from 'antd';
 import { TUserSavedFilter } from 'services/api/savedFilter/models';
 import { DeleteFilled, EditFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
@@ -18,6 +18,7 @@ interface OwnProps {
 }
 
 const FILTER_NAME_MAX_LENGTH = 50;
+const { Text } = Typography;
 
 const SavedFiltersListItem = ({ id, data }: OwnProps) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -64,16 +65,19 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
               className={styles.filterLink}
               to={{
                 pathname: FILTER_TAG_PAGE_MAPPING[data.tag],
-                search: `?filterId=${data.id}`
+                search: `?filterId=${data.id}`,
               }}
-              //onClick={() => dispatch(savedFilterActions.setSelectedId(data.id))}
             >
               {data.title}
             </Link>
           }
-          description={intl.get('screen.dashboard.cards.savedFilters.lastSaved', {
-            date: distanceInWords(new Date(), new Date(data.updated_date)),
-          })}
+          description={
+            <Text type="secondary">
+              {intl.get('screen.dashboard.cards.savedFilters.lastSaved', {
+                date: distanceInWords(new Date(), new Date(data.updated_date)),
+              })}
+            </Text>
+          }
           className={styles.itemMeta}
         />
       </List.Item>

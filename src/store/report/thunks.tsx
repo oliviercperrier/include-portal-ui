@@ -3,7 +3,6 @@ import { ReportApi } from 'services/api/reports';
 import { ReportConfig } from 'services/api/reports/models';
 import { message, notification } from 'antd';
 import intl from 'react-intl-universal';
-import { TColumnStates } from '@ferlab/ui/core/components/ProTable/types';
 import keycloak from 'auth/keycloak-api/keycloak';
 import { v4 } from 'uuid';
 import { sendRequest } from 'services/api';
@@ -14,6 +13,8 @@ import { format } from 'date-fns';
 import { saveAs } from 'file-saver';
 import { getDefaultContentType } from 'common/downloader';
 import { startCase } from 'lodash';
+import { TFetchTSVArgs } from './types';
+import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 
 const showErrorReportNotif = () =>
   notification.error({
@@ -54,48 +55,78 @@ const fetchReport = createAsyncThunk<
   }
 });
 
-const fetchTsvReport = createAsyncThunk<
-  void,
-  {
-    index: string;
-    columnStates: TColumnStates;
-    sqon: any;
+const fetchTsvReport = createAsyncThunk<void, TFetchTSVArgs, { rejectValue: string }>(
+  'report/generate/tsv',
+  async (args, thunkAPI) => {
+    message.loading({
+      content: 'Please wait while we generate your TSV report',
+      key: 'report_pending',
+      duration: 0,
+    });
+
+    try {
+      const filename = `[include-${args.index}-table]-YYYY-MM-DD`;
+      const formattedFileName = format(new Date(), `${filename}[.tsv]`);
+
+      const { data, error } = await sendRequest<ArrangerColumnStateResults>({
+        url: ARRANGER_API_COLUMN_STATE_URL,
+        method: 'POST',
+        data: {
+          query: getColumnStateQuery(args.index),
+          variables: {},
+        },
+      });
+
+      if (error) {
+        showErrorReportNotif();
+        message.destroy('report_pending');
+        return thunkAPI.rejectWithValue('error');
+      }
+
+      const { downloadData, downloadError } = await fetchTsxReport(args, data!, formattedFileName);
+
+      message.destroy('report_pending');
+
+      if (downloadError) {
+        showErrorReportNotif();
+        return thunkAPI.rejectWithValue('error');
+      }
+
+      saveAs(
+        new Blob([downloadData], {
+          type: getDefaultContentType('text'),
+        }),
+        formattedFileName,
+      );
+    } catch {
+      message.destroy('report_pending');
+      showErrorReportNotif();
+    }
   },
-  { rejectValue: string }
->('report/generate/tsv', async (args, thunkAPI) => {
-  message.loading({
-    content: 'Please wait while we generate your TSV report',
-    key: 'report_pending',
-    duration: 0,
-  });
+);
 
-  const filename = `[include-${args.index}-table]-YYYY-MM-DD`;
-  const formattedFileName = format(new Date(), `${filename}[.tsv]`);
+const fetchTsxReport = async (
+  args: TFetchTSVArgs,
+  data: ArrangerColumnStateResults,
+  formattedFileName: string,
+) => {
+  let colStates = args.columnStates
+    ? args.columnStates
+    : args.columns.map((col, index) => ({
+        index,
+        key: col.key,
+        visible: col.defaultHidden || true,
+      }));
+  colStates = colStates.filter(({ visible }) => !!visible);
 
-  const { data, error } = await sendRequest<ArrangerColumnStateResults>({
-    url: ARRANGER_API_COLUMN_STATE_URL,
-    method: 'POST',
-    data: {
-      query: getColumnStateQuery(args.index),
-      variables: {},
-    },
-  });
+  const columnKeyOrdered = [...colStates].sort((a, b) => a.index - b.index).map(({ key }) => key);
 
-  if (error) {
-    message.destroy('report_pending');
-    showErrorReportNotif();
-    return thunkAPI.rejectWithValue('error');
-  }
-  const columnKeyOrdered = [...args.columnStates]
-    .sort((a, b) => a.index - b.index)
-    .map(({ key }) => key);
-
-  const tsvColumnsConfig = data!.data.file.columnsState.state.columns.filter(({ field }) =>
-    args.columnStates.find(({ key }) => key === field),
+  const tsvColumnsConfig = data!.data[args.index].columnsState.state.columns.filter(({ field }) =>
+    colStates.find(({ key }) => key === field),
   );
   const tsvColumnsConfigWithHeader = tsvColumnsConfig.map((column) => ({
     ...column,
-    Header: startCase(column.field.replace(/\./g, ' ')),
+    Header: getTitleFromColumns(args.columns, column.field),
   }));
 
   const params = new URLSearchParams({
@@ -118,25 +149,26 @@ const fetchTsvReport = createAsyncThunk<
     downloadKey: v4(),
   });
 
-  const { data: fileData, error: downloadError } = await sendRequest<any>({
+  const { data: downloadData, error: downloadError } = await sendRequest<any>({
     url: ARRANGER_API_DOWNLOAD_URL,
     method: 'POST',
     data: params,
   });
 
-  message.destroy('report_pending');
+  return {
+    downloadData,
+    downloadError,
+  };
+};
 
-  if (downloadError) {
-    showErrorReportNotif();
-    return thunkAPI.rejectWithValue('error');
+const getTitleFromColumns = (columns: ProColumnType[], field: string) => {
+  const column = columns.find(({ key }) => key === field);
+
+  if (!column || (column.title && typeof column.title !== 'string')) {
+    return startCase(field.replace(/\./g, ' '));
   }
 
-  saveAs(
-    new Blob([fileData], {
-      type: getDefaultContentType('text'),
-    }),
-    formattedFileName,
-  );
-});
+  return column.title;
+};
 
 export { fetchReport, fetchTsvReport };

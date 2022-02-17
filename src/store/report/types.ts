@@ -1,7 +1,9 @@
+import { ProColumnType, TColumnStates } from '@ferlab/ui/core/components/ProTable/types';
+
 export type Message = {
   content: string;
   duration: number;
-  type: MessageType
+  type: MessageType;
 };
 
 export enum MessageType {
@@ -13,4 +15,11 @@ export enum MessageType {
 export type initialState = {
   isLoading: boolean;
   error?: any;
+};
+
+export type TFetchTSVArgs = {
+  index: string;
+  columnStates: TColumnStates | undefined;
+  columns: ProColumnType[];
+  sqon: any;
 };

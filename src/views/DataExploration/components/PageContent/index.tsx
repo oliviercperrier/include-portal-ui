@@ -213,6 +213,7 @@ const PageContent = ({
             setPagingConfig={setPagingConfigParticipant}
             pagingConfig={pagingConfigParticipant}
             downloadReport={handleDownloadReport}
+            sqon={participantResolvedSqon}
           />
         </Tabs.TabPane>
         <Tabs.TabPane
@@ -231,6 +232,7 @@ const PageContent = ({
             setPagingConfig={setPagingConfigBiospecimen}
             pagingConfig={pagingConfigBiospecimen}
             downloadReport={handleDownloadReport}
+            sqon={biospecimenResolvedSqon}
           />
         </Tabs.TabPane>
         <Tabs.TabPane
@@ -248,6 +250,7 @@ const PageContent = ({
             results={fileResults}
             setPagingConfig={setPagingConfigFile}
             pagingConfig={pagingConfigFile}
+            sqon={fileResolvedSqon}
           />
         </Tabs.TabPane>
       </Tabs>

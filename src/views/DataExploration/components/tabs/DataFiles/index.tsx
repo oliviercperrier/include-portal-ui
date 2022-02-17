@@ -16,11 +16,14 @@ import { Button, Tag, Tooltip } from 'antd';
 
 import styles from './index.module.scss';
 import { fetchTsvReport } from 'store/report/thunks';
+import { INDEXES } from 'graphql/constants';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
+  sqon?: ISqonGroupFilter;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -105,9 +108,10 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
+const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  // eslint-disable-next-line
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
@@ -129,21 +133,15 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig }: OwnProps) => {
         enableTableExport: true,
         onSelectAllResultsChange: setSelectedAllResults,
         onSelectedRowsChange: (keys) => setSelectedKeys(keys),
-        onTableExportClick: () => {
+        onTableExportClick: () =>
           dispatch(
             fetchTsvReport({
-              columnStates:
-                userInfo?.config.data_exploration?.tables?.datafiles?.columns ||
-                defaultColumns.map((column, index) => ({
-                  index,
-                  key: column.key,
-                  visible: true,
-                })),
-              index: 'file',
-              sqon: undefined,
+              columnStates: userInfo?.config.data_exploration?.tables?.datafiles?.columns,
+              columns: defaultColumns,
+              index: INDEXES.FILE,
+              sqon,
             }),
-          );
-        },
+          ),
         onColumnSortChange: (newState) =>
           dispatch(
             updateUserConfig({

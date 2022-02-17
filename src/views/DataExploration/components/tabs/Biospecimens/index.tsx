@@ -19,6 +19,9 @@ import { Button } from 'antd';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { fetchTsvReport } from 'store/report/thunks';
+import { INDEXES } from 'graphql/constants';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 
 import styles from './index.module.scss';
 
@@ -27,6 +30,7 @@ interface OwnProps {
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
   downloadReport: THandleReportDownload;
+  sqon?: ISqonGroupFilter;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -49,7 +53,7 @@ const defaultColumns: ProColumnType<any>[] = [
     dataIndex: 'biospecimen_id',
   },
   {
-    key: 'participant',
+    key: 'participant.participant_id',
     title: 'Participant ID',
     dataIndex: 'participant',
     render: (participant: IParticipantEntity) => participant.participant_id,
@@ -120,7 +124,13 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, downloadReport }: OwnProps) => {
+const BioSpecimenTab = ({
+  results,
+  setPagingConfig,
+  pagingConfig,
+  downloadReport,
+  sqon,
+}: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
@@ -154,6 +164,15 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, downloadReport
                   },
                 },
               },
+            }),
+          ),
+        onTableExportClick: () =>
+          dispatch(
+            fetchTsvReport({
+              columnStates: userInfo?.config.data_exploration?.tables?.biospecimens?.columns,
+              columns: defaultColumns,
+              index: INDEXES.BIOSPECIMEN,
+              sqon,
             }),
           ),
         extra: [

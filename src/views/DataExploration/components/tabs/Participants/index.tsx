@@ -34,12 +34,15 @@ import { INDEXES } from 'graphql/constants';
 import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 
 import styles from './index.module.scss';
+import { fetchTsvReport } from 'store/report/thunks';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
   downloadReport: THandleReportDownload;
+  sqon?: ISqonGroupFilter;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
@@ -103,7 +106,7 @@ const defaultColumns: ProColumnType<any>[] = [
     defaultHidden: true,
   },
   {
-    key: 'mondo',
+    key: 'mondo.name',
     title: 'Diagnosis (Mondo)',
     dataIndex: 'mondo',
     className: styles.diagnosisCell,
@@ -142,7 +145,7 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'observed_phenotype',
+    key: 'observed_phenotype.name',
     title: 'Phenotype (HPO)',
     dataIndex: 'observed_phenotype',
     className: styles.phenotypeCell,
@@ -207,7 +210,7 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'files',
+    key: 'files.hits.total',
     title: 'Files',
     render: (record: ITableParticipantEntity) => {
       const total = record?.files?.hits?.total;
@@ -232,7 +235,13 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, downloadReport }: OwnProps) => {
+const ParticipantsTab = ({
+  results,
+  setPagingConfig,
+  pagingConfig,
+  downloadReport,
+  sqon,
+}: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
@@ -271,6 +280,16 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, downloadRepor
                   },
                 },
               },
+            }),
+          ),
+        onTableExportClick: () =>
+          dispatch(
+            fetchTsvReport({
+              columnStates:
+                userInfo?.config.data_exploration?.tables?.participants?.columns,
+              columns: defaultColumns,
+              index: INDEXES.PARTICIPANT,
+              sqon,
             }),
           ),
         onSelectAllResultsChange: setSelectedAllResults,

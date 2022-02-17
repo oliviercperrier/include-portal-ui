@@ -120,7 +120,6 @@ const fetchTsxReport = async (
   colStates = colStates.filter(({ visible }) => !!visible);
 
   const columnKeyOrdered = [...colStates].sort((a, b) => a.index - b.index).map(({ key }) => key);
-
   const tsvColumnsConfig = data!.data[args.index].columnsState.state.columns.filter(({ field }) =>
     colStates.find(({ key }) => key === field),
   );

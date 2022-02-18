@@ -20,3 +20,7 @@ export interface IFileEntity {
   type_of_omics: string;
   participant: ArrangerResultsTree<IParticipantEntity>;
 }
+
+export type ITableFileEntity = IFileEntity & {
+  key: string;
+}

@@ -1,24 +1,25 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { combineReducers } from "redux";
-import storage from "redux-persist/lib/storage";
-import logger from "redux-logger";
-import { persistStore, persistReducer } from "redux-persist";
-import EnvVariables from "helpers/EnvVariables";
-import { RootState } from "store/types";
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
+import storage from 'redux-persist/lib/storage';
+import logger from 'redux-logger';
+import { persistStore, persistReducer } from 'redux-persist';
+import EnvVariables from 'helpers/EnvVariables';
+import { RootState } from 'store/types';
 // Reducers
-import GlobalReducer from "store/global";
-import UserReducer from "store/user";
-import FenceConnectionReducer from "store/fenceConnection";
-import RiffReducer from "store/riff";
-import ReportReducer from "store/report";
-import SavedFilterReducer from "store/savedFilter";
+import GlobalReducer from 'store/global';
+import UserReducer from 'store/user';
+import FenceConnectionReducer from 'store/fenceConnection';
+import RiffReducer from 'store/riff';
+import ReportReducer from 'store/report';
+import SavedFilterReducer from 'store/savedFilter';
+import CavaticaReducer from 'store/cavatica';
 
-const devMode = EnvVariables.configFor("ENV") === "development";
+const devMode = EnvVariables.configFor('ENV') === 'development';
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
-  whitelist: ["global"],
+  whitelist: ['global'],
 };
 
 const rootReducer = combineReducers<RootState>({
@@ -28,6 +29,7 @@ const rootReducer = combineReducers<RootState>({
   fenceConnection: FenceConnectionReducer,
   riff: RiffReducer,
   savedFilter: SavedFilterReducer,
+  cavatica: CavaticaReducer,
 });
 
 const store: any = configureStore({

@@ -3,6 +3,19 @@
 @input-hover-border-color: @blue-6;
 @input-outline-offset: 0;
 
+.@{select-prefix-cls} {  
+  & {
+    &-focused:not(.ant-select-disabled),
+    &:focus:not(.ant-select-disabled) {
+      &.@{select-prefix-cls}:not(.ant-select-customize-input) {
+        .@{select-prefix-cls}-selector {
+          border-color: @input-hover-border-color;
+        }
+      }
+    }
+  }
+}
+
 .@{input-prefix-cls} {
   &-number,
   & {

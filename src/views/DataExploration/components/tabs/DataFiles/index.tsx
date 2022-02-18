@@ -1,4 +1,4 @@
-import { IFileEntity } from 'graphql/files/models';
+import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import { CloudUploadOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
@@ -19,6 +19,8 @@ import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 
 import styles from './index.module.scss';
+import { cavaticaActions } from 'store/cavatica/slice';
+import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -119,14 +121,12 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
   const { userInfo } = useUser();
   // eslint-disable-next-line
   const [selectedAllResults, setSelectedAllResults] = useState(false);
-  const [analyseModalOpen, setAnalyseModalOpen] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-
-  const handleModalClose = () => setAnalyseModalOpen(false);
+  const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
 
   return (
     <>
-      <ProTable
+      <ProTable<ITableFileEntity>
         tableId="datafiles_table"
         columns={defaultColumns}
         wrapperClassName={styles.dataFilesTabWrapper}
@@ -142,7 +142,10 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
           enableColumnSort: true,
           enableTableExport: true,
           onSelectAllResultsChange: setSelectedAllResults,
-          onSelectedRowsChange: (keys) => setSelectedKeys(keys),
+          onSelectedRowsChange: (keys, rows) => {
+            setSelectedKeys(keys);
+            setSelectedRows(rows);
+          },
           onTableExportClick: () =>
             dispatch(
               fetchTsvReport({
@@ -169,7 +172,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               disabled={selectedKeys.length === 0}
               type="primary"
               icon={<CloudUploadOutlined />}
-              onClick={() => setAnalyseModalOpen(true)}
+              onClick={() => dispatch(cavaticaActions.beginAnalyse(selectedRows))}
             >
               Analyze in Cavatica
             </Button>,
@@ -193,7 +196,8 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
         dataSource={results.data.map((i) => ({ ...i, key: i.file_id }))}
         dictionary={getProTableDictionary()}
       />
-      <AnalyseModal open={analyseModalOpen} onCancel={handleModalClose} />
+      <AnalyseModal />
+      <CreateProjectModal />
     </>
   );
 };

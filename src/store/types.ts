@@ -4,6 +4,7 @@ import { FenceConnectionInitialState } from 'store/fenceConnection';
 import { RiffInitialState } from './riff';
 import { SavedFilterInitialState } from './savedFilter';
 import { ReportInitialState } from './report';
+import { cavaticaInitialState } from './cavatica';
 
 export type RootState = {
   global: GlobalInitialState;
@@ -12,4 +13,5 @@ export type RootState = {
   fenceConnection: FenceConnectionInitialState;
   riff: RiffInitialState;
   savedFilter: SavedFilterInitialState;
+  cavatica: cavaticaInitialState;
 };

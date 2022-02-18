@@ -1,12 +1,41 @@
-.treeSelectorWrapper {
-  width: 100%;
+.cavaticaAnalyseModal {
+  .authorizedFilesTag {
+    margin: 0;
+  }
+
+  .filesList {
+    div[class$='-meta-description'] {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin-right: 12px;
+    }
+  }
 }
 
-.authorizedFilesTag {
-    margin: 0
-}
-
-.treeSelectEmpty {
+.cavaticaModalWrapper {
+  .treeSelectorWrapper, .treeSelector{
     width: 100%;
-    padding: 4px 8px
+  }
+  
+  .treeSelectEmpty {
+    width: 100%;
+    padding: 4px 8px;
+  }
+}
+
+.cavaticaTreeDropdown {
+  padding: 0;
+
+  .cavaticaTreeDropdownMenu {
+    padding: 8px 4px;
+  }
+
+  .cavaticaTreeDropdownFooter {
+    padding: 12px;
+  }  
+
+  .cavaticaTreeDropdownDivider {
+    margin: 0;
+   }
 }

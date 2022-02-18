@@ -10,8 +10,11 @@ import CavaticaListItem from './ListItem';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardConnectPlaceholder from 'views/Dashboard/components/CardConnectPlaceholder';
 import CavaticaIcon from 'components/Icons/CavaticaIcon';
+import { cavaticaActions } from 'store/cavatica/slice';
+import { useDispatch } from 'react-redux';
 
 import styles from './index.module.scss';
+import CreateProjectModal from './CreateProjectModal';
 
 export interface IListItemData {
   key: any;
@@ -21,6 +24,7 @@ export interface IListItemData {
 }
 
 const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
+  const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result
@@ -57,94 +61,102 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
   ];
 
   return (
-    <GridCard
-      theme="shade"
-      wrapperClassName={className}
-      title={
-        <CardHeader
-          id={id}
-          title={intl.get('screen.dashboard.cards.cavatica.title', {
-            count: isConnected ? data.length : 0,
-          })}
-          infoPopover={{
-            title: intl.get('screen.dashboard.cards.cavatica.infoPopover.title'),
-            overlayClassName: styles.cavaticaInfoPopover,
-            content: (
-              <Space direction="vertical" className={styles.content} size={0}>
-                <Text>
-                  {intl.get('screen.dashboard.cards.cavatica.infoPopover.content')}{' '}
-                  <a href="https://www.cavatica.org/" target="_blank" rel="noreferrer">
-                    <Button type="link" size="small" className={styles.readMoreBtn}>
-                      {intl.get('screen.dashboard.cards.cavatica.infoPopover.readMore')}
-                    </Button>
-                  </a>
-                </Text>
-              </Space>
-            ),
-          }}
-          withHandle
-        />
-      }
-      content={
-        <div className={styles.cavaticaWrapper}>
-          {isConnected && (
-            <Space className={styles.authenticatedHeader} direction="horizontal">
-              <Space align="start">
-                <SafetyOutlined className={styles.safetyIcon} />
-                <Text className={styles.notice}>
-                  {intl.get('screen.dashboard.cards.cavatica.connectedNotice')}{' '}
-                  <Button
-                    type="link"
-                    size="small"
-                    danger
-                    icon={<DisconnectOutlined />}
-                    onClick={() => setIsConnected(false)}
-                    className={styles.disconnectBtn}
-                  >
-                    {intl.get('screen.dashboard.cards.cavatica.disconnect')}
-                  </Button>
-                </Text>
-              </Space>
-            </Space>
-          )}
-          <List<IListItemData>
-            className={styles.cavaticaProjectsList}
-            bordered
-            itemLayout="vertical"
-            locale={{
-              emptyText: isConnected ? (
-                <Empty
-                  imageType="grid"
-                  description={intl.get('screen.dashboard.cards.cavatica.noProjects')}
-                  action={
-                    <Button type="primary" icon={<PlusOutlined />} size="small">
-                      {intl.get('screen.dashboard.cards.cavatica.createNewProject')}
-                    </Button>
-                  }
-                />
-              ) : (
-                <CardConnectPlaceholder
-                  icon={<CavaticaIcon />}
-                  description={intl.get('screen.dashboard.cards.cavatica.disconnectedNotice')}
-                  btnProps={{
-                    onClick: () => setIsConnected(true),
-                  }}
-                />
+    <>
+      <GridCard
+        theme="shade"
+        wrapperClassName={className}
+        title={
+          <CardHeader
+            id={id}
+            title={intl.get('screen.dashboard.cards.cavatica.title', {
+              count: isConnected ? data.length : 0,
+            })}
+            infoPopover={{
+              title: intl.get('screen.dashboard.cards.cavatica.infoPopover.title'),
+              overlayClassName: styles.cavaticaInfoPopover,
+              content: (
+                <Space direction="vertical" className={styles.content} size={0}>
+                  <Text>
+                    {intl.get('screen.dashboard.cards.cavatica.infoPopover.content')}{' '}
+                    <a href="https://www.cavatica.org/" target="_blank" rel="noreferrer">
+                      <Button type="link" size="small" className={styles.readMoreBtn}>
+                        {intl.get('screen.dashboard.cards.cavatica.infoPopover.readMore')}
+                      </Button>
+                    </a>
+                  </Text>
+                </Space>
               ),
             }}
-            dataSource={isConnected ? data : []} // just for testing before implementing real data
-            renderItem={(item) => <CavaticaListItem id={item.key} data={item} />}
-          ></List>
-          {(isConnected ? data : []).length > 0 && (
-            <div className={styles.customFooter}>
-              <Button icon={<PlusOutlined />} className={styles.newProjectBtn} size="small">
-                {intl.get('screen.dashboard.cards.cavatica.newProject')}
-              </Button>
-            </div>
-          )}
-        </div>
-      }
-    />
+            withHandle
+          />
+        }
+        content={
+          <div className={styles.cavaticaWrapper}>
+            {isConnected && (
+              <Space className={styles.authenticatedHeader} direction="horizontal">
+                <Space align="start">
+                  <SafetyOutlined className={styles.safetyIcon} />
+                  <Text className={styles.notice}>
+                    {intl.get('screen.dashboard.cards.cavatica.connectedNotice')}{' '}
+                    <Button
+                      type="link"
+                      size="small"
+                      danger
+                      icon={<DisconnectOutlined />}
+                      onClick={() => setIsConnected(false)}
+                      className={styles.disconnectBtn}
+                    >
+                      {intl.get('screen.dashboard.cards.cavatica.disconnect')}
+                    </Button>
+                  </Text>
+                </Space>
+              </Space>
+            )}
+            <List<IListItemData>
+              className={styles.cavaticaProjectsList}
+              bordered
+              itemLayout="vertical"
+              locale={{
+                emptyText: isConnected ? (
+                  <Empty
+                    imageType="grid"
+                    description={intl.get('screen.dashboard.cards.cavatica.noProjects')}
+                    action={
+                      <Button type="primary" icon={<PlusOutlined />} size="small">
+                        {intl.get('screen.dashboard.cards.cavatica.createNewProject')}
+                      </Button>
+                    }
+                  />
+                ) : (
+                  <CardConnectPlaceholder
+                    icon={<CavaticaIcon />}
+                    description={intl.get('screen.dashboard.cards.cavatica.disconnectedNotice')}
+                    btnProps={{
+                      onClick: () => setIsConnected(true),
+                    }}
+                  />
+                ),
+              }}
+              dataSource={isConnected ? data : []} // just for testing before implementing real data
+              renderItem={(item) => <CavaticaListItem id={item.key} data={item} />}
+            ></List>
+            {(isConnected ? data : []).length > 0 && (
+              <div className={styles.customFooter}>
+                <Button
+                  icon={<PlusOutlined />}
+                  className={styles.newProjectBtn}
+                  size="small"
+                  onClick={() => dispatch(cavaticaActions.beginCreateProject())}
+                >
+                  {intl.get('screen.dashboard.cards.cavatica.newProject')}
+                </Button>
+              </div>
+            )}
+          </div>
+        }
+      />
+      <CreateProjectModal openAnalyseModalOnCancel={false} />
+    </>
   );
 };
 

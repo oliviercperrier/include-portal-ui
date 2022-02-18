@@ -77,28 +77,38 @@ const columns: ProColumnType<any>[] = [
     dataIndex: 'family_count',
   },
   {
+    key: 'clinical',
+    title: 'Clinical',
+    align: 'center',
+  },
+  {
     key: 'genomic',
     title: 'Genomic',
     align: 'center',
     render: () => <CheckOutlined />,
   },
   {
+    key: 'transcriptomic',
+    title: 'Transcriptomic',
+    align: 'center',
+  },
+  {
     key: 'proteomic',
     title: 'Proteomic',
     align: 'center',
-    render: () => <CheckOutlined />,
+    render: () => <></>,
   },
   {
     key: 'immune_map',
     title: 'Immune Map',
     align: 'center',
-    render: () => <CheckOutlined />,
+    render: () => <></>,
   },
   {
     key: 'metabolic',
     title: 'Metabolomic',
     align: 'center',
-    render: () => <CheckOutlined />,
+    render: () => <></>,
   },
 ];
 

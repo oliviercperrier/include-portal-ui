@@ -41,7 +41,6 @@ const fetchReport = createAsyncThunk<
   },
   { rejectValue: string }
 >('report/generateReport', async (args, thunkAPI) => {
-  showErrorReportNotif();
   try {
     message.loading({
       content: 'Please wait while we generate your report',

@@ -1,6 +1,6 @@
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
-import { Checkbox, Space, Typography } from 'antd';
+import { Space, Typography } from 'antd';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 import { useStudies } from 'graphql/studies/actions';
 import ApolloProvider from 'provider/ApolloProvider';
@@ -12,6 +12,7 @@ import { STATIC_ROUTES } from 'utils/routes';
 import { IStudyEntity } from 'graphql/studies/models';
 import { addFilter } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
+import { CheckOutlined } from '@ant-design/icons';
 
 import styles from './index.module.scss';
 
@@ -79,25 +80,25 @@ const columns: ProColumnType<any>[] = [
     key: 'genomic',
     title: 'Genomic',
     align: 'center',
-    render: () => <Checkbox></Checkbox>,
+    render: () => <CheckOutlined />,
   },
   {
     key: 'proteomic',
     title: 'Proteomic',
     align: 'center',
-    render: () => <Checkbox></Checkbox>,
+    render: () => <CheckOutlined />,
   },
   {
     key: 'immune_map',
     title: 'Immune Map',
     align: 'center',
-    render: () => <Checkbox></Checkbox>,
+    render: () => <CheckOutlined />,
   },
   {
     key: 'metabolic',
     title: 'Metabolomic',
     align: 'center',
-    render: () => <Checkbox></Checkbox>,
+    render: () => <CheckOutlined />,
   },
 ];
 

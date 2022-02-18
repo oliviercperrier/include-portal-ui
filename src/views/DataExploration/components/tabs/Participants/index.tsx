@@ -48,7 +48,7 @@ interface OwnProps {
 const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'participant_id',
-    title: 'ID',
+    title: 'Participant ID',
     dataIndex: 'participant_id',
   },
   {
@@ -73,7 +73,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'karyotype',
-    title: 'Karyotype',
+    title: 'DS Status',
     dataIndex: 'karyotype',
   },
   {
@@ -250,7 +250,7 @@ const ParticipantsTab = ({
   const menu = (
     <Menu onClick={(e) => downloadReport(e.key as ReportType, selectedKeys, selectedAllResults)}>
       <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
-      <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Participant & Family Members</Menu.Item>
+      {/* <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Participant & Family Members</Menu.Item> */}
     </Menu>
   );
 

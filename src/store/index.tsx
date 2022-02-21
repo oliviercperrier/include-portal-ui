@@ -13,6 +13,7 @@ import RiffReducer from 'store/riff';
 import ReportReducer from 'store/report';
 import SavedFilterReducer from 'store/savedFilter';
 import CavaticaReducer from 'store/cavatica';
+import FenceStudiesReducer from 'store/fenceStudies';
 
 const devMode = EnvVariables.configFor('ENV') === 'development';
 
@@ -27,6 +28,7 @@ const rootReducer = combineReducers<RootState>({
   user: UserReducer,
   report: ReportReducer,
   fenceConnection: FenceConnectionReducer,
+  fenceStudies: FenceStudiesReducer,
   riff: RiffReducer,
   savedFilter: SavedFilterReducer,
   cavatica: CavaticaReducer,

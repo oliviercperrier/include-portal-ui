@@ -13,6 +13,7 @@ import { connectFence, disconnectFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
 import { useDispatch } from 'react-redux';
 import { isEmpty } from 'lodash';
+import useFenceStudy from 'hooks/useFenceStudy';
 
 import styles from './index.module.scss';
 
@@ -28,6 +29,9 @@ export interface IListItemData {
 const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
   const dispatch = useDispatch();
   const { loadingFences, connections } = useFenceConnections();
+  const { loadingStudiesForFences, fenceAuthStudies } = useFenceStudy();
+
+  console.log(fenceAuthStudies)
 
   const data: IListItemData[] = [
     // Add appropriate api call and replace this list with the result

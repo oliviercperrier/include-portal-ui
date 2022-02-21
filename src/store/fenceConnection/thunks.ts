@@ -8,7 +8,9 @@ import { ALL_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/
 const fetchAllFenceConnections = createAsyncThunk<any, never, { state: RootState }>(
   'fence/fetch/all/connections',
   async (_, thunkAPI) => {
-    ALL_FENCE_NAMES.forEach((fenceName) => thunkAPI.dispatch(fetchFenceConnection(fenceName)));
+    ALL_FENCE_NAMES.forEach(
+      async (fenceName) => await thunkAPI.dispatch(fetchFenceConnection(fenceName)),
+    );
   },
 );
 

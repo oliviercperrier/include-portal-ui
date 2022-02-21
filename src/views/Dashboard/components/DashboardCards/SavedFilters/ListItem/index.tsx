@@ -1,29 +1,28 @@
 import cx from 'classnames';
-import { Button, List, Form, Input, Modal, Typography } from 'antd';
+import { Button, List, Modal, Typography } from 'antd';
 import { TUserSavedFilter } from 'services/api/savedFilter/models';
 import { DeleteFilled, EditFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useDispatch } from 'react-redux';
-import { deleteSavedFilter, updateSavedFilter } from 'store/savedFilter/thunks';
+import { deleteSavedFilter } from 'store/savedFilter/thunks';
 import { FILTER_TAG_PAGE_MAPPING } from 'views/DataExploration/utils/constant';
 import { Link } from 'react-router-dom';
 import { distanceInWords } from 'date-fns';
 
 import styles from './index.module.scss';
+import EditModal from '../EditModal';
 
 interface OwnProps {
   id: any;
   data: TUserSavedFilter;
 }
 
-const FILTER_NAME_MAX_LENGTH = 50;
 const { Text } = Typography;
 
 const SavedFiltersListItem = ({ id, data }: OwnProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  const [editForm] = Form.useForm();
 
   return (
     <>
@@ -81,54 +80,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
           className={styles.itemMeta}
         />
       </List.Item>
-      <Modal
-        title={intl.get('components.querybuilder.header.modal.edit.title')}
-        onCancel={() => setModalVisible(false)}
-        visible={modalVisible}
-        onOk={() => editForm.submit()}
-      >
-        <Form
-          form={editForm}
-          fields={[
-            {
-              name: ['title'],
-              value: data.title,
-            },
-          ]}
-          layout="vertical"
-          onFinish={(values) => {
-            if (data.title !== values.title) {
-              dispatch(
-                updateSavedFilter({
-                  ...data,
-                  title: values.title,
-                }),
-              );
-            }
-            setModalVisible(false);
-          }}
-        >
-          <Form.Item noStyle>
-            <Form.Item
-              name="title"
-              label={intl.get('components.querybuilder.header.modal.edit.input.label')}
-              rules={[{ required: true, type: 'string', max: FILTER_NAME_MAX_LENGTH }]}
-              required={false}
-              className={styles.filterEditFormItem}
-            >
-              <Input
-                placeholder={intl.get(
-                  'components.querybuilder.header.modal.edit.input.placeholder',
-                )}
-              />
-            </Form.Item>
-            <span>
-              {FILTER_NAME_MAX_LENGTH}{' '}
-              {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
-            </span>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <EditModal visible={modalVisible} onCancel={() => setModalVisible(false)} filter={data} />
     </>
   );
 };

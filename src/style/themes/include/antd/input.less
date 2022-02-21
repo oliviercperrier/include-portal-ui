@@ -10,6 +10,7 @@
       &.@{select-prefix-cls}:not(.ant-select-customize-input) {
         .@{select-prefix-cls}-selector {
           border-color: @input-hover-border-color;
+          box-shadow: none;
         }
       }
     }
@@ -21,6 +22,7 @@
   & {
     &-focused,
     &:focus {
+      box-shadow: none !important;
       border-color: @input-hover-border-color;
     }
   }

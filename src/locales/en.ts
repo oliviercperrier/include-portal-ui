@@ -424,7 +424,7 @@ const fr = {
       mondo_id_diagnosis: 'Diagnosis (MONDO)',
     },
     phenotype: {
-      hpo_id_phenotype: 'Phenotype (HPO)',
+      hpo_phenotype_observed: 'Phenotype (HPO)',
     },
     age_at_data_collection: 'Age at data collection',
     family_type: 'Family Unit',

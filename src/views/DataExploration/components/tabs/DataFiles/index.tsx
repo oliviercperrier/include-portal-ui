@@ -1,7 +1,6 @@
 import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import {
   CloudUploadOutlined,
-  ExclamationCircleOutlined,
   LockOutlined,
   SafetyOutlined,
 } from '@ant-design/icons';
@@ -24,6 +23,7 @@ import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { cavaticaActions } from 'store/cavatica/slice';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
+import intl from 'react-intl-universal';
 
 import styles from './index.module.scss';
 
@@ -181,10 +181,16 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               icon={<CloudUploadOutlined />}
               onClick={() => {
                 if (selectedRows.length > CAVATICA_FILE_UPLOAD_LIMIT || selectedAllResults) {
-                  Modal.info({
-                    title: 'lol',
-                    icon: <ExclamationCircleOutlined />,
-                    content: 'Allo',
+                  Modal.error({
+                    title: intl.get(
+                      'screen.dataExploration.tabs.datafiles.cavatica.uploadLimitTitle',
+                    ),
+                    content: intl.getHTML(
+                      'screen.dataExploration.tabs.datafiles.cavatica.uploadLimit',
+                      {
+                        limit: CAVATICA_FILE_UPLOAD_LIMIT,
+                      },
+                    ),
                     okText: 'Ok',
                     cancelText: undefined,
                   });

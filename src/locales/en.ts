@@ -336,6 +336,11 @@ const fr = {
         },
         datafiles: {
           title: 'Data Files ({count})',
+          cavatica: {
+            uploadLimitTitle: "Maximum file count exceeded",
+            uploadLimit:
+              'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
+          },
         },
       },
     },

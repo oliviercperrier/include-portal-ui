@@ -1,23 +1,36 @@
 import { FileTextOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, List, Modal, Space, Tag, TreeSelect, Typography } from 'antd';
-import { useState } from 'react';
+import { ITableFileEntity } from 'graphql/files/models';
+import { groupBy } from 'lodash';
+import { LegacyDataNode } from 'rc-tree-select/lib/TreeSelect';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { CavaticaApi } from 'services/api/cavatica';
 import { useCavatica } from 'store/cavatica';
 import { cavaticaActions } from 'store/cavatica/slice';
+import { fetchAllProjects } from 'store/cavatica/thunks';
+import { ICavaticaTreeNode } from 'store/cavatica/types';
 
 import styles from './index.module.scss';
 
 const { Text } = Typography;
-const { TreeNode } = TreeSelect;
 
 const AnalyseModal = () => {
-  const { isAnalyseModalOpen } = useCavatica();
+  const { isAnalyseModalOpen, projectsTree, isLoading, filesToCopy, newlyCreatedProjectId } =
+    useCavatica();
   const dispatch = useDispatch();
-  const [filesDest, setFilesDest] = useState(undefined);
+  const [filesDest, setFilesDest] = useState<string | undefined>();
+  const [localProjectTree, setLocalProjectTree] = useState<ICavaticaTreeNode[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const onChange = (value: any) => setFilesDest(value);
-  const handleOnCancel = () => dispatch(cavaticaActions.cancelAnalyse());
+  const onChange = (value: string) => setFilesDest(value);
+
+  const handleOnCancel = () => {
+    setLocalProjectTree(projectsTree);
+    setFilesDest(undefined);
+    dispatch(cavaticaActions.cancelAnalyse());
+  };
+
   const handleCreateProject = () => {
     setDropdownOpen(false);
     // Need a timeout else the dropdown stay visible
@@ -33,6 +46,49 @@ const AnalyseModal = () => {
     </Button>
   );
 
+  useEffect(() => {
+    // TODO Check if connected
+    dispatch(fetchAllProjects());
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setLocalProjectTree(projectsTree);
+  }, [projectsTree]);
+
+  useEffect(() => {
+    if (newlyCreatedProjectId) {
+      setFilesDest(newlyCreatedProjectId);
+    }
+  }, [newlyCreatedProjectId]);
+
+  const onLoadData = async (node: LegacyDataNode) => {
+    const { data } = await CavaticaApi.listFilesAndFolders(node.id, node.type === 'project');
+
+    const childs =
+      data?.items.map((child) => {
+        let enrichedChild: any = {
+          ...child,
+          value: child.id,
+          title: child.name,
+          pId: node.id,
+        };
+
+        if (child.type === 'file') {
+          enrichedChild.isLeaf = true;
+        }
+        return enrichedChild;
+      }) || [];
+
+    setLocalProjectTree([...localProjectTree, ...childs]);
+  };
+
+  const aggregateFilesToStudy = (filesToCopy: ITableFileEntity[]) =>
+    Object.entries(groupBy(filesToCopy, 'study_id')).map((study) => ({
+      title: study[0],
+      nbFiles: study[1].length,
+    }));
+
   return (
     <Modal
       title="Analyse in Cavatica"
@@ -42,14 +98,17 @@ const AnalyseModal = () => {
       onCancel={handleOnCancel}
       className={styles.cavaticaAnalyseModal}
       wrapClassName={styles.cavaticaModalWrapper}
+      destroyOnClose
     >
       <Space direction="vertical" size={24}>
         <Space direction="vertical" size={5} className={styles.treeSelectorWrapper}>
           <Text strong>Copy files to...</Text>
           <TreeSelect
+            treeDataSimpleMode
             open={dropdownOpen}
             showAction={['focus']}
             className={styles.treeSelector}
+            loading={isLoading}
             notFoundContent={
               <Space
                 direction="vertical"
@@ -68,54 +127,35 @@ const AnalyseModal = () => {
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             placeholder="Select a project"
             allowClear
-            treeDefaultExpandAll
             onChange={onChange}
+            loadData={onLoadData}
+            treeData={localProjectTree}
             dropdownRender={(menu) => (
               <>
                 <div className={styles.cavaticaTreeDropdownMenu}>{menu}</div>
-                <Divider className={styles.cavaticaTreeDropdownDivider} />
-                <div className={styles.cavaticaTreeDropdownFooter}>
-                  <NewProjectButton />
-                </div>
+                {localProjectTree.length > 0 && (
+                  <>
+                    <Divider className={styles.cavaticaTreeDropdownDivider} />
+                    <div className={styles.cavaticaTreeDropdownFooter}>
+                      <NewProjectButton />
+                    </div>
+                  </>
+                )}
               </>
             )}
-          >
-            <TreeNode value="parent 1" title="parent 1">
-              <TreeNode value="parent 1-0" title="parent 1-0">
-                <TreeNode value="leaf1" title="leaf1" />
-                <TreeNode value="leaf2" title="leaf2" />
-              </TreeNode>
-              <TreeNode value="parent 1-1" title="parent 1-1">
-                <TreeNode value="leaf3" title={<b style={{ color: '#08c' }}>leaf3</b>} />
-              </TreeNode>
-            </TreeNode>
-          </TreeSelect>
+          />
         </Space>
         <Text>
           <Text>You are authorized to copy</Text>{' '}
           <Tag className={styles.authorizedFilesTag} icon={<FileTextOutlined />}>
             8 files
           </Tag>{' '}
-          <Text>(out of 45 selected) to your Cavatica workspace.</Text>
+          <Text>(out of {filesToCopy.length} selected) to your Cavatica workspace.</Text>
         </Text>
         <List
           size="small"
-          className={styles.filesList}
-          dataSource={[
-            {
-              title:
-                'Lorem ipsum dolor sit amet consectetur adipiscing minus tulic asdf asf asf asf s',
-              nbFiles: 4,
-            },
-            {
-              title: 'Lorem ipsum dolor sit amet consectetur adipiscing elit',
-              nbFiles: 7,
-            },
-            {
-              title: 'Lorem ipsum dolor sit amet consectetur adipiscing elit tortor',
-              nbFiles: 3,
-            },
-          ]}
+          className={styles.studiesList}
+          dataSource={aggregateFilesToStudy(filesToCopy)}
           renderItem={(item) => {
             return (
               <List.Item>

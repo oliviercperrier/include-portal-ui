@@ -71,6 +71,18 @@ const fr = {
       deleteFilter: 'Unable to delete filter',
     },
   },
+  cavatica: {
+    error: {
+      title: 'Error',
+      projects: {
+        fetch: 'Unable to fetch your cavatica projects.',
+        create: 'Unable to create your cavatica project.',
+      },
+      billingGroups: {
+        fetch: 'Unable to fetch your cavatica billing groups.',
+      },
+    },
+  },
   report: {
     error: {
       title: 'Error',

@@ -1,5 +1,10 @@
 import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
-import { CloudUploadOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons';
+import {
+  CloudUploadOutlined,
+  ExclamationCircleOutlined,
+  LockOutlined,
+  SafetyOutlined,
+} from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
 import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
@@ -12,15 +17,15 @@ import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
 import { useState } from 'react';
 import { formatFileSize } from 'utils/formatFileSize';
-import { Button, Tag, Tooltip } from 'antd';
+import { Button, Modal, Tag, Tooltip } from 'antd';
 import AnalyseModal from 'views/Dashboard/components/DashboardCards/Cavatica/AnalyseModal';
 import { fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-
-import styles from './index.module.scss';
 import { cavaticaActions } from 'store/cavatica/slice';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -28,6 +33,8 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
   sqon?: ISqonGroupFilter;
 }
+
+const CAVATICA_FILE_UPLOAD_LIMIT = 100;
 
 const defaultColumns: ProColumnType<any>[] = [
   {
@@ -172,7 +179,19 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               disabled={selectedKeys.length === 0}
               type="primary"
               icon={<CloudUploadOutlined />}
-              onClick={() => dispatch(cavaticaActions.beginAnalyse(selectedRows))}
+              onClick={() => {
+                if (selectedRows.length > CAVATICA_FILE_UPLOAD_LIMIT || selectedAllResults) {
+                  Modal.info({
+                    title: 'lol',
+                    icon: <ExclamationCircleOutlined />,
+                    content: 'Allo',
+                    okText: 'Ok',
+                    cancelText: undefined,
+                  });
+                } else {
+                  dispatch(cavaticaActions.beginAnalyse(selectedRows));
+                }
+              }}
             >
               Analyze in Cavatica
             </Button>,

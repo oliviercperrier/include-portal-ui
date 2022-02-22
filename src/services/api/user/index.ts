@@ -1,27 +1,26 @@
-import EnvironmentVariables from "helpers/EnvVariables";
-import keycloak from "auth/keycloak-api/keycloak";
-import { IncludeKeycloakTokenParsed } from "common/tokenTypes";
-import { TUser, TUserInsert, TUserUpdate } from "./models";
-import { sendRequest } from "services/api";
+import EnvironmentVariables from 'helpers/EnvVariables';
+import keycloak from 'auth/keycloak-api/keycloak';
+import { IncludeKeycloakTokenParsed } from 'common/tokenTypes';
+import { TUser, TUserInsert, TUserUpdate } from './models';
+import { sendRequest } from 'services/api';
 
-const url = EnvironmentVariables.configFor("USERS_API");
+const url = EnvironmentVariables.configFor('USERS_API');
 
 const headers = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${keycloak.token}`,
+  'Content-Type': 'application/json',
 });
 
 const fetch = () =>
   sendRequest<TUser>({
-    method: "GET",
+    method: 'GET',
     url: `${url}/user`,
     headers: headers(),
   });
 
-const create = (body?: Omit<TUserInsert, "keycloak_id">) => {
+const create = (body?: Omit<TUserInsert, 'keycloak_id'>) => {
   const tokenParsed = keycloak.tokenParsed as IncludeKeycloakTokenParsed;
   return sendRequest<TUser>({
-    method: "POST",
+    method: 'POST',
     url: `${url}/user`,
     headers: headers(),
     data: {
@@ -34,7 +33,7 @@ const create = (body?: Omit<TUserInsert, "keycloak_id">) => {
 
 const update = (body: TUserUpdate) =>
   sendRequest<TUser>({
-    method: "PUT",
+    method: 'PUT',
     url: `${url}/user`,
     headers: headers(),
     data: body,
@@ -42,7 +41,7 @@ const update = (body: TUserUpdate) =>
 
 const completeRegistration = (body: TUserUpdate) =>
   sendRequest<TUser>({
-    method: "PUT",
+    method: 'PUT',
     url: `${url}/user/complete-registration`,
     headers: headers(),
     data: body,

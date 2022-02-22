@@ -1,5 +1,4 @@
 import EnvironmentVariables from "helpers/EnvVariables";
-import keycloak from "auth/keycloak-api/keycloak";
 import {
   TUserSavedFilter,
   TUserSavedFilterInsert,
@@ -10,8 +9,7 @@ import { sendRequest } from "services/api";
 const url = `${EnvironmentVariables.configFor("USERS_API")}/saved-filters`;
 
 const headers = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${keycloak.token}`,
+  "Content-Type": "application/json"
 });
 
 const fetchAll = (tag?: string) =>

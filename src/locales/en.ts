@@ -71,6 +71,18 @@ const fr = {
       deleteFilter: 'Unable to delete filter',
     },
   },
+  cavatica: {
+    error: {
+      title: 'Error',
+      projects: {
+        fetch: 'Unable to fetch your cavatica projects.',
+        create: 'Unable to create your cavatica project.',
+      },
+      billingGroups: {
+        fetch: 'Unable to fetch your cavatica billing groups.',
+      },
+    },
+  },
   report: {
     error: {
       title: 'Error',
@@ -416,7 +428,7 @@ const fr = {
   },
   facets: {
     // Participant
-    participant_id: "Participant ID",
+    participant_id: 'Participant ID',
     study_id: 'Study Code',
     karyotype: 'DS Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',

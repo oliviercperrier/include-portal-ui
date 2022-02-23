@@ -3,6 +3,8 @@ import { sendRequest } from 'services/api';
 import {
   ICavaticaBillingGroup,
   ICavaticaCreateProjectBody,
+  ICavaticaDRSImportBody,
+  ICavaticaDRSImportJobPayload,
   ICavaticaListPayload,
   ICavaticaProject,
   ICavaticaProjectChild,
@@ -56,10 +58,19 @@ const listFilesAndFolders = (parentId: string, isProject: boolean = false) =>
     },
   });
 
+const startBulkDrsImportJob = (data: ICavaticaDRSImportBody) =>
+  sendRequest<ICavaticaDRSImportJobPayload>({
+    method: 'POST',
+    url: `${url}/bulk/drs/imports/create`,
+    headers: headers(),
+    data,
+  });
+
 export const CavaticaApi = {
   fetchProjects,
   fetchProjetMembers,
   fetchBillingGroups,
   createProject,
   listFilesAndFolders,
+  startBulkDrsImportJob,
 };

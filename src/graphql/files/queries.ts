@@ -17,6 +17,7 @@ export const SEARCH_FILES_QUERY = gql`
             file_format
             size
             access
+            access_urls
           }
         }
       }

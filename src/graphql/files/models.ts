@@ -10,6 +10,7 @@ export interface IFileEntity {
   id: string;
   score: number;
   access: string;
+  access_urls: string;
   data_category: string;
   data_type: string;
   experimental_strategy: string;

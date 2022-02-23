@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CAVATICA_TYPE } from 'services/api/cavatica/models';
 import { initialState } from 'store/cavatica/types';
 import { createProjet, fetchAllBillingGroups, fetchAllProjects } from './thunks';
 
@@ -42,7 +43,7 @@ const cavaticaSlice = createSlice({
       ...state,
       filesToCopy: action.payload,
       isAnalyseModalOpen: true,
-      newlyCreatedProjectId: undefined
+      newlyCreatedProjectId: undefined,
     }),
     cancelAnalyse: (state) => ({
       ...state,
@@ -63,7 +64,7 @@ const cavaticaSlice = createSlice({
         pId: 0,
         title: project.name,
         value: project.id,
-        type: 'project',
+        type: CAVATICA_TYPE.PROJECT,
       }));
     });
     builder.addCase(fetchAllProjects.rejected, (state, action) => {
@@ -105,7 +106,7 @@ const cavaticaSlice = createSlice({
           pId: 0,
           title: action.payload.newProject.name,
           value: action.payload.newProject.id,
-          type: 'project',
+          type: CAVATICA_TYPE.PROJECT,
         },
       ];
     });

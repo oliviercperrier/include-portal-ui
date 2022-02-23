@@ -6,6 +6,7 @@ import { LegacyDataNode } from 'rc-tree-select/lib/TreeSelect';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { CavaticaApi } from 'services/api/cavatica';
+import { CAVATICA_TYPE } from 'services/api/cavatica/models';
 import { useCavatica } from 'store/cavatica';
 import { cavaticaActions } from 'store/cavatica/slice';
 import { fetchAllProjects } from 'store/cavatica/thunks';
@@ -63,22 +64,24 @@ const AnalyseModal = () => {
   }, [newlyCreatedProjectId]);
 
   const onLoadData = async (node: LegacyDataNode) => {
-    const { data } = await CavaticaApi.listFilesAndFolders(node.id, node.type === 'project');
+    const { data } = await CavaticaApi.listFilesAndFolders(
+      node.id,
+      node.type === CAVATICA_TYPE.PROJECT,
+    );
 
     const childs =
-      data?.items.map((child) => {
-        let enrichedChild: any = {
-          ...child,
-          value: child.id,
-          title: child.name,
-          pId: node.id,
-        };
+      data?.items
+        .filter(({ type }) => type !== CAVATICA_TYPE.FILE)
+        .map((child) => {
+          let enrichedChild: any = {
+            ...child,
+            value: child.id,
+            title: child.name,
+            pId: node.id,
+          };
 
-        if (child.type === 'file') {
-          enrichedChild.isLeaf = true;
-        }
-        return enrichedChild;
-      }) || [];
+          return enrichedChild;
+        }) || [];
 
     setLocalProjectTree([...localProjectTree, ...childs]);
   };

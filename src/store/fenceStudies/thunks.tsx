@@ -6,7 +6,7 @@ import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/uti
 import { RootState } from 'store/types';
 import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { sendRequest } from 'services/api';
-import { TFenceStudies } from './types';
+import { TFenceStudies, TFenceStudiesIdsAndCount } from './types';
 
 const fetchAllFenceStudies = createAsyncThunk<
   void,
@@ -17,9 +17,6 @@ const fetchAllFenceStudies = createAsyncThunk<
 
   const fenceNames = Object.keys(fenceConnection.connections) as FENCE_NAMES[];
   const aclsByFence = computeAclsByFence(fenceConnection.connections);
-
-  console.log('NAMES: ', fenceNames);
-  console.log('aclsByFence: ', aclsByFence);
 
   fenceNames.forEach(
     async (fenceName) =>
@@ -49,7 +46,7 @@ const fetchFenceStudies = createAsyncThunk<
 
     return {
       [args.fenceName]: {
-        authorizedStudies: [],
+        authorizedStudies: authorizedStudies,
       },
     };
   },
@@ -64,12 +61,20 @@ const fetchFenceStudies = createAsyncThunk<
         FENCE_CONNECTION_STATUSES.connected,
       ].includes(fenceStudies.statuses[args.fenceName]);
 
-      return hasNoAuthorizedStudies && hasNotBeenDisconnected;
+      return (
+        isEmpty(fenceStudies.studies[args.fenceName]) &&
+        hasNoAuthorizedStudies &&
+        hasNotBeenDisconnected
+      );
     },
   },
 );
 
-const getStudiesCountByNameAndAcl = async (studies: TFenceStudies, userAcls: string[]) => {
+const getStudiesCountByNameAndAcl = async (
+  studies: TFenceStudiesIdsAndCount,
+  userAcls: string[],
+) => {
+  console.log(studies)
   const studyIds = Object.keys(studies);
 
   const sqons = studyIds.reduce(
@@ -83,7 +88,7 @@ const getStudiesCountByNameAndAcl = async (studies: TFenceStudies, userAcls: str
     {},
   );
 
-  const { data, error } = await sendRequest<any>({
+  const { data } = await sendRequest<any>({
     url: ARRANGER_API_PROJECT_URL,
     method: 'POST',
     data: {
@@ -122,14 +127,24 @@ const getStudiesCountByNameAndAcl = async (studies: TFenceStudies, userAcls: str
     data: { file },
   } = data;
 
-  console.log(file);
+  return studyIds.map((id) => {
+    const agg = file[id];
+
+    return {
+      acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes(id)),
+      studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
+      totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
+      id,
+      authorizedFiles: studies[id].authorizedFiles,
+    };
+  });
 };
 
 const getAuthStudyIdsAndCounts = async (
   userAcls: string[],
   fenceName: FENCE_NAMES,
-): Promise<TFenceStudies> => {
-  const { data, error } = await sendRequest<any>({
+): Promise<TFenceStudiesIdsAndCount> => {
+  const { data } = await sendRequest<any>({
     url: ARRANGER_API_PROJECT_URL,
     method: 'POST',
     data: {
@@ -137,11 +152,12 @@ const getAuthStudyIdsAndCounts = async (
     query AuthorizedStudyIdsAndCount($sqon: JSON) {
       file {
         aggregations(filters: $sqon, aggregations_filter_themselves: true, include_missing: false){
-          participants__study__external_id{
+          participants__study__external_id {
             buckets
-            {
-              key
-              doc_count}
+              {
+                key
+                doc_count
+              }
             }
           }
         }
@@ -163,7 +179,7 @@ const getAuthStudyIdsAndCounts = async (
     data: {
       file: {
         aggregations: {
-          participants__study_external_id: { buckets },
+          participants__study__external_id: { buckets },
         },
       },
     },

@@ -5,19 +5,17 @@
 
   .filesList {
     div[class$='-meta-description'] {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
       margin-right: 12px;
     }
   }
 }
 
 .cavaticaModalWrapper {
-  .treeSelectorWrapper, .treeSelector{
+  .treeSelectorWrapper,
+  .treeSelector {
     width: 100%;
   }
-  
+
   .treeSelectEmpty {
     width: 100%;
     padding: 4px 8px;
@@ -33,9 +31,9 @@
 
   .cavaticaTreeDropdownFooter {
     padding: 12px;
-  }  
+  }
 
   .cavaticaTreeDropdownDivider {
     margin: 0;
-   }
+  }
 }

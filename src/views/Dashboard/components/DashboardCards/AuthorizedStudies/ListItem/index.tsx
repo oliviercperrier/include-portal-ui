@@ -1,13 +1,13 @@
 import cx from 'classnames';
 import { Button, List, Progress, Typography } from 'antd';
-import { IListItemData } from 'views/Dashboard/components/DashboardCards/AuthorizedStudies';
 import intl from 'react-intl-universal';
+import { TFenceStudy } from 'store/fenceStudies/types';
 
 import styles from './index.module.scss';
 
 interface OwnProps {
   id: any;
-  data: IListItemData;
+  data: TFenceStudy;
 }
 
 const { Text } = Typography;
@@ -16,12 +16,12 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
   return (
     <List.Item key={id} className={cx('wrapped', styles.AuthorizedStudiesListItem)}>
       <List.Item.Meta
-        title={data.title}
+        title={<Text ellipsis>{data.studyShortName}</Text>}
         description={
           <div className={styles.filesCount}>
             {intl.get('screen.dashboard.cards.authorizedStudies.authorization')}:{' '}
             <Button className={styles.fileLink} type="link">
-              <span>{data.nbFiles}</span>
+              <span>{data.authorizedFiles}</span>
             </Button>{' '}
             {intl.get('screen.dashboard.cards.authorizedStudies.of')}{' '}
             <Button className={styles.fileLink} type="link">
@@ -34,10 +34,14 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
       />
       <Text type="secondary" className={styles.dataUseGroups}>
         {intl.get('screen.dashboard.cards.authorizedStudies.dataGroups', {
-          groups: data.groups.join(', '),
+          groups: data.acl.join(', '),
         })}
       </Text>
-      <Progress className={styles.progress} size="small" percent={data.percent}></Progress>
+      <Progress
+        className={styles.progress}
+        size="small"
+        percent={(data.authorizedFiles / data.totalFiles) * 100}
+      ></Progress>
     </List.Item>
   );
 };

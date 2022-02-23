@@ -26,3 +26,9 @@ export type TFenceStudies = {
     authorizedStudies: TFenceStudy[];
   };
 };
+
+export type TFenceStudiesIdsAndCount = {
+  [fenceName: string]: {
+    authorizedFiles: number;
+  };
+};

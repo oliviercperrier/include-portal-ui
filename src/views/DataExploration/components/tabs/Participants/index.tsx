@@ -71,9 +71,9 @@ const defaultColumns: ProColumnType<any>[] = [
     ),
   },
   {
-    key: 'karyotype',
+    key: 'down_syndrome_status',
     title: 'DS Status',
-    dataIndex: 'karyotype',
+    dataIndex: 'down_syndrome_status',
   },
   {
     key: 'sex',

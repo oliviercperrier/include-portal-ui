@@ -29,8 +29,6 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
   const fenceStudiesLoading = loadingStudiesForFences.length > 0;
   const connectionsLoading = loadingFences.includes(FENCE_NAMES.gen3);
 
-  console.log(hasErrors)
-
   return (
     <GridCard
       theme="shade"
@@ -76,9 +74,9 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
                     size="small"
                     danger
                     icon={<DisconnectOutlined />}
-                    loading={connectionsLoading}
                     onClick={() => dispatch(disconnectFence(FENCE_NAMES.gen3))}
                     className={styles.disconnectBtn}
+                    loading={connectionsLoading}
                   >
                     {intl.get('screen.dashboard.cards.authorizedStudies.disconnect')}
                   </Button>
@@ -90,7 +88,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
             className={styles.authorizedStudiesList}
             bordered
             itemLayout="vertical"
-            loading={fenceStudiesLoading}
+            loading={fenceStudiesLoading || connectionsLoading}
             locale={{
               emptyText: hasErrors ? (
                 <CardErrorPlaceholder />

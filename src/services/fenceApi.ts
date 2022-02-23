@@ -97,6 +97,7 @@ export const fetchRefreshedAccessToken = async (fenceName: FENCE_NAMES) => {
 
 const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {
   let token = await fetchAccessToken(fenceName);
+
   const decodedToken = jwtDecode<DecodedJwt>(token);
   if (isDecodedJwtExpired(decodedToken)) {
     token = await fetchRefreshedAccessToken(fenceName);

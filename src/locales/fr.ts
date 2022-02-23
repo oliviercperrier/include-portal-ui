@@ -431,7 +431,7 @@ const fr = {
     // Participant
     participant_id: 'Participant ID',
     study_id: 'Study Code',
-    karyotype: 'DS Status',
+    down_syndrome_status: 'DS Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',
     diagnosis: {
       mondo_id_diagnosis: 'Diagnosis (MONDO)',

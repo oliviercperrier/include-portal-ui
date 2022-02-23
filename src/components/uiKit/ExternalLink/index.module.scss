@@ -1,0 +1,8 @@
+.externalLink {
+    text-decoration: underline !important;
+
+    &:hover {
+        text-decoration: none !important;
+        cursor: pointer;
+    }
+}

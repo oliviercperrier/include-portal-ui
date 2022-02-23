@@ -12,7 +12,7 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             participant_id
             study_id
             study_external_id
-            karyotype
+            down_syndrome_status
             sex
             family_type
             is_proband

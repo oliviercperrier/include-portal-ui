@@ -39,7 +39,7 @@ export interface IParticipantEntity {
   ethnicity: string;
   family_type: string;
   is_proband: boolean;
-  karyotype: string;
+  down_syndrome_status: string;
   participant_id: string;
   race: string;
   sex: string;

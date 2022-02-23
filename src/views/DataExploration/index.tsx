@@ -45,7 +45,7 @@ export const filterGroups: {
       {
         fields: [
           'study_id',
-          'karyotype',
+          'down_syndrome_status',
           'diagnosis__mondo_id_diagnosis',
           'phenotype__hpo_phenotype_observed',
           'family_type',

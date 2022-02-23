@@ -1,5 +1,6 @@
 import { keys } from 'lodash';
 import { FENCE_NAMES, TFenceConnections, TConnection } from 'common/fenceTypes';
+import { TAclsByFenceName } from 'store/fenceStudies/types';
 
 export const concatAllFencesAcls = (fenceConnections: TFenceConnections) => {
   const fenceNames = keys(fenceConnections) as FENCE_NAMES[];
@@ -8,10 +9,12 @@ export const concatAllFencesAcls = (fenceConnections: TFenceConnections) => {
     .flat();
 };
 
+export const addWildCardToAcls = (acls: string[]) => [...(acls || []), '*'];
+
 export const computeAclsForConnection = (connection: TConnection) =>
   keys(connection.projects || {});
 
-export const computeAclsByFence = (fenceConnections: TFenceConnections) =>
+export const computeAclsByFence = (fenceConnections: TFenceConnections): TAclsByFenceName =>
   Object.entries(fenceConnections).reduce(
     (acc, [fenceName, connection]) =>
       connection

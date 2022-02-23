@@ -119,7 +119,7 @@ const AnalyseModal = () => {
           renderItem={(item) => {
             return (
               <List.Item>
-                <List.Item.Meta description={item.title} />
+                <List.Item.Meta description={<Text ellipsis>{item.title}</Text>} />
                 <Text type="secondary">
                   {item.nbFiles} <FileTextOutlined />
                 </Text>

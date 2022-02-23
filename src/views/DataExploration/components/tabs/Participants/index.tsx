@@ -32,10 +32,11 @@ import { STATIC_ROUTES } from 'utils/routes';
 import { addFilter } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
-
-import styles from './index.module.scss';
 import { fetchTsvReport } from 'store/report/thunks';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import ExternalLink from 'components/uiKit/ExternalLink';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
@@ -62,13 +63,11 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'dbGaP',
     dataIndex: 'study_external_id',
     render: (study_external_id: string) => (
-      <a
-        target="_blank"
-        rel="noreferrer"
+      <ExternalLink
         href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_external_id}`}
       >
         {study_external_id}
-      </a>
+      </ExternalLink>
     ),
   },
   {
@@ -127,13 +126,11 @@ const defaultColumns: ProColumnType<any>[] = [
             return mondoInfo ? (
               <div key={index}>
                 {mondoInfo.title} (MONDO:{' '}
-                <a
+                <ExternalLink
                   href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
-                  target="_blank"
-                  rel="noreferrer"
                 >
                   {mondoInfo.code}
-                </a>
+                </ExternalLink>
                 )
               </div>
             ) : (
@@ -168,13 +165,9 @@ const defaultColumns: ProColumnType<any>[] = [
             return phenotypeInfo ? (
               <div key={index}>
                 {phenotypeInfo.title} (HP:{' '}
-                <a
-                  href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <ExternalLink href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}>
                   {phenotypeInfo.code}
-                </a>
+                </ExternalLink>
                 )
               </div>
             ) : (
@@ -285,8 +278,7 @@ const ParticipantsTab = ({
         onTableExportClick: () =>
           dispatch(
             fetchTsvReport({
-              columnStates:
-                userInfo?.config.data_exploration?.tables?.participants?.columns,
+              columnStates: userInfo?.config.data_exploration?.tables?.participants?.columns,
               columns: defaultColumns,
               index: INDEXES.PARTICIPANT,
               sqon,

@@ -66,8 +66,11 @@ const fenceConnectionSlice = createSlice({
 
     // DISCONNECT FENCE
     builder.addCase(disconnectFence.pending, (state, action) => {
-      addLoadingFences(state, action.meta.arg);
-      removeFenceAuthError(state.fencesDisconnectError, action.meta.arg);
+      state.loadingFences = addLoadingFences(state, action.meta.arg);
+      state.fencesDisconnectError = removeFenceAuthError(
+        state.fencesDisconnectError,
+        action.meta.arg,
+      );
     });
     builder.addCase(disconnectFence.fulfilled, (state, action) => {
       removeLoadingFences(state, action.meta.arg);

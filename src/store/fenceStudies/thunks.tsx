@@ -6,7 +6,9 @@ import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/uti
 import { RootState } from 'store/types';
 import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { sendRequest } from 'services/api';
-import { TFenceStudies, TFenceStudiesIdsAndCount } from './types';
+import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
+import { AxiosError } from 'axios';
+import { handleThunkApiReponse } from 'store/utils';
 
 const fetchAllFenceStudies = createAsyncThunk<
   void,
@@ -39,16 +41,24 @@ const fetchFenceStudies = createAsyncThunk<
 >(
   'fenceStudies/fetch/studies',
   async (args, thunkAPI) => {
-    const studies = await getAuthStudyIdsAndCounts(args.userAcls, args.fenceName);
-    const authorizedStudies = isEmpty(studies)
-      ? []
-      : await getStudiesCountByNameAndAcl(studies, addWildCardToAcls(args.userAcls));
+    const { studies, error: authStudyError } = await getAuthStudyIdsAndCounts(
+      args.userAcls,
+      args.fenceName,
+    );
 
-    return {
-      [args.fenceName]: {
-        authorizedStudies: authorizedStudies,
+    const { authorizedStudies, error: studiesCountError } = isEmpty(studies)
+      ? { authorizedStudies: [], error: undefined }
+      : await getStudiesCountByNameAndAcl(studies!, addWildCardToAcls(args.userAcls));
+
+    return handleThunkApiReponse({
+      error: authStudyError || studiesCountError,
+      data: {
+        [args.fenceName]: {
+          authorizedStudies: authorizedStudies!,
+        },
       },
-    };
+      reject: thunkAPI.rejectWithValue,
+    });
   },
   {
     condition: (args, { getState }) => {
@@ -73,8 +83,10 @@ const fetchFenceStudies = createAsyncThunk<
 const getStudiesCountByNameAndAcl = async (
   studies: TFenceStudiesIdsAndCount,
   userAcls: string[],
-) => {
-  console.log(studies)
+): Promise<{
+  error?: AxiosError;
+  authorizedStudies?: TFenceStudy[];
+}> => {
   const studyIds = Object.keys(studies);
 
   const sqons = studyIds.reduce(
@@ -88,7 +100,7 @@ const getStudiesCountByNameAndAcl = async (
     {},
   );
 
-  const { data } = await sendRequest<any>({
+  const { data, error } = await sendRequest<any>({
     url: ARRANGER_API_PROJECT_URL,
     method: 'POST',
     data: {
@@ -123,28 +135,40 @@ const getStudiesCountByNameAndAcl = async (
     },
   });
 
+  if (error) {
+    return {
+      authorizedStudies: undefined,
+      error,
+    };
+  }
+
   const {
     data: { file },
   } = data;
 
-  return studyIds.map((id) => {
-    const agg = file[id];
+  return {
+    authorizedStudies: studyIds.map((id) => {
+      const agg = file[id];
 
-    return {
-      acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes(id)),
-      studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
-      totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
-      id,
-      authorizedFiles: studies[id].authorizedFiles,
-    };
-  });
+      return {
+        acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes(id)),
+        studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
+        totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
+        id,
+        authorizedFiles: studies[id].authorizedFiles,
+      };
+    }),
+  };
 };
 
 const getAuthStudyIdsAndCounts = async (
   userAcls: string[],
   fenceName: FENCE_NAMES,
-): Promise<TFenceStudiesIdsAndCount> => {
-  const { data } = await sendRequest<any>({
+): Promise<{
+  error?: AxiosError;
+  studies?: TFenceStudiesIdsAndCount;
+}> => {
+  const { data, error } = await sendRequest<any>({
     url: ARRANGER_API_PROJECT_URL,
     method: 'POST',
     data: {
@@ -175,6 +199,13 @@ const getAuthStudyIdsAndCounts = async (
     },
   });
 
+  if (error) {
+    return {
+      studies: undefined,
+      error,
+    };
+  }
+
   const {
     data: {
       file: {
@@ -185,13 +216,15 @@ const getAuthStudyIdsAndCounts = async (
     },
   } = data;
 
-  return buckets.reduce(
-    (obj: TFenceStudies, { key, doc_count }: { key: string; doc_count: number }) => ({
-      ...obj,
-      [key]: { authorizedFiles: doc_count },
-    }),
-    {},
-  );
+  return {
+    studies: buckets.reduce(
+      (obj: TFenceStudies, { key, doc_count }: { key: string; doc_count: number }) => ({
+        ...obj,
+        [key]: { authorizedFiles: doc_count },
+      }),
+      {},
+    ),
+  };
 };
 
 export const computeAllFencesAuthStudies = (fenceStudies: TFenceStudies) => {

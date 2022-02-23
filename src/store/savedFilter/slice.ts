@@ -28,7 +28,7 @@ const savedFilterSlice = createSlice({
     // Fetch
     builder.addCase(fetchSavedFilters.pending, (state) => {
       state.isLoading = true;
-      state.error = undefined;
+      state.fetchingError = undefined;
     });
     builder.addCase(fetchSavedFilters.fulfilled, (state, action) => ({
       ...state,
@@ -37,7 +37,7 @@ const savedFilterSlice = createSlice({
     }));
     builder.addCase(fetchSavedFilters.rejected, (state, action) => ({
       ...state,
-      error: action.payload,
+      fetchingError: action.payload,
       isLoading: false,
     }));
     // Create

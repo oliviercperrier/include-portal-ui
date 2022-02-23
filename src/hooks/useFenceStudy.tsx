@@ -10,12 +10,13 @@ type Output = {
   loadingStudiesForFences: FENCE_NAMES[];
   fenceStudies: TFenceStudies;
   fenceAuthStudies: TFenceStudy[];
+  fencesError: FENCE_NAMES[];
 };
 
 const useFenceStudy = (): Output => {
   const dispatch = useDispatch();
   const { connections } = useFenceConnection();
-  const { studies: fenceStudies, loadingStudiesForFences } = useFenceStudies();
+  const { studies: fenceStudies, loadingStudiesForFences, fencesError } = useFenceStudies();
 
   useEffect(() => {
     dispatch(fetchAllFenceStudies());
@@ -26,6 +27,7 @@ const useFenceStudy = (): Output => {
     loadingStudiesForFences,
     fenceStudies,
     fenceAuthStudies: computeAllFencesAuthStudies(fenceStudies),
+    fencesError,
   };
 };
 export default useFenceStudy;

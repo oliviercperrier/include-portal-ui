@@ -10,11 +10,12 @@ type Output = {
   fencesAllAcls: string[];
   connectionStatus: { [fenceName: string]: FENCE_CONNECTION_STATUSES };
   loadingFences: FENCE_NAMES[];
+  fencesConnectError: FENCE_NAMES[];
 };
 
 const useFenceConnections = (): Output => {
   const dispatch = useDispatch();
-  const { connections, connectionStatus, loadingFences } = useFenceConnection();
+  const { connections, connectionStatus, loadingFences, fencesConnectError } = useFenceConnection();
 
   useEffect(() => {
     dispatch(fetchAllFenceConnections());
@@ -26,6 +27,7 @@ const useFenceConnections = (): Output => {
     connections,
     fencesAllAcls: concatAllFencesAcls(connections),
     connectionStatus,
+    fencesConnectError,
   };
 };
 export default useFenceConnections;

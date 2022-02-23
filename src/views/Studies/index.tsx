@@ -13,6 +13,7 @@ import { IStudyEntity } from 'graphql/studies/models';
 import { addFilter } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { CheckOutlined } from '@ant-design/icons';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
 import styles from './index.module.scss';
 
@@ -40,13 +41,11 @@ const columns: ProColumnType<any>[] = [
     title: 'dbGaP',
     dataIndex: 'external_id',
     render: (external_id: string) => (
-      <a
-        target="_blank"
-        rel="noreferrer"
+      <ExternalLink
         href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${external_id}`}
       >
         {external_id}
-      </a>
+      </ExternalLink>
     ),
   },
   {

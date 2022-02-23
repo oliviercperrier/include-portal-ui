@@ -1,16 +1,12 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { UserApi } from "services/api/user";
-import { TUser, TUserConfig, TUserUpdate } from "services/api/user/models";
-import { RootState } from "store/types";
-import { handleApiReponse } from "store/utils";
-import { mergeDeep } from "utils/object";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { UserApi } from 'services/api/user';
+import { TUser, TUserConfig, TUserUpdate } from 'services/api/user/models';
+import { RootState } from 'store/types';
+import { handleThunkApiReponse } from 'store/utils';
+import { mergeDeep } from 'utils/object';
 
-const fetchUser = createAsyncThunk<
-  TUser,
-  void,
-  { rejectValue: string; state: RootState }
->(
-  "user/fetch",
+const fetchUser = createAsyncThunk<TUser, void, { rejectValue: string; state: RootState }>(
+  'user/fetch',
   async (_, thunkAPI) => {
     const { data, error } = await UserApi.fetch();
 
@@ -21,7 +17,11 @@ const fetchUser = createAsyncThunk<
     if (error?.response?.status === 404) {
       const { data: newUser, error: newUserError } = await UserApi.create();
 
-      return handleApiReponse(newUserError, newUser!, thunkAPI.rejectWithValue);
+      return handleThunkApiReponse({
+        error: newUserError,
+        data: newUser!,
+        reject: thunkAPI.rejectWithValue,
+      });
     } else {
       return thunkAPI.rejectWithValue(error?.message);
     }
@@ -33,7 +33,7 @@ const fetchUser = createAsyncThunk<
         return false;
       }
     },
-  }
+  },
 );
 
 const updateUser = createAsyncThunk<
@@ -44,16 +44,16 @@ const updateUser = createAsyncThunk<
   },
   { rejectValue: string }
 >(
-  "user/update",
+  'user/update',
   async (args, thunkAPI) => {
     const { data, error } = await UserApi.update(args.data);
 
-    return handleApiReponse(
+    return handleThunkApiReponse({
       error,
-      data!,
-      thunkAPI.rejectWithValue,
-      args.callback
-    );
+      data: data!,
+      reject: thunkAPI.rejectWithValue,
+      onSuccess: args.callback,
+    });
   },
   {
     condition: (args) => {
@@ -61,7 +61,7 @@ const updateUser = createAsyncThunk<
         return false;
       }
     },
-  }
+  },
 );
 
 const updateUserConfig = createAsyncThunk<
@@ -69,24 +69,23 @@ const updateUserConfig = createAsyncThunk<
   TUserConfig,
   { rejectValue: string; state: RootState }
 >(
-  "user/update/config",
+  'user/update/config',
   async (config, thunkAPI) => {
     const { user } = thunkAPI.getState();
 
-    const deepCopyUserConfig = JSON.parse(
-      JSON.stringify(user.userInfo?.config)
-    );
+    const deepCopyUserConfig = JSON.parse(JSON.stringify(user.userInfo?.config));
     const deepCopyNewConfig = JSON.parse(JSON.stringify(config));
-    const mergedConfig = mergeDeep<TUserConfig>(
-      deepCopyUserConfig,
-      deepCopyNewConfig
-    );
+    const mergedConfig = mergeDeep<TUserConfig>(deepCopyUserConfig, deepCopyNewConfig);
 
     const { error } = await UserApi.update({
       config: mergedConfig,
     });
 
-    return handleApiReponse(error, mergedConfig, thunkAPI.rejectWithValue);
+    return handleThunkApiReponse({
+      error: error,
+      data: mergedConfig,
+      reject: thunkAPI.rejectWithValue,
+    });
   },
   {
     condition: (config) => {
@@ -94,7 +93,7 @@ const updateUserConfig = createAsyncThunk<
         return false;
       }
     },
-  }
+  },
 );
 
 const completeRegistration = createAsyncThunk<
@@ -105,16 +104,16 @@ const completeRegistration = createAsyncThunk<
   },
   { rejectValue: string }
 >(
-  "user/complete/registration",
+  'user/complete/registration',
   async (args, thunkAPI) => {
     const { data, error } = await UserApi.completeRegistration(args.data);
 
-    return handleApiReponse(
+    return handleThunkApiReponse({
       error,
-      data!,
-      thunkAPI.rejectWithValue,
-      args.callback
-    );
+      data: data!,
+      reject: thunkAPI.rejectWithValue,
+      onSuccess: args.callback,
+    });
   },
   {
     condition: (args) => {
@@ -122,7 +121,7 @@ const completeRegistration = createAsyncThunk<
         return false;
       }
     },
-  }
+  },
 );
 
 export { fetchUser, updateUser, completeRegistration, updateUserConfig };

@@ -18,15 +18,15 @@ import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 
 const showErrorReportNotif = () =>
   notification.error({
-    message: intl.get('report.error.title'),
+    message: intl.get('api.report.error.title'),
     description: (
       <div>
-        {intl.get('report.error.message')}
+        {intl.get('api.report.error.message')}
         <a
           style={{ color: 'unset', textDecoration: 'underline' }}
           href="mailto:support@includedrc.org"
         >
-          {intl.get('report.error.support')}
+          {intl.get('api.report.error.support')}
         </a>
       </div>
     ),
@@ -50,8 +50,8 @@ const fetchReport = createAsyncThunk<
     await ReportApi.generateReport(args.data).then((_) => {
       message.destroy('report_pending');
       notification.success({
-        message: intl.get('report.onSuccess.title'),
-        description: intl.get('report.onSuccess.fetchReport'),
+        message: intl.get('api.report.onSuccess.title'),
+        description: intl.get('api.report.onSuccess.fetchReport'),
       });
     });
   } catch (e) {
@@ -96,6 +96,11 @@ const fetchTsvReport = createAsyncThunk<void, TFetchTSVArgs, { rejectValue: stri
         showErrorReportNotif();
         return thunkAPI.rejectWithValue('error');
       }
+
+      notification.success({
+        message: intl.get('api.report.onSuccess.title'),
+        description: intl.get('api.report.onSuccess.fetchReport'),
+      });
 
       saveAs(
         new Blob([downloadData], {

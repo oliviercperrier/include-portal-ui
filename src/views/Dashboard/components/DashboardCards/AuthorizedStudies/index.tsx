@@ -15,14 +15,21 @@ import { useDispatch } from 'react-redux';
 import { isEmpty } from 'lodash';
 import useFenceStudy from 'hooks/useFenceStudy';
 import { TFenceStudy } from 'store/fenceStudies/types';
+import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
 import styles from './index.module.scss';
 
 const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
   const dispatch = useDispatch();
-  const { loadingFences, connections } = useFenceConnections();
-  const { loadingStudiesForFences, fenceAuthStudies } = useFenceStudy();
+  const { loadingFences, connections, fencesConnectError } = useFenceConnections();
+  const { loadingStudiesForFences, fenceAuthStudies, fencesError } = useFenceStudy();
   const hasConnections = !isEmpty(connections);
+  const hasErrors = !isEmpty(fencesConnectError) || !isEmpty(fencesError);
+  const fenceStudiesLoading = loadingStudiesForFences.length > 0;
+  const connectionsLoading = loadingFences.includes(FENCE_NAMES.gen3);
+
+  console.log(hasErrors)
 
   return (
     <GridCard
@@ -41,13 +48,13 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
               <Space direction="vertical" className={styles.content} size={0}>
                 <Text>
                   {intl.getHTML('screen.dashboard.cards.authorizedStudies.infoPopover.content')}{' '}
-                  <a href="https://google.com" target="_blank" rel="noreferrer">
+                  <ExternalLink href="https://google.com">
                     <Button type="link" size="small" className={styles.applyForAccessBtn}>
                       {intl.get(
                         'screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess',
                       )}
                     </Button>
-                  </a>
+                  </ExternalLink>
                   .
                 </Text>
               </Space>
@@ -58,7 +65,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
       }
       content={
         <div className={styles.authorizedWrapper}>
-          {hasConnections && (
+          {hasConnections && !hasErrors && !fenceStudiesLoading && (
             <Space className={styles.authenticatedHeader} direction="horizontal">
               <Space align="start">
                 <SafetyOutlined className={styles.safetyIcon} />
@@ -69,7 +76,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
                     size="small"
                     danger
                     icon={<DisconnectOutlined />}
-                    loading={loadingFences.includes(FENCE_NAMES.gen3)}
+                    loading={connectionsLoading}
                     onClick={() => dispatch(disconnectFence(FENCE_NAMES.gen3))}
                     className={styles.disconnectBtn}
                   >
@@ -83,9 +90,11 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
             className={styles.authorizedStudiesList}
             bordered
             itemLayout="vertical"
-            loading={loadingStudiesForFences.length > 0}
+            loading={fenceStudiesLoading}
             locale={{
-              emptyText: hasConnections ? (
+              emptyText: hasErrors ? (
+                <CardErrorPlaceholder />
+              ) : hasConnections ? (
                 <Empty
                   imageType="grid"
                   description={intl.get(
@@ -99,13 +108,13 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
                     'screen.dashboard.cards.authorizedStudies.disconnectedNotice',
                   )}
                   btnProps={{
-                    loading: loadingFences.includes(FENCE_NAMES.gen3),
+                    loading: connectionsLoading,
                     onClick: () => dispatch(connectFence(FENCE_NAMES.gen3)),
                   }}
                 />
               ),
             }}
-            dataSource={hasConnections ? fenceAuthStudies : []}
+            dataSource={hasConnections && !hasErrors ? fenceAuthStudies : []}
             renderItem={(item) => <AuthorizedStudiesListItem id={item.id} data={item} />}
           ></List>
         </div>

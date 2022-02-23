@@ -4,6 +4,7 @@ import { deleteFenceTokens, fenceConnect, getFenceConnection } from 'services/fe
 import {} from 'store/fenceConnection/types';
 import { RootState } from 'store/types';
 import { ALL_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
+import { handleThunkApiReponse } from 'store/utils';
 
 const fetchAllFenceConnections = createAsyncThunk<any, never, { state: RootState }>(
   'fence/fetch/all/connections',
@@ -19,11 +20,11 @@ const fetchFenceConnection = createAsyncThunk<any, FENCE_NAMES, { state: RootSta
   async (fenceName, thunkApi) => {
     const { data, error } = await getFenceConnection(fenceName);
 
-    if (error) {
-      return thunkApi.rejectWithValue('error');
-    }
-
-    return data;
+    return handleThunkApiReponse({
+      error,
+      data: data!,
+      reject: thunkApi.rejectWithValue,
+    });
   },
   {
     condition: (fenceName, { getState }) => {
@@ -41,18 +42,18 @@ const fetchFenceConnection = createAsyncThunk<any, FENCE_NAMES, { state: RootSta
 
 const connectFence = createAsyncThunk<any, FENCE_NAMES>(
   'fence/connect',
-  async (fenceName, thunkAPI) => {
+  async (fenceName, thunkApi) => {
     try {
       await fenceConnect(fenceName);
       const { data, error } = await getFenceConnection(fenceName);
 
-      if (error) {
-        return thunkAPI.rejectWithValue(`An error occured while trying to connect to ${fenceName}`);
-      }
-
-      return data;
+      return handleThunkApiReponse({
+        error,
+        data: data!,
+        reject: thunkApi.rejectWithValue,
+      });
     } catch {
-      return thunkAPI.rejectWithValue('error');
+      return thunkApi.rejectWithValue('error');
     }
   },
 );

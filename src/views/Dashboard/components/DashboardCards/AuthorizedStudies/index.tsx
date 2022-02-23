@@ -88,7 +88,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
             className={styles.authorizedStudiesList}
             bordered
             itemLayout="vertical"
-            loading={fenceStudiesLoading || connectionsLoading}
+            loading={fenceStudiesLoading || connectionsLoading}
             locale={{
               emptyText: hasErrors ? (
                 <CardErrorPlaceholder />

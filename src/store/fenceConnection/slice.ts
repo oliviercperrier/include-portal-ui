@@ -33,32 +33,32 @@ const fenceConnectionSlice = createSlice({
   extraReducers: (builder) => {
     // FETCH FENCE CONNECTION
     builder.addCase(fetchFenceConnection.pending, (state, action) => {
-      addLoadingFences(state, action.meta.arg);
-      removeFenceAuthError(state.fencesConnectError, action.meta.arg);
+      state.loadingFences = addLoadingFences(state, action.meta.arg);
+      state.fencesConnectError = removeFenceAuthError(state.fencesConnectError, action.meta.arg);
     });
     builder.addCase(fetchFenceConnection.fulfilled, (state, action) => {
-      removeLoadingFences(state, action.meta.arg);
+      state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
       state.connections[action.meta.arg] = action.payload;
     });
     builder.addCase(fetchFenceConnection.rejected, (state, action) => {
-      removeLoadingFences(state, action.meta.arg);
+      state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
     });
 
     // CONNECT FENCE
     builder.addCase(connectFence.pending, (state, action) => {
-      addLoadingFences(state, action.meta.arg);
-      removeFenceAuthError(state.fencesConnectError, action.meta.arg);
+      state.loadingFences = addLoadingFences(state, action.meta.arg);
+      state.fencesConnectError = removeFenceAuthError(state.fencesConnectError, action.meta.arg);
     });
     builder.addCase(connectFence.fulfilled, (state, action) => {
-      removeLoadingFences(state, action.meta.arg);
+      state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
       state.connections[action.meta.arg] = action.payload;
     });
     builder.addCase(connectFence.rejected, (state, action) => {
-      removeLoadingFences(state, action.meta.arg);
+      state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
       state.connections = omit(state.connections, [action.meta.arg]);
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
@@ -73,12 +73,12 @@ const fenceConnectionSlice = createSlice({
       );
     });
     builder.addCase(disconnectFence.fulfilled, (state, action) => {
-      removeLoadingFences(state, action.meta.arg);
+      state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
       state.connections = omit(state.connections, [action.meta.arg]);
     });
     builder.addCase(disconnectFence.rejected, (state, action) => {
-      removeLoadingFences(state, action.meta.arg);
+      state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.fencesDisconnectError = [...state.fencesDisconnectError, action.meta.arg];
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
       state.connections = omit(state.connections, [action.meta.arg]);

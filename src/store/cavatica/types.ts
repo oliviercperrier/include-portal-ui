@@ -1,3 +1,4 @@
+import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import { ICavaticaBillingGroup, ICavaticaProject } from 'services/api/cavatica/models';
 
 export type initialState = {
@@ -6,13 +7,15 @@ export type initialState = {
   isCreatingProject: boolean;
   isCopyingFiles: boolean;
   isFetchingBillingGroup: boolean;
+  isInitializingAnalyse: boolean;
+  isBulkImportLoading: boolean;
   isLoading: boolean;
-  filesToCopy: any[]; // TODO: add the right type
+  filesToCopy: IFileEntity[]; // TODO: add the right type
   projects: TCavaticaProjectWithMembers[];
   projectsTree: ICavaticaTreeNode[];
   billingGroups: ICavaticaBillingGroup[];
   error?: any;
-  newlyCreatedProjectId?: string;
+  newlyCreatedProject?: ICavaticaTreeNode;
 };
 
 export type TCavaticaProjectWithMembers = ICavaticaProject & {
@@ -27,5 +30,6 @@ export interface ICavaticaTreeNode {
   value: string;
   title: string;
   type: string;
+  project?: string;
   isLeaf?: boolean;
-};
+}

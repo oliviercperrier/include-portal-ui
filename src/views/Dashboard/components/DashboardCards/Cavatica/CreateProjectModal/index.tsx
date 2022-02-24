@@ -13,6 +13,8 @@ const { Text } = Typography;
 
 interface OwnProps {
   openAnalyseModalOnClose?: boolean;
+  showSuccessNotification?: boolean;
+  showErrorNotification?: boolean;
 }
 
 enum FORM_FIELDS {
@@ -20,7 +22,11 @@ enum FORM_FIELDS {
   PROJECT_BILLING_GROUP = 'project_billing_group',
 }
 
-const CreateProjectModal = ({ openAnalyseModalOnClose = true }: OwnProps) => {
+const CreateProjectModal = ({
+  openAnalyseModalOnClose = true,
+  showSuccessNotification = false,
+  showErrorNotification = true,
+}: OwnProps) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const [isFormValid, setFormValid] = useState(false);
@@ -57,6 +63,8 @@ const CreateProjectModal = ({ openAnalyseModalOnClose = true }: OwnProps) => {
         onFinish={(values) => {
           dispatch(
             createProjet({
+              showErrorNotification,
+              showSuccessNotification,
               openAnalyseModalOnDone: openAnalyseModalOnClose,
               body: {
                 billing_group: values[FORM_FIELDS.PROJECT_BILLING_GROUP],

@@ -7,7 +7,7 @@ import {
   ICavaticaDRSImportJobPayload,
   ICavaticaListPayload,
   ICavaticaProject,
-  ICavaticaProjectChild,
+  ICavaticaProjectNode,
   ICavaticaProjectMember,
 } from './models';
 
@@ -49,7 +49,7 @@ const createProject = (data: ICavaticaCreateProjectBody) =>
   });
 
 const listFilesAndFolders = (parentId: string, isProject: boolean = false) =>
-  sendRequest<ICavaticaListPayload<ICavaticaProjectChild>>({
+  sendRequest<ICavaticaListPayload<ICavaticaProjectNode>>({
     method: 'GET',
     url: `${url}/files`,
     headers: headers(),

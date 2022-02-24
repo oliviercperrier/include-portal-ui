@@ -28,7 +28,7 @@ export interface ICavaticaCreateProjectBody {
   billing_group: string;
 }
 
-export interface ICavaticaProjectChild {
+export interface ICavaticaProjectNode {
   href: string;
   id: string;
   name: string;

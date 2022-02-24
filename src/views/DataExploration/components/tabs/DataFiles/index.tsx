@@ -2,7 +2,7 @@ import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import { CloudUploadOutlined, LockOutlined, SafetyOutlined, UnlockFilled } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
+import { CAVATICA_FILE_BATCH_SIZE, DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -17,12 +17,12 @@ import AnalyseModal from 'views/Dashboard/components/DashboardCards/Cavatica/Ana
 import { fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { cavaticaActions } from 'store/cavatica/slice';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 import intl from 'react-intl-universal';
 import { IStudyEntity } from 'graphql/studies/models';
 import { intersection } from 'lodash';
 import useFenceConnections from 'hooks/useFenceConnection';
+import { beginAnalyse } from 'store/cavatica/thunks';
 
 import styles from './index.module.scss';
 
@@ -32,8 +32,6 @@ interface OwnProps {
   pagingConfig: TPagingConfig;
   sqon?: ISqonGroupFilter;
 }
-
-const CAVATICA_FILE_UPLOAD_LIMIT = 100;
 
 const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
   {
@@ -186,7 +184,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               type="primary"
               icon={<CloudUploadOutlined />}
               onClick={() => {
-                if (selectedRows.length > CAVATICA_FILE_UPLOAD_LIMIT || selectedAllResults) {
+                if (selectedRows.length > CAVATICA_FILE_BATCH_SIZE || selectedAllResults) {
                   Modal.error({
                     title: intl.get(
                       'screen.dataExploration.tabs.datafiles.cavatica.uploadLimitTitle',
@@ -194,14 +192,19 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
                     content: intl.getHTML(
                       'screen.dataExploration.tabs.datafiles.cavatica.uploadLimit',
                       {
-                        limit: CAVATICA_FILE_UPLOAD_LIMIT,
+                        limit: CAVATICA_FILE_BATCH_SIZE,
                       },
                     ),
                     okText: 'Ok',
                     cancelText: undefined,
                   });
                 } else {
-                  dispatch(cavaticaActions.beginAnalyse(selectedRows));
+                  dispatch(
+                    beginAnalyse({
+                      sqon: sqon!,
+                      fileIds: selectedKeys,
+                    }),
+                  );
                 }
               }}
             >
@@ -227,6 +230,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
         dataSource={results.data.map((i) => ({ ...i, key: i.file_id }))}
         dictionary={getProTableDictionary()}
       />
+      {/* Check if user is connected */}
       <AnalyseModal />
       <CreateProjectModal />
     </>

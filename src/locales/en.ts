@@ -89,6 +89,23 @@ const fr = {
         billingGroups: {
           fetch: 'Unable to fetch your cavatica billing groups.',
         },
+        bulk: {
+          import: 'Unable to copy files to your project',
+        },
+      },
+      success: {
+        title: 'Success',
+        projects: {
+          create: 'Project created successfully',
+        },
+        bulk: {
+          import: {
+            copySuccess: 'Your files have been copied to: <strong>{destination}</strong>',
+            possibleDelays:
+              'If you have uploaded more than 500 files in the last 5 minutes, the import may take a little longer.',
+            openProject: 'Open project in Cavatica'
+            },
+        },
       },
     },
     report: {
@@ -103,7 +120,7 @@ const fr = {
       },
       onSuccess: {
         title: 'Success',
-        fetchReport: 'The report was successfully downloaded',
+        fetchReport: 'Report downloaded successfully',
       },
     },
   },
@@ -350,7 +367,7 @@ const fr = {
         datafiles: {
           title: 'Data Files ({count})',
           cavatica: {
-            uploadLimitTitle: "Maximum file count exceeded",
+            uploadLimitTitle: 'Maximum file count exceeded',
             uploadLimit:
               'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
           },

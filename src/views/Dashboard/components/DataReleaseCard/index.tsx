@@ -1,8 +1,8 @@
-import DataRelease from "components/uiKit/DataRelease";
-import { Card, Space, Typography } from "antd";
-import intl from "react-intl-universal";
+import DataRelease from 'components/uiKit/DataRelease';
+import { Card, Space, Typography } from 'antd';
+import intl from 'react-intl-universal';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 const { Title } = Typography;
 
@@ -12,8 +12,8 @@ const DataReleaseCard = () => {
       <Space size={24} direction="vertical">
         <Space direction="horizontal">
           <Title level={5} className={styles.cardTitle}>
-            {intl.get("screen.dashboard.card.datarelease.title", {
-              version: "1.0",
+            {intl.get('screen.dashboard.cards.datarelease.title', {
+              version: '1.0',
             })}
           </Title>
         </Space>

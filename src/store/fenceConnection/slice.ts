@@ -15,6 +15,9 @@ export const FenceConnectionState: initialState = {
   connections: {},
 };
 
+const removeFenceAuthError = (state: FENCE_NAMES[], fenceName: FENCE_NAMES) =>
+  state.filter((name) => name !== fenceName);
+
 const removeLoadingFences = (state: initialState, fenceName: FENCE_NAMES) =>
   state.loadingFences.filter((name) => name !== fenceName);
 
@@ -31,21 +34,25 @@ const fenceConnectionSlice = createSlice({
     // FETCH FENCE CONNECTION
     builder.addCase(fetchFenceConnection.pending, (state, action) => {
       state.loadingFences = addLoadingFences(state, action.meta.arg);
+      state.fencesConnectError = removeFenceAuthError(state.fencesConnectError, action.meta.arg);
     });
     builder.addCase(fetchFenceConnection.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
-      state.connections[action.meta.arg] = action.payload;
+      state.connections[action.meta.arg] = action.payload.data;
     });
     builder.addCase(fetchFenceConnection.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
-      state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
+      if (!action.payload?.skipConnectionError) {
+        state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
+      }
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
     });
 
     // CONNECT FENCE
     builder.addCase(connectFence.pending, (state, action) => {
       state.loadingFences = addLoadingFences(state, action.meta.arg);
+      state.fencesConnectError = removeFenceAuthError(state.fencesConnectError, action.meta.arg);
     });
     builder.addCase(connectFence.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
@@ -62,6 +69,10 @@ const fenceConnectionSlice = createSlice({
     // DISCONNECT FENCE
     builder.addCase(disconnectFence.pending, (state, action) => {
       state.loadingFences = addLoadingFences(state, action.meta.arg);
+      state.fencesDisconnectError = removeFenceAuthError(
+        state.fencesDisconnectError,
+        action.meta.arg,
+      );
     });
     builder.addCase(disconnectFence.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);

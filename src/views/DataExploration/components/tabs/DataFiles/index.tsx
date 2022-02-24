@@ -1,9 +1,5 @@
 import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
-import {
-  CloudUploadOutlined,
-  LockOutlined,
-  SafetyOutlined,
-} from '@ant-design/icons';
+import { CloudUploadOutlined, LockOutlined, SafetyOutlined, UnlockFilled } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
 import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
@@ -24,6 +20,9 @@ import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { cavaticaActions } from 'store/cavatica/slice';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 import intl from 'react-intl-universal';
+import { IStudyEntity } from 'graphql/studies/models';
+import { intersection } from 'lodash';
+import useFenceConnections from 'hooks/useFenceConnection';
 
 import styles from './index.module.scss';
 
@@ -36,7 +35,7 @@ interface OwnProps {
 
 const CAVATICA_FILE_UPLOAD_LIMIT = 100;
 
-const defaultColumns: ProColumnType<any>[] = [
+const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
   {
     key: 'lock',
     title: (
@@ -44,13 +43,19 @@ const defaultColumns: ProColumnType<any>[] = [
         <LockOutlined />
       </Tooltip>
     ),
-    dataIndex: 'lock',
     displayTitle: 'File Authorization',
     align: 'center',
-    render: () => {
-      return (
+    render: (record: IFileEntity) => {
+      const acl = record.acl || [];
+      const hasAccess = acl.includes('*') || intersection(fenceAcls, acl).length > 0;
+
+      return hasAccess ? (
+        <Tooltip title="Authorized">
+          <UnlockFilled className={styles.authorizedLock} />
+        </Tooltip>
+      ) : (
         <Tooltip title="Unauthorized">
-          <LockOutlined className={styles.lockLoggedOut} />
+          <LockOutlined className={styles.unauthorizedLock} />
         </Tooltip>
       );
     },
@@ -92,7 +97,8 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'study_id',
     title: 'Study Code',
-    dataIndex: 'study_id',
+    dataIndex: 'study',
+    render: (study: IStudyEntity) => study.study_id,
   },
   {
     key: 'type_of_omics',
@@ -126,6 +132,7 @@ const defaultColumns: ProColumnType<any>[] = [
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const { fencesAllAcls } = useFenceConnections();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
@@ -134,7 +141,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
     <>
       <ProTable<ITableFileEntity>
         tableId="datafiles_table"
-        columns={defaultColumns}
+        columns={getDefaultColumns(fencesAllAcls)}
         wrapperClassName={styles.dataFilesTabWrapper}
         loading={results.loading}
         initialColumnState={userInfo?.config.data_exploration?.tables?.datafiles?.columns}
@@ -156,7 +163,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
             dispatch(
               fetchTsvReport({
                 columnStates: userInfo?.config.data_exploration?.tables?.datafiles?.columns,
-                columns: defaultColumns,
+                columns: getDefaultColumns(fencesAllAcls),
                 index: INDEXES.FILE,
                 sqon,
               }),

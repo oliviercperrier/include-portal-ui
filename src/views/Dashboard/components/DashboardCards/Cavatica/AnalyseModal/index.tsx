@@ -87,8 +87,8 @@ const AnalyseModal = () => {
   };
 
   const aggregateFilesToStudy = (filesToCopy: ITableFileEntity[]) =>
-    Object.entries(groupBy(filesToCopy, 'study_id')).map((study) => ({
-      title: study[0],
+    Object.entries(groupBy(filesToCopy, 'study.study_id')).map((study) => ({
+      title: study[1][0].study.study_name,
       nbFiles: study[1].length,
     }));
 
@@ -162,7 +162,7 @@ const AnalyseModal = () => {
           renderItem={(item) => {
             return (
               <List.Item>
-                <List.Item.Meta description={item.title} />
+                <List.Item.Meta description={<Text ellipsis>{item.title}</Text>} />
                 <Text type="secondary">
                   {item.nbFiles} <FileTextOutlined />
                 </Text>

@@ -5,6 +5,7 @@ import { FENCE_NAMES } from 'common/fenceTypes';
 import { DecodedJwt } from 'common/tokenTypes';
 import EnvironmentVariables from 'helpers/EnvVariables';
 import { sendRequest } from './api';
+import createHttpError from 'http-errors';
 
 const DCF = FENCE_NAMES.dcf;
 const GEN3 = FENCE_NAMES.gen3;
@@ -80,10 +81,15 @@ export const fenceConnect = async (fence: FENCE_NAMES) => {
 };
 
 export const fetchAccessToken = async (fenceName: FENCE_NAMES) => {
-  const { data } = await sendRequest<any>({
+  const { data, error, response } = await sendRequest<any>({
     method: 'GET',
     url: `${FENCE_AUTH_TOKENS_URI}?fence=${fenceName}`,
   });
+
+  if (error) {
+    throw createHttpError(response.status, error, error.message);
+  }
+
   return data.access_token;
 };
 
@@ -97,6 +103,7 @@ export const fetchRefreshedAccessToken = async (fenceName: FENCE_NAMES) => {
 
 const fetchTokenThenRefreshIfNeeded = async (fenceName: FENCE_NAMES) => {
   let token = await fetchAccessToken(fenceName);
+
   const decodedToken = jwtDecode<DecodedJwt>(token);
   if (isDecodedJwtExpired(decodedToken)) {
     token = await fetchRefreshedAccessToken(fenceName);

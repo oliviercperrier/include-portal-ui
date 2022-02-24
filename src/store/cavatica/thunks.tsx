@@ -23,8 +23,8 @@ const fetchAllProjects = createAsyncThunk<
 
     if (error) {
       notification.error({
-        message: intl.get('cavatica.error.title'),
-        description: intl.get('cavatica.error.projects.fetch'),
+        message: intl.get('api.cavatica.error.title'),
+        description: intl.get('api.cavatica.error.projects.fetch'),
       });
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -59,8 +59,8 @@ const fetchAllBillingGroups = createAsyncThunk<
 
     if (error) {
       notification.error({
-        message: intl.get('cavatica.error.title'),
-        description: intl.get('cavatica.error.billingGroups.fetch'),
+        message: intl.get('api.cavatica.error.title'),
+        description: intl.get('api.cavatica.error.billingGroups.fetch'),
       });
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -91,8 +91,8 @@ const createProjet = createAsyncThunk<
 
   if (error) {
     notification.error({
-      message: intl.get('cavatica.error.title'),
-      description: intl.get('cavatica.error.projects.create'),
+      message: intl.get('api.cavatica.error.title'),
+      description: intl.get('api.cavatica.error.projects.create'),
     });
     return thunkAPI.rejectWithValue(error.message);
   }

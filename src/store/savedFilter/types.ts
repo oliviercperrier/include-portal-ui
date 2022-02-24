@@ -6,6 +6,7 @@ export type initialState = {
   savedFilters: TUserSavedFilter[];
   isLoading: boolean;
   isUpdating: boolean;
-  error?: string;
+  error?: any;
+  fetchingError?: any;
   selectedId?: string;
 };

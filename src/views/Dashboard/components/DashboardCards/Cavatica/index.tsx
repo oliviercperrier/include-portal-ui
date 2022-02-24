@@ -16,6 +16,7 @@ import CreateProjectModal from './CreateProjectModal';
 import { fetchAllProjects } from 'store/cavatica/thunks';
 import { useCavatica } from 'store/cavatica';
 import { TCavaticaProjectWithMembers } from 'store/cavatica/types';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
 import styles from './index.module.scss';
 
@@ -47,11 +48,11 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                 <Space direction="vertical" className={styles.content} size={0}>
                   <Text>
                     {intl.get('screen.dashboard.cards.cavatica.infoPopover.content')}{' '}
-                    <a href="https://www.cavatica.org/" target="_blank" rel="noreferrer">
+                    <ExternalLink href="https://www.cavatica.org/">
                       <Button type="link" size="small" className={styles.readMoreBtn}>
                         {intl.get('screen.dashboard.cards.cavatica.infoPopover.readMore')}
                       </Button>
-                    </a>
+                    </ExternalLink>
                   </Text>
                 </Space>
               ),

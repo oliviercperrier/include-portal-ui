@@ -63,39 +63,48 @@ const fr = {
     },
   },
   // API
-  riff: {
-    error: {
-      title: 'Error',
-      fetchUser: 'Unable to fetch Riff user',
-      saveFilter: 'Unable to save filter',
-      deleteFilter: 'Unable to delete filter',
-    },
-  },
-  cavatica: {
-    error: {
-      title: 'Error',
-      projects: {
-        fetch: 'Unable to fetch your cavatica projects.',
-        create: 'Unable to create your cavatica project.',
-      },
-      billingGroups: {
-        fetch: 'Unable to fetch your cavatica billing groups.',
+  api: {
+    riff: {
+      error: {
+        title: 'Error',
+        fetchUser: 'Unable to fetch Riff user',
+        saveFilter: 'Unable to save filter',
+        deleteFilter: 'Unable to delete filter',
       },
     },
-  },
-  report: {
-    error: {
-      title: 'Error',
-      message: 'We were unable to generate the report at this time. Please try again later or ',
-      support: 'contact support',
+    savedFilter: {
+      error: {
+        title: 'Error',
+        messageUpdate: 'Unable to update filter',
+        messageDelete: 'Unable to delete filter',
+      },
     },
-    inProgress: {
-      title: 'Processing',
-      fetchReport: 'Fetching Report, please wait',
+    cavatica: {
+      error: {
+        title: 'Error',
+        projects: {
+          fetch: 'Unable to fetch your cavatica projects.',
+          create: 'Unable to create your cavatica project.',
+        },
+        billingGroups: {
+          fetch: 'Unable to fetch your cavatica billing groups.',
+        },
+      },
     },
-    onSuccess: {
-      title: 'Success',
-      fetchReport: 'The report was successfully downloaded',
+    report: {
+      error: {
+        title: 'Error',
+        message: 'We were unable to generate the report at this time. Please try again later or ',
+        support: 'contact support',
+      },
+      inProgress: {
+        title: 'Processing',
+        fetchReport: 'Fetching Report, please wait',
+      },
+      onSuccess: {
+        title: 'Success',
+        fetchReport: 'The report was successfully downloaded',
+      },
     },
   },
   // COMPONENTS
@@ -243,11 +252,6 @@ const fr = {
     },
     dashboard: {
       hello: 'Hello',
-      card: {
-        datarelease: {
-          title: 'Data release {version}',
-        },
-      },
       links: {
         studies: 'Studies',
         participants: 'Participants',
@@ -256,6 +260,15 @@ const fr = {
         variantSearch: 'Variant Search',
       },
       cards: {
+        error: {
+          title: 'Connection error',
+          subtitle:
+            'We are currently unable to connect to this service. Please refresh the page and try again. If the problem persists, please',
+          contactSupport: 'contact support',
+        },
+        datarelease: {
+          title: 'Data release {version}',
+        },
         authorizedStudies: {
           title: 'Authorized Studies {count, plural, =0 {} other {(#)}}',
           connectedNotice:
@@ -435,13 +448,13 @@ const fr = {
     // Participant
     participant_id: 'Participant ID',
     study_id: 'Study Code',
-    karyotype: 'DS Status',
+    down_syndrome_status: 'DS Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',
     diagnosis: {
       mondo_id_diagnosis: 'Diagnosis (MONDO)',
     },
     phenotype: {
-      hpo_id_phenotype: 'Phenotype (HPO)',
+      hpo_phenotype_observed: 'Phenotype (HPO)',
     },
     age_at_data_collection: 'Age at data collection',
     family_type: 'Family Unit',

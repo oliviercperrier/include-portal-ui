@@ -22,6 +22,7 @@ import { useState } from 'react';
 import { fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
 import styles from './index.module.scss';
 
@@ -103,13 +104,11 @@ const defaultColumns: ProColumnType<any>[] = [
       return ncitInfo ? (
         <div>
           {ncitInfo.title} (NCIT:{' '}
-          <a
+          <ExternalLink
             href={`https://www.ebi.ac.uk/ols/ontologies/ncit/terms?short_form=NCIT_${ncitInfo.code}`}
-            target="_blank"
-            rel="noreferrer"
           >
             {ncitInfo.code}
-          </a>
+          </ExternalLink>
           )
         </div>
       ) : (

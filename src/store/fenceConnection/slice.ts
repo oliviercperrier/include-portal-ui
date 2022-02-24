@@ -39,11 +39,13 @@ const fenceConnectionSlice = createSlice({
     builder.addCase(fetchFenceConnection.fulfilled, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
-      state.connections[action.meta.arg] = action.payload;
+      state.connections[action.meta.arg] = action.payload.data;
     });
     builder.addCase(fetchFenceConnection.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);
-      state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
+      if (!action.payload?.skipConnectionError) {
+        state.fencesConnectError = [...state.fencesConnectError, action.meta.arg];
+      }
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.disconnected;
     });
 

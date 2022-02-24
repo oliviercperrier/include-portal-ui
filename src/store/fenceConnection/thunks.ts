@@ -15,16 +15,40 @@ const fetchAllFenceConnections = createAsyncThunk<any, never, { state: RootState
   },
 );
 
-const fetchFenceConnection = createAsyncThunk<any, FENCE_NAMES, { state: RootState }>(
+const fetchFenceConnection = createAsyncThunk<
+  any,
+  FENCE_NAMES,
+  {
+    state: RootState;
+    rejectValue: {
+      message: string;
+      skipConnectionError: boolean;
+    };
+  }
+>(
   'fence/fetch/connection',
   async (fenceName, thunkApi) => {
-    const { data, error } = await getFenceConnection(fenceName);
-
-    return handleThunkApiReponse({
-      error,
-      data: data!,
-      reject: thunkApi.rejectWithValue,
-    });
+    try {
+      const { data, error } = await getFenceConnection(fenceName);
+      return handleThunkApiReponse({
+        error,
+        data: {
+          data: data!,
+          skipConnectionError: false,
+        },
+        reject: (error) => {
+          return thunkApi.rejectWithValue({
+            message: error,
+            skipConnectionError: false,
+          });
+        },
+      });
+    } catch (e: any) {
+      return thunkApi.rejectWithValue({
+        message: e.message || 'error',
+        skipConnectionError: e.status === 404,
+      });
+    }
   },
   {
     condition: (fenceName, { getState }) => {

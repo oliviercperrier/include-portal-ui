@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const SEARCH_FILES_QUERY = gql`
   query searchFiles($sqon: JSON, $first: Int, $offset: Int, $sort: [Sort]) {

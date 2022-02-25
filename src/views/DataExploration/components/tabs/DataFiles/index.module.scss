@@ -1,7 +1,13 @@
+@import "colors";
+
 .dataFilesTabWrapper {
     display: flex;
 
     :global(.ant-pagination) {
         margin-bottom: 0;
+    }
+
+    .lockLoggedOut {
+        color: $gray-6
     }
 }

@@ -1,67 +1,33 @@
-import { useState } from "react";
-import GridCard from "@ferlab/ui/core/view/v2/GridCard";
-import { Button, List, Space } from "antd";
-import intl from "react-intl-universal";
-import {
-  ApiOutlined,
-  DisconnectOutlined,
-  QuestionCircleOutlined,
-  SafetyOutlined,
-} from "@ant-design/icons";
-import { DashboardCardProps } from "views/Dashboard/components/DashboardCards";
-import CardHeader from "views/Dashboard/components/CardHeader";
-import Text from "antd/lib/typography/Text";
-import AuthorizedStudiesListItem from "./ListItem";
-import Empty from "@ferlab/ui/core/components/Empty";
+import GridCard from '@ferlab/ui/core/view/v2/GridCard';
+import { Button, List, Space } from 'antd';
+import intl from 'react-intl-universal';
+import { DisconnectOutlined, SafetyOutlined } from '@ant-design/icons';
+import { DashboardCardProps } from 'views/Dashboard/components/DashboardCards';
+import CardHeader from 'views/Dashboard/components/CardHeader';
+import Text from 'antd/lib/typography/Text';
+import AuthorizedStudiesListItem from './ListItem';
+import Empty from '@ferlab/ui/core/components/Empty';
+import CardConnectPlaceholder from 'views/Dashboard/components/CardConnectPlaceholder';
+import useFenceConnections from 'hooks/useFenceConnection';
+import { connectFence, disconnectFence } from 'store/fenceConnection/thunks';
+import { FENCE_NAMES } from 'common/fenceTypes';
+import { useDispatch } from 'react-redux';
+import { isEmpty } from 'lodash';
+import useFenceStudy from 'hooks/useFenceStudy';
+import { TFenceStudy } from 'store/fenceStudies/types';
+import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
-export interface IListItemData {
-  key: any;
-  title: string;
-  nbFiles: number;
-  totalFiles: number;
-  percent: number;
-  groups: string[];
-}
-
-const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
-  const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
-  const data: IListItemData[] = [
-    // Add appropriate api call and replace this list with the result
-    {
-      key: "1",
-      title: "Pediatric Brain Tumor Atlas: CBTTC",
-      nbFiles: 18845,
-      totalFiles: 27783,
-      percent: 50,
-      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
-    },
-    {
-      key: "2",
-      title: "CARING for Children with COVID: NICHD-2019-POP02",
-      nbFiles: 18845,
-      totalFiles: 27783,
-      percent: 100,
-      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
-    },
-    {
-      key: "3",
-      title: "Kids First: Neuroblastoma",
-      nbFiles: 18845,
-      totalFiles: 27783,
-      percent: 75,
-      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
-    },
-    {
-      key: "4",
-      title: "CARING for Children with COVID: NICHD-2019-POP02",
-      nbFiles: 18845,
-      totalFiles: 27783,
-      percent: 96,
-      groups: ["phs001168.c4", "phs0075632.c2", "Open access"],
-    },
-  ];
+const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
+  const dispatch = useDispatch();
+  const { loadingFences, connections, fencesConnectError } = useFenceConnections();
+  const { loadingStudiesForFences, fenceAuthStudies, fencesError } = useFenceStudy();
+  const hasConnections = !isEmpty(connections);
+  const hasErrors = !isEmpty(fencesConnectError) || !isEmpty(fencesError);
+  const fenceStudiesLoading = loadingStudiesForFences.length > 0;
+  const connectionsLoading = loadingFences.includes(FENCE_NAMES.gen3);
 
   return (
     <GridCard
@@ -70,84 +36,84 @@ const AuthorizedStudies = ({ id, className = "" }: DashboardCardProps) => {
       title={
         <CardHeader
           id={id}
-          title={intl.get("screen.dashboard.cards.authorizedStudies.title")}
+          title={intl.get('screen.dashboard.cards.authorizedStudies.title', {
+            count: !hasConnections ? 0 : fenceAuthStudies.length,
+          })}
+          infoPopover={{
+            title: intl.get('screen.dashboard.cards.authorizedStudies.infoPopover.title'),
+            overlayClassName: styles.authorizedStudiesInfoPopover,
+            content: (
+              <Space direction="vertical" className={styles.content} size={0}>
+                <Text>
+                  {intl.getHTML('screen.dashboard.cards.authorizedStudies.infoPopover.content')}{' '}
+                  <ExternalLink href="https://google.com">
+                    <Button type="link" size="small" className={styles.applyForAccessBtn}>
+                      {intl.get(
+                        'screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess',
+                      )}
+                    </Button>
+                  </ExternalLink>
+                  .
+                </Text>
+              </Space>
+            ),
+          }}
           withHandle
-          extra={[
-            <Button key="1" type="text" className={styles.dataAccessBtn}>
-              {intl.get("screen.dashboard.cards.authorizedStudies.headerBtn")}{" "}
-              <QuestionCircleOutlined />
-            </Button>,
-          ]}
         />
       }
       content={
         <div className={styles.authorizedWrapper}>
-          <Space
-            className={styles.authSection}
-            direction="horizontal"
-            align="start"
-          >
-            {isConnected ? (
-              <>
-                <Space size={8} direction="horizontal" align="start">
-                  <SafetyOutlined className={styles.safetyIcon} />
-                  <Text className={styles.notice}>
-                    {intl.get(
-                      "screen.dashboard.cards.authorizedStudies.connectedNotice"
-                    )}
-                  </Text>
-                </Space>
-                <Button
-                  type="primary"
-                  size="small"
-                  danger
-                  icon={<DisconnectOutlined />}
-                  onClick={() => setIsConnected(false)}
-                >
-                  {intl.get(
-                    "screen.dashboard.cards.authorizedStudies.disconnect"
-                  )}
-                </Button>
-              </>
-            ) : (
-              <>
-                <Space size={8} direction="horizontal" align="start">
-                  <SafetyOutlined className={styles.safetyIcon} />
-                  <Text className={styles.notice}>
-                    {intl.get(
-                      "screen.dashboard.cards.authorizedStudies.disconnectedNotice"
-                    )}
-                  </Text>
-                </Space>
-                <Button
-                  type="primary"
-                  size="small"
-                  icon={<ApiOutlined />}
-                  onClick={() => setIsConnected(true)}
-                >
-                  {intl.get("screen.dashboard.cards.authorizedStudies.connect")}
-                </Button>
-              </>
-            )}
-          </Space>
-          <List<IListItemData>
+          {hasConnections && !hasErrors && !fenceStudiesLoading && (
+            <Space className={styles.authenticatedHeader} direction="horizontal">
+              <Space align="start">
+                <SafetyOutlined className={styles.safetyIcon} />
+                <Text className={styles.notice}>
+                  {intl.get('screen.dashboard.cards.authorizedStudies.connectedNotice')}{' '}
+                  <Button
+                    type="link"
+                    size="small"
+                    danger
+                    icon={<DisconnectOutlined />}
+                    onClick={() => dispatch(disconnectFence(FENCE_NAMES.gen3))}
+                    className={styles.disconnectBtn}
+                    loading={connectionsLoading}
+                  >
+                    {intl.get('screen.dashboard.cards.authorizedStudies.disconnect')}
+                  </Button>
+                </Text>
+              </Space>
+            </Space>
+          )}
+          <List<TFenceStudy>
             className={styles.authorizedStudiesList}
             bordered
             itemLayout="vertical"
+            loading={fenceStudiesLoading || connectionsLoading}
             locale={{
-              emptyText: (
+              emptyText: hasErrors ? (
+                <CardErrorPlaceholder />
+              ) : hasConnections ? (
                 <Empty
                   imageType="grid"
                   description={intl.get(
-                    "screen.dashboard.cards.authorizedStudies.noAvailableStudies"
+                    'screen.dashboard.cards.authorizedStudies.noAvailableStudies',
                   )}
+                />
+              ) : (
+                <CardConnectPlaceholder
+                  icon={<SafetyOutlined className={styles.safetyIcon} />}
+                  description={intl.get(
+                    'screen.dashboard.cards.authorizedStudies.disconnectedNotice',
+                  )}
+                  btnProps={{
+                    loading: connectionsLoading,
+                    onClick: () => dispatch(connectFence(FENCE_NAMES.gen3)),
+                  }}
                 />
               ),
             }}
-            dataSource={data}
-            renderItem={(item) => (
-              <AuthorizedStudiesListItem id={item.key} data={item} />
-            )}
+            dataSource={hasConnections && !hasErrors ? fenceAuthStudies : []}
+            renderItem={(item) => <AuthorizedStudiesListItem id={item.id} data={item} />}
           ></List>
         </div>
       }

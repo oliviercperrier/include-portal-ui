@@ -8,21 +8,21 @@
       padding: 0;
       height: unset;
       font-size: 12px;
-      text-decoration: underline;
-      &:hover {
-        background-color: transparent;
-        text-decoration: none;
-      }
+      color: $gray-8;
     }
   }
 
   .dataUseGroups {
     font-size: 12px;
-    color: $gray-7;
+    display: block;
   }
 
   .itemMeta {
     margin-bottom: 2px;
+
+    *[class$="-meta-title"] {
+      font-size: 14px;
+    }
   }
 
   .progress {

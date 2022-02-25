@@ -34,6 +34,11 @@ export type TUserConfig = {
       datafiles?: TUserTableConfig;
     };
   };
+  dashboard?: {
+    cards?: {
+      order?: string[]
+    }
+  }
 };
 
 export type TUserInsert = Omit<

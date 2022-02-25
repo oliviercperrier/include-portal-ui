@@ -1,86 +1,92 @@
 import {
-  IParticipantDiagnosis,
+  ITableParticipantEntity,
   IParticipantEntity,
-  IParticipantPhenotype,
-} from "graphql/participants/models";
-import { ArrangerResultsTree, IQueryResults } from "graphql/models";
-import { DEFAULT_PAGE_SIZE } from "views/DataExploration/utils/constant";
+  IParticipantMondo,
+  IParticipantObservedPhenotype,
+} from 'graphql/participants/models';
+import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
+import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
 import {
+  THandleReportDownload,
   TPagingConfig,
   TPagingConfigCb,
-} from "views/DataExploration/utils/types";
-import { SEX, TABLE_EMPTY_PLACE_HOLDER } from "common/constants";
-import ExpandableCell from "components/uiKit/table/ExpendableCell";
+} from 'views/DataExploration/utils/types';
+import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
+import ExpandableCell from 'components/uiKit/table/ExpendableCell';
 import {
   extractMondoTitleAndCode,
   extractPhenotypeTitleAndCode,
-} from "views/DataExploration/utils/helper";
-import ProTable from "@ferlab/ui/core/components/ProTable";
-import { ProColumnType } from "@ferlab/ui/core/components/ProTable/types";
-import { getProTableDictionary } from "utils/translation";
-import { Tag } from "antd";
-import { useDispatch } from "react-redux";
-import { updateUserConfig } from "store/user/thunks";
-import { useUser } from "store/user";
+} from 'views/DataExploration/utils/helper';
+import ProTable from '@ferlab/ui/core/components/ProTable';
+import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
+import { getProTableDictionary } from 'utils/translation';
+import { Button, Dropdown, Menu, Tag } from 'antd';
+import { useDispatch } from 'react-redux';
+import { updateUserConfig } from 'store/user/thunks';
+import { useUser } from 'store/user';
+import { ReportType } from 'services/api/reports/models';
+import { DownloadOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { STATIC_ROUTES } from 'utils/routes';
+import { addFilter } from 'utils/sqons';
+import { INDEXES } from 'graphql/constants';
+import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
+import { fetchTsvReport } from 'store/report/thunks';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
+  downloadReport: THandleReportDownload;
+  sqon?: ISqonGroupFilter;
 }
 
 const defaultColumns: ProColumnType<any>[] = [
   {
-    key: "participant_id",
-    title: "ID",
-    dataIndex: "participant_id",
+    key: 'participant_id',
+    title: 'Participant ID',
+    dataIndex: 'participant_id',
   },
   {
-    key: "study_id",
-    title: "Study Code",
-    dataIndex: "study_id",
+    key: 'study_id',
+    title: 'Study Code',
+    dataIndex: 'study_id',
     className: styles.studyIdCell,
   },
   {
-    key: "study_external_id",
-    title: "dbGaP Accession number",
-    dataIndex: "study_external_id",
+    key: 'study_external_id',
+    title: 'dbGaP',
+    dataIndex: 'study_external_id',
     render: (study_external_id: string) => (
-      <a
-        target="_blank"
-        rel="noreferrer"
+      <ExternalLink
         href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_external_id}`}
       >
         {study_external_id}
-      </a>
+      </ExternalLink>
     ),
   },
   {
-    key: "karyotype",
-    title: "Karyotype",
-    dataIndex: "karyotype",
+    key: 'down_syndrome_status',
+    title: 'DS Status',
+    dataIndex: 'down_syndrome_status',
   },
   {
-    key: "down_syndrome_diagnosis",
-    title: "Down Syndrome Diagnosis",
-    dataIndex: "down_syndrome_diagnosis",
-    render: (down_syndrome_diagnosis: string) =>
-      down_syndrome_diagnosis || TABLE_EMPTY_PLACE_HOLDER,
-  },
-  {
-    key: "sex",
-    title: "Sex",
-    dataIndex: "sex",
+    key: 'sex',
+    title: 'Sex',
+    dataIndex: 'sex',
     render: (sex: string) => (
       <Tag
         color={
           sex.toLowerCase() === SEX.FEMALE
-            ? "magenta"
+            ? 'magenta'
             : sex.toLowerCase() === SEX.MALE
-            ? "geekblue"
-            : ""
+            ? 'geekblue'
+            : ''
         }
       >
         {sex}
@@ -88,52 +94,43 @@ const defaultColumns: ProColumnType<any>[] = [
     ),
   },
   {
-    key: "family_type",
-    title: "Family Unit",
-    dataIndex: "family_type",
+    key: 'family_type',
+    title: 'Family Unit',
+    dataIndex: 'family_type',
   },
   {
-    key: "is_proband",
-    title: "Proband Status",
-    dataIndex: "is_proband",
+    key: 'is_proband',
+    title: 'Proband',
+    dataIndex: 'is_proband',
     defaultHidden: true,
   },
   {
-    key: "age_at_data_collection",
-    title: "Age at Data Collection",
-    dataIndex: "age_at_data_collection",
-  },
-  {
-    key: "diagnosis",
-    title: "Diagnosis (Mondo)",
-    dataIndex: "diagnosis",
+    key: 'mondo.name',
+    title: 'Diagnosis (Mondo)',
+    dataIndex: 'mondo',
     className: styles.diagnosisCell,
-    render: (diagnosis: ArrangerResultsTree<IParticipantDiagnosis>) => {
-      const mondo_ids_diagnosis = diagnosis?.hits?.edges
-        .map((diagnosis) => diagnosis.node.mondo_id_diagnosis)
-        .filter((id) => !!id);
+    render: (mondo: ArrangerResultsTree<IParticipantMondo>) => {
+      const mondoNames = mondo?.hits?.edges.filter((m) => m.node.is_tagged).map((m) => m.node.name);
 
-      if (!mondo_ids_diagnosis) {
+      if (!mondoNames || mondoNames.length === 0) {
         return TABLE_EMPTY_PLACE_HOLDER;
       }
 
       return (
         <ExpandableCell
           nbToShow={1}
-          dataSource={mondo_ids_diagnosis}
+          dataSource={mondoNames}
           renderItem={(modo_id, index): React.ReactNode => {
             const mondoInfo = extractMondoTitleAndCode(modo_id);
 
             return mondoInfo ? (
               <div key={index}>
-                {mondoInfo.title} (MONDO:{" "}
-                <a
+                {mondoInfo.title} (MONDO:{' '}
+                <ExternalLink
                   href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
-                  target="_blank"
-                  rel="noreferrer"
                 >
                   {mondoInfo.code}
-                </a>
+                </ExternalLink>
                 )
               </div>
             ) : (
@@ -145,37 +142,32 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: "phenotype",
-    title: "Phenotype (HPO)",
-    dataIndex: "phenotype",
+    key: 'observed_phenotype.name',
+    title: 'Phenotype (HPO)',
+    dataIndex: 'observed_phenotype',
     className: styles.phenotypeCell,
-    render: (phenotype: ArrangerResultsTree<IParticipantPhenotype>) => {
-      const hydratedPhenotypeIds = phenotype?.hits?.edges
-        .map((phenotype) => phenotype.node.hpo_id_phenotype)
-        .filter((id) => !!id);
+    render: (observed_phenotype: ArrangerResultsTree<IParticipantObservedPhenotype>) => {
+      const phenotypeNames = observed_phenotype?.hits?.edges
+        .filter((p) => p.node.is_tagged)
+        .map((p) => p.node.name);
 
-      if (!hydratedPhenotypeIds) {
+      if (!phenotypeNames || phenotypeNames.length === 0) {
         return TABLE_EMPTY_PLACE_HOLDER;
       }
 
       return (
         <ExpandableCell
           nbToShow={1}
-          dataSource={hydratedPhenotypeIds}
+          dataSource={phenotypeNames}
           renderItem={(hpo_id_phenotype, index): React.ReactNode => {
-            const phenotypeInfo =
-              extractPhenotypeTitleAndCode(hpo_id_phenotype);
+            const phenotypeInfo = extractPhenotypeTitleAndCode(hpo_id_phenotype);
 
             return phenotypeInfo ? (
               <div key={index}>
-                {phenotypeInfo.title} (HP:{" "}
-                <a
-                  href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                {phenotypeInfo.title} (HP:{' '}
+                <ExternalLink href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}>
                   {phenotypeInfo.code}
-                </a>
+                </ExternalLink>
                 )
               </div>
             ) : (
@@ -187,15 +179,52 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: "biospecimen",
-    title: "Biospecimen",
-    render: (record: IParticipantEntity) =>
-      record?.biospecimen?.hits?.total || 0,
+    key: 'biospecimen',
+    title: 'Biospecimen',
+    render: (record: ITableParticipantEntity) => {
+      const total = record?.biospecimen?.hits?.total;
+
+      return total ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+            search: createQueryParams({
+              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
+                record.participant_id,
+              ]),
+            }),
+          }}
+        >
+          {total}
+        </Link>
+      ) : (
+        total || 0
+      );
+    },
   },
   {
-    key: "files",
-    title: "Files",
-    render: (record: IParticipantEntity) => record?.files?.hits?.total || 0,
+    key: 'files.hits.total',
+    title: 'Files',
+    render: (record: ITableParticipantEntity) => {
+      const total = record?.files?.hits?.total;
+
+      return total ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
+            search: createQueryParams({
+              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
+                record.participant_id,
+              ]),
+            }),
+          }}
+        >
+          {total}
+        </Link>
+      ) : (
+        total || 0
+      );
+    },
   },
 ];
 
@@ -203,27 +232,38 @@ const ParticipantsTab = ({
   results,
   setPagingConfig,
   pagingConfig,
+  downloadReport,
+  sqon,
 }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const [selectedAllResults, setSelectedAllResults] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const menu = (
+    <Menu onClick={(e) => downloadReport(e.key as ReportType, selectedKeys, selectedAllResults)}>
+      <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
+      {/* <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Participant & Family Members</Menu.Item> */}
+    </Menu>
+  );
 
   return (
-    <ProTable
+    <ProTable<ITableParticipantEntity>
       tableId="participants_table"
       columns={defaultColumns}
       wrapperClassName={styles.participantTabWrapper}
       loading={results.loading}
-      initialColumnState={
-        userInfo?.config.data_exploration?.tables?.participants?.columns
-      }
+      initialColumnState={userInfo?.config.data_exploration?.tables?.participants?.columns}
+      enableRowSelection={true}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,
           pageSize: pagingConfig.size,
           total: results.total,
         },
-        columnSetting: true,
-        onColumnStateChange: (newState) =>
+        enableColumnSort: true,
+        enableTableExport: true,
+        onColumnSortChange: (newState) =>
           dispatch(
             updateUserConfig({
               data_exploration: {
@@ -233,8 +273,24 @@ const ParticipantsTab = ({
                   },
                 },
               },
-            })
+            }),
           ),
+        onTableExportClick: () =>
+          dispatch(
+            fetchTsvReport({
+              columnStates: userInfo?.config.data_exploration?.tables?.participants?.columns,
+              columns: defaultColumns,
+              index: INDEXES.PARTICIPANT,
+              sqon,
+            }),
+          ),
+        onSelectAllResultsChange: setSelectedAllResults,
+        onSelectedRowsChange: (keys) => setSelectedKeys(keys),
+        extra: [
+          <Dropdown disabled={selectedKeys.length === 0} overlay={menu} placement="bottomLeft">
+            <Button icon={<DownloadOutlined />}>Download clinical data</Button>
+          </Dropdown>,
+        ],
       }}
       bordered
       size="small"
@@ -251,7 +307,7 @@ const ParticipantsTab = ({
           }
         },
       }}
-      dataSource={results.data}
+      dataSource={results.data.map((i) => ({ ...i, key: i.participant_id }))}
       dictionary={getProTableDictionary()}
     />
   );

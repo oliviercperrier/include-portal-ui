@@ -1,36 +1,39 @@
 @import "colors";
 
 .authorizedWrapper {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
 
   .authorizedStudiesList {
     overflow: auto;
-  }
+    height: 100%;
 
-  .dataAccessBtn {
-    padding: 0;
-    > span {
-      text-decoration: underline;
-      &:hover {
-        text-decoration: none;
-      }
+    .safetyIcon {
+      font-size: 40px;
     }
   }
 
-  .authSection {
+  .authenticatedHeader {
     margin-bottom: 8px;
-    justify-content: space-between;
 
-    .safetyIcon {
-      font-size: 20px;
+    .disconnectBtn {
+      padding: 0;
+      font-size: 12px;
     }
 
     .notice {
       font-size: 12px;
-      vertical-align: super;
       line-height: 10px;
+    }
+  }
+}
+
+.authorizedStudiesInfoPopover {
+  .applyForAccessBtn {
+    padding: 0;
+    &, &:hover {
+      color: $gray-8
     }
   }
 }

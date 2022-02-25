@@ -9,6 +9,9 @@ import NotificationBanner from "components/featureToggle/NotificationBanner";
 import { dashboardCards } from "./components/DashboardCards";
 
 import styles from "./index.module.scss";
+import { TSortableItems } from "@ferlab/ui/core/layout/SortableGrid/SortableItem";
+import { useDispatch } from "react-redux";
+import { updateUserConfig } from "store/user/thunks";
 
 const { Title } = Typography;
 
@@ -16,7 +19,20 @@ const FT_FLAG_KEY = "DASHBOARD_BANNER";
 const BANNER_TYPE_KEY = FT_FLAG_KEY + "_TYPE";
 const BANNER_MSG_KEY = FT_FLAG_KEY + "_MSG";
 
+const orderCardIfNeeded = (
+  dashboardCards: TSortableItems[],
+  userCardConfig: string[] | undefined
+) =>
+  userCardConfig
+    ? dashboardCards.sort((a, b) => {
+        return userCardConfig.indexOf(a.id) > userCardConfig.indexOf(b.id)
+          ? 1
+          : -1;
+      })
+    : dashboardCards;
+
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const { userInfo } = useUser();
 
   return (
@@ -34,7 +50,24 @@ const Dashboard = () => {
         </Title>
         <DataReleaseCard />
       </Space>
-      <SortableGrid items={dashboardCards} gutter={[24, 24]} />
+      <SortableGrid
+        onReorder={(ids) =>
+          dispatch(
+            updateUserConfig({
+              dashboard: {
+                cards: {
+                  order: ids,
+                },
+              },
+            })
+          )
+        }
+        items={orderCardIfNeeded(
+          dashboardCards,
+          userInfo?.config.dashboard?.cards?.order
+        )}
+        gutter={[24, 24]}
+      />
     </Space>
   );
 };

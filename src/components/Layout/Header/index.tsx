@@ -11,7 +11,6 @@ import { DownOutlined } from "@ant-design/icons";
 import Gravatar from "components/uiKit/Gravatar";
 import HeaderLink from "components/Layout/Header/HeaderLink";
 import { STATIC_ROUTES } from "utils/routes";
-import history from "utils/history";
 import { useUser } from "store/user";
 import intl from "react-intl-universal";
 import { getFTEnvVarByKey } from "helpers/EnvVariables";
@@ -19,7 +18,7 @@ import NotificationBanner from "components/featureToggle/NotificationBanner";
 import { AlterTypes } from "common/types";
 import { useKeycloak } from "@react-keycloak/web";
 import { IncludeKeycloakTokenParsed } from "common/tokenTypes";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "store/user/slice";
 
@@ -34,6 +33,7 @@ const Header = () => {
   const { userInfo } = useUser();
   const dispatch = useDispatch();
   const { keycloak } = useKeycloak();
+  const history = useHistory();
   const currentPathName = history.location.pathname;
 
   return (

@@ -6,6 +6,7 @@ export interface IFileResultTree {
 }
 
 export interface IFileEntity {
+  key?: string;
   id: string;
   score: number;
   access: string;
@@ -18,4 +19,8 @@ export interface IFileEntity {
   study_id: string;
   type_of_omics: string;
   participant: ArrangerResultsTree<IParticipantEntity>;
+}
+
+export type ITableFileEntity = IFileEntity & {
+  key: string;
 }

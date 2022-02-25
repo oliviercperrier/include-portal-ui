@@ -1,3 +1,5 @@
-const MyProfile = () => <div>My Profile</div>
+const MyProfile = () => {
+  return <div>My Profile</div>;
+};
 
 export default MyProfile;

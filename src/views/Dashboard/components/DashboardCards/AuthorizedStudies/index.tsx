@@ -9,7 +9,7 @@ import AuthorizedStudiesListItem from './ListItem';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardConnectPlaceholder from 'views/Dashboard/components/CardConnectPlaceholder';
 import useFenceConnections from 'hooks/useFenceConnection';
-import { connectFence, disconnectFence } from 'store/fenceConnection/thunks';
+import { connectToFence, disconnectFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
 import { useDispatch } from 'react-redux';
 import { isEmpty } from 'lodash';
@@ -107,7 +107,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
                   )}
                   btnProps={{
                     loading: connectionsLoading,
-                    onClick: () => dispatch(connectFence(FENCE_NAMES.gen3)),
+                    onClick: () => dispatch(connectToFence(FENCE_NAMES.gen3)),
                   }}
                 />
               ),

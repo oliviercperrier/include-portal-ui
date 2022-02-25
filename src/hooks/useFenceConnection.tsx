@@ -1,24 +1,24 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFenceConnection } from 'store/fenceConnection';
-import { fetchAllFenceConnections } from 'store/fenceConnection/thunks';
+import { checkFencesAuthStatus } from 'store/fenceConnection/thunks';
 import { concatAllFencesAcls } from 'store/fenceConnection/utils';
-import { FENCE_CONNECTION_STATUSES, FENCE_NAMES, TFenceConnections } from 'common/fenceTypes';
+import { FENCE_NAMES, TFenceConnections } from 'common/fenceTypes';
 
 type Output = {
   connections: TFenceConnections;
   fencesAllAcls: string[];
-  connectionStatus: { [fenceName: string]: FENCE_CONNECTION_STATUSES };
+  connectedFences: FENCE_NAMES[];
   loadingFences: FENCE_NAMES[];
   fencesConnectError: FENCE_NAMES[];
 };
 
 const useFenceConnections = (): Output => {
   const dispatch = useDispatch();
-  const { connections, connectionStatus, loadingFences, fencesConnectError } = useFenceConnection();
+  const { connections, connectedFences, loadingFences, fencesConnectError } = useFenceConnection();
 
   useEffect(() => {
-    dispatch(fetchAllFenceConnections());
+    dispatch(checkFencesAuthStatus());
     // eslint-disable-next-line
   }, []);
 
@@ -26,7 +26,7 @@ const useFenceConnections = (): Output => {
     loadingFences,
     connections,
     fencesAllAcls: concatAllFencesAcls(connections),
-    connectionStatus,
+    connectedFences,
     fencesConnectError,
   };
 };

@@ -17,6 +17,8 @@ import { fetchAllProjects } from 'store/cavatica/thunks';
 import { useCavatica } from 'store/cavatica';
 import { TCavaticaProjectWithMembers } from 'store/cavatica/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
+import { connectToFence } from 'store/fenceConnection/thunks';
+import { FENCE_NAMES } from 'common/fenceTypes';
 
 import styles from './index.module.scss';
 
@@ -103,7 +105,7 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                     icon={<CavaticaIcon />}
                     description={intl.get('screen.dashboard.cards.cavatica.disconnectedNotice')}
                     btnProps={{
-                      onClick: () => setIsConnected(true),
+                      onClick: () => dispatch(connectToFence(FENCE_NAMES.cavatica)),
                     }}
                   />
                 ),

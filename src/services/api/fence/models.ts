@@ -4,7 +4,7 @@ export interface IFenceAuthPayload {
 }
 
 export interface IFenceInfo {
-  token_uri: string;
+  authorize_uri: string;
   scope: string;
   redirect_uri: string;
   client_id: string;

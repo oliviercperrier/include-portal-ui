@@ -11,6 +11,6 @@ export type initialState = {
   connections: TFenceConnections;
   connectionStatus: {
     [FENCE_NAMES.gen3]: FENCE_CONNECTION_STATUSES;
-    [FENCE_NAMES.dcf]: FENCE_CONNECTION_STATUSES;
+    [FENCE_NAMES.cavatica]: FENCE_CONNECTION_STATUSES;
   };
 };

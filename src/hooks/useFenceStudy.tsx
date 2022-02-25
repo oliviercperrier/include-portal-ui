@@ -2,15 +2,14 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFenceConnection } from 'store/fenceConnection';
 import { computeAllFencesAuthStudies, fetchAllFenceStudies } from 'store/fenceStudies/thunks';
-import { FENCE_NAMES } from 'common/fenceTypes';
 import { useFenceStudies } from 'store/fenceStudies';
-import { TFenceStudies, TFenceStudy } from 'store/fenceStudies/types';
+import { STUDIES_FENCE_NAMES, TFenceStudies, TFenceStudy } from 'store/fenceStudies/types';
 
 type Output = {
-  loadingStudiesForFences: FENCE_NAMES[];
+  loadingStudiesForFences: STUDIES_FENCE_NAMES[];
   fenceStudies: TFenceStudies;
   fenceAuthStudies: TFenceStudy[];
-  fencesError: FENCE_NAMES[];
+  fencesError: STUDIES_FENCE_NAMES[];
 };
 
 const useFenceStudy = (): Output => {

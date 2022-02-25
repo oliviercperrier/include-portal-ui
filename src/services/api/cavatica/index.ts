@@ -11,39 +11,39 @@ import {
   ICavaticaProjectMember,
 } from './models';
 
-const url = EnvironmentVariables.configFor('CAVATICA_API');
-const token = process.env.REACT_APP_CAVATICA_TOKEN!; // temporary
+const FENCE_API_URL = EnvironmentVariables.configFor('FENCE_API_URL');
+const CAVATICA_FENCE_PROXY = EnvironmentVariables.configFor('CAVATICA_API');
+const CAVATICA_PROXY_URL = `${FENCE_API_URL}/${CAVATICA_FENCE_PROXY}`;
 
 const headers = () => ({
   'Content-Type': 'application/json',
-  'X-SBG-Auth-Token': token,
 });
 
 const fetchProjects = () =>
   sendRequest<ICavaticaListPayload<ICavaticaProject>>({
     method: 'GET',
-    url: `${url}/projects`,
+    url: `${CAVATICA_PROXY_URL}/projects`,
     headers: headers(),
   });
 
 const fetchProjetMembers = (projectId: string) =>
   sendRequest<ICavaticaListPayload<ICavaticaProjectMember>>({
     method: 'GET',
-    url: `${url}/projects/${projectId}/members`,
+    url: `${CAVATICA_PROXY_URL}/projects/${projectId}/members`,
     headers: headers(),
   });
 
 const fetchBillingGroups = () =>
   sendRequest<ICavaticaListPayload<ICavaticaBillingGroup>>({
     method: 'GET',
-    url: `${url}/billing/groups`,
+    url: `${CAVATICA_PROXY_URL}/billing/groups`,
     headers: headers(),
   });
 
 const createProject = (data: ICavaticaCreateProjectBody) =>
   sendRequest<ICavaticaProject>({
     method: 'POST',
-    url: `${url}/projects`,
+    url: `${CAVATICA_PROXY_URL}/projects`,
     headers: headers(),
     data,
   });
@@ -51,7 +51,7 @@ const createProject = (data: ICavaticaCreateProjectBody) =>
 const listFilesAndFolders = (parentId: string, isProject: boolean = false) =>
   sendRequest<ICavaticaListPayload<ICavaticaProjectNode>>({
     method: 'GET',
-    url: `${url}/files`,
+    url: `${CAVATICA_PROXY_URL}/files`,
     headers: headers(),
     params: {
       [isProject ? 'project' : 'parent']: parentId,
@@ -61,7 +61,7 @@ const listFilesAndFolders = (parentId: string, isProject: boolean = false) =>
 const startBulkDrsImportJob = (data: ICavaticaDRSImportBody) =>
   sendRequest<ICavaticaDRSImportJobPayload>({
     method: 'POST',
-    url: `${url}/bulk/drs/imports/create`,
+    url: `${CAVATICA_PROXY_URL}/bulk/drs/imports/create`,
     headers: headers(),
     data,
   });

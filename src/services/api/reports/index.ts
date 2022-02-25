@@ -6,13 +6,13 @@ import { format } from 'date-fns';
 import downloader from 'common/downloader';
 import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
 
-const url = EnvironmentVariables.configFor('REPORTS_API_URL');
+const REPORT_API_URL = EnvironmentVariables.configFor('REPORTS_API_URL');
 const arrangerProjectId = EnvironmentVariables.configFor('ARRANGER_PROJECT_ID');
 
 const REPORTS_ROUTES = {
-  [ReportType.CLINICAL_DATA]: `${url}/reports/clinical-data`,
-  [ReportType.CLINICAL_DATA_FAM]: `${url}/reports/family-clinical-data`,
-  [ReportType.BIOSEPCIMEN_DATA]: `${url}/reports/biospecimen-data`,
+  [ReportType.CLINICAL_DATA]: `${REPORT_API_URL}/reports/clinical-data`,
+  [ReportType.CLINICAL_DATA_FAM]: `${REPORT_API_URL}/reports/family-clinical-data`,
+  [ReportType.BIOSEPCIMEN_DATA]: `${REPORT_API_URL}/reports/biospecimen-data`,
 };
 
 const headers = () => ({

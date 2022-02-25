@@ -55,11 +55,6 @@ const App = () => {
                   exact
                   render={() => <FenceRedirect fence={FENCE_NAMES.gen3} />}
                 />
-                <Route
-                  path={STATIC_ROUTES.DCF_REDIRECT}
-                  exact
-                  render={() => <FenceRedirect fence={FENCE_NAMES.dcf} />}
-                />
                 <Route exact path={STATIC_ROUTES.LOGIN}>
                   <SideImageLayout sideImgSrc={MainSideImage}>
                     <Login />

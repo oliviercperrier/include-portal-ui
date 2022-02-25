@@ -1,12 +1,12 @@
 import flatMap from 'lodash/flatMap';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
+import { FENCE_CONNECTION_STATUSES } from 'common/fenceTypes';
 import { isEmpty } from 'lodash';
 import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/utils';
 import { RootState } from 'store/types';
 import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { sendRequest } from 'services/api';
-import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
+import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy, STUDIES_FENCE_NAMES } from './types';
 import { AxiosError } from 'axios';
 import { handleThunkApiReponse } from 'store/utils';
 
@@ -17,7 +17,7 @@ const fetchAllFenceStudies = createAsyncThunk<
 >('fenceStudies/fetch/all/studies', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
 
-  const fenceNames = Object.keys(fenceConnection.connections) as FENCE_NAMES[];
+  const fenceNames = Object.keys(fenceConnection.connections) as STUDIES_FENCE_NAMES[];
   const aclsByFence = computeAclsByFence(fenceConnection.connections);
 
   fenceNames.forEach(
@@ -34,7 +34,7 @@ const fetchAllFenceStudies = createAsyncThunk<
 const fetchFenceStudies = createAsyncThunk<
   TFenceStudies,
   {
-    fenceName: FENCE_NAMES;
+    fenceName: STUDIES_FENCE_NAMES;
     userAcls: string[];
   },
   { rejectValue: string; state: RootState }
@@ -62,14 +62,14 @@ const fetchFenceStudies = createAsyncThunk<
   },
   {
     condition: (args, { getState }) => {
-      const { fenceStudies } = getState();
+      const { fenceStudies, fenceConnection } = getState();
 
       const studies = fenceStudies.studies[args.fenceName];
       const hasNoAuthorizedStudies = isEmpty(studies) || isEmpty(studies.authorizedStudies);
       const hasNotBeenDisconnected = [
         FENCE_CONNECTION_STATUSES.unknown,
         FENCE_CONNECTION_STATUSES.connected,
-      ].includes(fenceStudies.statuses[args.fenceName]);
+      ].includes(fenceConnection.connectionStatus[args.fenceName]);
 
       return (
         isEmpty(fenceStudies.studies[args.fenceName]) &&
@@ -163,7 +163,7 @@ const getStudiesCountByNameAndAcl = async (
 
 const getAuthStudyIdsAndCounts = async (
   userAcls: string[],
-  fenceName: FENCE_NAMES,
+  fenceName: STUDIES_FENCE_NAMES,
 ): Promise<{
   error?: AxiosError;
   studies?: TFenceStudiesIdsAndCount;

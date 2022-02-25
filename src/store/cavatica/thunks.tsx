@@ -22,7 +22,6 @@ import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { CAVATICA_FILE_BATCH_SIZE } from 'views/DataExploration/utils/constant';
 import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
-import ExternalLink from 'components/uiKit/ExternalLink';
 
 const USER_BASE_URL = EnvironmentVariables.configFor('CAVATICA_USER_BASE_URL');
 

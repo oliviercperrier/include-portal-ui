@@ -4,7 +4,7 @@ import { IncludeKeycloakTokenParsed } from 'common/tokenTypes';
 import { TUser, TUserInsert, TUserUpdate } from './models';
 import { sendRequest } from 'services/api';
 
-const url = EnvironmentVariables.configFor('USERS_API');
+const USER_API_URL = EnvironmentVariables.configFor('USERS_API');
 
 const headers = () => ({
   'Content-Type': 'application/json',
@@ -13,7 +13,7 @@ const headers = () => ({
 const fetch = () =>
   sendRequest<TUser>({
     method: 'GET',
-    url: `${url}/user`,
+    url: `${USER_API_URL}/user`,
     headers: headers(),
   });
 
@@ -21,7 +21,7 @@ const create = (body?: Omit<TUserInsert, 'keycloak_id'>) => {
   const tokenParsed = keycloak.tokenParsed as IncludeKeycloakTokenParsed;
   return sendRequest<TUser>({
     method: 'POST',
-    url: `${url}/user`,
+    url: `${USER_API_URL}/user`,
     headers: headers(),
     data: {
       ...body,
@@ -34,7 +34,7 @@ const create = (body?: Omit<TUserInsert, 'keycloak_id'>) => {
 const update = (body: TUserUpdate) =>
   sendRequest<TUser>({
     method: 'PUT',
-    url: `${url}/user`,
+    url: `${USER_API_URL}/user`,
     headers: headers(),
     data: body,
   });
@@ -42,7 +42,7 @@ const update = (body: TUserUpdate) =>
 const completeRegistration = (body: TUserUpdate) =>
   sendRequest<TUser>({
     method: 'PUT',
-    url: `${url}/user/complete-registration`,
+    url: `${USER_API_URL}/user/complete-registration`,
     headers: headers(),
     data: body,
   });

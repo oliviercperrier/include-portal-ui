@@ -1,19 +1,19 @@
 export enum FENCE_NAMES {
-  gen3 = "gen3",
-  dcf = "dcf",
+  gen3 = 'gen3',
+  cavatica = 'cavatica',
 }
 
-export const ALL_FENCE_NAMES = [FENCE_NAMES.gen3];
+export const ALL_FENCE_NAMES = [FENCE_NAMES.gen3, FENCE_NAMES.cavatica];
 
 export enum FENCE_CONNECTION_STATUSES {
-  connected = "connected",
-  disconnected = "disconnected",
-  unknown = "unknown",
+  connected = 'connected',
+  disconnected = 'disconnected',
+  unknown = 'unknown',
 }
 
 export type TFenceConnections = {
   [FENCE_NAMES.gen3]?: TConnection;
-  [FENCE_NAMES.dcf]?: TConnection;
+  [FENCE_NAMES.cavatica]?: TConnection;
 };
 
 export type TProjects = { [index: string]: any };

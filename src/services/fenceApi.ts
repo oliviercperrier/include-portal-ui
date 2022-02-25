@@ -7,26 +7,21 @@ import EnvironmentVariables from 'helpers/EnvVariables';
 import { sendRequest } from './api';
 import createHttpError from 'http-errors';
 
-const DCF = FENCE_NAMES.dcf;
 const GEN3 = FENCE_NAMES.gen3;
 
 const RESPONSE_TYPE = 'code';
 
 const GEN3_SCOPE = 'openid+data+user';
-const DCF_SCOPE = 'openid+user';
 const FENCE_AUTH_CLIENT_URI = EnvironmentVariables.configFor('FENCE_AUTH_CLIENT_URI');
 const FENCE_AUTH_REFRESH_URI = EnvironmentVariables.configFor('FENCE_AUTH_REFRESH_URI');
 const FENCE_AUTH_TOKENS_URI = EnvironmentVariables.configFor('FENCE_AUTH_TOKENS_URI');
 const GEN3_API_ROOT = EnvironmentVariables.configFor('GEN3_API');
-const DCF_API_ROOT = EnvironmentVariables.configFor('DCF_API');
 const IDP = EnvironmentVariables.configFor('IDP');
 
 const getScope = (fenceName: FENCE_NAMES) => {
   switch (fenceName) {
     case GEN3:
       return GEN3_SCOPE;
-    case DCF:
-      return DCF_SCOPE;
     default:
       return '';
   }
@@ -37,7 +32,7 @@ const getScope = (fenceName: FENCE_NAMES) => {
 //  as the event handler, so client_id and redirect_uri must be available at all times.
 const PROVIDERS = {
   gen3: { fenceUri: GEN3_API_ROOT },
-  dcf: { fenceUri: DCF_API_ROOT },
+  cavatica: { fenceUri: '' },
 };
 
 /*

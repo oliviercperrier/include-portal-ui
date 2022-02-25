@@ -8,7 +8,7 @@ export const FenceConnectionState: initialState = {
   loadingFences: [],
   connectionStatus: {
     [FENCE_NAMES.gen3]: FENCE_CONNECTION_STATUSES.unknown,
-    [FENCE_NAMES.dcf]: FENCE_CONNECTION_STATUSES.unknown,
+    [FENCE_NAMES.cavatica]: FENCE_CONNECTION_STATUSES.unknown,
   },
   fencesConnectError: [],
   fencesDisconnectError: [],

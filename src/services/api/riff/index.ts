@@ -1,28 +1,25 @@
-import EnvironmentVariables from "helpers/EnvVariables";
-import keycloak from "auth/keycloak-api/keycloak";
-import { sendRequest } from "services/api";
-import { TRiffEntity, TRiffEntityCreate } from "./models";
-import { TRiffContent } from "store/riff/types";
+import EnvironmentVariables from 'helpers/EnvVariables';
+import keycloak from 'auth/keycloak-api/keycloak';
+import { sendRequest } from 'services/api';
+import { TRiffEntity, TRiffEntityCreate } from './models';
+import { TRiffContent } from 'store/riff/types';
 
-const url = EnvironmentVariables.configFor("RIFF_API");
+const url = EnvironmentVariables.configFor('RIFF_API');
 
 const headers = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${keycloak.token}`,
+  'Content-Type': 'application/json',
 });
 
 const fetchRiffUser = () =>
   sendRequest<TRiffEntity<TRiffContent>[]>({
-    method: "GET",
+    method: 'GET',
     url: `${url}/user/${keycloak.tokenParsed?.sub}`,
     headers: headers(),
   });
 
-const createRiffEntity = <TReturnContent = TRiffContent>(
-  data: TRiffEntityCreate<TRiffContent>
-) => {
+const createRiffEntity = <TReturnContent = TRiffContent>(data: TRiffEntityCreate<TRiffContent>) => {
   return sendRequest<TRiffEntity<TReturnContent>>({
-    method: "POST",
+    method: 'POST',
     url: `${url}/shorten`,
     headers: headers(),
     data: {

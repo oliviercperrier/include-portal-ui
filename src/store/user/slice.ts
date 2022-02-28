@@ -1,12 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialState } from "store/user/types";
-import keycloak from "auth/keycloak-api/keycloak";
-import {
-  completeRegistration,
-  fetchUser,
-  updateUser,
-  updateUserConfig,
-} from "store/user/thunks";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { initialState } from 'store/user/types';
+import keycloak from 'auth/keycloak-api/keycloak';
+import { completeRegistration, fetchUser, updateUser, updateUserConfig } from 'store/user/thunks';
 
 export const UserState: initialState = {
   userInfo: null,
@@ -15,7 +10,7 @@ export const UserState: initialState = {
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: UserState,
   reducers: {
     cleanLogout: (state) => {

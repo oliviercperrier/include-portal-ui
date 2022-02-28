@@ -8,15 +8,13 @@ export default class EnvironmentVariables {
     ARRANGER_PROJECT_ID: process.env.REACT_APP_ARRANGER_PROJECT_ID,
     USERS_API: process.env.REACT_APP_USERS_API_URL,
     RIFF_API: process.env.REACT_APP_RIFF_API_URL,
+    // CAVATICA
+    CAVATICA_USER_BASE_URL: process.env.REACT_APP_CAVATICA_USER_BASE_URL,
     // FENCES
-    FENCE_AUTH_CLIENT_URI: process.env.REACT_APP_FENCE_AUTH_CLIENT_URI,
-    FENCE_AUTH_REFRESH_URI: process.env.REACT_APP_FENCE_REFRESH_URI,
-    FENCE_AUTH_TOKENS_URI: process.env.REACT_APP_FENCE_TOKENS_URI,
-    IDP: process.env.REACT_APP_IDP,
-    DCF_API: process.env.REACT_APP_DCF_API,
-    DCF_WEB: process.env.REACT_APP_DCF_WEB,
-    GEN3_API: process.env.REACT_APP_GEN3_API,
-    GEN3_WEB: process.env.REACT_APP_GEN3_WEB,
+    KEY_MANAGER_API_URL: process.env.REACT_APP_KEY_MANAGER_API_URL,
+    FENCE_API_URL: process.env.REACT_APP_FENCE_API_URL,
+    CAVATICA_FENCE_PROXY: process.env.REACT_APP_CAVATICA_FENCE_PROXY,
+    GEN3_FENCE_PROXY: process.env.REACT_APP_GEN3_FENCE_PROXY,
     // KEYCLOAK
     KC_AUTH_SERVER_URL: process.env.REACT_APP_KC_AUTH_SERVER_URL,
     KC_CLIENT_ID: process.env.REACT_APP_KC_CLIENT_ID,
@@ -28,7 +26,7 @@ export default class EnvironmentVariables {
   };
 
   static configFor(key: string): string {
-    return EnvironmentVariables.vars[key] || "";
+    return EnvironmentVariables.vars[key] || '';
   }
 }
 

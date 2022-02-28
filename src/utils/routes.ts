@@ -18,8 +18,8 @@ export enum STATIC_ROUTES {
   DATA_EXPLORATION_BIOSPECIMENS = "/data-exploration/biospecimens",
   DATA_EXPLORATION_DATAFILES = "/data-exploration/datafiles",
 
-  GEN3_REDIRECT = "/gen3_redirect",
-  DCF_REDIRECT = "/dcf_redirect",
+  GEN3_FENCE_REDIRECT = "/gen3_redirect",
+  CAVATICA_FENCE_REDIRECT = "/cavatica_redirect",
 }
 
 export enum DYNAMIC_ROUTES {

@@ -1,6 +1,6 @@
 import flatMap from 'lodash/flatMap';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
+import { ALL_STUDIES_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { isEmpty } from 'lodash';
 import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/utils';
 import { RootState } from 'store/types';
@@ -17,10 +17,9 @@ const fetchAllFenceStudies = createAsyncThunk<
 >('fenceStudies/fetch/all/studies', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
 
-  const fenceNames = Object.keys(fenceConnection.connections) as FENCE_NAMES[];
-  const aclsByFence = computeAclsByFence(fenceConnection.connections);
+  const aclsByFence = computeAclsByFence(fenceConnection.connections); // TODO change this
 
-  fenceNames.forEach(
+  ALL_STUDIES_FENCE_NAMES.forEach(
     async (fenceName) =>
       await thunkAPI.dispatch(
         fetchFenceStudies({
@@ -62,14 +61,14 @@ const fetchFenceStudies = createAsyncThunk<
   },
   {
     condition: (args, { getState }) => {
-      const { fenceStudies } = getState();
+      const { fenceStudies, fenceConnection } = getState();
 
       const studies = fenceStudies.studies[args.fenceName];
       const hasNoAuthorizedStudies = isEmpty(studies) || isEmpty(studies.authorizedStudies);
       const hasNotBeenDisconnected = [
         FENCE_CONNECTION_STATUSES.unknown,
         FENCE_CONNECTION_STATUSES.connected,
-      ].includes(fenceStudies.statuses[args.fenceName]);
+      ].includes(fenceConnection.connectionStatus[args.fenceName]);
 
       return (
         isEmpty(fenceStudies.studies[args.fenceName]) &&

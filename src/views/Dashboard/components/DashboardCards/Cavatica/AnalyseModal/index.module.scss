@@ -3,9 +3,15 @@
     margin: 0;
   }
 
-  .filesList {
+  .studiesList {
     div[class$='-meta-description'] {
       margin-right: 12px;
+    }
+
+    :global(.ant-list-item) {
+      &:hover {
+        background-color: transparent;
+      }
     }
   }
 }
@@ -15,15 +21,15 @@
   .treeSelector {
     width: 100%;
   }
+}
+
+.cavaticaTreeDropdown {
+  padding: 0;
 
   .treeSelectEmpty {
     width: 100%;
     padding: 4px 8px;
   }
-}
-
-.cavaticaTreeDropdown {
-  padding: 0;
 
   .cavaticaTreeDropdownMenu {
     padding: 8px 4px;

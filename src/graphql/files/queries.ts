@@ -9,7 +9,6 @@ export const SEARCH_FILES_QUERY = gql`
           node {
             id
             file_id
-            study_id
             type_of_omics
             experimental_strategy
             data_category
@@ -17,6 +16,13 @@ export const SEARCH_FILES_QUERY = gql`
             file_format
             size
             access
+            access_urls
+            acl
+            repository
+            study {
+              study_id
+              study_name
+            }
           }
         }
       }

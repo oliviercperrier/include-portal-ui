@@ -1,29 +1,45 @@
 import { FileTextOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, List, Modal, Space, Tag, TreeSelect, Typography } from 'antd';
-import { useState } from 'react';
+import { IFileEntity } from 'graphql/files/models';
+import { groupBy } from 'lodash';
+import { LegacyDataNode } from 'rc-tree-select/lib/TreeSelect';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useCavatica } from 'store/cavatica';
-import { cavaticaActions } from 'store/cavatica/slice';
+import { CavaticaApi } from 'services/api/cavatica';
+import { CAVATICA_TYPE } from 'services/api/cavatica/models';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
+import { fetchAllProjects, startBulkImportJob } from 'store/fenceCavatica/thunks';
+import { ICavaticaTreeNode } from 'store/fenceCavatica/types';
 
 import styles from './index.module.scss';
 
 const { Text } = Typography;
-const { TreeNode } = TreeSelect;
 
 const AnalyseModal = () => {
-  const { isAnalyseModalOpen } = useCavatica();
+  const { isAnalyseModalOpen, projectsTree, isLoading, bulkImportData, newlyCreatedProject } =
+    useFenceCavatica();
   const dispatch = useDispatch();
-  const [filesDest, setFilesDest] = useState(undefined);
+  const [selectedTreeNode, setSelectedTreeNode] = useState<ICavaticaTreeNode | undefined>();
+  const [localProjectTree, setLocalProjectTree] = useState<ICavaticaTreeNode[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const onChange = (value: any) => setFilesDest(value);
-  const handleOnCancel = () => dispatch(cavaticaActions.cancelAnalyse());
+  const handleOnCancel = () => {
+    setLocalProjectTree(projectsTree);
+    setSelectedTreeNode(undefined);
+    dispatch(fenceCavaticaActions.cancelAnalyse());
+  };
+
+  const handleOnOk = () => dispatch(startBulkImportJob(selectedTreeNode!));
+
+  const handleOnClear = () => setSelectedTreeNode(undefined);
+
   const handleCreateProject = () => {
     setDropdownOpen(false);
     // Need a timeout else the dropdown stay visible
     // when the create project modal open
     setTimeout(() => {
-      dispatch(cavaticaActions.beginCreateProject());
+      dispatch(fenceCavaticaActions.beginCreateProject());
     }, 100);
   };
 
@@ -33,23 +49,68 @@ const AnalyseModal = () => {
     </Button>
   );
 
+  useEffect(() => {
+    // TODO Check if connected
+    dispatch(fetchAllProjects());
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setLocalProjectTree(projectsTree);
+  }, [projectsTree]);
+
+  useEffect(() => {
+    if (newlyCreatedProject) {
+      setSelectedTreeNode(newlyCreatedProject);
+    }
+  }, [newlyCreatedProject]);
+
+  const onLoadData = async (node: LegacyDataNode) => {
+    const { data } = await CavaticaApi.listFilesAndFolders(
+      node.id,
+      node.type === CAVATICA_TYPE.PROJECT,
+    );
+
+    const childs =
+      data?.items
+        .filter(({ type }) => type !== CAVATICA_TYPE.FILE)
+        .map((child) => {
+          let enrichedChild: any = {
+            ...child,
+            value: child.id,
+            title: child.name,
+            pId: node.id,
+          };
+
+          return enrichedChild;
+        }) || [];
+
+    setLocalProjectTree([...localProjectTree, ...childs]);
+  };
+
   return (
     <Modal
       title="Analyse in Cavatica"
       visible={isAnalyseModalOpen}
       okText="Copy files"
-      okButtonProps={{ disabled: !filesDest }}
+      okButtonProps={{
+        disabled: !selectedTreeNode?.id,
+      }}
+      onOk={handleOnOk}
       onCancel={handleOnCancel}
       className={styles.cavaticaAnalyseModal}
       wrapClassName={styles.cavaticaModalWrapper}
+      destroyOnClose
     >
       <Space direction="vertical" size={24}>
         <Space direction="vertical" size={5} className={styles.treeSelectorWrapper}>
           <Text strong>Copy files to...</Text>
           <TreeSelect
+            treeDataSimpleMode
             open={dropdownOpen}
             showAction={['focus']}
             className={styles.treeSelector}
+            loading={isLoading}
             notFoundContent={
               <Space
                 direction="vertical"
@@ -63,59 +124,43 @@ const AnalyseModal = () => {
             }
             onDropdownVisibleChange={setDropdownOpen}
             showSearch
-            value={filesDest}
+            value={selectedTreeNode?.value}
             dropdownClassName={styles.cavaticaTreeDropdown}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             placeholder="Select a project"
             allowClear
-            treeDefaultExpandAll
-            onChange={onChange}
+            onClear={handleOnClear}
+            onSelect={(_: any, node: any /* ICavaticaTreeNode */) => {
+              setSelectedTreeNode(node);
+            }}
+            loadData={onLoadData}
+            treeData={localProjectTree}
             dropdownRender={(menu) => (
               <>
                 <div className={styles.cavaticaTreeDropdownMenu}>{menu}</div>
-                <Divider className={styles.cavaticaTreeDropdownDivider} />
-                <div className={styles.cavaticaTreeDropdownFooter}>
-                  <NewProjectButton />
-                </div>
+                {localProjectTree.length > 0 && (
+                  <>
+                    <Divider className={styles.cavaticaTreeDropdownDivider} />
+                    <div className={styles.cavaticaTreeDropdownFooter}>
+                      <NewProjectButton />
+                    </div>
+                  </>
+                )}
               </>
             )}
-          >
-            <TreeNode value="parent 1" title="parent 1">
-              <TreeNode value="parent 1-0" title="parent 1-0">
-                <TreeNode value="leaf1" title="leaf1" />
-                <TreeNode value="leaf2" title="leaf2" />
-              </TreeNode>
-              <TreeNode value="parent 1-1" title="parent 1-1">
-                <TreeNode value="leaf3" title={<b style={{ color: '#08c' }}>leaf3</b>} />
-              </TreeNode>
-            </TreeNode>
-          </TreeSelect>
+          />
         </Space>
         <Text>
           <Text>You are authorized to copy</Text>{' '}
           <Tag className={styles.authorizedFilesTag} icon={<FileTextOutlined />}>
-            8 files
+            {bulkImportData.authorizedFileCount} files
           </Tag>{' '}
-          <Text>(out of 45 selected) to your Cavatica workspace.</Text>
+          <Text>(out of {bulkImportData.files.length} selected) to your Cavatica workspace.</Text>
         </Text>
         <List
           size="small"
-          className={styles.filesList}
-          dataSource={[
-            {
-              title:
-                'Lorem ipsum dolor sit amet consectetur adipiscing minus tulic asdf asf asf asf s',
-              nbFiles: 4,
-            },
-            {
-              title: 'Lorem ipsum dolor sit amet consectetur adipiscing elit',
-              nbFiles: 7,
-            },
-            {
-              title: 'Lorem ipsum dolor sit amet consectetur adipiscing elit tortor',
-              nbFiles: 3,
-            },
-          ]}
+          className={styles.studiesList}
+          dataSource={aggregateFilesToStudy(bulkImportData.files)}
           renderItem={(item) => {
             return (
               <List.Item>
@@ -131,5 +176,11 @@ const AnalyseModal = () => {
     </Modal>
   );
 };
+
+const aggregateFilesToStudy = (filesToCopy: IFileEntity[]) =>
+  Object.entries(groupBy(filesToCopy, 'study.study_id')).map((study) => ({
+    title: study[1][0].study.study_name,
+    nbFiles: study[1].length,
+  }));
 
 export default AnalyseModal;

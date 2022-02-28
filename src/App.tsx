@@ -51,14 +51,14 @@ const App = () => {
             <Router>
               <Switch>
                 <Route
-                  path={STATIC_ROUTES.GEN3_REDIRECT}
+                  path={STATIC_ROUTES.GEN3_FENCE_REDIRECT}
                   exact
                   render={() => <FenceRedirect fence={FENCE_NAMES.gen3} />}
                 />
                 <Route
-                  path={STATIC_ROUTES.DCF_REDIRECT}
+                  path={STATIC_ROUTES.CAVATICA_FENCE_REDIRECT}
                   exact
-                  render={() => <FenceRedirect fence={FENCE_NAMES.dcf} />}
+                  render={() => <FenceRedirect fence={FENCE_NAMES.cavatica} />}
                 />
                 <Route exact path={STATIC_ROUTES.LOGIN}>
                   <SideImageLayout sideImgSrc={MainSideImage}>

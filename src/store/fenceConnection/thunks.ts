@@ -1,12 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { isEmpty } from 'lodash';
-import { deleteFenceTokens, fenceConnect, getFenceConnection } from 'services/fenceApi';
-import {} from 'store/fenceConnection/types';
 import { RootState } from 'store/types';
 import { ALL_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { handleThunkApiReponse } from 'store/utils';
 import { FenceApi } from 'services/api/fence';
 import { IFenceAuthPayload, IFenceInfo } from 'services/api/fence/models';
+
+const TEN_MINUTES_IN_MS = 1000 * 60 * 10;
 
 /* NEW NEW NEW */
 
@@ -28,9 +27,25 @@ const checkFenceAuthStatus = createAsyncThunk<IFenceAuthPayload, FENCE_NAMES, { 
       reject: thunkAPI.rejectWithValue,
     });
   },
+  {
+    condition: (fence, { getState }) => {
+      const { fenceConnection } = getState();
+
+      return (
+        !fenceConnection.loadingFences.includes(fence) &&
+        fenceConnection.connectionStatus[fence] === FENCE_CONNECTION_STATUSES.unknown
+      );
+    },
+  },
 );
 
-const connectToFence = createAsyncThunk<IFenceInfo, FENCE_NAMES, { state: RootState }>(
+const connectToFence = createAsyncThunk<
+  IFenceInfo,
+  FENCE_NAMES,
+  {
+    state: RootState;
+  }
+>(
   'fence/connection',
   async (fence, thunkAPI) => {
     const { fenceConnection } = thunkAPI.getState();
@@ -42,116 +57,47 @@ const connectToFence = createAsyncThunk<IFenceInfo, FENCE_NAMES, { state: RootSt
     }
 
     const authUrl = `${fenceInfo?.authorize_uri}?client_id=${fenceInfo?.client_id}&response_type=code&scope=${fenceInfo?.scope}&redirect_uri=${fenceInfo?.redirect_uri}`;
-    window.open(authUrl);
+    const authWindow = window.open(authUrl)!;
 
-    return fenceInfo!;
+    return new Promise((resolve, reject) => {
+      const interval = setInterval(async () => {
+        if (authWindow.closed) {
+          const { data } = await FenceApi.isAuthenticated(fence);
+
+          if (data?.authenticated) {
+            clearInterval(interval);
+            resolve(fenceInfo!);
+          } else {
+            clearInterval(interval);
+            reject('failed authenticating');
+          }
+        }
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(interval);
+        reject('nothing');
+      }, TEN_MINUTES_IN_MS);
+    });
   },
   {
-    condition: (fence, { getState }) => !getState().fenceConnection.connectedFences.includes(fence),
+    condition: (fence, { getState }) =>
+      [FENCE_CONNECTION_STATUSES.unknown, FENCE_CONNECTION_STATUSES.disconnected].includes(
+        getState().fenceConnection.connectionStatus[fence],
+      ),
   },
 );
 
 const disconnectFromFence = createAsyncThunk<any, FENCE_NAMES>(
   'fence/disconnection',
-  async (fenceName, thunkAPI) => {},
-);
+  async (fence, thunkAPI) => {
+    const { data, error } = await FenceApi.disconnect(fence);
 
-/* OLD OLD OLD */
-
-const fetchAllFenceConnections = createAsyncThunk<any, never, { state: RootState }>(
-  'fence/fetch/all/connections',
-  async (_, thunkAPI) => {
-    ALL_FENCE_NAMES.forEach(
-      async (fenceName) => await thunkAPI.dispatch(fetchFenceConnection(fenceName)),
-    );
+    return handleThunkApiReponse({
+      error,
+      data,
+      reject: thunkAPI.rejectWithValue,
+    });
   },
 );
 
-const fetchFenceConnection = createAsyncThunk<
-  any,
-  FENCE_NAMES,
-  {
-    state: RootState;
-    rejectValue: {
-      message: string;
-      skipConnectionError: boolean;
-    };
-  }
->(
-  'fence/fetch/connection',
-  async (fenceName, thunkApi) => {
-    try {
-      const { data, error } = await getFenceConnection(fenceName);
-      return handleThunkApiReponse({
-        error,
-        data: {
-          data: data!,
-          skipConnectionError: false,
-        },
-        reject: (error) => {
-          return thunkApi.rejectWithValue({
-            message: error,
-            skipConnectionError: false,
-          });
-        },
-      });
-    } catch (e: any) {
-      return thunkApi.rejectWithValue({
-        message: e.message || 'error',
-        skipConnectionError: e.status === 404,
-      });
-    }
-  },
-  {
-    condition: (fenceName, { getState }) => {
-      const { fenceConnection } = getState();
-
-      return (
-        isEmpty(fenceConnection.connections[fenceName]) &&
-        [FENCE_CONNECTION_STATUSES.unknown, FENCE_CONNECTION_STATUSES.connected].includes(
-          fenceConnection.connectionStatus[fenceName],
-        )
-      );
-    },
-  },
-);
-
-const connectFence = createAsyncThunk<any, FENCE_NAMES>(
-  'fence/connect',
-  async (fenceName, thunkApi) => {
-    try {
-      await fenceConnect(fenceName);
-      const { data, error } = await getFenceConnection(fenceName);
-
-      return handleThunkApiReponse({
-        error,
-        data: data!,
-        reject: thunkApi.rejectWithValue,
-      });
-    } catch {
-      return thunkApi.rejectWithValue('error');
-    }
-  },
-);
-
-const disconnectFence = createAsyncThunk<any, FENCE_NAMES>(
-  'fence/disconnect',
-  async (fenceName, thunkAPI) => {
-    try {
-      await deleteFenceTokens(fenceName);
-    } catch {
-      return thunkAPI.rejectWithValue('error');
-    }
-  },
-);
-
-export {
-  connectToFence,
-  disconnectFromFence,
-  checkFenceAuthStatus,
-  checkFencesAuthStatus,
-  fetchAllFenceConnections,
-  fetchFenceConnection,
-  connectFence,
-  disconnectFence,
-};
+export { connectToFence, disconnectFromFence, checkFenceAuthStatus, checkFencesAuthStatus };

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { notification } from 'antd';
-import { isEmpty } from 'lodash';
+import { Modal, notification } from 'antd';
+import { intersection, isEmpty } from 'lodash';
 import { CavaticaApi } from 'services/api/cavatica';
 import {
   CAVATICA_TYPE,
@@ -9,7 +9,7 @@ import {
   ICavaticaProject,
 } from 'services/api/cavatica/models';
 import { RootState } from 'store/types';
-import { ICavaticaTreeNode, TCavaticaProjectWithMembers } from './types';
+import { IBulkImportData, ICavaticaTreeNode, TCavaticaProjectWithMembers } from './types';
 import intl from 'react-intl-universal';
 import { IFileEntity, IFileResultTree } from 'graphql/files/models';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
@@ -22,6 +22,7 @@ import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { CAVATICA_FILE_BATCH_SIZE } from 'views/DataExploration/utils/constant';
 import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
+import { concatAllFencesAcls } from 'store/fenceConnection/utils';
 
 const USER_BASE_URL = EnvironmentVariables.configFor('CAVATICA_USER_BASE_URL');
 
@@ -55,21 +56,24 @@ const fetchAllProjects = createAsyncThunk<
   },
   {
     condition: (_, { getState }) => {
-      const { cavatica } = getState();
+      const { fenceCavatica } = getState();
 
-      return isEmpty(cavatica.projects);
+      return isEmpty(fenceCavatica.projects);
     },
   },
 );
 
 const beginAnalyse = createAsyncThunk<
-  IFileEntity[],
+  IBulkImportData,
   {
     sqon: ISqonGroupFilter;
     fileIds: string[];
   },
   { rejectValue: string; state: RootState }
 >('cavatica/begin/analyse', async (args, thunkAPI) => {
+  const { fenceConnection } = thunkAPI.getState();
+  const allFencesAcls = concatAllFencesAcls(fenceConnection.connections);
+
   const sqon: ISqonGroupFilter = { ...args.sqon } || {
     op: BooleanOperators.and,
     content: [],
@@ -109,7 +113,23 @@ const beginAnalyse = createAsyncThunk<
     data: { file },
   } = data!;
 
-  return hydrateResults(file?.hits?.edges || []);
+  const files = hydrateResults(file?.hits?.edges || []);
+  const authorizedFileCount = getAuthorizedFilesCount(allFencesAcls, files);
+
+  if (!authorizedFileCount) {
+    Modal.error({
+      type: 'error',
+      title: 'Unauthorized files',
+      content:
+        'You are not authorized to analyze the files you have selected. Learn more about data access.',
+    });
+    return thunkAPI.rejectWithValue('0 authorized files');
+  }
+
+  return {
+    files,
+    authorizedFileCount,
+  };
 });
 
 const fetchAllBillingGroups = createAsyncThunk<
@@ -134,9 +154,9 @@ const fetchAllBillingGroups = createAsyncThunk<
   },
   {
     condition: (_, { getState }) => {
-      const { cavatica } = getState();
+      const { fenceCavatica } = getState();
 
-      return isEmpty(cavatica.billingGroups);
+      return isEmpty(fenceCavatica.billingGroups);
     },
   },
 );
@@ -187,8 +207,8 @@ const startBulkImportJob = createAsyncThunk<
   ICavaticaTreeNode,
   { rejectValue: string; state: RootState }
 >('cavatica/bulk/import', async (node, thunkAPI) => {
-  const { cavatica } = thunkAPI.getState();
-  const selectedFiles = cavatica.filesToCopy;
+  const { fenceCavatica } = thunkAPI.getState();
+  const selectedFiles = fenceCavatica.bulkImportData.files;
   const isProject = node.type === CAVATICA_TYPE.PROJECT;
 
   const cavaticaDRSItems = selectedFiles.map((file) => ({
@@ -236,5 +256,17 @@ const startBulkImportJob = createAsyncThunk<
       }),
   });
 });
+
+const getAuthorizedFilesCount = (fenceAcls: string[], files: IFileEntity[]) => {
+  let nbAuthorizedFiles = 0;
+  files.forEach(({ acl }) => {
+    const fileAcls = acl || [];
+    const hasAccess = acl.includes('*') || intersection(fenceAcls, fileAcls).length > 0;
+    if (hasAccess) {
+      nbAuthorizedFiles += 1;
+    }
+  });
+  return nbAuthorizedFiles;
+};
 
 export { fetchAllProjects, fetchAllBillingGroups, createProjet, beginAnalyse, startBulkImportJob };

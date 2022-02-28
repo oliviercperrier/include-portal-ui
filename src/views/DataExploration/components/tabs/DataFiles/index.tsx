@@ -21,10 +21,11 @@ import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavati
 import intl from 'react-intl-universal';
 import { IStudyEntity } from 'graphql/studies/models';
 import { intersection } from 'lodash';
-import useFenceConnections from 'hooks/useFenceConnection';
-import { beginAnalyse } from 'store/cavatica/thunks';
+import { beginAnalyse } from 'store/fenceCavatica/thunks';
+import { useFenceConnection } from 'store/fenceConnection';
 
 import styles from './index.module.scss';
+import { useFenceCavatica } from 'store/fenceCavatica';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -130,7 +131,8 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const { fencesAllAcls } = useFenceConnections();
+  const { isConnected, isInitializingAnalyse } = useFenceCavatica();
+  const { fencesAllAcls } = useFenceConnection();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
@@ -183,6 +185,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               disabled={selectedKeys.length === 0}
               type="primary"
               icon={<CloudUploadOutlined />}
+              loading={isInitializingAnalyse}
               onClick={() => {
                 if (selectedRows.length > CAVATICA_FILE_BATCH_SIZE || selectedAllResults) {
                   Modal.error({
@@ -230,9 +233,12 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
         dataSource={results.data.map((i) => ({ ...i, key: i.file_id }))}
         dictionary={getProTableDictionary()}
       />
-      {/* Check if user is connected */}
-      <AnalyseModal />
-      <CreateProjectModal />
+      {isConnected && (
+        <>
+          <AnalyseModal />
+          <CreateProjectModal />
+        </>
+      )}
     </>
   );
 };

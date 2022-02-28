@@ -1,13 +1,9 @@
-import { FENCE_CONNECTION_STATUSES } from 'common/fenceTypes';
-
-export enum STUDIES_FENCE_NAMES {
-  gen3 = 'gen3',
-}
+import { FENCE_NAMES } from 'common/fenceTypes';
 
 export type initialState = {
   studies: TFenceStudies;
-  loadingStudiesForFences: STUDIES_FENCE_NAMES[];
-  fencesError: STUDIES_FENCE_NAMES[];
+  loadingStudiesForFences: FENCE_NAMES[];
+  fencesError: FENCE_NAMES[];
 };
 
 export type TAclsByFenceName = {

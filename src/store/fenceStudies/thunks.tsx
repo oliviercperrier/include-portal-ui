@@ -1,12 +1,12 @@
 import flatMap from 'lodash/flatMap';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FENCE_CONNECTION_STATUSES } from 'common/fenceTypes';
+import { ALL_STUDIES_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { isEmpty } from 'lodash';
 import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/utils';
 import { RootState } from 'store/types';
 import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { sendRequest } from 'services/api';
-import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy, STUDIES_FENCE_NAMES } from './types';
+import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
 import { AxiosError } from 'axios';
 import { handleThunkApiReponse } from 'store/utils';
 
@@ -17,10 +17,9 @@ const fetchAllFenceStudies = createAsyncThunk<
 >('fenceStudies/fetch/all/studies', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
 
-  const fenceNames = Object.keys(fenceConnection.connections) as STUDIES_FENCE_NAMES[];
-  const aclsByFence = computeAclsByFence(fenceConnection.connections);
+  const aclsByFence = computeAclsByFence(fenceConnection.connections); // TODO change this
 
-  fenceNames.forEach(
+  ALL_STUDIES_FENCE_NAMES.forEach(
     async (fenceName) =>
       await thunkAPI.dispatch(
         fetchFenceStudies({
@@ -34,7 +33,7 @@ const fetchAllFenceStudies = createAsyncThunk<
 const fetchFenceStudies = createAsyncThunk<
   TFenceStudies,
   {
-    fenceName: STUDIES_FENCE_NAMES;
+    fenceName: FENCE_NAMES;
     userAcls: string[];
   },
   { rejectValue: string; state: RootState }
@@ -163,7 +162,7 @@ const getStudiesCountByNameAndAcl = async (
 
 const getAuthStudyIdsAndCounts = async (
   userAcls: string[],
-  fenceName: STUDIES_FENCE_NAMES,
+  fenceName: FENCE_NAMES,
 ): Promise<{
   error?: AxiosError;
   studies?: TFenceStudiesIdsAndCount;

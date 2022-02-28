@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { TeamOutlined } from '@ant-design/icons';
 import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 import EnvironmentVariables from 'helpers/EnvVariables';
-import { TCavaticaProjectWithMembers } from 'store/cavatica/types';
+import { TCavaticaProjectWithMembers } from 'store/fenceCavatica/types';
 
 import styles from './index.module.scss';
 

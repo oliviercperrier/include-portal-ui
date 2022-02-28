@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CAVATICA_TYPE, ICavaticaProject } from 'services/api/cavatica/models';
-import { initialState } from 'store/cavatica/types';
+import { initialState, TCavaticaProjectWithMembers } from 'store/fenceCavatica/types';
 import {
   beginAnalyse,
   createProjet,
@@ -9,7 +9,7 @@ import {
   startBulkImportJob,
 } from './thunks';
 
-export const CavaticaState: initialState = {
+export const FenceCavaticaState: initialState = {
   isAnalyseModalOpen: false,
   isCreateProjectModalOpen: false,
   isCreatingProject: false,
@@ -18,7 +18,10 @@ export const CavaticaState: initialState = {
   isInitializingAnalyse: false,
   isBulkImportLoading: false,
   isLoading: false,
-  filesToCopy: [],
+  bulkImportData: {
+    files: [],
+    authorizedFileCount: 0,
+  },
   projects: [],
   projectsTree: [],
   billingGroups: [],
@@ -33,9 +36,12 @@ const convertProjectToTreeNode = (project: ICavaticaProject) => ({
   type: CAVATICA_TYPE.PROJECT,
 });
 
-const cavaticaSlice = createSlice({
-  name: 'cavatica',
-  initialState: CavaticaState,
+const sortProjects = (projects: TCavaticaProjectWithMembers[]) =>
+  projects.sort((p1, p2) => (new Date(p1.modified_on) < new Date(p2.modified_on) ? 1 : -1));
+
+const fenceCavaticaSlice = createSlice({
+  name: 'fenceCavatica',
+  initialState: FenceCavaticaState,
   reducers: {
     toggleAnalyseModal: (state, action: PayloadAction<boolean>) => ({
       ...state,
@@ -57,7 +63,10 @@ const cavaticaSlice = createSlice({
     }),
     cancelAnalyse: (state) => ({
       ...state,
-      filesToCopy: [],
+      bulkImportData: {
+        files: [],
+        authorizedFileCount: 0,
+      },
       isAnalyseModalOpen: false,
     }),
   },
@@ -67,9 +76,10 @@ const cavaticaSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(fetchAllProjects.fulfilled, (state, action) => {
+      const sortedProjectList = sortProjects(action.payload);
       state.isLoading = false;
-      state.projects = action.payload;
-      state.projectsTree = action.payload.map((project) => convertProjectToTreeNode(project));
+      state.projects = sortedProjectList;
+      state.projectsTree = sortedProjectList.map((project) => convertProjectToTreeNode(project));
     });
     builder.addCase(fetchAllProjects.rejected, (state, action) => {
       state.isLoading = false;
@@ -90,12 +100,12 @@ const cavaticaSlice = createSlice({
     // BEGIN ANALYSE
     builder.addCase(beginAnalyse.pending, (state, action) => {
       state.isInitializingAnalyse = true;
-      state.isAnalyseModalOpen = true;
       state.newlyCreatedProject = undefined;
     });
     builder.addCase(beginAnalyse.fulfilled, (state, action) => {
       state.isInitializingAnalyse = false;
-      state.filesToCopy = action.payload;
+      state.isAnalyseModalOpen = true;
+      state.bulkImportData = action.payload;
     });
     builder.addCase(beginAnalyse.rejected, (state, action) => {
       state.isInitializingAnalyse = false;
@@ -118,19 +128,21 @@ const cavaticaSlice = createSlice({
       state.isCreatingProject = true;
     });
     builder.addCase(createProjet.fulfilled, (state, action) => {
-      const newProjectTreeNode = convertProjectToTreeNode(action.payload.newProject);
-      state.isCreatingProject = false;
-      state.isCreateProjectModalOpen = false;
-      state.isAnalyseModalOpen = action.payload.isAnalyseModalVisible;
-      state.newlyCreatedProject = newProjectTreeNode;
-      state.projects = [
+      const newProjectList = [
         ...state.projects,
         {
           ...action.payload.newProject,
           memberCount: 1,
         },
       ];
-      state.projectsTree = [...state.projectsTree, newProjectTreeNode];
+      const sortedProjectList = sortProjects(newProjectList);
+
+      state.isCreatingProject = false;
+      state.isCreateProjectModalOpen = false;
+      state.isAnalyseModalOpen = action.payload.isAnalyseModalVisible;
+      state.newlyCreatedProject = convertProjectToTreeNode(action.payload.newProject);
+      state.projects = sortedProjectList;
+      state.projectsTree = sortedProjectList.map((project) => convertProjectToTreeNode(project));
     });
     builder.addCase(createProjet.rejected, (state, action) => {
       state.isCreatingProject = false;
@@ -139,5 +151,5 @@ const cavaticaSlice = createSlice({
   },
 });
 
-export const cavaticaActions = cavaticaSlice.actions;
-export default cavaticaSlice.reducer;
+export const fenceCavaticaActions = fenceCavaticaSlice.actions;
+export default fenceCavaticaSlice.reducer;

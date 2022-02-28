@@ -2,9 +2,9 @@ import Empty from '@ferlab/ui/core/components/Empty';
 import { Form, Input, Modal, Select, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useCavatica } from 'store/cavatica';
-import { cavaticaActions } from 'store/cavatica/slice';
-import { createProjet, fetchAllBillingGroups } from 'store/cavatica/thunks';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
+import { createProjet, fetchAllBillingGroups } from 'store/fenceCavatica/thunks';
 import intl from 'react-intl-universal';
 
 import styles from './index.module.scss';
@@ -31,11 +31,11 @@ const CreateProjectModal = ({
   const dispatch = useDispatch();
   const [isFormValid, setFormValid] = useState(false);
   const { isCreateProjectModalOpen, isFetchingBillingGroup, billingGroups, isCreatingProject } =
-    useCavatica();
+    useFenceCavatica();
   const handleOnCancel = () => {
     form.resetFields();
     setFormValid(false);
-    dispatch(cavaticaActions.cancelCreateProject(openAnalyseModalOnClose));
+    dispatch(fenceCavaticaActions.cancelCreateProject(openAnalyseModalOnClose));
   };
 
   const handleOnOk = () => {
@@ -56,6 +56,7 @@ const CreateProjectModal = ({
       onOk={handleOnOk}
       onCancel={handleOnCancel}
       className={styles.cavaticaCreateProjectModal}
+      destroyOnClose
     >
       <Form
         layout="vertical"

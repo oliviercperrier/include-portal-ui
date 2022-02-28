@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialState, STUDIES_FENCE_NAMES } from 'store/fenceStudies/types';
+import { FENCE_NAMES } from 'common/fenceTypes';
+import { initialState } from 'store/fenceStudies/types';
 import { fetchFenceStudies } from './thunks';
 
 export const FenceStudiesState: initialState = {
@@ -8,13 +9,13 @@ export const FenceStudiesState: initialState = {
   fencesError: [],
 };
 
-const removeFenceAuthError = (state: STUDIES_FENCE_NAMES[], fenceName: STUDIES_FENCE_NAMES) =>
+const removeFenceAuthError = (state: FENCE_NAMES[], fenceName: FENCE_NAMES) =>
   state.filter((name) => name !== fenceName);
 
-const removeLoadingFenceStudies = (state: initialState, fenceName: STUDIES_FENCE_NAMES) =>
+const removeLoadingFenceStudies = (state: initialState, fenceName: FENCE_NAMES) =>
   state.loadingStudiesForFences.filter((name) => name !== fenceName);
 
-const addLoadingFenceStudies = (state: initialState, fenceName: STUDIES_FENCE_NAMES) =>
+const addLoadingFenceStudies = (state: initialState, fenceName: FENCE_NAMES) =>
   state.loadingStudiesForFences.includes(fenceName)
     ? state.loadingStudiesForFences
     : [...state.loadingStudiesForFences, fenceName];

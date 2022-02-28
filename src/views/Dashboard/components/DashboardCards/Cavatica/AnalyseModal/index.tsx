@@ -1,33 +1,25 @@
 import { FileTextOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, List, Modal, Space, Tag, TreeSelect, Typography } from 'antd';
 import { IFileEntity } from 'graphql/files/models';
-import useFenceConnections from 'hooks/useFenceConnection';
-import { groupBy, intersection } from 'lodash';
+import { groupBy } from 'lodash';
 import { LegacyDataNode } from 'rc-tree-select/lib/TreeSelect';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { CavaticaApi } from 'services/api/cavatica';
 import { CAVATICA_TYPE } from 'services/api/cavatica/models';
-import { useCavatica } from 'store/cavatica';
-import { cavaticaActions } from 'store/cavatica/slice';
-import { fetchAllProjects, startBulkImportJob } from 'store/cavatica/thunks';
-import { ICavaticaTreeNode } from 'store/cavatica/types';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
+import { fetchAllProjects, startBulkImportJob } from 'store/fenceCavatica/thunks';
+import { ICavaticaTreeNode } from 'store/fenceCavatica/types';
 
 import styles from './index.module.scss';
 
 const { Text } = Typography;
 
 const AnalyseModal = () => {
-  const {
-    isAnalyseModalOpen,
-    projectsTree,
-    isLoading,
-    filesToCopy,
-    newlyCreatedProject,
-    isInitializingAnalyse,
-  } = useCavatica();
+  const { isAnalyseModalOpen, projectsTree, isLoading, bulkImportData, newlyCreatedProject } =
+    useFenceCavatica();
   const dispatch = useDispatch();
-  const { fencesAllAcls } = useFenceConnections();
   const [selectedTreeNode, setSelectedTreeNode] = useState<ICavaticaTreeNode | undefined>();
   const [localProjectTree, setLocalProjectTree] = useState<ICavaticaTreeNode[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -35,7 +27,7 @@ const AnalyseModal = () => {
   const handleOnCancel = () => {
     setLocalProjectTree(projectsTree);
     setSelectedTreeNode(undefined);
-    dispatch(cavaticaActions.cancelAnalyse());
+    dispatch(fenceCavaticaActions.cancelAnalyse());
   };
 
   const handleOnOk = () => dispatch(startBulkImportJob(selectedTreeNode!));
@@ -47,7 +39,7 @@ const AnalyseModal = () => {
     // Need a timeout else the dropdown stay visible
     // when the create project modal open
     setTimeout(() => {
-      dispatch(cavaticaActions.beginCreateProject());
+      dispatch(fenceCavaticaActions.beginCreateProject());
     }, 100);
   };
 
@@ -102,7 +94,7 @@ const AnalyseModal = () => {
       visible={isAnalyseModalOpen}
       okText="Copy files"
       okButtonProps={{
-        disabled: !selectedTreeNode?.id || !getAuthorizedFilesCount(fencesAllAcls, filesToCopy),
+        disabled: !selectedTreeNode?.id,
       }}
       onOk={handleOnOk}
       onCancel={handleOnCancel}
@@ -161,15 +153,14 @@ const AnalyseModal = () => {
         <Text>
           <Text>You are authorized to copy</Text>{' '}
           <Tag className={styles.authorizedFilesTag} icon={<FileTextOutlined />}>
-            {getAuthorizedFilesCount(fencesAllAcls, filesToCopy)} files
+            {bulkImportData.authorizedFileCount} files
           </Tag>{' '}
-          <Text>(out of {filesToCopy.length} selected) to your Cavatica workspace.</Text>
+          <Text>(out of {bulkImportData.files.length} selected) to your Cavatica workspace.</Text>
         </Text>
         <List
           size="small"
           className={styles.studiesList}
-          dataSource={aggregateFilesToStudy(filesToCopy)}
-          loading={isInitializingAnalyse}
+          dataSource={aggregateFilesToStudy(bulkImportData.files)}
           renderItem={(item) => {
             return (
               <List.Item>
@@ -184,18 +175,6 @@ const AnalyseModal = () => {
       </Space>
     </Modal>
   );
-};
-
-const getAuthorizedFilesCount = (fenceAcls: string[], files: IFileEntity[]) => {
-  let nbAuthorizedFiles = 0;
-  files.forEach(({ acl }) => {
-    const fileAcls = acl || [];
-    const hasAccess = acl.includes('*') || intersection(fenceAcls, fileAcls).length > 0;
-    if (hasAccess) {
-      nbAuthorizedFiles += 1;
-    }
-  });
-  return nbAuthorizedFiles;
 };
 
 const aggregateFilesToStudy = (filesToCopy: IFileEntity[]) =>

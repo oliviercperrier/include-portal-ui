@@ -26,8 +26,15 @@ const exchangeCode = (fence: FENCE_NAMES, code: string) =>
     },
   });
 
+const disconnect = (fence: FENCE_NAMES) =>
+  sendRequest({
+    url: `${FENCE_API_URL}/${fence}/token`,
+    method: 'DELETE',
+  });
+
 export const FenceApi = {
   isAuthenticated,
   fetchInfo,
   exchangeCode,
+  disconnect,
 };

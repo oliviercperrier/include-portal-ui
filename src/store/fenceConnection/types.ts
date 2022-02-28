@@ -5,7 +5,6 @@ export type initialState = {
   loadingFences: FENCE_NAMES[];
   fencesConnectError: FENCE_NAMES[];
   fencesDisconnectError: FENCE_NAMES[];
-  connectedFences: FENCE_NAMES[];
   connections: TFenceConnections;
   fencesInfo: {
     [FENCE_NAMES.gen3]?: IFenceInfo;

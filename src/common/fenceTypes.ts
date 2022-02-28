@@ -4,6 +4,7 @@ export enum FENCE_NAMES {
 }
 
 export const ALL_FENCE_NAMES = [FENCE_NAMES.gen3, FENCE_NAMES.cavatica];
+export const ALL_STUDIES_FENCE_NAMES = [FENCE_NAMES.gen3];
 
 export enum FENCE_CONNECTION_STATUSES {
   connected = 'connected',

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Button, List, Space } from 'antd';
 import intl from 'react-intl-universal';
@@ -10,22 +9,22 @@ import CavaticaListItem from './ListItem';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardConnectPlaceholder from 'views/Dashboard/components/CardConnectPlaceholder';
 import CavaticaIcon from 'components/Icons/CavaticaIcon';
-import { cavaticaActions } from 'store/cavatica/slice';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { useDispatch } from 'react-redux';
 import CreateProjectModal from './CreateProjectModal';
-import { fetchAllProjects } from 'store/cavatica/thunks';
-import { useCavatica } from 'store/cavatica';
-import { TCavaticaProjectWithMembers } from 'store/cavatica/types';
+import { TCavaticaProjectWithMembers } from 'store/fenceCavatica/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
-import { connectToFence } from 'store/fenceConnection/thunks';
+import { connectToFence, disconnectFromFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { useEffect } from 'react';
+import { fetchAllProjects } from 'store/fenceCavatica/thunks';
 
 import styles from './index.module.scss';
 
 const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
   const dispatch = useDispatch();
-  const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
-  const { projects, isLoading } = useCavatica();
+  const { projects, isLoading, isConnected, connectionLoading } = useFenceCavatica();
 
   useEffect(() => {
     if (isConnected) {
@@ -75,8 +74,9 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                       size="small"
                       danger
                       icon={<DisconnectOutlined />}
-                      onClick={() => setIsConnected(false)}
+                      onClick={() => dispatch(disconnectFromFence(FENCE_NAMES.cavatica))}
                       className={styles.disconnectBtn}
+                      loading={connectionLoading}
                     >
                       {intl.get('screen.dashboard.cards.cavatica.disconnect')}
                     </Button>
@@ -88,14 +88,19 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
               className={styles.cavaticaProjectsList}
               bordered
               itemLayout="vertical"
-              loading={isLoading}
+              loading={isLoading || connectionLoading}
               locale={{
                 emptyText: isConnected ? (
                   <Empty
                     imageType="grid"
                     description={intl.get('screen.dashboard.cards.cavatica.noProjects')}
                     action={
-                      <Button type="primary" icon={<PlusOutlined />} size="small">
+                      <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        size="small"
+                        onClick={() => dispatch(fenceCavaticaActions.beginCreateProject())}
+                      >
                         {intl.get('screen.dashboard.cards.cavatica.createNewProject')}
                       </Button>
                     }
@@ -119,7 +124,7 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                   icon={<PlusOutlined />}
                   className={styles.newProjectBtn}
                   size="small"
-                  onClick={() => dispatch(cavaticaActions.beginCreateProject())}
+                  onClick={() => dispatch(fenceCavaticaActions.beginCreateProject())}
                 >
                   {intl.get('screen.dashboard.cards.cavatica.newProject')}
                 </Button>

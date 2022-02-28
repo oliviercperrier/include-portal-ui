@@ -11,9 +11,9 @@ import {
   ICavaticaProjectMember,
 } from './models';
 
-const FENCE_API_URL = EnvironmentVariables.configFor('FENCE_API_URL');
-const CAVATICA_FENCE_PROXY = EnvironmentVariables.configFor('CAVATICA_API');
-const CAVATICA_PROXY_URL = `${FENCE_API_URL}/${CAVATICA_FENCE_PROXY}`;
+const KEY_MANAGER_API_URL = EnvironmentVariables.configFor('KEY_MANAGER_API_URL');
+const CAVATICA_FENCE_PROXY = EnvironmentVariables.configFor('CAVATICA_FENCE_PROXY');
+const CAVATICA_PROXY_URL = `${KEY_MANAGER_API_URL}/${CAVATICA_FENCE_PROXY}/v2`;
 
 const headers = () => ({
   'Content-Type': 'application/json',

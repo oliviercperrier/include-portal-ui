@@ -50,10 +50,11 @@ const AnalyseModal = () => {
   );
 
   useEffect(() => {
-    // TODO Check if connected
-    dispatch(fetchAllProjects());
+    if (isAnalyseModalOpen) {
+      dispatch(fetchAllProjects());
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [isAnalyseModalOpen]);
 
   useEffect(() => {
     setLocalProjectTree(projectsTree);

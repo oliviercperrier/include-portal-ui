@@ -5,12 +5,8 @@ import {
   IParticipantObservedPhenotype,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
-import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
-import {
-  THandleReportDownload,
-  TPagingConfig,
-  TPagingConfigCb,
-} from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ExpandableCell from 'components/uiKit/table/ExpendableCell';
 import {
@@ -32,9 +28,10 @@ import { STATIC_ROUTES } from 'utils/routes';
 import { addFilter } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
-import { fetchTsvReport } from 'store/report/thunks';
+import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
+import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
 
@@ -42,7 +39,6 @@ interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
-  downloadReport: THandleReportDownload;
   sqon?: ISqonGroupFilter;
 }
 
@@ -228,22 +224,31 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const ParticipantsTab = ({
-  results,
-  setPagingConfig,
-  pagingConfig,
-  downloadReport,
-  sqon,
-}: OwnProps) => {
+const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
+  const getReportSqon = (): any =>
+    selectedAllResults || !selectedKeys.length
+      ? sqon
+      : generateSelectionSqon(TAB_IDS.PARTICIPANTS, selectedKeys);
+
   const menu = (
-    <Menu onClick={(e) => downloadReport(e.key as ReportType, selectedKeys, selectedAllResults)}>
+    <Menu
+      onClick={(e) =>
+        dispatch(
+          fetchReport({
+            data: {
+              sqon: getReportSqon(),
+              name: e.key,
+            },
+          }),
+        )
+      }
+    >
       <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
-      {/* <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Participant & Family Members</Menu.Item> */}
     </Menu>
   );
 
@@ -281,7 +286,7 @@ const ParticipantsTab = ({
               columnStates: userInfo?.config.data_exploration?.tables?.participants?.columns,
               columns: defaultColumns,
               index: INDEXES.PARTICIPANT,
-              sqon,
+              sqon: getReportSqon(),
             }),
           ),
         onSelectAllResultsChange: setSelectedAllResults,

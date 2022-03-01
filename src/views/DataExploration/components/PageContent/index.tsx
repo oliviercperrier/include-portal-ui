@@ -31,7 +31,7 @@ import SummaryTab from 'views/DataExploration/components/tabs/Summary';
 import BiospecimensTab from 'views/DataExploration/components/tabs/Biospecimens';
 import DataFilesTabs from 'views/DataExploration/components/tabs/DataFiles';
 import ParticipantsTab from 'views/DataExploration/components/tabs/Participants';
-import { Key, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   createSavedFilter,
@@ -41,10 +41,7 @@ import {
   updateSavedFilter,
 } from 'store/savedFilter/thunks';
 import { useSavedFilter } from 'store/savedFilter';
-import { fetchReport } from 'store/report/thunks';
-import { ReportType } from 'services/api/reports/models';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
-import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { useHistory } from 'react-router-dom';
 
 import styles from './index.module.scss';
@@ -113,31 +110,6 @@ const PageContent = ({
       : combineExtendedMappings([participantMapping, fileMapping, biospecimenMapping])?.data?.find(
           (mapping: ExtendedMapping) => key === mapping.field,
         )?.displayName || key;
-  };
-
-  const handleDownloadReport = async (
-    reportType: ReportType,
-    selectedKeys: Key[],
-    selectedAllResults: boolean,
-  ) => {
-    let sqon;
-    if (selectedAllResults || !selectedKeys.length) {
-      sqon =
-        reportType === ReportType.BIOSEPCIMEN_DATA
-          ? biospecimenResolvedSqon
-          : participantResolvedSqon;
-    } else {
-      sqon = generateSelectionSqon(reportType, selectedKeys);
-    }
-
-    dispatch(
-      fetchReport({
-        data: {
-          sqon,
-          name: reportType,
-        },
-      }),
-    );
   };
 
   const handleOnUpdateFilter = (filter: ISavedFilter) => dispatch(updateSavedFilter(filter));
@@ -212,7 +184,6 @@ const PageContent = ({
             results={participantResults}
             setPagingConfig={setPagingConfigParticipant}
             pagingConfig={pagingConfigParticipant}
-            downloadReport={handleDownloadReport}
             sqon={participantResolvedSqon}
           />
         </Tabs.TabPane>
@@ -231,7 +202,6 @@ const PageContent = ({
             results={biospecimenResults}
             setPagingConfig={setPagingConfigBiospecimen}
             pagingConfig={pagingConfigBiospecimen}
-            downloadReport={handleDownloadReport}
             sqon={biospecimenResolvedSqon}
           />
         </Tabs.TabPane>

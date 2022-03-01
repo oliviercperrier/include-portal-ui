@@ -2,7 +2,7 @@ import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/opera
 import { Key } from 'react';
 import { TAB_IDS } from 'views/DataExploration/utils/constant';
 
-export const generateSelectionSqon = (type: string, ids: Key[]) => {
+export const generateSelectionSqon = (type: Omit<TAB_IDS, TAB_IDS.SUMMARY>, ids: Key[]) => {
   let field;
 
   switch (type) {

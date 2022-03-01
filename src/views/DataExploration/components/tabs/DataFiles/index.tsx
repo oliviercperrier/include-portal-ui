@@ -2,7 +2,11 @@ import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import { CloudUploadOutlined, LockOutlined, SafetyOutlined, UnlockFilled } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
-import { CAVATICA_FILE_BATCH_SIZE, DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
+import {
+  CAVATICA_FILE_BATCH_SIZE,
+  DEFAULT_PAGE_SIZE,
+  TAB_IDS,
+} from 'views/DataExploration/utils/constant';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -27,6 +31,7 @@ import { useFenceCavatica } from 'store/fenceCavatica';
 import { connectToFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
 import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
+import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
 
@@ -208,7 +213,10 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
                 columnStates: userInfo?.config.data_exploration?.tables?.datafiles?.columns,
                 columns: getDefaultColumns(fencesAllAcls),
                 index: INDEXES.FILE,
-                sqon,
+                sqon:
+                  selectedAllResults || !selectedKeys.length
+                    ? sqon
+                    : generateSelectionSqon(TAB_IDS.DATA_FILES, selectedKeys),
               }),
             ),
           onColumnSortChange: (newState) =>

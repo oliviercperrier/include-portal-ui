@@ -91,6 +91,12 @@ const fr = {
         },
         bulk: {
           import: 'Unable to copy files to your project',
+          fetchFiles: 'Unable to fetch selected files',
+        },
+        fileAuth: {
+          title: 'Unauthorized files',
+          description:
+            'You are not authorized to analyze the files you have selected. Learn more about data access.',
         },
       },
       success: {
@@ -103,8 +109,8 @@ const fr = {
             copySuccess: 'Your files have been copied to: <strong>{destination}</strong>',
             possibleDelays:
               'If you have uploaded more than 500 files in the last 5 minutes, the import may take a little longer.',
-            openProject: 'Open project in Cavatica'
-            },
+            openProject: 'Open project in Cavatica',
+          },
         },
       },
     },

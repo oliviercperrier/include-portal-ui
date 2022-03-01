@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Modal, notification } from 'antd';
+import { Modal } from 'antd';
 import { intersection, isEmpty } from 'lodash';
 import { CavaticaApi } from 'services/api/cavatica';
 import {
@@ -23,6 +23,7 @@ import { CAVATICA_FILE_BATCH_SIZE } from 'views/DataExploration/utils/constant';
 import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
 import { concatAllFencesAcls } from 'store/fenceConnection/utils';
+import { globalActions } from 'store/global';
 
 const USER_BASE_URL = EnvironmentVariables.configFor('CAVATICA_USER_BASE_URL');
 
@@ -37,10 +38,13 @@ const fetchAllProjects = createAsyncThunk<
     const projects = data?.items || [];
 
     if (error) {
-      notification.error({
-        message: intl.get('api.cavatica.error.title'),
-        description: intl.get('api.cavatica.error.projects.fetch'),
-      });
+      thunkAPI.dispatch(
+        globalActions.displayNotification({
+          type: 'error',
+          message: intl.get('api.cavatica.error.title'),
+          description: intl.get('api.cavatica.error.projects.fetch'),
+        }),
+      );
       return thunkAPI.rejectWithValue(error.message);
     }
 
@@ -102,10 +106,13 @@ const beginAnalyse = createAsyncThunk<
   });
 
   if (error) {
-    notification.error({
-      message: 'Error',
-      description: 'Unable to fetch selected files',
-    });
+    thunkAPI.dispatch(
+      globalActions.displayNotification({
+        type: 'error',
+        message: intl.get('api.cavatica.error.title'),
+        description: intl.get('api.cavatica.error.bulk.fetchFiles'),
+      }),
+    );
     return thunkAPI.rejectWithValue(error.message);
   }
 
@@ -119,9 +126,8 @@ const beginAnalyse = createAsyncThunk<
   if (!authorizedFileCount) {
     Modal.error({
       type: 'error',
-      title: 'Unauthorized files',
-      content:
-        'You are not authorized to analyze the files you have selected. Learn more about data access.',
+      title: intl.get('api.cavatica.error.fileAuth.title'),
+      content: intl.get('api.cavatica.error.fileAuth.description'),
     });
     return thunkAPI.rejectWithValue('0 authorized files');
   }
@@ -146,10 +152,13 @@ const fetchAllBillingGroups = createAsyncThunk<
       data: data?.items || [],
       reject: thunkAPI.rejectWithValue,
       onError: () =>
-        notification.error({
-          message: intl.get('api.cavatica.error.title'),
-          description: intl.get('api.cavatica.error.billingGroups.fetch'),
-        }),
+        thunkAPI.dispatch(
+          globalActions.displayNotification({
+            type: 'error',
+            message: intl.get('api.cavatica.error.title'),
+            description: intl.get('api.cavatica.error.billingGroups.fetch'),
+          }),
+        ),
     });
   },
   {
@@ -181,18 +190,24 @@ const createProjet = createAsyncThunk<
     reject: thunkAPI.rejectWithValue,
     onError: () => {
       if (args.showErrorNotification) {
-        notification.error({
-          message: intl.get('api.cavatica.error.title'),
-          description: intl.get('api.cavatica.error.projects.create'),
-        });
+        thunkAPI.dispatch(
+          globalActions.displayNotification({
+            type: 'error',
+            message: intl.get('api.cavatica.error.title'),
+            description: intl.get('api.cavatica.error.projects.create'),
+          }),
+        );
       }
     },
     onSuccess: () => {
       if (args.showSuccessNotification) {
-        notification.success({
-          message: intl.get('api.cavatica.success.title'),
-          description: intl.get('api.cavatica.success.projects.create'),
-        });
+        thunkAPI.dispatch(
+          globalActions.displayNotification({
+            type: 'success',
+            message: intl.get('api.cavatica.success.title'),
+            description: intl.get('api.cavatica.success.projects.create'),
+          }),
+        );
       }
     },
     data: {
@@ -225,35 +240,41 @@ const startBulkImportJob = createAsyncThunk<
     data,
     reject: thunkAPI.rejectWithValue,
     onError: () =>
-      notification.error({
-        message: intl.get('api.cavatica.error.title'),
-        description: intl.get('api.cavatica.error.bulk.import'),
-      }),
+      thunkAPI.dispatch(
+        globalActions.displayNotification({
+          type: 'error',
+          message: intl.get('api.cavatica.error.title'),
+          description: intl.get('api.cavatica.error.bulk.import'),
+        }),
+      ),
     onSuccess: () =>
-      notification.success({
-        message: intl.get('api.cavatica.success.title'),
-        description: (
-          <div>
-            {intl.getHTML('api.cavatica.success.bulk.import.copySuccess', {
-              destination: node.title,
-            })}
-            <br />
-            <br />
-            {intl.get('api.cavatica.success.bulk.import.possibleDelays')}
-            <br />
-            <br />
-            <a
-              href={`${USER_BASE_URL}${isProject ? node.id : node.project!}`}
-              style={{ color: 'unset', textDecoration: 'underline' }}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {intl.get('api.cavatica.success.bulk.import.openProject')}
-            </a>
-          </div>
-        ),
-        duration: 5,
-      }),
+      thunkAPI.dispatch(
+        globalActions.displayNotification({
+          type: 'success',
+          message: intl.get('api.cavatica.success.title'),
+          description: (
+            <div>
+              {intl.getHTML('api.cavatica.success.bulk.import.copySuccess', {
+                destination: node.title,
+              })}
+              <br />
+              <br />
+              {intl.get('api.cavatica.success.bulk.import.possibleDelays')}
+              <br />
+              <br />
+              <a
+                href={`${USER_BASE_URL}${isProject ? node.id : node.project!}`}
+                style={{ color: 'unset', textDecoration: 'underline' }}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {intl.get('api.cavatica.success.bulk.import.openProject')}
+              </a>
+            </div>
+          ),
+          duration: 5,
+        }),
+      ),
   });
 });
 

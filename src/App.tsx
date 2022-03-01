@@ -18,7 +18,7 @@ import PageLayout from 'components/Layout';
 import Authenticator from 'auth/Authenticator';
 import ErrorPage from 'views/Error';
 import loadable from '@loadable/component';
-import { useGlobals } from 'store/global';
+import { useLang } from 'store/global';
 import { ConfigProvider } from 'antd';
 import { LANG } from 'common/constants';
 import frFR from 'antd/lib/locale/fr_FR';
@@ -26,6 +26,7 @@ import enUS from 'antd/lib/locale/en_US';
 import ErrorBoundary from 'components/ErrorBoundary';
 import FenceRedirect from 'views/FenceRedirect';
 import { FENCE_NAMES } from 'common/fenceTypes';
+import NotificationContextHolder from 'components/utils/NotificationContextHolder';
 
 const loadableProps = { fallback: <Spinner size="large" /> };
 const Dashboard = loadable(() => import('views/Dashboard'), loadableProps);
@@ -36,7 +37,7 @@ const DataExploration = loadable(() => import('views/DataExploration'), loadable
 const JoinPage = loadable(() => import('views/Join'), loadableProps);
 
 const App = () => {
-  const { lang } = useGlobals();
+  const lang = useLang();
   const { keycloak, initialized } = useKeycloak();
   const keycloakIsReady = keycloak && initialized;
 
@@ -96,6 +97,7 @@ const App = () => {
                 </ProtectedRoute>
                 <Redirect from="*" to={STATIC_ROUTES.DASHBOARD} />
               </Switch>
+              <NotificationContextHolder />
             </Router>
           </Authenticator>
         ) : (

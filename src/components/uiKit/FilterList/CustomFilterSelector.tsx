@@ -1,17 +1,14 @@
 import FilterSelector, {
   FilterSelectorProps,
-} from "@ferlab/ui/core/components/filters/FilterSelector";
-import {
-  getQueryBuilderCache,
-  useFilters,
-} from "@ferlab/ui/core/data/filters/utils";
-import { resolveSyntheticSqon } from "@ferlab/ui/core/data/sqon/utils";
-import { Spin } from "antd";
-import { useEffect } from "react";
-import useGetAggregations from "hooks/graphql/useGetAggregations";
-import { ExtendedMappingResults } from "graphql/models";
-import { AGGREGATION_QUERY } from "graphql/queries";
-import { TCustomFilterMapper } from ".";
+} from '@ferlab/ui/core/components/filters/FilterSelector';
+import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
+import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
+import { Spin } from 'antd';
+import { useEffect } from 'react';
+import useGetAggregations from 'hooks/graphql/useGetAggregations';
+import { ExtendedMappingResults } from 'graphql/models';
+import { AGGREGATION_QUERY } from 'graphql/queries';
+import { TCustomFilterMapper } from '.';
 
 type OwnProps = FilterSelectorProps & {
   index: string;
@@ -41,15 +38,15 @@ const CustomFilterSelector = ({
 
   const allSqons = getQueryBuilderCache(cacheKey).state;
 
-  const newQueryFilters = filterMapper
-    ? filterMapper(queryFilters)
-    : queryFilters;
+  const resolvedSqon = filterMapper
+    ? filterMapper(resolveSyntheticSqon(allSqons, queryFilters))
+    : resolveSyntheticSqon(allSqons, queryFilters);
   const results = useGetAggregations(
     {
-      sqon: resolveSyntheticSqon(allSqons, newQueryFilters),
+      sqon: resolvedSqon,
     },
     AGGREGATION_QUERY(index, [filterKey], extendedMappingResults),
-    index
+    index,
   );
 
   useEffect(() => {

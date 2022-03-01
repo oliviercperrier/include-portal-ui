@@ -17,8 +17,14 @@ import styles from './index.module.scss';
 const { Text } = Typography;
 
 const AnalyseModal = () => {
-  const { isAnalyseModalOpen, projectsTree, isLoading, bulkImportData, newlyCreatedProject } =
-    useFenceCavatica();
+  const {
+    isAnalyseModalOpen,
+    projectsTree,
+    isLoading,
+    bulkImportData,
+    newlyCreatedProject,
+    isCopyingFiles,
+  } = useFenceCavatica();
   const dispatch = useDispatch();
   const [selectedTreeNode, setSelectedTreeNode] = useState<ICavaticaTreeNode | undefined>();
   const [localProjectTree, setLocalProjectTree] = useState<ICavaticaTreeNode[]>([]);
@@ -96,6 +102,7 @@ const AnalyseModal = () => {
       okText="Copy files"
       okButtonProps={{
         disabled: !selectedTreeNode?.id,
+        loading: isCopyingFiles,
       }}
       onOk={handleOnOk}
       onCancel={handleOnCancel}

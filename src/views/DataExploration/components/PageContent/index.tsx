@@ -76,9 +76,9 @@ const PageContent = ({
   const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
 
-  const participantResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForParticipant(filters));
-  const biospecimenResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForBiospecimen(filters));
-  const fileResolvedSqon = resolveSyntheticSqon(allSqons, mapFilterForFiles(filters));
+  const participantResolvedSqon = mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters));
+  const biospecimenResolvedSqon = mapFilterForBiospecimen(resolveSyntheticSqon(allSqons, filters));
+  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, filters));
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,

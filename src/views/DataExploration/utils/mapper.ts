@@ -1,4 +1,11 @@
-import { IValueContent, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import {
+  IValueContent,
+  ISyntheticSqon,
+  ISqonGroupFilter,
+  TSqonContent,
+  IValueFilter,
+} from '@ferlab/ui/core/data/sqon/types';
+import { isBooleanOperator, isEmptySqon } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
 
@@ -27,47 +34,49 @@ const getPrefix = (field: IValueContent, fieldPrefixMaps: IFieldPrefixMap[]) => 
   return fieldPrefixMap ? fieldPrefixMap.prefix : '';
 };
 
-const mapFilters = (
-  sqonFilters: ISyntheticSqon,
+const recursiveMap = (
+  sqon: ISqonGroupFilter | IValueFilter,
   fieldPrefixMaps: IFieldPrefixMap[],
-): ISyntheticSqon => {
-  const sqonToMap = {
-    ...sqonFilters,
-  };
+): ISqonGroupFilter => {
+  if (isEmptySqon(sqon as ISyntheticSqon)) {
+    return sqon as ISqonGroupFilter;
+  }
 
-  const newContent = (sqonToMap.content || []).map((c) => {
-    if (typeof c !== 'object') {
-      return c;
-    }
+  const getNewContent = (sqon: ISqonGroupFilter): TSqonContent =>
+    sqon.content.map((c: any) => recursiveMap(c, fieldPrefixMaps));
 
-    const cc = c.content as IValueContent;
-    return {
-      ...c,
-      content: {
-        ...cc,
-        field: `${getPrefix(cc, fieldPrefixMaps)}${cc.field}`,
-      },
-    };
+  if (isBooleanOperator(sqon)) {
+    return Object.assign({
+      content: getNewContent(sqon as ISqonGroupFilter),
+      op: sqon.op,
+    });
+  }
+
+  const valueSqon = sqon as IValueFilter;
+
+  return Object.assign({
+    content: {
+      ...valueSqon.content,
+      field: `${getPrefix(valueSqon.content, fieldPrefixMaps)}${valueSqon.content.field}`,
+    },
+    op: sqon.op,
   });
-
-  sqonToMap.content = newContent;
-  return sqonToMap;
 };
 
-export const mapFilterForParticipant = (sqonFilters: ISyntheticSqon) =>
-  mapFilters(sqonFilters, [
+export const mapFilterForParticipant = (sqonFilters: ISqonGroupFilter) =>
+  recursiveMap(sqonFilters, [
     filePrefixMap,
     //biospecimenPrefixMap
   ]);
 
-export const mapFilterForFiles = (sqonFilters: ISyntheticSqon) =>
-  mapFilters(sqonFilters, [
+export const mapFilterForFiles = (sqonFilters: ISqonGroupFilter) =>
+  recursiveMap(sqonFilters, [
     participantPrefixMap,
     //biospecimenPrefixMap
   ]);
 
-export const mapFilterForBiospecimen = (sqonFilters: ISyntheticSqon) =>
-  mapFilters(sqonFilters, [
+export const mapFilterForBiospecimen = (sqonFilters: ISqonGroupFilter) =>
+  recursiveMap(sqonFilters, [
     filePrefixMap,
     {
       // Biospecimen only 1 participant so no 's'

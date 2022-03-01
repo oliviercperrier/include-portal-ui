@@ -43,9 +43,9 @@ const CreateProjectModal = ({
   };
 
   useEffect(() => {
-    if (isCreateProjectModalOpen) {
+    //if (isCreateProjectModalOpen) {
       dispatch(fetchAllBillingGroups());
-    }
+    //}
     // eslint-disable-next-line
   }, [isCreateProjectModalOpen]);
 

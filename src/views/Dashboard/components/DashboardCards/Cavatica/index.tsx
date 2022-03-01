@@ -115,7 +115,7 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                   />
                 ),
               }}
-              dataSource={isConnected ? projects : []} // just for testing before implementing real data
+              dataSource={isConnected ? projects : []}
               renderItem={(item) => <CavaticaListItem id={item.id} data={item} />}
             ></List>
             {(isConnected ? projects : []).length > 0 && (

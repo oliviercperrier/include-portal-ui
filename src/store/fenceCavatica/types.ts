@@ -10,7 +10,8 @@ export type initialState = {
   isInitializingAnalyse: boolean;
   isBulkImportLoading: boolean;
   isLoading: boolean;
-  bulkImportData: IBulkImportData,
+  beginAnalyseAfterConnection: boolean;
+  bulkImportData: IBulkImportData;
   projects: TCavaticaProjectWithMembers[];
   projectsTree: ICavaticaTreeNode[];
   billingGroups: ICavaticaBillingGroup[];
@@ -19,8 +20,8 @@ export type initialState = {
 };
 
 export interface IBulkImportData {
-  files: IFileEntity[],
-  authorizedFileCount: number
+  files: IFileEntity[];
+  authorizedFileCount: number;
 }
 
 export type TCavaticaProjectWithMembers = ICavaticaProject & {

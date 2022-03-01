@@ -373,9 +373,17 @@ const fr = {
         datafiles: {
           title: 'Data Files ({count})',
           cavatica: {
-            uploadLimitTitle: 'Maximum file count exceeded',
-            uploadLimit:
-              'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
+            analyseInCavatica: 'Analyze in Cavatica',
+            bulkImportLimit: {
+              title: 'Maximum file count exceeded',
+              description:
+                'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
+            },
+            authWarning: {
+              title: 'You are not connected to Cavatica',
+              description:
+                'In order to analyze your files in Cavatica, you must first connect to your Cavatica account',
+            },
           },
         },
       },

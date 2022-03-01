@@ -10,7 +10,7 @@ import { getProTableDictionary } from 'utils/translation';
 import { useDispatch } from 'react-redux';
 import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatFileSize } from 'utils/formatFileSize';
 import { Button, Modal, Tag, Tooltip } from 'antd';
 import AnalyseModal from 'views/Dashboard/components/DashboardCards/Cavatica/AnalyseModal';
@@ -23,9 +23,12 @@ import { IStudyEntity } from 'graphql/studies/models';
 import { intersection } from 'lodash';
 import { beginAnalyse } from 'store/fenceCavatica/thunks';
 import { useFenceConnection } from 'store/fenceConnection';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { connectToFence } from 'store/fenceConnection/thunks';
+import { FENCE_NAMES } from 'common/fenceTypes';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 
 import styles from './index.module.scss';
-import { useFenceCavatica } from 'store/fenceCavatica';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -131,11 +134,51 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const { isConnected, isInitializingAnalyse } = useFenceCavatica();
+  const { isConnected, isInitializingAnalyse, beginAnalyseAfterConnection } = useFenceCavatica();
   const { fencesAllAcls } = useFenceConnection();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
+
+  const onBeginAnalyse = () =>
+    dispatch(
+      beginAnalyse({
+        sqon: sqon!,
+        fileIds: selectedKeys,
+      }),
+    );
+
+  const onCavaticaConnectionRequired = () =>
+    Modal.confirm({
+      type: 'warn',
+      title: intl.get('screen.dataExploration.tabs.datafiles.cavatica.authWarning.title'),
+      content: intl.get('screen.dataExploration.tabs.datafiles.cavatica.authWarning.description'),
+      okText: 'Connect',
+      onOk: () => {
+        dispatch(fenceCavaticaActions.setBeginAnalyseConnectionFlag());
+        dispatch(connectToFence(FENCE_NAMES.cavatica));
+      },
+    });
+
+  const onCavaticaUploadLimitReached = () =>
+    Modal.error({
+      title: intl.get('screen.dataExploration.tabs.datafiles.cavatica.bulkImportLimit.title'),
+      content: intl.getHTML(
+        'screen.dataExploration.tabs.datafiles.cavatica.bulkImportLimit.description',
+        {
+          limit: CAVATICA_FILE_BATCH_SIZE,
+        },
+      ),
+      okText: 'Ok',
+      cancelText: undefined,
+    });
+
+  useEffect(() => {
+    if (isConnected && beginAnalyseAfterConnection) {
+      onBeginAnalyse();
+    }
+    // eslint-disable-next-line
+  }, [isConnected, beginAnalyseAfterConnection]);
 
   return (
     <>
@@ -187,31 +230,23 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               icon={<CloudUploadOutlined />}
               loading={isInitializingAnalyse}
               onClick={() => {
-                if (selectedRows.length > CAVATICA_FILE_BATCH_SIZE || selectedAllResults) {
-                  Modal.error({
-                    title: intl.get(
-                      'screen.dataExploration.tabs.datafiles.cavatica.uploadLimitTitle',
-                    ),
-                    content: intl.getHTML(
-                      'screen.dataExploration.tabs.datafiles.cavatica.uploadLimit',
-                      {
-                        limit: CAVATICA_FILE_BATCH_SIZE,
-                      },
-                    ),
-                    okText: 'Ok',
-                    cancelText: undefined,
-                  });
+                if (isConnected) {
+                  if (selectedRows.length > CAVATICA_FILE_BATCH_SIZE || selectedAllResults) {
+                    onCavaticaUploadLimitReached();
+                  } else {
+                    dispatch(
+                      beginAnalyse({
+                        sqon: sqon!,
+                        fileIds: selectedKeys,
+                      }),
+                    );
+                  }
                 } else {
-                  dispatch(
-                    beginAnalyse({
-                      sqon: sqon!,
-                      fileIds: selectedKeys,
-                    }),
-                  );
+                  onCavaticaConnectionRequired();
                 }
               }}
             >
-              Analyze in Cavatica
+              {intl.get('screen.dataExploration.tabs.datafiles.cavatica.analyseInCavatica')}
             </Button>,
           ],
         }}

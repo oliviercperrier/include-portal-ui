@@ -18,6 +18,7 @@ export const FenceCavaticaState: initialState = {
   isInitializingAnalyse: false,
   isBulkImportLoading: false,
   isLoading: false,
+  beginAnalyseAfterConnection: false,
   bulkImportData: {
     files: [],
     authorizedFileCount: 0,
@@ -50,6 +51,10 @@ const fenceCavaticaSlice = createSlice({
     toggleCreateProjectModal: (state, action: PayloadAction<boolean>) => ({
       ...state,
       isCreateModalOpen: action.payload,
+    }),
+    setBeginAnalyseConnectionFlag: (state) => ({
+      ...state,
+      beginAnalyseAfterConnection: true,
     }),
     beginCreateProject: (state) => ({
       ...state,
@@ -100,6 +105,7 @@ const fenceCavaticaSlice = createSlice({
     // BEGIN ANALYSE
     builder.addCase(beginAnalyse.pending, (state, action) => {
       state.isInitializingAnalyse = true;
+      state.beginAnalyseAfterConnection = false;
       state.newlyCreatedProject = undefined;
     });
     builder.addCase(beginAnalyse.fulfilled, (state, action) => {

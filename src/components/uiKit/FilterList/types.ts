@@ -1,10 +1,12 @@
-import { DocumentNode } from "graphql";
-import { ExtendedMappingResults } from "graphql/models";
-import { SUGGESTION_TYPES } from "../Suggester";
+import { DocumentNode } from 'graphql';
+import { ExtendedMappingResults } from 'graphql/models';
+import React from 'react';
+import { SUGGESTION_TYPES } from '../Suggester';
 
 export interface FilterGroup {
   title?: string;
   fields: string[];
+  customs?: React.ReactNode[];
 }
 
 export interface FilterInfo {
@@ -20,5 +22,5 @@ export interface FilterInfo {
 export type TAggregationFunction = (
   index: string,
   aggList: string[],
-  mappingResults: ExtendedMappingResults
+  mappingResults: ExtendedMappingResults,
 ) => DocumentNode;

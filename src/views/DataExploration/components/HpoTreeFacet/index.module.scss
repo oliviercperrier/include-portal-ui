@@ -1,0 +1,18 @@
+.hpoTransfer {
+  div[class$='transfer-list'] {
+    flex: 1 1 50%;
+    width: auto;
+    height: auto;
+    min-height: 300px;
+
+    :global(.highlight) {
+      background-color: yellow;
+    }
+  }
+}
+
+.hpoTreeModalWrapper {
+  .hpoTreeModal {
+    width: 80% !important;
+  }
+}

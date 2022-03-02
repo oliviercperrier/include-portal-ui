@@ -2,8 +2,9 @@ import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Col, Row, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { lightTreeNodeConstructor, TreeNode } from './utils/OntologyTree';
-import { generateNavTreeFormKey, PhenotypeStore } from './utils/PhenotypeStore';
+import { generateNavTreeFormKey, PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
+import { lightTreeNodeConstructor, TreeNode } from 'views/DataExploration/utils/OntologyTree';
+
 import intl from 'react-intl-universal';
 import SunburstD3 from './utils/sunburst-d3';
 import { getCommonColors } from 'common/charts';
@@ -51,7 +52,7 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
           centerTitleFormatter: (data: TreeNode) => data.results,
           centerSubtitleFormatter: (data: TreeNode) => 'Participants with',
           centerDescriptionFormatter: (data: TreeNode) =>
-            `HP:${extractPhenotypeTitleAndCode(data.name!)?.code}`,
+            `HP:${extractPhenotypeTitleAndCode(data.title!)?.code}`,
           tooltipFormatter: (data: TreeNode) =>
             `<div>
               ${data.title}<br/><br/>

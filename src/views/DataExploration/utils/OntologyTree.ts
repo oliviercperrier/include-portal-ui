@@ -1,4 +1,4 @@
-import { IPhenotypeSource } from "graphql/summary/models";
+import { IPhenotypeSource } from 'graphql/summary/models';
 
 export type TreeNode = {
   title: string;
@@ -13,18 +13,16 @@ export type TreeNode = {
   disabled?: boolean;
   value?: number; // for d3
   valueText: number; // required by d3 for displaying the value
-  name?: string;
+  name: string | React.ReactElement;
 };
 
-export const lightTreeNodeConstructor = (
-  key: string,
-  children: TreeNode[] = []
-): TreeNode => {
+export const lightTreeNodeConstructor = (key: string, children: TreeNode[] = []): TreeNode => {
   return {
     title: key,
     key: key,
     children,
     valueText: 0,
+    name: key,
   };
 };
 
@@ -39,17 +37,14 @@ export default class OntologyTree {
 
   private getChildrenValue = (childrenNodes: TreeNode[], sourceValue: number) =>
     childrenNodes.length
-      ? childrenNodes.reduce(
-          (accumulator, n) => accumulator + (n.valueText || 0),
-          0
-        )
+      ? childrenNodes.reduce((accumulator, n) => accumulator + (n.valueText || 0), 0)
       : sourceValue || 0;
 
   private populateNodeChild = (
     source: IPhenotypeSource,
     field: string,
     depth: number = 0,
-    parentKey: string
+    parentKey: string,
   ): TreeNode[] => {
     const nodes: TreeNode[] = [];
     this.phenotypes.forEach((phenotype: IPhenotypeSource) => {
@@ -58,14 +53,9 @@ export default class OntologyTree {
           phenotype,
           field,
           depth + 1,
-          `${parentKey}-${phenotype.key}`
+          `${parentKey}-${phenotype.key}`,
         );
-        const node = this.createNodeFromSource(
-          phenotype,
-          childrenNodes,
-          depth,
-          parentKey
-        );
+        const node = this.createNodeFromSource(phenotype, childrenNodes, depth, parentKey);
         nodes.push(node);
       }
     });
@@ -78,16 +68,8 @@ export default class OntologyTree {
     workingPhenotypes.forEach((sourcePhenotype) => {
       let phenotype: TreeNode;
       // start from root and then look for each element inhereting from that node
-      if (
-        !sourcePhenotype.top_hits.parents.length ||
-        workingPhenotypes.length === 1
-      ) {
-        const children = this.populateNodeChild(
-          sourcePhenotype,
-          field,
-          1,
-          sourcePhenotype.key
-        );
+      if (!sourcePhenotype.top_hits.parents.length || workingPhenotypes.length === 1) {
+        const children = this.populateNodeChild(sourcePhenotype, field, 1, sourcePhenotype.key);
         phenotype = this.createNodeFromSource(sourcePhenotype, children);
         phenotype.children = children;
         rootNode = phenotype;
@@ -100,7 +82,7 @@ export default class OntologyTree {
     source: IPhenotypeSource,
     children: TreeNode[] = [],
     depth: number = 0,
-    parentKey?: string
+    parentKey?: string,
   ): TreeNode => {
     const value = this.getChildrenValue(children, source.doc_count);
 

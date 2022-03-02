@@ -17,7 +17,7 @@ const fetchAllFenceStudies = createAsyncThunk<
 >('fenceStudies/fetch/all/studies', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
 
-  const aclsByFence = computeAclsByFence(fenceConnection.connections); // TODO change this
+  const aclsByFence = computeAclsByFence(fenceConnection.connections); // TODO change this?
 
   ALL_STUDIES_FENCE_NAMES.forEach(
     async (fenceName) =>

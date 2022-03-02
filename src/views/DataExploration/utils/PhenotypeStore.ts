@@ -65,6 +65,7 @@ export class PhenotypeStore {
       variables: {
         sqon: {
           ...sqon,
+          content: sqon?.content || [],
           op: sqon?.op || BooleanOperators.and,
         },
         term_filters: {

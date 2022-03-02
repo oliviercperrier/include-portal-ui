@@ -74,8 +74,6 @@ const HpoTreeFacet = () => {
       hitTreeNodes.push(treeNode.key);
       if (result) {
         const [before, hit, after] = treeNode.title.split(regex);
-        console.log(treeNode.title.split(regex));
-
         treeNode.name = (
           <span>
             {before}
@@ -128,10 +126,10 @@ const HpoTreeFacet = () => {
               const hits: string[] = [];
               const tree = JSON.parse(JSON.stringify(treeData));
               const result = searchInTree(value, tree, hits);
-              console.log(result);
-              console.log(direction, value);
+              setExpandedKeys(hits);
               setTreeData(tree);
             } else {
+              setExpandedKeys([]);
               setTreeData(rootNode);
             }
           }}

@@ -7,10 +7,10 @@ export const generateSelectionSqon = (type: Omit<TAB_IDS, TAB_IDS.SUMMARY>, ids:
 
   switch (type) {
     case TAB_IDS.BIOSPECIMENS:
-      field = 'files.biospecimens.biospecimen_id';
+      field = 'participant.participant_id'; // TODO 'biospecimen_id';
       break;
     case TAB_IDS.DATA_FILES:
-      field = 'files.file_id';
+      field = 'file_id';
       break;
     default:
       field = 'participant_id';

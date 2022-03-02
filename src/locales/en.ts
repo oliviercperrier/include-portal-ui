@@ -493,7 +493,7 @@ const fr = {
     ethnicity: 'Ethnicity',
     race: 'Race',
     observed_phenotype: {
-      name: 'Observed Phenotype Name',
+      name: 'Phenotype (HPO)',
     },
     // Biospecimen
     biospecimen_type: 'Biospecimen Type',

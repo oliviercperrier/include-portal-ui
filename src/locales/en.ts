@@ -382,7 +382,7 @@ const fr = {
             authWarning: {
               title: 'You are not connected to Cavatica',
               description:
-                'In order to analyze your files in Cavatica, you must first connect to your Cavatica account',
+                'In order to analyze your files you must first connect your Cavatica account. Once you are connected, you will be redirected back to this page.',
             },
           },
         },

@@ -4,13 +4,21 @@ import intl from 'react-intl-universal';
 import { useEffect, useRef, useState } from 'react';
 import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
-import { addFieldToActiveQuery } from 'utils/sqons';
+import { addFieldToActiveQuery, findSqonValueByField } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
 import TreeNodeTitle from './TreeNodeTitle';
+import {
+  getQueryBuilderCache,
+  updateQueryFilters,
+  useFilters,
+} from '@ferlab/ui/core/data/filters/utils';
+import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
 
 import styles from './index.module.scss';
+import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
+import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 
 const isChecked = (selectedKeys: string[], eventKey: string) =>
   selectedKeys.indexOf(eventKey) !== -1;
@@ -24,6 +32,8 @@ const HpoTreeFacet = () => {
   const [rootNode, setRootNode] = useState<TreeNode>();
   const [treeData, setTreeData] = useState<TreeNode>();
   const history = useHistory();
+  const { filters } = useFilters();
+  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
 
   const onChange = (keys: string[]) => {
     setTargetKeys(keys);
@@ -148,8 +158,21 @@ const HpoTreeFacet = () => {
         setTreeData(rootNode);
         setRootNode(rootNode);
         setIsLoading(false);
+
+        const flatTree = getFlattenTree(rootNode!);
+        const selectedValues = findSqonValueByField(
+          'observed_phenotype.name',
+          resolveSyntheticSqon(allSqons, filters),
+        );
+
+        if (selectedValues) {
+          setTargetKeys(
+            flatTree.filter(({ title }) => selectedValues.includes(title)).map(({ key }) => key),
+          );
+        }
       });
     }
+
     // eslint-disable-next-line
   }, [visible]);
 
@@ -171,7 +194,18 @@ const HpoTreeFacet = () => {
             .filter(({ key }) => targetKeys.includes(key))
             .map(({ title }) => title);
 
-          addFieldToActiveQuery('observed_phenotype.name', results, INDEXES.PARTICIPANT, history);
+          if (!results || results.length === 0) {
+            updateQueryFilters(history, 'observed_phenotype.name', []);
+          } else {
+            addFieldToActiveQuery(
+              'observed_phenotype.name',
+              results,
+              INDEXES.PARTICIPANT,
+              history,
+              MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+            );
+          }
+
           setVisible(false);
         }}
         onCancel={() => setVisible(false)}

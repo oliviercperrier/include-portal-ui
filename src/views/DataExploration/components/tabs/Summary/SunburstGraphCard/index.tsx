@@ -2,7 +2,11 @@ import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Col, Row, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { generateNavTreeFormKey, PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
+import {
+  generateNavTreeFormKey,
+  PhenotypeStore,
+  RegexExtractPhenotype,
+} from 'views/DataExploration/utils/PhenotypeStore';
 import { lightTreeNodeConstructor, TreeNode } from 'views/DataExploration/utils/OntologyTree';
 
 import intl from 'react-intl-universal';
@@ -17,7 +21,7 @@ interface OwnProps {
   className?: string;
   sqon: ISyntheticSqon;
 }
-export const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, 'g');
+
 const { Title } = Typography;
 const width = 335;
 const height = 335;

@@ -1,9 +1,14 @@
 import CollapseLikeFacet from 'components/uiKit/FilterList/CollapseLikeFacet.tsx';
-import { Modal, Spin, Transfer, Tree } from 'antd';
+import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree } from 'antd';
 import intl from 'react-intl-universal';
 import { useEffect, useRef, useState } from 'react';
 import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
+import { addFieldToActiveQuery } from 'utils/sqons';
+import { INDEXES } from 'graphql/constants';
+import { useHistory } from 'react-router-dom';
+import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
+import TreeNodeTitle from './TreeNodeTitle';
 
 import styles from './index.module.scss';
 
@@ -18,6 +23,7 @@ const HpoTreeFacet = () => {
   const phenotypeStore = useRef(new PhenotypeStore());
   const [rootNode, setRootNode] = useState<TreeNode>();
   const [treeData, setTreeData] = useState<TreeNode>();
+  const history = useHistory();
 
   const onChange = (keys: string[]) => {
     setTargetKeys(keys);
@@ -45,7 +51,13 @@ const HpoTreeFacet = () => {
         const isDisabled = checkedKeys.includes(props.key) || disabledTree;
         return {
           ...props,
-          name: <span className="lol">{props.name}</span>,
+          name: (
+            <TreeNodeTitle
+              title={props.name}
+              exactTagCount={props.exactTagCount || 0}
+              totalCount={props.results || 0}
+            />
+          ),
           disabled: isDisabled,
           children: generateTree(children, checkedKeys, isDisabled),
         };
@@ -88,6 +100,46 @@ const HpoTreeFacet = () => {
     return match;
   };
 
+  const findChildrenKey = (checkedKeys: string[], node: TreeNode[]): boolean =>
+    node.some(
+      ({ key, children }) => checkedKeys.includes(key) || findChildrenKey(checkedKeys, children),
+    );
+
+  const checkKeys = (
+    key: string | number,
+    dataSource = treeData ? [treeData] : [],
+    accu: { check: string[]; halfcheck: string[] } = {
+      check: [],
+      halfcheck: [],
+    },
+  ) => {
+    dataSource.forEach((o) => {
+      if (o.key === key) {
+        return accu.check.push(o.key);
+      }
+
+      if (accu.check.length === 0) {
+        checkKeys(key, o.children, accu);
+
+        if (accu.check.length > 0) {
+          accu.halfcheck.push(o.key);
+        }
+      }
+    });
+    return accu;
+  };
+
+  const onCheckOrSelect = (
+    onItemSelect: any,
+    key: string,
+    checkedKeys: string[],
+    children: TreeNode[],
+  ) => {
+    const hasChildAlreadyChecked = findChildrenKey(checkedKeys, children);
+    onItemSelect(key.toString(), !isChecked(checkedKeys, key.toString()));
+    setTargetKeys(hasChildAlreadyChecked ? [key] : [...checkedKeys, key]);
+  };
+
   useEffect(() => {
     if (visible) {
       setIsLoading(true);
@@ -111,9 +163,17 @@ const HpoTreeFacet = () => {
         visible={visible}
         wrapClassName={styles.hpoTreeModalWrapper}
         className={styles.hpoTreeModal}
-        title="Observed Phenotype (HPO) Browser"
-        okText="Apply"
-        onOk={() => setVisible(false)}
+        title={intl.get('screen.dataExploration.hpoTree.modal.title')}
+        okText={intl.get('screen.dataExploration.hpoTree.modal.okText')}
+        onOk={() => {
+          const flatTreeData = getFlattenTree(treeData!);
+          const results = flatTreeData
+            .filter(({ key }) => targetKeys.includes(key))
+            .map(({ title }) => title);
+
+          addFieldToActiveQuery('observed_phenotype.name', results, INDEXES.PARTICIPANT, history);
+          setVisible(false);
+        }}
         onCancel={() => setVisible(false)}
       >
         <Transfer<TreeNode>
@@ -125,13 +185,16 @@ const HpoTreeFacet = () => {
             if (value && value.length > 3) {
               const hits: string[] = [];
               const tree = JSON.parse(JSON.stringify(treeData));
-              const result = searchInTree(value, tree, hits);
+              searchInTree(value, tree, hits);
               setExpandedKeys(hits);
               setTreeData(tree);
             } else {
               setExpandedKeys([]);
               setTreeData(rootNode);
             }
+          }}
+          locale={{
+            searchPlaceholder: intl.get('screen.dataExploration.hpoTree.searchPlaceholder'),
           }}
           filterOption={(inputValue, item) => item.title.indexOf(inputValue) !== -1}
           onSelectChange={(s, t) => {
@@ -147,30 +210,59 @@ const HpoTreeFacet = () => {
           showSelectAll={false}
           operationStyle={{ visibility: 'hidden', width: '5px' }}
         >
-          {({ direction, onItemSelect, selectedKeys, dataSource }) => {
+          {({ direction, onItemSelect, selectedKeys, onItemSelectAll }) => {
             if (direction === 'left') {
               const checkedKeys = [...selectedKeys, ...targetKeys];
+              const halfCheckedKeys = checkedKeys
+                .map((k) => checkKeys(k))
+                .flatMap((k) => k.halfcheck);
               return (
                 <Spin spinning={isLoading}>
+                  <Row justify="space-between" className={styles.phenotypeTreeHeader}>
+                    <Col></Col>
+                    <Col>
+                      <Row style={{ width: 100 }}>
+                        <Col span={12} className={styles.phenotypeTreeCountTag}>
+                          <Tooltip title={intl.get('screen.dataExploration.hpoTree.tags.exact')}>
+                            <UserOutlined />
+                          </Tooltip>
+                        </Col>
+                        <Col span={12} className={styles.phenotypeTreeCountTag}>
+                          <Tooltip title={intl.get('screen.dataExploration.hpoTree.tags.all')}>
+                            <BranchesOutlined />
+                          </Tooltip>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
                   <Tree
                     checkable
                     checkStrictly
+                    height={600}
                     expandedKeys={expandedKeys}
                     onExpand={(keys) => setExpandedKeys(keys as string[])}
                     checkedKeys={{
                       checked: checkedKeys,
-                      halfChecked: [],
+                      halfChecked: halfCheckedKeys,
                     }}
                     titleRender={(node) => node.name}
                     treeData={treeData ? generateTree([treeData], checkedKeys) : []}
-                    onCheck={(_, { node: { key } }) => {
-                      onItemSelect(key.toString(), !isChecked(checkedKeys, key.toString()));
-                      setTargetKeys([...checkedKeys, key as string]);
-                    }}
-                    onSelect={(_, { node: { key } }) => {
-                      onItemSelect(key.toString(), !isChecked(checkedKeys, key.toString()));
-                      setTargetKeys([...checkedKeys, key as string]);
-                    }}
+                    onCheck={(_, { node: { key, children } }) =>
+                      onCheckOrSelect(
+                        onItemSelect,
+                        key as string,
+                        checkedKeys,
+                        children as TreeNode[],
+                      )
+                    }
+                    onSelect={(_, { node: { key, children } }) =>
+                      onCheckOrSelect(
+                        onItemSelect,
+                        key as string,
+                        checkedKeys,
+                        children as TreeNode[],
+                      )
+                    }
                   />
                 </Spin>
               );

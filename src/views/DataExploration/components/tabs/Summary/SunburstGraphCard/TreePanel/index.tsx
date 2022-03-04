@@ -2,9 +2,9 @@ import { Button, Space, Tree, Typography } from 'antd';
 import { addFieldToActiveQuery } from 'utils/sqons';
 import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import intl from 'react-intl-universal';
-import { RegexExtractPhenotype } from '..';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
+import { RegexExtractPhenotype } from 'views/DataExploration/utils/PhenotypeStore';
 
 import styles from './index.module.scss';
 

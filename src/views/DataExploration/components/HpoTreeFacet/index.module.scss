@@ -3,11 +3,45 @@
     flex: 1 1 50%;
     width: auto;
     height: auto;
-    min-height: 300px;
+    min-height: 600px;
 
     :global(.highlight) {
       background-color: yellow;
     }
+
+    &:last-child {
+      div[class$='-list-body-search-wrapper'] {
+        display: none;
+      }
+    }
+  }
+
+  :global(.ant-tree-list-holder-inner) {
+    display: block !important;
+  }
+
+  :global(.ant-tree-treenode) {
+    width: 100%;
+  }
+
+  :global(.ant-tree-node-content-wrapper) {
+    width: 100%;
+    display: block;
+  }
+
+  :global(.ant-tree-title) {
+    display: block;
+    width: 100%;
+  }
+
+  .phenotypeTreeCountTag {
+    display: flex;
+    justify-content: center;
+  }
+
+  .phenotypeTreeHeader {
+    padding-right: 4px;
+    margin-bottom: 12px;
   }
 }
 

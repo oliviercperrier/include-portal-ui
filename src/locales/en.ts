@@ -343,6 +343,17 @@ const fr = {
         biospecimen: 'Biospecimen',
         datafiles: 'Data Files',
       },
+      hpoTree: {
+        modal: {
+          title: "Observed Phenotype (HPO) Browser",
+          okText: "Apply"
+        },
+        searchPlaceholder: "Search for ontology term - min 3 characters",
+        tags: {
+          exact: "Participants with this exact term",
+          all: "Participants including descendant terms"
+        }
+      },
       tabs: {
         summary: {
           title: 'Summary',

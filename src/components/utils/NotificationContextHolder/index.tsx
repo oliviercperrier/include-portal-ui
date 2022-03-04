@@ -12,6 +12,7 @@ const NotificationContextHolder = () => {
     if (notification) {
       antNotification.open({
         ...notification,
+        style: undefined,
         onClose: () => {
           if (notification.onClose) {
             notification.onClose();
@@ -27,6 +28,7 @@ const NotificationContextHolder = () => {
     if (message) {
       antMessage.open({
         ...message,
+        style: undefined,
         onClose: () => {
           if (message.onClose) {
             message.onClose();

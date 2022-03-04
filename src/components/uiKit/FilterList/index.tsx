@@ -7,6 +7,7 @@ import { ExtendedMappingResults } from 'graphql/models';
 import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import SuggesterWrapper from 'components/uiKit/Suggester/Wrapper';
 import Suggester from 'components/uiKit/Suggester';
+import cx from 'classnames';
 
 import styles from './Filters.module.scss';
 
@@ -54,7 +55,7 @@ const FilterList = ({
       </div>
       <Layout className={styles.filterWrapper}>
         {filterInfo.groups.map((group: FilterGroup, i) => (
-          <div key={index}>
+          <div key={i} className={styles.filtersGroup}>
             {group.title ? (
               <Text type="secondary" className={styles.filterGroupTitle}>
                 {group.title}
@@ -65,12 +66,17 @@ const FilterList = ({
                 key={field}
                 index={index}
                 cacheKey={cacheKey}
-                classname={styles.customFilterContainer}
+                classname={cx(styles.customFilterContainer, styles.filter)}
                 filterKey={field}
                 extendedMappingResults={extendedMappingResults}
                 filtersOpen={filtersOpen}
                 filterMapper={filterMapper}
               />
+            ))}
+            {group.customs?.map((custom, i) => (
+              <div key={i} className={cx(styles.customFilterWrapper, styles.filter)}>
+                {custom}
+              </div>
             ))}
           </div>
         ))}

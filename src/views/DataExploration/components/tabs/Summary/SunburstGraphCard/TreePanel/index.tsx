@@ -1,10 +1,10 @@
 import { Button, Space, Tree, Typography } from 'antd';
 import { addFieldToActiveQuery } from 'utils/sqons';
-import { TreeNode } from '../utils/OntologyTree';
+import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import intl from 'react-intl-universal';
-import { RegexExtractPhenotype } from '..';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
+import { RegexExtractPhenotype } from 'views/DataExploration/utils/PhenotypeStore';
 
 import styles from './index.module.scss';
 
@@ -54,7 +54,7 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
         onClick={() => {
           addFieldToActiveQuery(
             'observed_phenotype.name',
-            [currentNode?.name!],
+            [currentNode?.title!],
             INDEXES.PARTICIPANT,
             history,
           );
@@ -82,6 +82,7 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
               const key = getPath(keys[0] as string, treeData!).join('-');
               getSelectedPhenotype({
                 title: keys[0] as string,
+                name: keys[0] as string,
                 key,
                 children: [],
                 valueText: 0,

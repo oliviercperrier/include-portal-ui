@@ -22,6 +22,8 @@ interface IPhenotypeQueryPayload {
   errors?: any[];
 }
 
+export const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, 'g');
+
 export const generateNavTreeFormKey = (phenotypes: string[]): TreeNode[] => {
   if (!phenotypes.length) {
     return [];
@@ -65,6 +67,7 @@ export class PhenotypeStore {
       variables: {
         sqon: {
           ...sqon,
+          content: sqon?.content || [],
           op: sqon?.op || BooleanOperators.and,
         },
         term_filters: {

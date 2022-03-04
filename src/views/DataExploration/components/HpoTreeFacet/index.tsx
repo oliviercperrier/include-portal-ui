@@ -2,26 +2,29 @@ import CollapseLikeFacet from 'components/uiKit/FilterList/CollapseLikeFacet.tsx
 import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree } from 'antd';
 import intl from 'react-intl-universal';
 import { useEffect, useRef, useState } from 'react';
-import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
+import {
+  getFlattenTree,
+  TreeNode,
+  removeSameTerms,
+} from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
 import { addFieldToActiveQuery, findSqonValueByField } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
-import TreeNodeTitle from './TreeNodeTitle';
 import {
   getQueryBuilderCache,
   updateQueryFilters,
   useFilters,
 } from '@ferlab/ui/core/data/filters/utils';
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
-
-import styles from './index.module.scss';
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
+import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 
-const isChecked = (selectedKeys: string[], eventKey: string) =>
-  selectedKeys.indexOf(eventKey) !== -1;
+import styles from './index.module.scss';
+
+const FIELD_NAME = 'observed_phenotype.name';
 
 const HpoTreeFacet = () => {
   const [visible, setVisible] = useState(false);
@@ -34,86 +37,6 @@ const HpoTreeFacet = () => {
   const history = useHistory();
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
-
-  const onChange = (keys: string[]) => {
-    setTargetKeys(keys);
-  };
-
-  const getFlattenTree = (root: TreeNode) => {
-    const transferDataSource: TreeNode[] = [];
-    const flatten = (list: TreeNode[] = []) => {
-      list.forEach((item) => {
-        transferDataSource.push(item);
-        flatten(item.children);
-      });
-    };
-    flatten([root]);
-    return transferDataSource;
-  };
-
-  const generateTree = (
-    treeNodes: TreeNode[] = [],
-    checkedKeys: string[] = [],
-    disabledTree: boolean = false,
-  ): TreeNode[] =>
-    treeNodes
-      .map(({ children, ...props }) => {
-        const isDisabled = checkedKeys.includes(props.key) || disabledTree;
-        return {
-          ...props,
-          name: (
-            <TreeNodeTitle
-              title={props.name}
-              exactTagCount={props.exactTagCount || 0}
-              totalCount={props.results || 0}
-            />
-          ),
-          disabled: isDisabled,
-          children: generateTree(children, checkedKeys, isDisabled),
-        };
-      })
-      .filter((node) => (node.hidden ? false : !node.hidden));
-
-  const searchInTree = (searchText: string, treeNode: TreeNode, hitTreeNodes: string[] = []) => {
-    const cleanSearchText = searchText.replace(/[-/\\^$*+?.()|[\]{}]/g, '');
-    const regex = new RegExp('\\b(\\w*' + cleanSearchText + '\\w*)\\b', 'gi');
-    const text = treeNode.title;
-    const result = text.search(regex) >= 0;
-    let match = cleanSearchText === '' || result;
-
-    if (treeNode.children.length > 0) {
-      let matchChild = cleanSearchText === '' || false;
-      treeNode.children.forEach((child: TreeNode) => {
-        if (searchInTree(cleanSearchText, child, hitTreeNodes)) {
-          matchChild = true;
-        }
-      });
-      match = matchChild || match;
-    }
-    treeNode.hidden = !match;
-
-    if (!treeNode.hidden) {
-      hitTreeNodes.push(treeNode.key);
-      if (result) {
-        const [before, hit, after] = treeNode.title.split(regex);
-        treeNode.name = (
-          <span>
-            {before}
-            <div className={'highlight'} style={{ display: 'inherit' }}>
-              {hit}
-            </div>
-            {after}
-          </span>
-        );
-      }
-    }
-    return match;
-  };
-
-  const findChildrenKey = (checkedKeys: string[], node: TreeNode[]): boolean =>
-    node.some(
-      ({ key, children }) => checkedKeys.includes(key) || findChildrenKey(checkedKeys, children),
-    );
 
   const checkKeys = (
     key: string | number,
@@ -147,7 +70,7 @@ const HpoTreeFacet = () => {
   ) => {
     const hasChildAlreadyChecked = findChildrenKey(checkedKeys, children);
     onItemSelect(key.toString(), !isChecked(checkedKeys, key.toString()));
-    setTargetKeys(hasChildAlreadyChecked ? [key] : [...checkedKeys, key]);
+    setTargetKeys(removeSameTerms([], hasChildAlreadyChecked ? [key] : [...checkedKeys, key]));
   };
 
   useEffect(() => {
@@ -161,14 +84,17 @@ const HpoTreeFacet = () => {
 
         const flatTree = getFlattenTree(rootNode!);
         const selectedValues = findSqonValueByField(
-          'observed_phenotype.name',
+          FIELD_NAME,
           resolveSyntheticSqon(allSqons, filters),
         );
 
         if (selectedValues) {
-          setTargetKeys(
-            flatTree.filter(({ title }) => selectedValues.includes(title)).map(({ key }) => key),
-          );
+          const targetKeys = flatTree
+            .filter(({ title }) => selectedValues.includes(title))
+            .map(({ key }) => key);
+
+          setExpandedKeys(getExpandedKeys(targetKeys));
+          setTargetKeys(removeSameTerms([], targetKeys));
         }
       });
     }
@@ -195,10 +121,11 @@ const HpoTreeFacet = () => {
             .map(({ title }) => title);
 
           if (!results || results.length === 0) {
-            updateQueryFilters(history, 'observed_phenotype.name', []);
+            setExpandedKeys([]);
+            updateQueryFilters(history, FIELD_NAME, []);
           } else {
             addFieldToActiveQuery(
-              'observed_phenotype.name',
+              FIELD_NAME,
               results,
               INDEXES.PARTICIPANT,
               history,
@@ -215,7 +142,7 @@ const HpoTreeFacet = () => {
           showSearch={true}
           targetKeys={targetKeys}
           selectedKeys={[]}
-          onSearch={(direction, value) => {
+          onSearch={(_, value) => {
             if (value && value.length > 3) {
               const hits: string[] = [];
               const tree = JSON.parse(JSON.stringify(treeData));
@@ -223,7 +150,6 @@ const HpoTreeFacet = () => {
               setExpandedKeys(hits);
               setTreeData(tree);
             } else {
-              setExpandedKeys([]);
               setTreeData(rootNode);
             }
           }}
@@ -233,20 +159,22 @@ const HpoTreeFacet = () => {
           filterOption={(inputValue, item) => item.title.indexOf(inputValue) !== -1}
           onSelectChange={(s, t) => {
             setTargetKeys(
-              targetKeys.filter((el) => {
-                return !t.includes(el);
-              }),
+              removeSameTerms(
+                [],
+                targetKeys.filter((el) => {
+                  return !t.includes(el);
+                }),
+              ),
             );
           }}
           dataSource={treeData ? getFlattenTree(treeData) : []}
           render={(item) => item.title}
-          onChange={onChange}
           showSelectAll={false}
           operationStyle={{ visibility: 'hidden', width: '5px' }}
         >
           {({ direction, onItemSelect, selectedKeys, onItemSelectAll }) => {
             if (direction === 'left') {
-              const checkedKeys = [...selectedKeys, ...targetKeys];
+              const checkedKeys = [...removeSameTerms(selectedKeys, targetKeys)];
               const halfCheckedKeys = checkedKeys
                 .map((k) => checkKeys(k))
                 .flatMap((k) => k.halfcheck);

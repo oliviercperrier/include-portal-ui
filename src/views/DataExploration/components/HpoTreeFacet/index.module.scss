@@ -5,8 +5,9 @@
     height: auto;
     min-height: 600px;
 
-    :global(.highlight) {
+    .highlight {
       background-color: yellow;
+      display: inherit;
     }
 
     &:last-child {

@@ -26,6 +26,30 @@ export const lightTreeNodeConstructor = (key: string, children: TreeNode[] = [])
   };
 };
 
+const termRegex = new RegExp('[^-]+$');
+
+export const removeSameTerms = (selectedKeys: string[], targetKeys: string[]) => {
+  let allSelectedAndChecked = {};
+
+  selectedKeys.concat(targetKeys).forEach((t) => {
+    allSelectedAndChecked = { ...allSelectedAndChecked, [`${t.match(termRegex)}`]: t };
+  });
+
+  return [...(Object.values(allSelectedAndChecked) as string[])];
+};
+
+export const getFlattenTree = (root: TreeNode) => {
+  const transferDataSource: TreeNode[] = [];
+  const flatten = (list: TreeNode[] = []) => {
+    list.forEach((item) => {
+      transferDataSource.push(item);
+      flatten(item.children);
+    });
+  };
+  flatten([root]);
+  return transferDataSource;
+};
+
 export default class OntologyTree {
   phenotypes: IPhenotypeSource[] = [];
   tree: TreeNode | undefined = undefined;

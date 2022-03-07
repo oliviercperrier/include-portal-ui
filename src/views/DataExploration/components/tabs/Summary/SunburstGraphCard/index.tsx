@@ -14,6 +14,7 @@ import SunburstD3 from './utils/sunburst-d3';
 import { getCommonColors } from 'common/charts';
 import TreePanel from 'views/DataExploration/components/tabs/Summary/SunburstGraphCard/TreePanel';
 import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper';
+import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
 
@@ -39,7 +40,7 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
     phenotypeStore.current.fetch('observed_phenotype', sqon).then(() => {
       const rootNode = phenotypeStore.current.getRootNode()!;
       setCurrentNode(rootNode);
-      setTreeData([lightTreeNodeConstructor(rootNode?.key)]);
+      setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode?.key)] : []);
       setIsLoading(false);
 
       updateSunburst.current = SunburstD3(
@@ -86,25 +87,29 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
         </Title>
       }
       content={
-        <Row gutter={[24, 24]} id="tooltip-wrapper">
-          <Col lg={8} xl={10}>
-            <svg
-              className={styles.sunburstChart}
-              width={width}
-              height={height}
-              viewBox={`0 0 ${width} ${height}`}
-              ref={sunburstRef}
-            />
-          </Col>
-          <Col lg={16} xl={14}>
-            <TreePanel
-              currentNode={currentNode!}
-              treeData={treeData!}
-              getSelectedPhenotype={getSelectedPhenotype}
-              updateSunburst={updateSunburst.current!}
-            />
-          </Col>
-        </Row>
+        treeData && treeData?.length > 0 ? (
+          <Row gutter={[24, 24]} id="tooltip-wrapper">
+            <Col lg={8} xl={10}>
+              <svg
+                className={styles.sunburstChart}
+                width={width}
+                height={height}
+                viewBox={`0 0 ${width} ${height}`}
+                ref={sunburstRef}
+              />
+            </Col>
+            <Col lg={16} xl={14}>
+              <TreePanel
+                currentNode={currentNode!}
+                treeData={treeData!}
+                getSelectedPhenotype={getSelectedPhenotype}
+                updateSunburst={updateSunburst.current!}
+              />
+            </Col>
+          </Row>
+        ) : (
+          <Empty description="No observed phenotypes reported for these participants" />
+        )
       }
     />
   );

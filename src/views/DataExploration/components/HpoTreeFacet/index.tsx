@@ -25,6 +25,8 @@ import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree
 import styles from './index.module.scss';
 
 const FIELD_NAME = 'observed_phenotype.name';
+const AUTO_EXPAND_TREE = 2;
+const MIN_SEARCH_TEXT_LENGTH = 3;
 
 const HpoTreeFacet = () => {
   const [visible, setVisible] = useState(false);
@@ -37,6 +39,19 @@ const HpoTreeFacet = () => {
   const history = useHistory();
   const { filters } = useFilters();
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+
+  const getInitialExpandedKeys = (data: TreeNode[], collectedKeys: string[] = [], counter = 0) => {
+    if (counter < AUTO_EXPAND_TREE) {
+      data.forEach((node) => {
+        counter++;
+        collectedKeys.push(node.key);
+        if (node.children) {
+          getInitialExpandedKeys(node.children, collectedKeys, counter);
+        }
+      });
+    }
+    return collectedKeys;
+  };
 
   const checkKeys = (
     key: string | number,
@@ -95,6 +110,8 @@ const HpoTreeFacet = () => {
 
           setExpandedKeys(getExpandedKeys(targetKeys));
           setTargetKeys(removeSameTerms([], targetKeys));
+        } else {
+          setExpandedKeys(getInitialExpandedKeys([rootNode!]));
         }
       });
     }
@@ -121,7 +138,7 @@ const HpoTreeFacet = () => {
             .map(({ title }) => title);
 
           if (!results || results.length === 0) {
-            setExpandedKeys([]);
+            setExpandedKeys(getInitialExpandedKeys([treeData!]));
             updateQueryFilters(history, FIELD_NAME, []);
           } else {
             addFieldToActiveQuery(
@@ -143,13 +160,14 @@ const HpoTreeFacet = () => {
           targetKeys={targetKeys}
           selectedKeys={[]}
           onSearch={(_, value) => {
-            if (value && value.length > 3) {
+            if (value && value.length > MIN_SEARCH_TEXT_LENGTH) {
               const hits: string[] = [];
               const tree = JSON.parse(JSON.stringify(treeData));
               searchInTree(value, tree, hits);
               setExpandedKeys(hits);
               setTreeData(tree);
             } else {
+              setExpandedKeys(getInitialExpandedKeys([rootNode!]));
               setTreeData(rootNode);
             }
           }}

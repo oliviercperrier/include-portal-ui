@@ -56,7 +56,13 @@ const connectToFence = createAsyncThunk<
       fenceInfo = data;
     }
 
-    const authUrl = `${fenceInfo?.authorize_uri}?client_id=${fenceInfo?.client_id}&response_type=code&scope=${fenceInfo?.scope}&redirect_uri=${fenceInfo?.redirect_uri}`;
+    let authUrl = `${fenceInfo?.authorize_uri}?client_id=${fenceInfo?.client_id}&response_type=code&scope=${fenceInfo?.scope}&redirect_uri=${fenceInfo?.redirect_uri}`;
+
+    // Will be remove. fenceInfo.authorize_uri will eventually contains all the params.
+    if (fence === FENCE_NAMES.gen3) {
+      authUrl = authUrl + '&idp=ras';
+    }
+
     const authWindow = window.open(authUrl)!;
 
     return new Promise((resolve, reject) => {

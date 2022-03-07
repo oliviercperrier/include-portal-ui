@@ -23,7 +23,7 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from 'views/DataExploration/utils/mapper';
-import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
+import { isEmptySqon, resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { useParticipants } from 'graphql/participants/actions';
 import { useDataFiles } from 'graphql/files/actions';
 import { useBiospecimen } from 'graphql/biospecimens/actions';
@@ -45,6 +45,7 @@ import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
 
 import styles from './index.module.scss';
+import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -66,16 +67,26 @@ const PageContent = ({
 }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { filters } = useFilters();
+  const { filters }: { filters: ISyntheticSqon } = useFilters();
   const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
+  const activeSqon = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).active;
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
 
-  const participantResolvedSqon = mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters));
-  const biospecimenResolvedSqon = mapFilterForBiospecimen(resolveSyntheticSqon(allSqons, filters));
-  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, filters));
+  let currentFilter =
+    allSqons && isEmptySqon(filters) && !filters.id
+      ? allSqons.find((sqon: any) => sqon.id === activeSqon)
+      : filters;
+
+  const participantResolvedSqon = mapFilterForParticipant(
+    resolveSyntheticSqon(allSqons, currentFilter),
+  );
+  const biospecimenResolvedSqon = mapFilterForBiospecimen(
+    resolveSyntheticSqon(allSqons, currentFilter),
+  );
+  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, currentFilter));
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
@@ -130,7 +141,7 @@ const PageContent = ({
           options: {
             enableEditTitle: true,
             enableDuplicate: true,
-            enableFavoriteFilter: true,
+            enableFavoriteFilter: false,
           },
           selectedSavedFilter: defaultFilter,
           savedFilters: savedFilters,
@@ -144,7 +155,7 @@ const PageContent = ({
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
         cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
-        currentQuery={filters?.content?.length ? filters : {}}
+        currentQuery={isEmptySqon(currentFilter) ? {} : currentFilter}
         loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}
         total={participantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}

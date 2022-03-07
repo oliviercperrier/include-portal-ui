@@ -23,7 +23,10 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from 'views/DataExploration/utils/mapper';
-import { isEmptySqon, resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
+import {
+  isEmptySqon,
+  resolveSyntheticSqon,
+} from '@ferlab/ui/core/data/sqon/utils';
 import { useParticipants } from 'graphql/participants/actions';
 import { useDataFiles } from 'graphql/files/actions';
 import { useBiospecimen } from 'graphql/biospecimens/actions';
@@ -43,9 +46,9 @@ import {
 import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
+import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 
 import styles from './index.module.scss';
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -75,10 +78,10 @@ const PageContent = ({
   const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
 
-  let currentFilter =
-    allSqons && isEmptySqon(filters) && !filters.id
+  const currentFilter =
+    (allSqons && isEmptySqon(filters) && !filters.id
       ? allSqons.find((sqon: any) => sqon.id === activeSqon)
-      : filters;
+      : filters) || filters;
 
   const participantResolvedSqon = mapFilterForParticipant(
     resolveSyntheticSqon(allSqons, currentFilter),

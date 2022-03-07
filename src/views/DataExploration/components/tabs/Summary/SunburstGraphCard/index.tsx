@@ -108,7 +108,11 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
             </Col>
           </Row>
         ) : (
-          <Empty description="No observed phenotypes reported for these participants" />
+          <Empty
+            imageType="grid"
+            size="large"
+            description="No observed phenotypes reported for these participants"
+          />
         )
       }
     />

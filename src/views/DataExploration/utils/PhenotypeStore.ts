@@ -2,8 +2,7 @@ import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
 import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { IPhenotypeSource } from 'graphql/summary/models';
-import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
-import { sendRequest } from 'services/api';
+import { ArrangerApi } from 'services/api/arranger';
 import OntologyTree, { lightTreeNodeConstructor, TreeNode } from './OntologyTree';
 
 const ROOT_PHENO = 'All (HP:0000001)';
@@ -67,7 +66,7 @@ export class PhenotypeStore {
       variables: {
         sqon: {
           ...sqon,
-          content: sqon?.content || [],
+          content: sqon?.content || [],
           op: sqon?.op || BooleanOperators.and,
         },
         term_filters: {
@@ -82,11 +81,7 @@ export class PhenotypeStore {
       },
     };
 
-    const { data, error } = await sendRequest<IPhenotypeQueryPayload>({
-      url: ARRANGER_API_PROJECT_URL,
-      method: 'POST',
-      data: body,
-    });
+    const { data, error } = await ArrangerApi.graphqlRequest<IPhenotypeQueryPayload>(body);
 
     if (error || data?.data.errors) {
       return [];

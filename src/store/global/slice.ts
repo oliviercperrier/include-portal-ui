@@ -5,12 +5,15 @@ import intl from 'react-intl-universal';
 import locales from 'locales';
 import { ArgsProps as NotificationArgsProps } from 'antd/lib/notification';
 import { ArgsProps as MessageArgsProps } from 'antd/lib/message';
+import { fetchStats } from './thunks';
 
 export const GlobalState: initialState = {
   lang: LANG.EN,
   notification: undefined,
   message: undefined,
   messagesToDestroy: [],
+  stats: undefined,
+  isFetchingStats: false,
 };
 
 const globalSlice = createSlice({
@@ -49,6 +52,18 @@ const globalSlice = createSlice({
       ...state,
       notification: undefined,
     }),
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchStats.pending, (state) => {
+      state.isFetchingStats = true;
+    });
+    builder.addCase(fetchStats.fulfilled, (state, action) => {
+      state.isFetchingStats = false;
+      state.stats = action.payload;
+    });
+    builder.addCase(fetchStats.rejected, (state) => {
+      state.isFetchingStats = false;
+    });
   },
 });
 

@@ -13,8 +13,6 @@ import { IBulkImportData, ICavaticaTreeNode, TCavaticaProjectWithMembers } from 
 import intl from 'react-intl-universal';
 import { IFileEntity, IFileResultTree } from 'graphql/files/models';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { sendRequest } from 'services/api';
-import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { SEARCH_FILES_QUERY } from 'graphql/files/queries';
 import { hydrateResults } from 'graphql/models';
 import { termToSqon } from '@ferlab/ui/core/data/sqon/utils';
@@ -24,6 +22,7 @@ import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
 import { concatAllFencesAcls } from 'store/fenceConnection/utils';
 import { globalActions } from 'store/global';
+import { ArrangerApi } from 'services/api/arranger';
 
 const USER_BASE_URL = EnvironmentVariables.configFor('CAVATICA_USER_BASE_URL');
 
@@ -93,15 +92,11 @@ const beginAnalyse = createAsyncThunk<
     ];
   }
 
-  const { data, error } = await sendRequest<{ data: IFileResultTree }>({
-    url: ARRANGER_API_PROJECT_URL,
-    method: 'POST',
-    data: {
-      query: SEARCH_FILES_QUERY.loc?.source.body,
-      variables: {
-        sqon,
-        first: CAVATICA_FILE_BATCH_SIZE,
-      },
+  const { data, error } = await ArrangerApi.graphqlRequest<{ data: IFileResultTree }>({
+    query: SEARCH_FILES_QUERY.loc?.source.body,
+    variables: {
+      sqon,
+      first: CAVATICA_FILE_BATCH_SIZE,
     },
   });
 

@@ -87,7 +87,8 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
         </Title>
       }
       content={
-        treeData && treeData?.length > 0 ? (
+        !isLoading &&
+        (treeData && treeData?.length > 0 ? (
           <Row gutter={[24, 24]} id="tooltip-wrapper">
             <Col lg={8} xl={10}>
               <svg
@@ -113,7 +114,7 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
             size="large"
             description="No observed phenotypes reported for these participants"
           />
-        )
+        ))
       }
     />
   );

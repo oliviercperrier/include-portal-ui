@@ -4,10 +4,7 @@ import { ReportConfig } from 'services/api/reports/models';
 import intl from 'react-intl-universal';
 import keycloak from 'auth/keycloak-api/keycloak';
 import { v4 } from 'uuid';
-import { sendRequest } from 'services/api';
-import { ARRANGER_API_COLUMN_STATE_URL, ARRANGER_API_DOWNLOAD_URL } from 'provider/ApolloProvider';
 import { getColumnStateQuery } from '../../graphql/reports/queries';
-import { ArrangerColumnStateResults } from 'graphql/models';
 import { format } from 'date-fns';
 import { saveAs } from 'file-saver';
 import { getDefaultContentType } from 'common/downloader';
@@ -15,6 +12,8 @@ import { startCase } from 'lodash';
 import { TFetchTSVArgs } from './types';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 import { globalActions } from 'store/global';
+import { ArrangerApi } from 'services/api/arranger';
+import { ArrangerColumnStateResults } from 'services/api/arranger/models';
 
 const showErrorReportNotif = (thunkApi: any) =>
   thunkApi.dispatch(
@@ -89,13 +88,9 @@ const fetchTsvReport = createAsyncThunk<void, TFetchTSVArgs, { rejectValue: stri
       const filename = `[include-${args.index}-table]-YYYY-MM-DD`;
       const formattedFileName = format(new Date(), `${filename}[.tsv]`);
 
-      const { data, error } = await sendRequest<ArrangerColumnStateResults>({
-        url: ARRANGER_API_COLUMN_STATE_URL,
-        method: 'POST',
-        data: {
-          query: getColumnStateQuery(args.index),
-          variables: {},
-        },
+      const { data, error } = await ArrangerApi.columnStates({
+        query: getColumnStateQuery(args.index),
+        variables: {},
       });
 
       if (error) {
@@ -177,11 +172,7 @@ const fetchTsxReport = async (
     downloadKey: v4(),
   });
 
-  const { data: downloadData, error: downloadError } = await sendRequest<any>({
-    url: ARRANGER_API_DOWNLOAD_URL,
-    method: 'POST',
-    data: params,
-  });
+  const { data: downloadData, error: downloadError } = await ArrangerApi.download(params);
 
   return {
     downloadData,

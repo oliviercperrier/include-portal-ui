@@ -20,7 +20,6 @@ import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { CAVATICA_FILE_BATCH_SIZE } from 'views/DataExploration/utils/constant';
 import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
-import { concatAllFencesAcls } from 'store/fenceConnection/utils';
 import { globalActions } from 'store/global';
 import { ArrangerApi } from 'services/api/arranger';
 
@@ -75,7 +74,7 @@ const beginAnalyse = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('cavatica/begin/analyse', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
-  const allFencesAcls = concatAllFencesAcls(fenceConnection.connections);
+  const allFencesAcls = Object.values(fenceConnection.fencesAcls).flat();
 
   const sqon: ISqonGroupFilter = { ...args.sqon } || {
     op: BooleanOperators.and,

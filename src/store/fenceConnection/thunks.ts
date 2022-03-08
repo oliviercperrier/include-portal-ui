@@ -16,14 +16,30 @@ const checkFencesAuthStatus = createAsyncThunk<void, void, { state: RootState }>
   },
 );
 
-const checkFenceAuthStatus = createAsyncThunk<IFenceAuthPayload, FENCE_NAMES, { state: RootState }>(
+const checkFenceAuthStatus = createAsyncThunk<
+  {
+    auth: IFenceAuthPayload;
+    acls: string[];
+  },
+  FENCE_NAMES,
+  { state: RootState }
+>(
   'fence/check/auth/status',
   async (fence, thunkAPI) => {
+    let fenceAcls: string[] = [];
     const { data, error } = await FenceApi.isAuthenticated(fence);
+
+    if (data?.authenticated) {
+      const { data: aclData } = await FenceApi.fetchAcls(fence);
+      fenceAcls = aclData?.acl || [];
+    }
 
     return handleThunkApiReponse({
       error,
-      data: data!,
+      data: {
+        auth: data!,
+        acls: fenceAcls,
+      },
       reject: thunkAPI.rejectWithValue,
     });
   },
@@ -40,7 +56,10 @@ const checkFenceAuthStatus = createAsyncThunk<IFenceAuthPayload, FENCE_NAMES, { 
 );
 
 const connectToFence = createAsyncThunk<
-  IFenceInfo,
+  {
+    info: IFenceInfo;
+    acls: string[];
+  },
   FENCE_NAMES,
   {
     state: RootState;
@@ -56,23 +75,26 @@ const connectToFence = createAsyncThunk<
       fenceInfo = data;
     }
 
-    let authUrl = `${fenceInfo?.authorize_uri}?client_id=${fenceInfo?.client_id}&response_type=code&scope=${fenceInfo?.scope}&redirect_uri=${fenceInfo?.redirect_uri}`;
-
-    // Will be remove. fenceInfo.authorize_uri will eventually contains all the params.
-    if (fence === FENCE_NAMES.gen3) {
-      authUrl = authUrl + '&idp=ras';
-    }
-
-    const authWindow = window.open(authUrl)!;
+    const authWindow = window.open(fenceInfo?.authorize_uri)!;
 
     return new Promise((resolve, reject) => {
       const interval = setInterval(async () => {
         if (authWindow.closed) {
+          let fenceAcls: string[] = [];
           const { data } = await FenceApi.isAuthenticated(fence);
 
           if (data?.authenticated) {
             clearInterval(interval);
-            resolve(fenceInfo!);
+
+            if (data?.authenticated) {
+              const { data: aclData } = await FenceApi.fetchAcls(fence);
+              fenceAcls = aclData?.acl || [];
+            }
+
+            resolve({
+              info: fenceInfo!,
+              acls: fenceAcls,
+            });
           } else {
             clearInterval(interval);
             reject('failed authenticating');

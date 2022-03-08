@@ -2,7 +2,7 @@ import flatMap from 'lodash/flatMap';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ALL_STUDIES_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { isEmpty } from 'lodash';
-import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/utils';
+import { addWildCardToAcls } from 'store/fenceConnection/utils';
 import { RootState } from 'store/types';
 import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
 import { AxiosError } from 'axios';
@@ -16,14 +16,12 @@ const fetchAllFenceStudies = createAsyncThunk<
 >('fenceStudies/fetch/all/studies', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
 
-  const aclsByFence = computeAclsByFence(fenceConnection.connections); // TODO change this?
-
   ALL_STUDIES_FENCE_NAMES.forEach(
     async (fenceName) =>
       await thunkAPI.dispatch(
         fetchFenceStudies({
           fenceName,
-          userAcls: aclsByFence[fenceName],
+          userAcls: fenceConnection.fencesAcls[fenceName],
         }),
       ),
   );

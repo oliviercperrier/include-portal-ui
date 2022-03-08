@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fenceConnectionSelector } from './selector';
 import { checkFenceAuthStatus, checkFencesAuthStatus } from './thunks';
-import { concatAllFencesAcls } from './utils';
 
 export type { initialState as FenceConnectionInitialState } from './types';
 export { default, FenceConnectionState } from './slice';
@@ -23,6 +22,6 @@ export const useFenceConnection = (fence?: FENCE_NAMES) => {
 
   return {
     ...state,
-    fencesAllAcls: concatAllFencesAcls(state.connections),
+    fencesAllAcls: Object.values(state.fencesAcls).flat(),
   };
 };

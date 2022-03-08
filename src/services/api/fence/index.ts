@@ -1,13 +1,19 @@
 import { FENCE_NAMES } from 'common/fenceTypes';
 import EnvironmentVariables from 'helpers/EnvVariables';
 import { sendRequest } from '..';
-import { IFenceAuthPayload, IFenceInfo } from './models';
+import { IFenceAclsPayload, IFenceAuthPayload, IFenceInfo } from './models';
 
 const FENCE_API_URL = EnvironmentVariables.configFor('FENCE_API_URL');
 
 const isAuthenticated = (fence: FENCE_NAMES) =>
   sendRequest<IFenceAuthPayload>({
     url: `${FENCE_API_URL}/${fence}/authenticated`,
+    method: 'GET',
+  });
+
+const fetchAcls = (fence: FENCE_NAMES) =>
+  sendRequest<IFenceAclsPayload>({
+    url: `${FENCE_API_URL}/${fence}/acl`,
     method: 'GET',
   });
 
@@ -37,4 +43,5 @@ export const FenceApi = {
   fetchInfo,
   exchangeCode,
   disconnect,
+  fetchAcls,
 };

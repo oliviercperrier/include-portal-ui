@@ -3,6 +3,10 @@ export interface IFenceAuthPayload {
   expiration?: number;
 }
 
+export interface IFenceAclsPayload {
+  acl: string[];
+}
+
 export interface IFenceInfo {
   authorize_uri: string;
   scope: string;

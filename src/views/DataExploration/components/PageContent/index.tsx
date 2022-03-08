@@ -23,10 +23,7 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from 'views/DataExploration/utils/mapper';
-import {
-  isEmptySqon,
-  resolveSyntheticSqon,
-} from '@ferlab/ui/core/data/sqon/utils';
+import { isEmptySqon, resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { useParticipants } from 'graphql/participants/actions';
 import { useDataFiles } from 'graphql/files/actions';
 import { useBiospecimen } from 'graphql/biospecimens/actions';
@@ -72,24 +69,14 @@ const PageContent = ({
   const history = useHistory();
   const { filters }: { filters: ISyntheticSqon } = useFilters();
   const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
-  const activeSqon = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).active;
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [pagingConfigParticipant, setPagingConfigParticipant] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
   const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
 
-  const currentFilter =
-    (allSqons && isEmptySqon(filters) && !filters.id
-      ? allSqons.find((sqon: any) => sqon.id === activeSqon)
-      : filters) || filters;
-
-  const participantResolvedSqon = mapFilterForParticipant(
-    resolveSyntheticSqon(allSqons, currentFilter),
-  );
-  const biospecimenResolvedSqon = mapFilterForBiospecimen(
-    resolveSyntheticSqon(allSqons, currentFilter),
-  );
-  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, currentFilter));
+  const participantResolvedSqon = mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters));
+  const biospecimenResolvedSqon = mapFilterForBiospecimen(resolveSyntheticSqon(allSqons, filters));
+  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, filters));
 
   const participantResults = useParticipants({
     first: pagingConfigParticipant.size,
@@ -158,7 +145,7 @@ const PageContent = ({
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
         cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
-        currentQuery={isEmptySqon(currentFilter) ? {} : currentFilter}
+        currentQuery={isEmptySqon(filters) ? {} : filters}
         loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}
         total={participantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}

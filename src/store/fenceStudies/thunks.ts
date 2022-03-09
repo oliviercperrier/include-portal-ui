@@ -7,6 +7,7 @@ import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
 import { AxiosError } from 'axios';
 import { handleThunkApiReponse } from 'store/utils';
 import { ArrangerApi } from 'services/api/arranger';
+import { FileAccessType } from 'graphql/files/models';
 
 const fetchAllFenceStudies = createAsyncThunk<
   void,
@@ -177,10 +178,24 @@ const getAuthStudyIdsAndCounts = async (
     `,
     variables: {
       sqon: {
-        op: 'and',
+        op: 'or',
         content: [
-          { op: 'in', content: { field: 'acl', value: userAcls } },
-          { op: 'in', content: { field: 'repository', value: fenceName } },
+          {
+            op: 'and',
+            content: [
+              { op: 'in', content: { field: 'acl', value: userAcls } },
+              { op: 'in', content: { field: 'repository', value: fenceName } },
+            ],
+          },
+          {
+            op: 'and',
+            content: [
+              {
+                op: 'in',
+                content: { field: 'access_control', value: [FileAccessType.REGISTERED] },
+              },
+            ],
+          },
         ],
       },
     },

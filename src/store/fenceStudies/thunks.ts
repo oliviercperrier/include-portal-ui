@@ -8,6 +8,7 @@ import { AxiosError } from 'axios';
 import { handleThunkApiReponse } from 'store/utils';
 import { ArrangerApi } from 'services/api/arranger';
 import { FileAccessType } from 'graphql/files/models';
+import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 
 const fetchAllFenceStudies = createAsyncThunk<
   void,
@@ -89,7 +90,7 @@ const getStudiesCountByNameAndAcl = async (
     (obj, studyId) => ({
       ...obj,
       [`${studyId}_sqon`]: {
-        op: 'in',
+        op: TermOperators.in,
         content: { field: 'participants.study.external_id', value: [studyId] },
       },
     }),
@@ -178,20 +179,20 @@ const getAuthStudyIdsAndCounts = async (
     `,
     variables: {
       sqon: {
-        op: 'or',
+        op: BooleanOperators.or,
         content: [
           {
-            op: 'and',
+            op: BooleanOperators.and,
             content: [
-              { op: 'in', content: { field: 'acl', value: userAcls } },
-              { op: 'in', content: { field: 'repository', value: fenceName } },
+              { op: TermOperators.in, content: { field: 'acl', value: userAcls } },
+              { op: TermOperators.in, content: { field: 'repository', value: fenceName } },
             ],
           },
           {
-            op: 'and',
+            op: BooleanOperators.and,
             content: [
               {
-                op: 'in',
+                op: TermOperators.in,
                 content: { field: 'access_control', value: [FileAccessType.REGISTERED] },
               },
             ],

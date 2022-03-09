@@ -16,7 +16,7 @@ import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { SEARCH_FILES_QUERY } from 'graphql/files/queries';
 import { hydrateResults } from 'graphql/models';
 import { termToSqon } from '@ferlab/ui/core/data/sqon/utils';
-import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
+import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { CAVATICA_FILE_BATCH_SIZE } from 'views/DataExploration/utils/constant';
 import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
@@ -80,17 +80,17 @@ const beginAnalyse = createAsyncThunk<
     op: BooleanOperators.and,
     content: [
       {
-        op: 'or',
+        op: BooleanOperators.or,
         content: [
           {
-            op: 'and',
-            content: [{ op: 'in', content: { field: 'acl', value: allFencesAcls } }],
+            op: BooleanOperators.and,
+            content: [{ op: TermOperators.in, content: { field: 'acl', value: allFencesAcls } }],
           },
           {
-            op: 'and',
+            op: BooleanOperators.and,
             content: [
               {
-                op: 'in',
+                op: TermOperators.in,
                 content: { field: 'access_control', value: [FileAccessType.REGISTERED] },
               },
             ],

@@ -1,7 +1,7 @@
 const filesFacets = {
   type_of_omics: 'Data Category',
-  experimental_strategy: 'Experimental Strategy',
   data_category: 'Data Category',
+  controlled_access: 'Access',
   data_type: 'Data Type',
   file_format: 'File Format',
   size: 'Size',

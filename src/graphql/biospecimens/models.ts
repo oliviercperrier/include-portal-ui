@@ -1,6 +1,6 @@
-import { IFileEntity } from "graphql/files/models";
-import { ArrangerResultsTree } from "graphql/models";
-import { IParticipantEntity } from "graphql/participants/models";
+import { IFileEntity } from 'graphql/files/models';
+import { ArrangerResultsTree } from 'graphql/models';
+import { IParticipantEntity } from 'graphql/participants/models';
 
 export interface IBiospecimenResultTree {
   biospecimen: ArrangerResultsTree<IBiospecimenEntity>;
@@ -9,14 +9,18 @@ export interface IBiospecimenResultTree {
 export interface IBiospecimenEntity {
   key?: string;
   id: string;
+  status: string;
   score: number;
+  volume_ul: number;
+  volume_unit: string;
+  container_id: string;
   age_at_biospecimen_collection: number;
-  bio_repository: string;
-  biospecimen_id: string;
-  biospecimen_type: string;
-  derived_sample_id: string;
-  derived_sample_type: string;
-  ncit_id_tissue_type: string;
+  biospecimen_storage: string;
+  laboratory_procedure: string;
+  collection_sample_id: string;
+  collection_sample_type: string;
+  parent_sample_id: string;
+  parent_sample_type: string;
   sample_id: string;
   sample_type: string;
   files: ArrangerResultsTree<IFileEntity>;

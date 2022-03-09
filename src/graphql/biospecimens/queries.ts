@@ -1,30 +1,35 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const SEARCH_BIOSPECIMEN_QUERY = gql`
-  query searchBiospecimen(
-    $sqon: JSON
-    $first: Int
-    $offset: Int
-    $sort: [Sort]
-  ) {
+  query searchBiospecimen($sqon: JSON, $first: Int, $offset: Int, $sort: [Sort]) {
     biospecimen {
       hits(filters: $sqon, first: $first, offset: $offset, sort: $sort) {
         total
         edges {
           node {
             id
-            derived_sample_id
+            container_id
+            status
             sample_id
-            biospecimen_id
-            biospecimen_type
             sample_type
-            derived_sample_type
+            parent_sample_id
+            parent_sample_type
+            collection_sample_id
+            collection_sample_type
             age_at_biospecimen_collection
-            ncit_id_tissue_type
-            bio_repository
+            laboratory_procedure
+            volume_ul
+            volume_unit
+            biospecimen_storage
 
             participant {
               participant_id
+            }
+
+            files {
+              hits {
+                total
+              }
             }
           }
         }

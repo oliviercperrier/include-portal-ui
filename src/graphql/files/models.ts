@@ -11,11 +11,10 @@ export interface IFileEntity {
   id: string;
   score: number;
   acl: string[];
-  access: string;
+  controlled_access: string;
   access_urls: string;
   data_category: string;
   data_type: string;
-  experimental_strategy: string;
   file_format: string;
   file_id: string;
   size: number;

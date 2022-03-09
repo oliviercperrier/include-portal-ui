@@ -10,12 +10,11 @@ export const SEARCH_FILES_QUERY = gql`
             id
             file_id
             type_of_omics
-            experimental_strategy
             data_category
             data_type
             file_format
             size
-            access
+            controlled_access
             access_urls
             acl
             repository

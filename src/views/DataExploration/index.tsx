@@ -69,12 +69,12 @@ export const filterGroups: {
     groups: [
       {
         fields: [
-          'biospecimen_type',
           'sample_type',
-          'derived_sample_type',
-          'ncit_id_tissue_type',
+          'collection_sample_type',
           'age_at_biospecimen_collection',
-          'bio_repository',
+          'status',
+          'laboratory_procedure',
+          'biospecimen_storage'
         ],
       },
     ],
@@ -88,7 +88,7 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: ['type_of_omics', 'experimental_strategy', 'data_type', 'file_format', 'access'],
+        fields: ['type_of_omics', 'data_type', 'file_format', 'controlled_access'],
       },
     ],
   },

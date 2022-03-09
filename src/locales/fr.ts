@@ -1,7 +1,7 @@
 const filesFacets = {
   type_of_omics: 'Data Category',
-  experimental_strategy: 'Experimental Strategy',
   data_category: 'Data Category',
+  controlled_access: 'Access',
   data_type: 'Data Type',
   file_format: 'File Format',
   size: 'Size',
@@ -438,14 +438,17 @@ const fr = {
           researchAndDataUse: 'Research & Data Use',
         },
         labels: {
+          firstName: 'First Name',
+          lastName: 'Last Name',
           haveAUserID: 'I have a user ID for:',
           enterUserId: 'Please enter your user ID',
+          commercialUseReason: 'Please specify your commercial use:',
           fullName: 'Full name',
           email: 'Email',
           iAmA: 'I am a:',
           pleaseDescribe: 'Please describe',
           iAmAffiliatedWith: 'I am affiliated with:',
-          intendToUser: 'I intend to use the INCLUDE Portal data to:',
+          intendToUser: 'I intend to use the INCLUDE Portal data for:',
           dataUseStatement: 'Data use statement',
           researchAreaDescribe: 'My research area or area of interest may best be described as:',
         },
@@ -455,7 +458,7 @@ const fr = {
         helps: {
           checkAllThatApply: 'Check all that apply',
           describeUseBelow:
-            'For other purpose, including commercial purpose, you must describe your use below',
+            'For other purpose, you must described your use below',
           provideBriefDescription:
             'Provide a brief description and a link to your professional biography or organization website, if available',
           provideOrgAffiliation: 'Provide institutional or organizational affiliation',
@@ -475,6 +478,7 @@ const fr = {
           1: 'Learn more about Down syndrome and its health outcomes, management, and/or treatment',
           2: 'Help me design a new research study',
           3: 'Identify datasets that I want to analyze',
+          4: 'Commercial purposes'
         },
         userIdOptions: {
           1: 'ERA Commons',

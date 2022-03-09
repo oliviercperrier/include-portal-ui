@@ -1,16 +1,13 @@
-import { hydrateResults } from "graphql/models";
-import { QueryVariable } from "graphql/queries";
-import { useLazyResultQueryOnLoadOnly } from "hooks/graphql/useLazyResultQuery";
-import { IStudyResultTree } from "./models";
-import { FETCH_STUDIES_QUERY } from "./queries";
+import { hydrateResults } from 'graphql/models';
+import { QueryVariable } from 'graphql/queries';
+import { useLazyResultQueryOnLoadOnly } from 'hooks/graphql/useLazyResultQuery';
+import { IStudyResultTree } from './models';
+import { FETCH_STUDIES_QUERY } from './queries';
 
 export const useStudies = (variables?: QueryVariable) => {
-  const { loading, result } = useLazyResultQueryOnLoadOnly<IStudyResultTree>(
-    FETCH_STUDIES_QUERY,
-    {
-      variables: variables,
-    }
-  );
+  const { loading, result } = useLazyResultQueryOnLoadOnly<IStudyResultTree>(FETCH_STUDIES_QUERY, {
+    variables,
+  });
 
   return {
     loading,

@@ -2,6 +2,7 @@ import cx from 'classnames';
 import { Button, List, Progress, Typography } from 'antd';
 import intl from 'react-intl-universal';
 import { TFenceStudy } from 'store/fenceStudies/types';
+import { numberWithCommas } from 'utils/string';
 
 import styles from './index.module.scss';
 
@@ -16,16 +17,20 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
   return (
     <List.Item key={id} className={cx('wrapped', styles.AuthorizedStudiesListItem)}>
       <List.Item.Meta
-        title={<Text ellipsis>{data.studyShortName}</Text>}
+        title={
+          <Text title={data.studyShortName} ellipsis>
+            {data.studyShortName}
+          </Text>
+        }
         description={
           <div className={styles.filesCount}>
             {intl.get('screen.dashboard.cards.authorizedStudies.authorization')}:{' '}
             <Button className={styles.fileLink} type="link">
-              <span>{data.authorizedFiles}</span>
+              <span>{numberWithCommas(data.authorizedFiles)}</span>
             </Button>{' '}
             {intl.get('screen.dashboard.cards.authorizedStudies.of')}{' '}
             <Button className={styles.fileLink} type="link">
-              <span>{data.totalFiles}</span>
+              <span>{numberWithCommas(data.totalFiles)}</span>
             </Button>{' '}
             {intl.get('screen.dashboard.cards.authorizedStudies.files')}
           </div>

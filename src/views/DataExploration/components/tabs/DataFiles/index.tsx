@@ -1,8 +1,12 @@
 import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
-import { CloudUploadOutlined, LockOutlined, SafetyOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, LockOutlined, SafetyOutlined, UnlockFilled } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
+import {
+  CAVATICA_FILE_BATCH_SIZE,
+  DEFAULT_PAGE_SIZE,
+  TAB_IDS,
+} from 'views/DataExploration/utils/constant';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -10,17 +14,26 @@ import { getProTableDictionary } from 'utils/translation';
 import { useDispatch } from 'react-redux';
 import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatFileSize } from 'utils/formatFileSize';
-import { Button, Tag, Tooltip } from 'antd';
+import { Button, Modal, Tag, Tooltip } from 'antd';
 import AnalyseModal from 'views/Dashboard/components/DashboardCards/Cavatica/AnalyseModal';
 import { fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
+import intl from 'react-intl-universal';
+import { IStudyEntity } from 'graphql/studies/models';
+import { intersection } from 'lodash';
+import { beginAnalyse } from 'store/fenceCavatica/thunks';
+import { useFenceConnection } from 'store/fenceConnection';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { connectToFence } from 'store/fenceConnection/thunks';
+import { FENCE_NAMES } from 'common/fenceTypes';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
+import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
-import { cavaticaActions } from 'store/cavatica/slice';
-import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -29,7 +42,7 @@ interface OwnProps {
   sqon?: ISqonGroupFilter;
 }
 
-const defaultColumns: ProColumnType<any>[] = [
+const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
   {
     key: 'lock',
     title: (
@@ -37,13 +50,19 @@ const defaultColumns: ProColumnType<any>[] = [
         <LockOutlined />
       </Tooltip>
     ),
-    dataIndex: 'lock',
     displayTitle: 'File Authorization',
     align: 'center',
-    render: () => {
-      return (
+    render: (record: IFileEntity) => {
+      const acl = record.acl || [];
+      const hasAccess = acl.includes('*') || intersection(fenceAcls, acl).length > 0;
+
+      return hasAccess ? (
+        <Tooltip title="Authorized">
+          <UnlockFilled className={styles.authorizedLock} />
+        </Tooltip>
+      ) : (
         <Tooltip title="Unauthorized">
-          <LockOutlined className={styles.lockLoggedOut} />
+          <LockOutlined className={styles.unauthorizedLock} />
         </Tooltip>
       );
     },
@@ -85,7 +104,8 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'study_id',
     title: 'Study Code',
-    dataIndex: 'study_id',
+    dataIndex: 'study',
+    render: (study: IStudyEntity) => study.study_id,
   },
   {
     key: 'type_of_omics',
@@ -119,16 +139,57 @@ const defaultColumns: ProColumnType<any>[] = [
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  // eslint-disable-next-line
+  const { isConnected, isInitializingAnalyse, beginAnalyseAfterConnection } = useFenceCavatica();
+  const { fencesAllAcls } = useFenceConnection();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
+
+  const onBeginAnalyse = () =>
+    dispatch(
+      beginAnalyse({
+        sqon: sqon!,
+        fileIds: selectedKeys,
+      }),
+    );
+
+  const onCavaticaConnectionRequired = () =>
+    Modal.confirm({
+      type: 'warn',
+      title: intl.get('screen.dataExploration.tabs.datafiles.cavatica.authWarning.title'),
+      content: intl.get('screen.dataExploration.tabs.datafiles.cavatica.authWarning.description'),
+      okText: 'Connect',
+      onOk: () => {
+        dispatch(fenceCavaticaActions.setBeginAnalyseConnectionFlag());
+        dispatch(connectToFence(FENCE_NAMES.cavatica));
+      },
+    });
+
+  const onCavaticaUploadLimitReached = () =>
+    Modal.error({
+      title: intl.get('screen.dataExploration.tabs.datafiles.cavatica.bulkImportLimit.title'),
+      content: intl.getHTML(
+        'screen.dataExploration.tabs.datafiles.cavatica.bulkImportLimit.description',
+        {
+          limit: CAVATICA_FILE_BATCH_SIZE,
+        },
+      ),
+      okText: 'Ok',
+      cancelText: undefined,
+    });
+
+  useEffect(() => {
+    if (isConnected && beginAnalyseAfterConnection) {
+      onBeginAnalyse();
+    }
+    // eslint-disable-next-line
+  }, [isConnected, beginAnalyseAfterConnection]);
 
   return (
     <>
       <ProTable<ITableFileEntity>
         tableId="datafiles_table"
-        columns={defaultColumns}
+        columns={getDefaultColumns(fencesAllAcls)}
         wrapperClassName={styles.dataFilesTabWrapper}
         loading={results.loading}
         initialColumnState={userInfo?.config.data_exploration?.tables?.datafiles?.columns}
@@ -150,9 +211,12 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
             dispatch(
               fetchTsvReport({
                 columnStates: userInfo?.config.data_exploration?.tables?.datafiles?.columns,
-                columns: defaultColumns,
+                columns: getDefaultColumns(fencesAllAcls),
                 index: INDEXES.FILE,
-                sqon,
+                sqon:
+                  selectedAllResults || !selectedKeys.length
+                    ? sqon
+                    : generateSelectionSqon(TAB_IDS.DATA_FILES, selectedKeys),
               }),
             ),
           onColumnSortChange: (newState) =>
@@ -172,9 +236,25 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               disabled={selectedKeys.length === 0}
               type="primary"
               icon={<CloudUploadOutlined />}
-              onClick={() => dispatch(cavaticaActions.beginAnalyse(selectedRows))}
+              loading={isInitializingAnalyse}
+              onClick={() => {
+                if (isConnected) {
+                  if (selectedRows.length > CAVATICA_FILE_BATCH_SIZE || selectedAllResults) {
+                    onCavaticaUploadLimitReached();
+                  } else {
+                    dispatch(
+                      beginAnalyse({
+                        sqon: sqon!,
+                        fileIds: selectedKeys,
+                      }),
+                    );
+                  }
+                } else {
+                  onCavaticaConnectionRequired();
+                }
+              }}
             >
-              Analyze in Cavatica
+              {intl.get('screen.dataExploration.tabs.datafiles.cavatica.analyseInCavatica')}
             </Button>,
           ],
         }}
@@ -196,8 +276,12 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
         dataSource={results.data.map((i) => ({ ...i, key: i.file_id }))}
         dictionary={getProTableDictionary()}
       />
-      <AnalyseModal />
-      <CreateProjectModal />
+      {isConnected && (
+        <>
+          <AnalyseModal />
+          <CreateProjectModal />
+        </>
+      )}
     </>
   );
 };

@@ -20,6 +20,7 @@ import {
 } from './utils/mapper';
 
 import styles from './index.module.scss';
+import HpoTreeFacet from './components/HpoTreeFacet';
 
 interface OwnProps {
   tab?: string;
@@ -47,12 +48,14 @@ export const filterGroups: {
           'study_id',
           'down_syndrome_status',
           'diagnosis__mondo_id_diagnosis',
-          'phenotype__hpo_phenotype_observed',
+          //'observed_phenotype__name',
+          //'phenotype__hpo_phenotype_observed',
           'family_type',
           'sex',
           'race',
           'ethnicity',
         ],
+        customs: [<HpoTreeFacet />],
       },
     ],
   },
@@ -85,13 +88,7 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: [
-          'type_of_omics',
-          'experimental_strategy',
-          'data_type',
-          'file_format',
-          'access',
-        ],
+        fields: ['type_of_omics', 'experimental_strategy', 'data_type', 'file_format', 'access'],
       },
     ],
   },

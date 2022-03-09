@@ -79,6 +79,41 @@ const fr = {
         messageDelete: 'Unable to delete filter',
       },
     },
+    cavatica: {
+      error: {
+        title: 'Error',
+        projects: {
+          fetch: 'Unable to fetch your cavatica projects.',
+          create: 'Unable to create your cavatica project.',
+        },
+        billingGroups: {
+          fetch: 'Unable to fetch your cavatica billing groups.',
+        },
+        bulk: {
+          import: 'Unable to copy files to your project',
+          fetchFiles: 'Unable to fetch selected files',
+        },
+        fileAuth: {
+          title: 'Unauthorized files',
+          description:
+            'You are not authorized to analyze the files you have selected. Learn more about data access.',
+        },
+      },
+      success: {
+        title: 'Success',
+        projects: {
+          create: 'Project created successfully',
+        },
+        bulk: {
+          import: {
+            copySuccess: 'Your files have been copied to: <strong>{destination}</strong>',
+            possibleDelays:
+              'If you have uploaded more than 500 files in the last 5 minutes, the import may take a little longer.',
+            openProject: 'Open project in Cavatica',
+          },
+        },
+      },
+    },
     report: {
       error: {
         title: 'Error',
@@ -91,7 +126,7 @@ const fr = {
       },
       onSuccess: {
         title: 'Success',
-        fetchReport: 'The report was successfully downloaded',
+        fetchReport: 'Report downloaded successfully',
       },
     },
   },
@@ -308,6 +343,17 @@ const fr = {
         biospecimen: 'Biospecimen',
         datafiles: 'Data Files',
       },
+      hpoTree: {
+        modal: {
+          title: "Observed Phenotype (HPO) Browser",
+          okText: "Apply"
+        },
+        searchPlaceholder: "Search for ontology term - min 3 characters",
+        tags: {
+          exact: "Participants with this exact term",
+          all: "Participants including descendant terms"
+        }
+      },
       tabs: {
         summary: {
           title: 'Summary',
@@ -337,6 +383,19 @@ const fr = {
         },
         datafiles: {
           title: 'Data Files ({count})',
+          cavatica: {
+            analyseInCavatica: 'Analyze in Cavatica',
+            bulkImportLimit: {
+              title: 'Maximum file count exceeded',
+              description:
+                'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
+            },
+            authWarning: {
+              title: 'You are not connected to Cavatica',
+              description:
+                'In order to analyze your files you must first connect your Cavatica account. Once you are connected, you will be redirected back to this page.',
+            },
+          },
         },
       },
     },
@@ -445,7 +504,7 @@ const fr = {
     ethnicity: 'Ethnicity',
     race: 'Race',
     observed_phenotype: {
-      name: 'Observed Phenotype Name',
+      name: 'Phenotype (HPO)',
     },
     // Biospecimen
     biospecimen_type: 'Biospecimen Type',

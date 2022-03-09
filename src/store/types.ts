@@ -4,7 +4,7 @@ import { FenceConnectionInitialState } from 'store/fenceConnection';
 import { RiffInitialState } from './riff';
 import { SavedFilterInitialState } from './savedFilter';
 import { ReportInitialState } from './report';
-import { cavaticaInitialState } from './cavatica';
+import { FenceCavaticaInitialState } from './fenceCavatica';
 import { fenceStudiesInitialState } from './fenceStudies';
 
 export type RootState = {
@@ -15,5 +15,5 @@ export type RootState = {
   fenceStudies: fenceStudiesInitialState;
   riff: RiffInitialState;
   savedFilter: SavedFilterInitialState;
-  cavatica: cavaticaInitialState;
+  fenceCavatica: FenceCavaticaInitialState;
 };

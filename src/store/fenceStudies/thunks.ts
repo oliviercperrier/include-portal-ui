@@ -1,14 +1,13 @@
 import flatMap from 'lodash/flatMap';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
+import { ALL_STUDIES_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { isEmpty } from 'lodash';
-import { addWildCardToAcls, computeAclsByFence } from 'store/fenceConnection/utils';
+import { addWildCardToAcls } from 'store/fenceConnection/utils';
 import { RootState } from 'store/types';
-import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
-import { sendRequest } from 'services/api';
 import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
 import { AxiosError } from 'axios';
 import { handleThunkApiReponse } from 'store/utils';
+import { ArrangerApi } from 'services/api/arranger';
 
 const fetchAllFenceStudies = createAsyncThunk<
   void,
@@ -17,15 +16,12 @@ const fetchAllFenceStudies = createAsyncThunk<
 >('fenceStudies/fetch/all/studies', async (args, thunkAPI) => {
   const { fenceConnection } = thunkAPI.getState();
 
-  const fenceNames = Object.keys(fenceConnection.connections) as FENCE_NAMES[];
-  const aclsByFence = computeAclsByFence(fenceConnection.connections);
-
-  fenceNames.forEach(
+  ALL_STUDIES_FENCE_NAMES.forEach(
     async (fenceName) =>
       await thunkAPI.dispatch(
         fetchFenceStudies({
           fenceName,
-          userAcls: aclsByFence[fenceName],
+          userAcls: fenceConnection.fencesAcls[fenceName],
         }),
       ),
   );
@@ -62,14 +58,14 @@ const fetchFenceStudies = createAsyncThunk<
   },
   {
     condition: (args, { getState }) => {
-      const { fenceStudies } = getState();
+      const { fenceStudies, fenceConnection } = getState();
 
       const studies = fenceStudies.studies[args.fenceName];
       const hasNoAuthorizedStudies = isEmpty(studies) || isEmpty(studies.authorizedStudies);
       const hasNotBeenDisconnected = [
         FENCE_CONNECTION_STATUSES.unknown,
         FENCE_CONNECTION_STATUSES.connected,
-      ].includes(fenceStudies.statuses[args.fenceName]);
+      ].includes(fenceConnection.connectionStatus[args.fenceName]);
 
       return (
         isEmpty(fenceStudies.studies[args.fenceName]) &&
@@ -100,39 +96,35 @@ const getStudiesCountByNameAndAcl = async (
     {},
   );
 
-  const { data, error } = await sendRequest<any>({
-    url: ARRANGER_API_PROJECT_URL,
-    method: 'POST',
-    data: {
-      query: `
-      query StudyCountByNamesAndAcl(${studyIds.map(
-        (studyId) => `$${studyId}_sqon: JSON`,
-      )}) {          
-        file {
-          ${studyIds
-            .map(
-              (studyId) => `
-            ${studyId}: aggregations(filters: $${studyId}_sqon, aggregations_filter_themselves: true) {
-              acl {
-                buckets {
-                  key
-                }
+  const { data, error } = await ArrangerApi.graphqlRequest({
+    query: `
+    query StudyCountByNamesAndAcl(${studyIds.map(
+      (studyId) => `$${studyId}_sqon: JSON`,
+    )}) {          
+      file {
+        ${studyIds
+          .map(
+            (studyId) => `
+          ${studyId}: aggregations(filters: $${studyId}_sqon, aggregations_filter_themselves: true) {
+            acl {
+              buckets {
+                key
               }
-              participants__study__study_name{
-                buckets{
-                  key
-                  doc_count
-                }
-              } 
             }
-          `,
-            )
-            .join('')}
-        }
+            participants__study__study_name{
+              buckets{
+                key
+                doc_count
+              }
+            } 
+          }
+        `,
+          )
+          .join('')}
       }
-      `,
-      variables: sqons,
-    },
+    }
+    `,
+    variables: sqons,
   });
 
   if (error) {
@@ -168,11 +160,8 @@ const getAuthStudyIdsAndCounts = async (
   error?: AxiosError;
   studies?: TFenceStudiesIdsAndCount;
 }> => {
-  const { data, error } = await sendRequest<any>({
-    url: ARRANGER_API_PROJECT_URL,
-    method: 'POST',
-    data: {
-      query: `
+  const { data, error } = await ArrangerApi.graphqlRequest<any>({
+    query: `
     query AuthorizedStudyIdsAndCount($sqon: JSON) {
       file {
         aggregations(filters: $sqon, aggregations_filter_themselves: true, include_missing: false){
@@ -187,14 +176,13 @@ const getAuthStudyIdsAndCounts = async (
         }
       }
     `,
-      variables: {
-        sqon: {
-          op: 'and',
-          content: [
-            { op: 'in', content: { field: 'acl', value: addWildCardToAcls(userAcls) } },
-            { op: 'in', content: { field: 'repository', value: fenceName } },
-          ],
-        },
+    variables: {
+      sqon: {
+        op: 'and',
+        content: [
+          { op: 'in', content: { field: 'acl', value: addWildCardToAcls(userAcls) } },
+          { op: 'in', content: { field: 'repository', value: fenceName } },
+        ],
       },
     },
   });

@@ -2,13 +2,19 @@ import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Col, Row, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { lightTreeNodeConstructor, TreeNode } from './utils/OntologyTree';
-import { generateNavTreeFormKey, PhenotypeStore } from './utils/PhenotypeStore';
+import {
+  generateNavTreeFormKey,
+  PhenotypeStore,
+  RegexExtractPhenotype,
+} from 'views/DataExploration/utils/PhenotypeStore';
+import { lightTreeNodeConstructor, TreeNode } from 'views/DataExploration/utils/OntologyTree';
+
 import intl from 'react-intl-universal';
 import SunburstD3 from './utils/sunburst-d3';
 import { getCommonColors } from 'common/charts';
 import TreePanel from 'views/DataExploration/components/tabs/Summary/SunburstGraphCard/TreePanel';
 import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper';
+import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
 
@@ -16,7 +22,7 @@ interface OwnProps {
   className?: string;
   sqon: ISyntheticSqon;
 }
-export const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, 'g');
+
 const { Title } = Typography;
 const width = 335;
 const height = 335;
@@ -34,7 +40,7 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
     phenotypeStore.current.fetch('observed_phenotype', sqon).then(() => {
       const rootNode = phenotypeStore.current.getRootNode()!;
       setCurrentNode(rootNode);
-      setTreeData([lightTreeNodeConstructor(rootNode?.key)]);
+      setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode?.key)] : []);
       setIsLoading(false);
 
       updateSunburst.current = SunburstD3(
@@ -51,7 +57,7 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
           centerTitleFormatter: (data: TreeNode) => data.results,
           centerSubtitleFormatter: (data: TreeNode) => 'Participants with',
           centerDescriptionFormatter: (data: TreeNode) =>
-            `HP:${extractPhenotypeTitleAndCode(data.name!)?.code}`,
+            `HP:${extractPhenotypeTitleAndCode(data.title!)?.code}`,
           tooltipFormatter: (data: TreeNode) =>
             `<div>
               ${data.title}<br/><br/>
@@ -81,25 +87,34 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
         </Title>
       }
       content={
-        <Row gutter={[24, 24]} id="tooltip-wrapper">
-          <Col lg={8} xl={10}>
-            <svg
-              className={styles.sunburstChart}
-              width={width}
-              height={height}
-              viewBox={`0 0 ${width} ${height}`}
-              ref={sunburstRef}
-            />
-          </Col>
-          <Col lg={16} xl={14}>
-            <TreePanel
-              currentNode={currentNode!}
-              treeData={treeData!}
-              getSelectedPhenotype={getSelectedPhenotype}
-              updateSunburst={updateSunburst.current!}
-            />
-          </Col>
-        </Row>
+        !isLoading &&
+        (treeData && treeData?.length > 0 ? (
+          <Row gutter={[24, 24]} id="tooltip-wrapper">
+            <Col lg={8} xl={10}>
+              <svg
+                className={styles.sunburstChart}
+                width={width}
+                height={height}
+                viewBox={`0 0 ${width} ${height}`}
+                ref={sunburstRef}
+              />
+            </Col>
+            <Col lg={16} xl={14}>
+              <TreePanel
+                currentNode={currentNode!}
+                treeData={treeData!}
+                getSelectedPhenotype={getSelectedPhenotype}
+                updateSunburst={updateSunburst.current!}
+              />
+            </Col>
+          </Row>
+        ) : (
+          <Empty
+            imageType="grid"
+            size="large"
+            description="No observed phenotypes reported for these participants"
+          />
+        ))
       }
     />
   );

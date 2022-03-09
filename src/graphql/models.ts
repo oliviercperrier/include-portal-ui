@@ -74,29 +74,3 @@ export interface IQueryResults<T> {
   loading: boolean;
   total: number;
 }
-
-// COLUMN STATE
-export interface ArrangerSingleColumnState {
-  accessor: string;
-  canChangeShow: boolean;
-  field: string;
-  jsonPath: string | null;
-  query: string | null;
-  show: boolean;
-  sortable: boolean;
-  type: string;
-}
-
-export interface ArrangerColumnStateResults {
-  data: {
-    [index: string]: {
-      columnsState: {
-        state: {
-          columns: ArrangerSingleColumnState[];
-          keyField?: string;
-          type: string;
-        };
-      };
-    };
-  };
-}

@@ -15,18 +15,20 @@
     }
   }
 
-  &.genericFilterWrapper {
-    .customFilterContainer {
+  .filtersGroup {
+    .filter {
+      margin-top: 8px;
+
       &:last-child {
         padding-bottom: 8px;
       }
     }
   }
 
-  &:not(.genericFilterWrapper) {
+  &.genericFilterWrapper {
     .customFilterContainer {
       &:last-child {
-        padding-bottom: 16px;
+        padding-bottom: 8px;
       }
     }
   }

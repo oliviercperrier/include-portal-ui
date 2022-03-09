@@ -1,12 +1,8 @@
 import { IQueryResults } from 'graphql/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
-import {
-  THandleReportDownload,
-  TPagingConfig,
-  TPagingConfigCb,
-} from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE } from 'views/DataExploration/utils/constant';
+import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
 import { IParticipantEntity } from 'graphql/participants/models';
 import { extractNcitTissueTitleAndCode } from 'views/DataExploration/utils/helper';
 import ProTable from '@ferlab/ui/core/components/ProTable';
@@ -19,18 +15,18 @@ import { Button } from 'antd';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { fetchTsvReport } from 'store/report/thunks';
+import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
 
 import styles from './index.module.scss';
+import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
   setPagingConfig: TPagingConfigCb;
   pagingConfig: TPagingConfig;
-  downloadReport: THandleReportDownload;
   sqon?: ISqonGroupFilter;
 }
 
@@ -123,17 +119,16 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const BioSpecimenTab = ({
-  results,
-  setPagingConfig,
-  pagingConfig,
-  downloadReport,
-  sqon,
-}: OwnProps) => {
+const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const getReportSqon = (): any =>
+    selectedAllResults || !selectedKeys.length
+      ? sqon
+      : generateSelectionSqon(TAB_IDS.BIOSPECIMENS, selectedKeys);
 
   return (
     <ProTable
@@ -171,14 +166,21 @@ const BioSpecimenTab = ({
               columnStates: userInfo?.config.data_exploration?.tables?.biospecimens?.columns,
               columns: defaultColumns,
               index: INDEXES.BIOSPECIMEN,
-              sqon,
+              sqon: getReportSqon(),
             }),
           ),
         extra: [
           <Button
             icon={<DownloadOutlined />}
             onClick={() =>
-              downloadReport(ReportType.BIOSEPCIMEN_DATA, selectedKeys, selectedAllResults)
+              dispatch(
+                fetchReport({
+                  data: {
+                    sqon: getReportSqon(),
+                    name: ReportType.BIOSEPCIMEN_DATA,
+                  },
+                }),
+              )
             }
             disabled={selectedKeys.length === 0}
           >

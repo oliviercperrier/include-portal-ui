@@ -6,8 +6,8 @@ import {
 } from 'services/api/savedFilter/models';
 import { SavedFilterApi } from 'services/api/savedFilter';
 import { handleThunkApiReponse } from 'store/utils';
-import { notification } from 'antd';
 import intl from 'react-intl-universal';
+import { globalActions } from 'store/global';
 
 const fetchSavedFilters = createAsyncThunk<
   TUserSavedFilter[],
@@ -49,12 +49,14 @@ const updateSavedFilter = createAsyncThunk<
     error,
     data: data!,
     reject: thunkAPI.rejectWithValue,
-    onError: () => {
-      notification.error({
-        message: intl.get('api.savedFilter.error.title'),
-        description: intl.get('api.savedFilter.error.messageUpdate'),
-      });
-    },
+    onError: (error) =>
+      thunkAPI.dispatch(
+        globalActions.displayNotification({
+          type: 'error',
+          message: intl.get('api.savedFilter.error.title'),
+          description: intl.get('api.savedFilter.error.messageUpdate'),
+        }),
+      ),
   });
 });
 
@@ -82,12 +84,14 @@ const deleteSavedFilter = createAsyncThunk<string, string, { rejectValue: string
       error,
       data: data!,
       reject: thunkAPI.rejectWithValue,
-      onError: () => {
-        notification.error({
-          message: intl.get('api.savedFilter.error.title'),
-          description: intl.get('api.savedFilter.error.messageDelete'),
-        });
-      },
+      onError: () =>
+        thunkAPI.dispatch(
+          globalActions.displayNotification({
+            type: 'error',
+            message: intl.get('api.savedFilter.error.title'),
+            description: intl.get('api.savedFilter.error.messageDelete'),
+          }),
+        ),
     });
   },
 );

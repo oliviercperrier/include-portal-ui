@@ -1,24 +1,20 @@
-import { Spin, Row, Col } from "antd";
-import cx from "classnames";
+import { Spin, Row, Col } from 'antd';
+import cx from 'classnames';
 import MultiLabel, {
   MultiLabelIconPositionEnum,
-} from "@ferlab/ui/core/components/labels/MultiLabel";
-import { numberFormat } from "@ferlab/ui/core/utils/numberUtils";
-import {
-  UserOutlined,
-  ReadOutlined,
-  DatabaseOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
-import useApi from "hooks/useApi";
-import EnvVariables from "helpers/EnvVariables";
-import intl from "react-intl-universal";
+} from '@ferlab/ui/core/components/labels/MultiLabel';
+import { numberFormat } from '@ferlab/ui/core/utils/numberUtils';
+import { UserOutlined, ReadOutlined, DatabaseOutlined, FileTextOutlined } from '@ant-design/icons';
+import intl from 'react-intl-universal';
+import { useGlobals } from 'store/global';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchStats } from 'store/global/thunks';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 interface OwnProps {
   className?: string;
-  itemSpacing?: number;
 }
 
 const formatStorage = (storage: string) => {
@@ -27,58 +23,52 @@ const formatStorage = (storage: string) => {
   return `${parts[0]}${parts[2]}`;
 };
 
-const DataRelease = ({ className = "", itemSpacing = 0 }: OwnProps) => {
-  const { result } = useApi<{
-    studies: number;
-    participants: number;
-    samples: number;
-    fileSize: string;
-  }>({
-    config: {
-      url: `${EnvVariables.configFor("ARRANGER_API")}/statistics`,
-    },
-  });
+const DataRelease = ({ className = '' }: OwnProps) => {
+  const dispatch = useDispatch();
+  const { stats } = useGlobals();
+
+  useEffect(() => {
+    dispatch(fetchStats());
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Spin spinning={false}>
-      <Row
-        className={cx(styles.dataReleaseContainer, className)}
-        gutter={[40, 24]}
-      >
+      <Row className={cx(styles.dataReleaseContainer, className)} gutter={[40, 24]}>
         <Col xs={12} md={6}>
           <MultiLabel
             iconPosition={MultiLabelIconPositionEnum.Top}
-            label={numberFormat(result?.studies!)}
+            label={numberFormat(stats?.studies!)}
             Icon={<ReadOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={intl.get("components.dataRelease.studies")}
+            subLabel={intl.get('components.dataRelease.studies')}
           />
         </Col>
         <Col xs={12} md={6}>
           <MultiLabel
             iconPosition={MultiLabelIconPositionEnum.Top}
-            label={numberFormat(result?.participants!)}
+            label={numberFormat(stats?.participants!)}
             Icon={<UserOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={intl.get("components.dataRelease.participants")}
+            subLabel={intl.get('components.dataRelease.participants')}
           />
         </Col>
         <Col xs={12} md={6}>
           <MultiLabel
             iconPosition={MultiLabelIconPositionEnum.Top}
-            label={numberFormat(result?.samples!)}
+            label={numberFormat(stats?.samples!)}
             Icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={intl.get("components.dataRelease.biospecimens")}
+            subLabel={intl.get('components.dataRelease.biospecimens')}
           />
         </Col>
         <Col xs={12} md={6}>
           <MultiLabel
             iconPosition={MultiLabelIconPositionEnum.Top}
-            label={formatStorage(result?.fileSize!) || "0TB"}
+            label={formatStorage(stats?.fileSize!) || '0TB'}
             Icon={<DatabaseOutlined className={styles.dataReleaseIcon} />}
             className={styles.dataReleaseStatsLabel}
-            subLabel={intl.get("components.dataRelease.datafiles")}
+            subLabel={intl.get('components.dataRelease.datafiles')}
           />
         </Col>
       </Row>

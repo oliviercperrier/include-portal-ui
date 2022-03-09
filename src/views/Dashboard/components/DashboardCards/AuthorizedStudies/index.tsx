@@ -8,26 +8,30 @@ import Text from 'antd/lib/typography/Text';
 import AuthorizedStudiesListItem from './ListItem';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardConnectPlaceholder from 'views/Dashboard/components/CardConnectPlaceholder';
-import useFenceConnections from 'hooks/useFenceConnection';
-import { connectFence, disconnectFence } from 'store/fenceConnection/thunks';
+import { connectToFence, disconnectFromFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
 import { useDispatch } from 'react-redux';
-import { isEmpty } from 'lodash';
-import useFenceStudy from 'hooks/useFenceStudy';
 import { TFenceStudy } from 'store/fenceStudies/types';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
 import ExternalLink from 'components/uiKit/ExternalLink';
+import { useFenceStudies } from 'store/fenceStudies';
+import { useEffect } from 'react';
+import { fetchAllFenceStudies } from 'store/fenceStudies/thunks';
 
 import styles from './index.module.scss';
 
 const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
   const dispatch = useDispatch();
-  const { loadingFences, connections, fencesConnectError } = useFenceConnections();
-  const { loadingStudiesForFences, fenceAuthStudies, fencesError } = useFenceStudy();
-  const hasConnections = !isEmpty(connections);
-  const hasErrors = !isEmpty(fencesConnectError) || !isEmpty(fencesError);
+  const { loadingStudiesForFences, fenceStudiesAcls, isConnected, hasErrors, connectionLoading } =
+    useFenceStudies();
   const fenceStudiesLoading = loadingStudiesForFences.length > 0;
-  const connectionsLoading = loadingFences.includes(FENCE_NAMES.gen3);
+
+  useEffect(() => {
+    if (isConnected) {
+      dispatch(fetchAllFenceStudies());
+    }
+    // eslint-disable-next-line
+  }, [isConnected]);
 
   return (
     <GridCard
@@ -37,7 +41,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
         <CardHeader
           id={id}
           title={intl.get('screen.dashboard.cards.authorizedStudies.title', {
-            count: !hasConnections ? 0 : fenceAuthStudies.length,
+            count: isConnected ? fenceStudiesAcls.length : 0,
           })}
           infoPopover={{
             title: intl.get('screen.dashboard.cards.authorizedStudies.infoPopover.title'),
@@ -46,7 +50,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
               <Space direction="vertical" className={styles.content} size={0}>
                 <Text>
                   {intl.getHTML('screen.dashboard.cards.authorizedStudies.infoPopover.content')}{' '}
-                  <ExternalLink href="https://google.com">
+                  <ExternalLink href="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?login=&page=login">
                     <Button type="link" size="small" className={styles.applyForAccessBtn}>
                       {intl.get(
                         'screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess',
@@ -63,7 +67,7 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
       }
       content={
         <div className={styles.authorizedWrapper}>
-          {hasConnections && !hasErrors && !fenceStudiesLoading && (
+          {isConnected && !hasErrors && !fenceStudiesLoading && (
             <Space className={styles.authenticatedHeader} direction="horizontal">
               <Space align="start">
                 <SafetyOutlined className={styles.safetyIcon} />
@@ -74,9 +78,9 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
                     size="small"
                     danger
                     icon={<DisconnectOutlined />}
-                    onClick={() => dispatch(disconnectFence(FENCE_NAMES.gen3))}
+                    onClick={() => dispatch(disconnectFromFence(FENCE_NAMES.gen3))}
                     className={styles.disconnectBtn}
-                    loading={connectionsLoading}
+                    loading={connectionLoading}
                   >
                     {intl.get('screen.dashboard.cards.authorizedStudies.disconnect')}
                   </Button>
@@ -88,11 +92,11 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
             className={styles.authorizedStudiesList}
             bordered
             itemLayout="vertical"
-            loading={fenceStudiesLoading || connectionsLoading}
+            loading={fenceStudiesLoading || connectionLoading}
             locale={{
               emptyText: hasErrors ? (
                 <CardErrorPlaceholder />
-              ) : hasConnections ? (
+              ) : isConnected ? (
                 <Empty
                   imageType="grid"
                   description={intl.get(
@@ -106,13 +110,12 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
                     'screen.dashboard.cards.authorizedStudies.disconnectedNotice',
                   )}
                   btnProps={{
-                    loading: connectionsLoading,
-                    onClick: () => dispatch(connectFence(FENCE_NAMES.gen3)),
+                    onClick: () => dispatch(connectToFence(FENCE_NAMES.gen3)),
                   }}
                 />
               ),
             }}
-            dataSource={hasConnections && !hasErrors ? fenceAuthStudies : []}
+            dataSource={isConnected && !hasErrors ? fenceStudiesAcls : []}
             renderItem={(item) => <AuthorizedStudiesListItem id={item.id} data={item} />}
           ></List>
         </div>

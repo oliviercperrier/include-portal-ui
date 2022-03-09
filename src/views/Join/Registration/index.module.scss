@@ -1,14 +1,22 @@
-@import "colors";
+@import 'colors';
 
 .registrationForm {
   .withCustomHelp {
-    div[class$="-item-label"] {
+    div[class$='-item-label'] {
       padding-bottom: 0;
     }
   }
 
-  div[class$="-item-label"] {
+  div[class$='-item-label'] {
     font-weight: 600;
+  }
+
+  span[class$='-item-optional'] {
+    font-weight: 400;
+  }
+
+  .checkBoxGroup {
+    width: 100%;
   }
 
   .help {
@@ -26,20 +34,28 @@
     }
   }
 
+  .allFieldRequiredNotice {
+    margin-bottom: 24px;
+    display: block;
+  }
+
   .dynamicField {
-    margin-top: -18px;
+    &:not(.inner) {
+      margin-top: -18px;
+    }
+
+    &.inner {
+      margin-bottom: 0;
+    }
 
     &:not(.withCustomHelp) {
-      div[class$="-item-label"] {
+      div[class$='-item-label'] {
         padding-bottom: 4px;
       }
     }
 
     label {
       font-size: 12px;
-      &::before {
-        content: none !important;
-      }
     }
   }
 
@@ -51,6 +67,7 @@
     margin-bottom: 0;
   }
 
+  .haveAUserID,
   .noAffiliationField,
   .affiliationField,
   .researchAreaField {

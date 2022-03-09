@@ -1,14 +1,14 @@
-import { DocumentNode, TypedDocumentNode } from "@apollo/client";
-import { GqlResults } from "graphql/models";
-import useLazyResultQuery from "hooks/graphql/useLazyResultQuery";
+import { DocumentNode, TypedDocumentNode } from '@apollo/client';
+import { GqlResults } from 'graphql/models';
+import useLazyResultQuery from 'hooks/graphql/useLazyResultQuery';
 
 const useGetAggregations = (
   variables: any,
   query: DocumentNode | TypedDocumentNode,
-  index: string
+  index: string,
 ): GqlResults<any> => {
   const { loading, result } = useLazyResultQuery<any>(query, {
-    variables: variables,
+    variables,
   });
 
   return {

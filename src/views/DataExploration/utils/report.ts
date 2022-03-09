@@ -2,15 +2,15 @@ import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/opera
 import { Key } from 'react';
 import { TAB_IDS } from 'views/DataExploration/utils/constant';
 
-export const generateSelectionSqon = (type: string, ids: Key[]) => {
+export const generateSelectionSqon = (type: Omit<TAB_IDS, TAB_IDS.SUMMARY>, ids: Key[]) => {
   let field;
 
   switch (type) {
     case TAB_IDS.BIOSPECIMENS:
-      field = 'files.biospecimens.biospecimen_id';
+      field = 'participant.participant_id'; // TODO 'biospecimen_id';
       break;
     case TAB_IDS.DATA_FILES:
-      field = 'files.file_id';
+      field = 'file_id';
       break;
     default:
       field = 'participant_id';

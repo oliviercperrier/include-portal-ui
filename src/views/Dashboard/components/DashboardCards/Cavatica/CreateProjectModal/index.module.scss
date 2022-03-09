@@ -1,7 +1,5 @@
 .cavaticaCreateProjectModal {
-  .createProjectWrapper {
-    &, .projectNameWrapper, .projectBillingWrapper {
-      width: 100%;
-    }
+  .billingGroupItem {
+    margin-bottom: 0;
   }
 }

@@ -17,7 +17,7 @@ const DataReleaseCard = () => {
             })}
           </Title>
         </Space>
-        <DataRelease itemSpacing={40} />
+        <DataRelease />
       </Space>
     </Card>
   );

@@ -19,6 +19,7 @@ export type TUser = {
   accepted_terms: boolean;
   understand_disclaimer: boolean;
   completed_registration: boolean;
+  commercial_use_reason: string;
   config: TUserConfig;
 };
 

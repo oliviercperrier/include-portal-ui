@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Button, List, Space } from 'antd';
 import intl from 'react-intl-universal';
@@ -10,56 +9,29 @@ import CavaticaListItem from './ListItem';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardConnectPlaceholder from 'views/Dashboard/components/CardConnectPlaceholder';
 import CavaticaIcon from 'components/Icons/CavaticaIcon';
-import { cavaticaActions } from 'store/cavatica/slice';
+import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { useDispatch } from 'react-redux';
 import CreateProjectModal from './CreateProjectModal';
+import { TCavaticaProjectWithMembers } from 'store/fenceCavatica/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
+import { connectToFence, disconnectFromFence } from 'store/fenceConnection/thunks';
+import { FENCE_NAMES } from 'common/fenceTypes';
+import { useFenceCavatica } from 'store/fenceCavatica';
+import { useEffect } from 'react';
+import { fetchAllProjects } from 'store/fenceCavatica/thunks';
 
 import styles from './index.module.scss';
 
-export interface IListItemData {
-  key: any;
-  title: string;
-  nbMember: number;
-  projectUrl: string;
-}
-
 const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
   const dispatch = useDispatch();
-  const [isConnected, setIsConnected] = useState(false); // Add appropriate auth
-  const data: IListItemData[] = [
-    // Add appropriate api call and replace this list with the result
-    {
-      key: '1',
-      title: 'PNOC008-Annovar-Annotation',
-      nbMember: 1,
-      projectUrl: 'https://google.com',
-    },
-    {
-      key: '2',
-      title: 'Project Title',
-      nbMember: 7,
-      projectUrl: 'https://google.com',
-    },
-    {
-      key: '3',
-      title: 'Project Title',
-      nbMember: 2,
-      projectUrl: 'https://google.com',
-    },
-    {
-      key: '4',
-      title: 'Project Title',
-      nbMember: 9,
-      projectUrl: 'https://google.com',
-    },
-    {
-      key: '5',
-      title: 'Project Title',
-      nbMember: 3,
-      projectUrl: 'https://google.com',
-    },
-  ];
+  const { projects, isLoading, isConnected, connectionLoading } = useFenceCavatica();
+
+  useEffect(() => {
+    if (isConnected) {
+      dispatch(fetchAllProjects());
+    }
+    // eslint-disable-next-line
+  }, [isConnected]);
 
   return (
     <>
@@ -69,9 +41,7 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
         title={
           <CardHeader
             id={id}
-            title={intl.get('screen.dashboard.cards.cavatica.title', {
-              count: isConnected ? data.length : 0,
-            })}
+            title={intl.get('screen.dashboard.cards.cavatica.title')}
             infoPopover={{
               title: intl.get('screen.dashboard.cards.cavatica.infoPopover.title'),
               overlayClassName: styles.cavaticaInfoPopover,
@@ -104,8 +74,9 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                       size="small"
                       danger
                       icon={<DisconnectOutlined />}
-                      onClick={() => setIsConnected(false)}
+                      onClick={() => dispatch(disconnectFromFence(FENCE_NAMES.cavatica))}
                       className={styles.disconnectBtn}
+                      loading={connectionLoading}
                     >
                       {intl.get('screen.dashboard.cards.cavatica.disconnect')}
                     </Button>
@@ -113,17 +84,23 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                 </Space>
               </Space>
             )}
-            <List<IListItemData>
+            <List<TCavaticaProjectWithMembers>
               className={styles.cavaticaProjectsList}
               bordered
               itemLayout="vertical"
+              loading={isLoading || connectionLoading}
               locale={{
                 emptyText: isConnected ? (
                   <Empty
                     imageType="grid"
                     description={intl.get('screen.dashboard.cards.cavatica.noProjects')}
                     action={
-                      <Button type="primary" icon={<PlusOutlined />} size="small">
+                      <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        size="small"
+                        onClick={() => dispatch(fenceCavaticaActions.beginCreateProject())}
+                      >
                         {intl.get('screen.dashboard.cards.cavatica.createNewProject')}
                       </Button>
                     }
@@ -133,21 +110,21 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
                     icon={<CavaticaIcon />}
                     description={intl.get('screen.dashboard.cards.cavatica.disconnectedNotice')}
                     btnProps={{
-                      onClick: () => setIsConnected(true),
+                      onClick: () => dispatch(connectToFence(FENCE_NAMES.cavatica)),
                     }}
                   />
                 ),
               }}
-              dataSource={isConnected ? data : []} // just for testing before implementing real data
-              renderItem={(item) => <CavaticaListItem id={item.key} data={item} />}
+              dataSource={isConnected ? projects : []}
+              renderItem={(item) => <CavaticaListItem id={item.id} data={item} />}
             ></List>
-            {(isConnected ? data : []).length > 0 && (
+            {(isConnected ? projects : []).length > 0 && (
               <div className={styles.customFooter}>
                 <Button
                   icon={<PlusOutlined />}
                   className={styles.newProjectBtn}
                   size="small"
-                  onClick={() => dispatch(cavaticaActions.beginCreateProject())}
+                  onClick={() => dispatch(fenceCavaticaActions.beginCreateProject())}
                 >
                   {intl.get('screen.dashboard.cards.cavatica.newProject')}
                 </Button>
@@ -156,7 +133,7 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
           </div>
         }
       />
-      <CreateProjectModal openAnalyseModalOnCancel={false} />
+      {isConnected && <CreateProjectModal openAnalyseModalOnClose={false} />}
     </>
   );
 };

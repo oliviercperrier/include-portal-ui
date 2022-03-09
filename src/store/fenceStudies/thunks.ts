@@ -2,7 +2,6 @@ import flatMap from 'lodash/flatMap';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ALL_STUDIES_FENCE_NAMES, FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { isEmpty } from 'lodash';
-import { addWildCardToAcls } from 'store/fenceConnection/utils';
 import { RootState } from 'store/types';
 import { TFenceStudies, TFenceStudiesIdsAndCount, TFenceStudy } from './types';
 import { AxiosError } from 'axios';
@@ -44,7 +43,7 @@ const fetchFenceStudies = createAsyncThunk<
 
     const { authorizedStudies, error: studiesCountError } = isEmpty(studies)
       ? { authorizedStudies: [], error: undefined }
-      : await getStudiesCountByNameAndAcl(studies!, addWildCardToAcls(args.userAcls));
+      : await getStudiesCountByNameAndAcl(studies!, args.userAcls);
 
     return handleThunkApiReponse({
       error: authStudyError || studiesCountError,
@@ -180,7 +179,7 @@ const getAuthStudyIdsAndCounts = async (
       sqon: {
         op: 'and',
         content: [
-          { op: 'in', content: { field: 'acl', value: addWildCardToAcls(userAcls) } },
+          { op: 'in', content: { field: 'acl', value: userAcls } },
           { op: 'in', content: { field: 'repository', value: fenceName } },
         ],
       },

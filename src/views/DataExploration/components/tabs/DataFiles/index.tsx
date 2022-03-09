@@ -68,20 +68,20 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
     },
   },
   {
-    key: 'access',
+    key: 'controlled_access',
     title: (
       <Tooltip title="Data access">
         <SafetyOutlined />
       </Tooltip>
     ),
-    dataIndex: 'access',
-    displayTitle: 'Access',
+    dataIndex: 'controlled_access',
+    displayTitle: 'Data access',
     align: 'center',
     width: 75,
-    render: (access: string) =>
-      !access ? (
+    render: (controlled_access: string) =>
+      !controlled_access ? (
         '-'
-      ) : access.toLowerCase() === 'controlled' ? (
+      ) : controlled_access.toLowerCase() === 'controlled' ? (
         <Tooltip title="Controlled">
           <Tag color="geekblue">C</Tag>
         </Tooltip>
@@ -111,11 +111,6 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
     key: 'type_of_omics',
     title: 'Data Category',
     dataIndex: 'type_of_omics',
-  },
-  {
-    key: 'experimental_strategy',
-    title: 'Experimental Strategy',
-    dataIndex: 'experimental_strategy',
   },
   {
     key: 'data_type',

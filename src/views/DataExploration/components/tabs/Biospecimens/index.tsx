@@ -4,7 +4,6 @@ import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
 import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
 import { IParticipantEntity } from 'graphql/participants/models';
-import { extractNcitTissueTitleAndCode } from 'views/DataExploration/utils/helper';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 import { getProTableDictionary } from 'utils/translation';
@@ -18,10 +17,9 @@ import { useState } from 'react';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
-import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -32,33 +30,21 @@ interface OwnProps {
 
 const defaultColumns: ProColumnType<any>[] = [
   {
-    key: 'derived_sample_id',
-    title: 'Derived Sample ID',
-    dataIndex: 'derived_sample_id',
-    render: (derived_sample_id: string) => derived_sample_id || TABLE_EMPTY_PLACE_HOLDER,
+    key: 'collection_sample_id',
+    title: 'Collection ID',
+    dataIndex: 'collection_sample_id',
+    render: (collection_sample_id: string) => collection_sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'sample_id',
     title: 'Sample ID',
     dataIndex: 'sample_id',
-    defaultHidden: true,
     render: (sample_id: string) => sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: 'biospecimen_id',
-    title: 'Biospecimen ID',
-    dataIndex: 'biospecimen_id',
-  },
-  {
-    key: 'participant.participant_id',
-    title: 'Participant ID',
-    dataIndex: 'participant',
-    render: (participant: IParticipantEntity) => participant.participant_id,
-  },
-  {
-    key: 'biospecimen_type',
-    title: 'Biospecimen Type',
-    dataIndex: 'biospecimen_type',
+    key: 'container_id',
+    title: 'Container ID',
+    dataIndex: 'container_id',
   },
   {
     key: 'sample_type',
@@ -67,10 +53,28 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (sample_type: string) => sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: 'derived_sample_type',
-    title: 'Derived Sample Type',
-    dataIndex: 'derived_sample_type',
-    render: (derived_sample_type) => derived_sample_type || TABLE_EMPTY_PLACE_HOLDER,
+    key: 'parent_sample_id',
+    title: 'Parent Sample ID',
+    dataIndex: 'parent_sample_id',
+    render: (parent_sample_id) => parent_sample_id || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'parent_sample_type',
+    title: 'Parent Sample Type',
+    dataIndex: 'parent_sample_type',
+    render: (parent_sample_type) => parent_sample_type || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'participant.participant_id',
+    title: 'Participant ID',
+    dataIndex: 'participant',
+    render: (participant: IParticipantEntity) => participant.participant_id,
+  },
+  {
+    key: 'collection_sample_type',
+    title: 'Collected Simple Type',
+    dataIndex: 'collection_sample_type',
+    render: (collection_sample_type) => collection_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'age_at_biospecimen_collection',
@@ -78,44 +82,39 @@ const defaultColumns: ProColumnType<any>[] = [
     dataIndex: 'age_at_biospecimen_collection',
   },
   {
-    key: 'anatomical_site',
-    title: 'Anatomical Site (NCIT)',
-    displayTitle: 'Anatomical Site (NCIT)',
-    dataIndex: '',
+    key: 'volume_ul',
+    title: 'Volume',
+    dataIndex: 'volume_ul',
+    render: (volume_ul) => volume_ul || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'volume_unit',
+    title: 'Volume Unit',
+    dataIndex: 'volume_unit',
+    render: (volume_ul) => volume_ul || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'status',
+    title: 'Sample Availability',
+    dataIndex: 'status',
+    render: (status: string) => (status.toLowerCase() === 'available' ? 'Yes' : 'No'),
+  },
+  {
+    key: 'files.hits.total',
+    title: 'Files',
+    render: (record) => record?.files?.hits?.total || 0,
+  },
+  {
+    key: 'laboratory_procedure',
+    title: 'Laboratory Procedure',
+    dataIndex: 'laboratory_procedure',
     defaultHidden: true,
   },
   {
-    key: 'ncit_id_tissue_type',
-    title: 'Tissue Type (NCIT)',
-    displayTitle: 'Tissue Type (NCIT)',
-    dataIndex: 'ncit_id_tissue_type',
-    className: styles.ncitTissueCell,
-    render: (ncit_id_tissue_type) => {
-      if (!ncit_id_tissue_type) {
-        return TABLE_EMPTY_PLACE_HOLDER;
-      }
-
-      const ncitInfo = extractNcitTissueTitleAndCode(ncit_id_tissue_type);
-
-      return ncitInfo ? (
-        <div>
-          {ncitInfo.title} (NCIT:{' '}
-          <ExternalLink
-            href={`https://www.ebi.ac.uk/ols/ontologies/ncit/terms?short_form=NCIT_${ncitInfo.code}`}
-          >
-            {ncitInfo.code}
-          </ExternalLink>
-          )
-        </div>
-      ) : (
-        TABLE_EMPTY_PLACE_HOLDER
-      );
-    },
-  },
-  {
-    key: 'bio_repository',
-    title: 'Biorepository',
-    dataIndex: 'bio_repository',
+    key: 'biospecimen_storage',
+    title: 'Biospecimen Storage',
+    dataIndex: 'biospecimen_storage',
+    defaultHidden: true,
   },
 ];
 

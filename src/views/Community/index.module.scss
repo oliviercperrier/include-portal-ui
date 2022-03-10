@@ -1,0 +1,60 @@
+@import 'layout';
+
+.communityWrapper {
+  width: 100%;
+  padding: $default-page-content-padding;
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+
+  .tableWrapper {
+    width: 100%;
+  }
+
+  .title {
+    margin: 0;
+  }
+
+  .usagesWrapper {
+    padding-left: 67px;
+  }
+
+  .usagesWrapper,
+  .commercialUseWrapper {
+    margin-top: 12px;
+
+    .usagesListTitle {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .usagesList {
+      padding-left: 14px;
+      font-size: 12px;
+    }
+
+    .commercialUseReason {
+      font-size: 12px;
+    }
+  }
+
+  .usersListWrapper {
+    width: 100%;
+
+    .usersList {
+      div[class$='-item-meta'] {
+        margin-bottom: 0;
+      }
+
+      .usersListItem {
+        &:hover {
+          background-color: unset;
+        }
+      }
+
+      *[class$='-item-meta-description'] {
+        font-size: 12px;
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ export enum STATIC_ROUTES {
   STUDIES = "/studies",
   MY_PROFILE = "/profile",
   SETTINGS = "/settings",
+  COMMUNITY = "/community",
   ERROR = "/error",
 
   JOIN = "/join",

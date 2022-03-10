@@ -193,6 +193,7 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
       bordered
       size="small"
       pagination={{
+        current: pagingConfig.index,
         pageSize: pagingConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,

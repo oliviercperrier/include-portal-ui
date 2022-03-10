@@ -8,6 +8,7 @@ import {
 import {
   DATA_EPLORATION_FILTER_TAG,
   DATA_EXPLORATION_REPO_CACHE_KEY,
+  DEFAULT_PAGE_INDEX,
   DEFAULT_PAGING_CONFIG,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
@@ -82,27 +83,43 @@ const PageContent = ({
     first: pagingConfigParticipant.size,
     offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
     sqon: participantResolvedSqon,
-    sort: [],
+    sort: [{ field: 'participant_id', order: 'asc' }],
   });
 
   const fileResults = useDataFiles({
     first: pagingConfigFile.size,
     offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
     sqon: fileResolvedSqon,
-    sort: [],
+    sort: [{ field: 'file_id', order: 'asc' }],
   });
 
   const biospecimenResults = useBiospecimen({
     first: pagingConfigBiospecimen.size,
     offset: pagingConfigBiospecimen.size * (pagingConfigBiospecimen.index - 1),
     sqon: biospecimenResolvedSqon,
-    sort: [],
+    sort: [{ field: 'sample_id', order: 'asc' }],
   });
 
   useEffect(() => {
     dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    setPagingConfigParticipant({
+      ...pagingConfigParticipant,
+      index: DEFAULT_PAGE_INDEX,
+    });
+    setPagingConfigBiospecimen({
+      ...pagingConfigParticipant,
+      index: DEFAULT_PAGE_INDEX,
+    });
+    setPagingConfigFile({
+      ...pagingConfigParticipant,
+      index: DEFAULT_PAGE_INDEX,
+    });
+    // eslint-disable-next-line
+  }, [filters.id]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);

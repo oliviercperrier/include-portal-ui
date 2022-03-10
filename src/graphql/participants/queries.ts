@@ -19,13 +19,25 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             age_at_data_collection
             ethnicity
             race
-
             files {
               hits {
                 total
+                edges{
+                  node{
+                    biospecimens{
+                      hits{
+                        total
+                        edges{
+                           node{
+                             sample_id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }  
               }
             }
-
             mondo {
               hits {
                 edges {

@@ -178,7 +178,11 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'biospecimen',
     title: 'Biospecimen',
     render: (record: ITableParticipantEntity) => {
-      const total = record?.biospecimen?.hits?.total;
+      const total = new Set([
+        ...record.files.hits.edges.flatMap((e) =>
+          e.node.biospecimens.hits.edges.map((e) => e.node.sample_id),
+        ),
+      ]).size;
 
       return total ? (
         <Link
@@ -194,7 +198,7 @@ const defaultColumns: ProColumnType<any>[] = [
           {total}
         </Link>
       ) : (
-        total || 0
+        total
       );
     },
   },
@@ -300,6 +304,7 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       bordered
       size="small"
       pagination={{
+        current: pagingConfig.index,
         pageSize: pagingConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,

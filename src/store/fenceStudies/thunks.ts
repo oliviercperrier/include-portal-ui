@@ -91,7 +91,7 @@ const getStudiesCountByNameAndAcl = async (
       ...obj,
       [`${studyId}_sqon`]: {
         op: TermOperators.in,
-        content: { field: 'participants.study.external_id', value: [studyId] },
+        content: { field: 'participants.study.study_id', value: [studyId] },
       },
     }),
     {},
@@ -112,7 +112,7 @@ const getStudiesCountByNameAndAcl = async (
                 key
               }
             }
-            participants__study__study_name{
+            participants__study__study_id{
               buckets{
                 key
                 doc_count
@@ -166,7 +166,7 @@ const getAuthStudyIdsAndCounts = async (
     query AuthorizedStudyIdsAndCount($sqon: JSON) {
       file {
         aggregations(filters: $sqon, aggregations_filter_themselves: true, include_missing: false){
-          participants__study__external_id {
+          participants__study__study_id {
             buckets
               {
                 key
@@ -213,7 +213,7 @@ const getAuthStudyIdsAndCounts = async (
     data: {
       file: {
         aggregations: {
-          participants__study__external_id: { buckets },
+          participants__study__study_id: { buckets },
         },
       },
     },

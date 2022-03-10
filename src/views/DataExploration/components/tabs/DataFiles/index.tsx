@@ -263,6 +263,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
         bordered
         size="small"
         pagination={{
+          current: pagingConfig.index,
           pageSize: pagingConfig.size,
           defaultPageSize: DEFAULT_PAGE_SIZE,
           total: results.total,

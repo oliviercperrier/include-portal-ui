@@ -238,13 +238,16 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
               loading={isInitializingAnalyse}
               onClick={() => {
                 if (isConnected) {
-                  if (selectedRows.length > CAVATICA_FILE_BATCH_SIZE || selectedAllResults) {
+                  if (
+                    selectedRows.length > CAVATICA_FILE_BATCH_SIZE ||
+                    (selectedAllResults && results.total > CAVATICA_FILE_BATCH_SIZE)
+                  ) {
                     onCavaticaUploadLimitReached();
                   } else {
                     dispatch(
                       beginAnalyse({
                         sqon: sqon!,
-                        fileIds: selectedKeys,
+                        fileIds: selectedAllResults ? [] : selectedKeys,
                       }),
                     );
                   }

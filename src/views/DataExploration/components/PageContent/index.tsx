@@ -82,21 +82,21 @@ const PageContent = ({
     first: pagingConfigParticipant.size,
     offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
     sqon: participantResolvedSqon,
-    sort: [],
+    sort: [{ field: 'participant_id', order: 'asc' }],
   });
 
   const fileResults = useDataFiles({
     first: pagingConfigFile.size,
     offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
     sqon: fileResolvedSqon,
-    sort: [],
+    sort: [{ field: 'file_id', order: 'asc' }],
   });
 
   const biospecimenResults = useBiospecimen({
     first: pagingConfigBiospecimen.size,
     offset: pagingConfigBiospecimen.size * (pagingConfigBiospecimen.index - 1),
     sqon: biospecimenResolvedSqon,
-    sort: [],
+    sort: [{ field: 'sample_id', order: 'asc' }],
   });
 
   useEffect(() => {

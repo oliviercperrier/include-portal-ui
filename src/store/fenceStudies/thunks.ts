@@ -144,7 +144,7 @@ const getStudiesCountByNameAndAcl = async (
       const agg = file[id];
 
       return {
-        acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes(id)),
+        acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => userAcls.includes(b)),
         studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
         totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
         id,

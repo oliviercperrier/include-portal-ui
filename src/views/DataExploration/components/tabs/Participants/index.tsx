@@ -178,23 +178,27 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'biospecimen',
     title: 'Biospecimen',
     render: (record: ITableParticipantEntity) => {
-      const total = record.files.hits.edges
-        .map((e) => e.node.biospecimens.hits.total)
-        .reduce((a, b) => (a || 0) + (b || 0), 0);
+      const total = new Set([
+        ...record.files.hits.edges.flatMap((e) =>
+          e.node.biospecimens.hits.edges.map((e) => e.node.sample_id),
+        ),
+      ]).size;
 
       return total ? (
         <Link
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [record.participant_id]),
+              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
+                record.participant_id,
+              ]),
             }),
           }}
         >
           {total}
         </Link>
       ) : (
-        total || 0
+        total
       );
     },
   },

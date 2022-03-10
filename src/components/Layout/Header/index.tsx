@@ -75,6 +75,7 @@ const Header = () => {
         }
         extra={[
           <HeaderLink
+            key="community"
             currentPathName={currentPathName}
             to={STATIC_ROUTES.COMMUNITY}
             icon={<TeamOutlined />}

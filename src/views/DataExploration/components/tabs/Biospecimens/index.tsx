@@ -45,6 +45,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'container_id',
     title: 'Container ID',
     dataIndex: 'container_id',
+    render: (container_id: string) => container_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'sample_type',
@@ -80,6 +81,8 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'age_at_biospecimen_collection',
     title: 'Age at Biospecimen Collection',
     dataIndex: 'age_at_biospecimen_collection',
+    render: (age_at_biospecimen_collection) =>
+      age_at_biospecimen_collection || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'volume_ul',

@@ -304,6 +304,7 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       bordered
       size="small"
       pagination={{
+        current: pagingConfig.index,
         pageSize: pagingConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,

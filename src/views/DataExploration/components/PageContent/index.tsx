@@ -8,6 +8,7 @@ import {
 import {
   DATA_EPLORATION_FILTER_TAG,
   DATA_EXPLORATION_REPO_CACHE_KEY,
+  DEFAULT_PAGE_INDEX,
   DEFAULT_PAGING_CONFIG,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
@@ -103,6 +104,22 @@ const PageContent = ({
     dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    setPagingConfigParticipant({
+      ...pagingConfigParticipant,
+      index: DEFAULT_PAGE_INDEX,
+    });
+    setPagingConfigBiospecimen({
+      ...pagingConfigParticipant,
+      index: DEFAULT_PAGE_INDEX,
+    });
+    setPagingConfigFile({
+      ...pagingConfigParticipant,
+      index: DEFAULT_PAGE_INDEX,
+    });
+    // eslint-disable-next-line
+  }, [filters.id]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);

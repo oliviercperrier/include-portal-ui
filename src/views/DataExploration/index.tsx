@@ -18,9 +18,9 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from './utils/mapper';
+import HpoTreeFacet from './components/HpoTreeFacet';
 
 import styles from './index.module.scss';
-import HpoTreeFacet from './components/HpoTreeFacet';
 
 interface OwnProps {
   tab?: string;
@@ -74,7 +74,7 @@ export const filterGroups: {
           'age_at_biospecimen_collection',
           'status',
           'laboratory_procedure',
-          'biospecimen_storage'
+          'biospecimen_storage',
         ],
       },
     ],
@@ -88,7 +88,7 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: ['type_of_omics', 'data_type', 'file_format', 'controlled_access'],
+        fields: ['data_category', 'data_type', 'file_format', 'controlled_access'],
       },
     ],
   },

@@ -159,6 +159,12 @@ const HpoTreeFacet = () => {
           showSearch={true}
           targetKeys={targetKeys}
           selectedKeys={[]}
+          oneWay
+          onChange={(targetKeys, direction) => {
+            if (direction === 'left') {
+              setTargetKeys(targetKeys);
+            }
+          }}
           onSearch={(_, value) => {
             if (value && value.length > MIN_SEARCH_TEXT_LENGTH) {
               const hits: string[] = [];
@@ -190,7 +196,7 @@ const HpoTreeFacet = () => {
           showSelectAll={false}
           operationStyle={{ visibility: 'hidden', width: '5px' }}
         >
-          {({ direction, onItemSelect, selectedKeys, onItemSelectAll }) => {
+          {({ direction, onItemSelect, selectedKeys, dataSource }) => {
             if (direction === 'left') {
               const checkedKeys = [...removeSameTerms(selectedKeys, targetKeys)];
               const halfCheckedKeys = checkedKeys

@@ -42,11 +42,6 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (sample_id: string) => sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: 'container_id',
-    title: 'Container ID',
-    dataIndex: 'container_id',
-  },
-  {
     key: 'sample_type',
     title: 'Sample Type',
     dataIndex: 'sample_type',
@@ -80,6 +75,14 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'age_at_biospecimen_collection',
     title: 'Age at Biospecimen Collection',
     dataIndex: 'age_at_biospecimen_collection',
+    render: (age_at_biospecimen_collection) =>
+      age_at_biospecimen_collection || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'container_id',
+    title: 'Container ID',
+    dataIndex: 'container_id',
+    render: (container_id: string) => container_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'volume_ul',
@@ -90,8 +93,8 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'volume_unit',
     title: 'Volume Unit',
-    dataIndex: 'volume_unit',
-    render: (volume_ul) => volume_ul || TABLE_EMPTY_PLACE_HOLDER,
+    render: (record: IBiospecimenEntity) =>
+      record.volume_ul ? record.volume_unit : TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'status',

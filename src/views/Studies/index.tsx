@@ -140,7 +140,7 @@ const Studies = () => {
             dictionary={getProTableDictionary()}
           />
         }
-      ></GridCard>
+      />
     </Space>
   );
 };

@@ -24,6 +24,11 @@ export interface IFileEntity {
   participant: ArrangerResultsTree<IParticipantEntity>;
 }
 
+export enum FileAccessType {
+  CONTROLLED = 'Controlled',
+  REGISTERED = 'Registered',
+}
+
 export type ITableFileEntity = IFileEntity & {
   key: string;
 };

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Modal } from 'antd';
-import { intersection, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { CavaticaApi } from 'services/api/cavatica';
 import {
   CAVATICA_TYPE,
@@ -11,12 +11,12 @@ import {
 import { RootState } from 'store/types';
 import { IBulkImportData, ICavaticaTreeNode, TCavaticaProjectWithMembers } from './types';
 import intl from 'react-intl-universal';
-import { IFileEntity, IFileResultTree } from 'graphql/files/models';
+import { FileAccessType, IFileResultTree } from 'graphql/files/models';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { SEARCH_FILES_QUERY } from 'graphql/files/queries';
 import { hydrateResults } from 'graphql/models';
 import { termToSqon } from '@ferlab/ui/core/data/sqon/utils';
-import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
+import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { CAVATICA_FILE_BATCH_SIZE } from 'views/DataExploration/utils/constant';
 import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
@@ -76,9 +76,28 @@ const beginAnalyse = createAsyncThunk<
   const { fenceConnection } = thunkAPI.getState();
   const allFencesAcls = Object.values(fenceConnection.fencesAcls).flat();
 
-  const sqon: ISqonGroupFilter = { ...args.sqon } || {
+  const sqon: ISqonGroupFilter = {
     op: BooleanOperators.and,
-    content: [],
+    content: [
+      {
+        op: BooleanOperators.or,
+        content: [
+          {
+            op: BooleanOperators.and,
+            content: [{ op: TermOperators.in, content: { field: 'acl', value: allFencesAcls } }],
+          },
+          {
+            op: BooleanOperators.and,
+            content: [
+              {
+                op: TermOperators.in,
+                content: { field: 'access_control', value: [FileAccessType.REGISTERED] },
+              },
+            ],
+          },
+        ],
+      },
+    ],
   };
 
   if (args.fileIds.length > 0) {
@@ -89,6 +108,8 @@ const beginAnalyse = createAsyncThunk<
         value: args.fileIds,
       }),
     ];
+  } else {
+    sqon.content = [args.sqon];
   }
 
   const { data, error } = await ArrangerApi.graphqlRequest<{ data: IFileResultTree }>({
@@ -115,9 +136,8 @@ const beginAnalyse = createAsyncThunk<
   } = data!;
 
   const files = hydrateResults(file?.hits?.edges || []);
-  const authorizedFileCount = getAuthorizedFilesCount(allFencesAcls, files);
 
-  if (!authorizedFileCount) {
+  if (!files.length) {
     Modal.error({
       type: 'error',
       title: intl.get('api.cavatica.error.fileAuth.title'),
@@ -128,7 +148,7 @@ const beginAnalyse = createAsyncThunk<
 
   return {
     files,
-    authorizedFileCount,
+    authorizedFileCount: files.length,
   };
 });
 
@@ -271,17 +291,5 @@ const startBulkImportJob = createAsyncThunk<
       ),
   });
 });
-
-const getAuthorizedFilesCount = (fenceAcls: string[], files: IFileEntity[]) => {
-  let nbAuthorizedFiles = 0;
-  files.forEach(({ acl }) => {
-    const fileAcls = acl || [];
-    const hasAccess = acl.includes('*') || intersection(fenceAcls, fileAcls).length > 0;
-    if (hasAccess) {
-      nbAuthorizedFiles += 1;
-    }
-  });
-  return nbAuthorizedFiles;
-};
 
 export { fetchAllProjects, fetchAllBillingGroups, createProjet, beginAnalyse, startBulkImportJob };

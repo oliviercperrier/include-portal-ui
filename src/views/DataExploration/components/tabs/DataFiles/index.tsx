@@ -1,4 +1,4 @@
-import { IFileEntity, ITableFileEntity } from 'graphql/files/models';
+import { FileAccessType, IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import { CloudUploadOutlined, LockOutlined, SafetyOutlined, UnlockFilled } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
 import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
@@ -54,7 +54,11 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
     align: 'center',
     render: (record: IFileEntity) => {
       const acl = record.acl || [];
-      const hasAccess = acl.includes('*') || intersection(fenceAcls, acl).length > 0;
+      const hasAccess =
+        !acl ||
+        acl.length === 0 ||
+        intersection(fenceAcls, acl).length > 0 ||
+        record.controlled_access === FileAccessType.REGISTERED;
 
       return hasAccess ? (
         <Tooltip title="Authorized">
@@ -81,7 +85,7 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
     render: (controlled_access: string) =>
       !controlled_access ? (
         '-'
-      ) : controlled_access.toLowerCase() === 'controlled' ? (
+      ) : controlled_access.toLowerCase() === FileAccessType.CONTROLLED.toLowerCase() ? (
         <Tooltip title="Controlled">
           <Tag color="geekblue">C</Tag>
         </Tooltip>

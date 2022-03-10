@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { PageHeader, Dropdown, Button, Menu } from 'antd';
 import IncludeIcon from 'components/Icons/IncludeIcon';
-import { ReadOutlined, HomeOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { ReadOutlined, HomeOutlined, FileSearchOutlined, TeamOutlined } from '@ant-design/icons';
 import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 import { DownOutlined } from '@ant-design/icons';
 import Gravatar from 'components/uiKit/Gravatar';
@@ -74,6 +74,12 @@ const Header = () => {
           </nav>
         }
         extra={[
+          <HeaderLink
+            currentPathName={currentPathName}
+            to={STATIC_ROUTES.COMMUNITY}
+            icon={<TeamOutlined />}
+            title={intl.get('layout.main.menu.community')}
+          />,
           <Button key="external-website" className={style.headerBtn}>
             {intl.get('layout.main.menu.website')}{' '}
             <ExternalLinkIcon className={style.icon} {...iconSize} />
@@ -101,8 +107,8 @@ const Header = () => {
             <a className={style.userMenuTrigger} onClick={(e) => e.preventDefault()} href="">
               <Gravatar
                 className={style.userGravatar}
+                circle
                 email={tokenParsed.email || tokenParsed.identity_provider_identity}
-                size={100}
               />
               <span className={style.userName}>{userInfo?.first_name}</span>
               <DownOutlined />

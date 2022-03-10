@@ -248,6 +248,7 @@ const fr = {
         biospecimen: 'Biospecimen',
         datafiles: 'Data Files',
         website: 'Website',
+        community: 'Community'
       },
     },
     user: {

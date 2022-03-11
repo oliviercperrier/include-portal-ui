@@ -19,6 +19,7 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             age_at_data_collection
             ethnicity
             race
+            nb_files
             files {
               hits {
                 total

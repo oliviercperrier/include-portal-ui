@@ -17,6 +17,7 @@ import { IncludeKeycloakTokenParsed } from 'common/tokenTypes';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { userActions } from 'store/user/slice';
+import ExternalLink from 'components/uiKit/ExternalLink';
 
 import style from './index.module.scss';
 
@@ -81,10 +82,12 @@ const Header = () => {
             icon={<TeamOutlined />}
             title={intl.get('layout.main.menu.community')}
           />,
-          <Button key="external-website" className={style.headerBtn}>
-            {intl.get('layout.main.menu.website')}{' '}
-            <ExternalLinkIcon className={style.icon} {...iconSize} />
-          </Button>,
+          <ExternalLink href="https://includedcc.org">
+            <Button key="external-website" className={style.headerBtn}>
+              {intl.get('layout.main.menu.website')}{' '}
+              <ExternalLinkIcon className={style.icon} {...iconSize} />
+            </Button>
+          </ExternalLink>,
           <Dropdown
             key="user-menu"
             trigger={['click']}

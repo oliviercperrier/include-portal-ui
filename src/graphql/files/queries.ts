@@ -17,6 +17,7 @@ export const SEARCH_FILES_QUERY = gql`
             controlled_access
             access_urls
             acl
+            file_name
             repository
             study {
               study_id

@@ -248,6 +248,7 @@ const fr = {
         biospecimen: 'Biospecimen',
         datafiles: 'Data Files',
         website: 'Website',
+        community: 'Community',
       },
     },
     user: {
@@ -295,7 +296,7 @@ const fr = {
         authorizedStudies: {
           title: 'Authorized Studies {count, plural, =0 {} other {(#)}}',
           connectedNotice:
-            'You have access to all released INLCUDE controlled data through your NIH credentials.',
+            'You have access to all released INCLUDE controlled data through your NIH credentials.',
           disconnectedNotice:
             'Access all released INCLUDE controlled data by connecting your account using your NIH credentials.',
           disconnect: 'Disconnect',
@@ -341,18 +342,18 @@ const fr = {
       sidemenu: {
         participant: 'Participant',
         biospecimen: 'Biospecimen',
-        datafiles: 'Data Files',
+        datafiles: 'Data File',
       },
       hpoTree: {
         modal: {
-          title: "Observed Phenotype (HPO) Browser",
-          okText: "Apply"
+          title: 'Observed Phenotype (HPO) Browser',
+          okText: 'Apply',
         },
-        searchPlaceholder: "Search for ontology term - min 3 characters",
+        searchPlaceholder: 'Search for ontology term - min 3 characters',
         tags: {
-          exact: "Participants with this exact term",
-          all: "Participants including descendant terms"
-        }
+          exact: 'Participants with this exact term',
+          all: 'Participants including descendant terms',
+        },
       },
       tabs: {
         summary: {
@@ -457,8 +458,7 @@ const fr = {
         },
         helps: {
           checkAllThatApply: 'Check all that apply',
-          describeUseBelow:
-            'For other purpose, you must described your use below',
+          describeUseBelow: 'For other purpose, you must described your use below',
           provideBriefDescription:
             'Provide a brief description and a link to your professional biography or organization website, if available',
           provideOrgAffiliation: 'Provide institutional or organizational affiliation',
@@ -478,7 +478,7 @@ const fr = {
           1: 'Learn more about Down syndrome and its health outcomes, management, and/or treatment',
           2: 'Help me design a new research study',
           3: 'Identify datasets that I want to analyze',
-          4: 'Commercial purposes'
+          4: 'Commercial purposes',
         },
         userIdOptions: {
           1: 'ERA Commons',
@@ -496,6 +496,9 @@ const fr = {
     study_id: 'Study Code',
     down_syndrome_status: 'DS Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',
+    mondo: {
+      name: 'Diagnosis (MONDO)',
+    },
     diagnosis: {
       mondo_id_diagnosis: 'Diagnosis (MONDO)',
     },
@@ -515,6 +518,7 @@ const fr = {
     sample_type: 'Sample Type',
     derived_sample_type: 'Derived Sample Type',
     ncit_id_tissue_type: 'Tissue Type (NCIT)',
+    status: 'Availability',
     age_at_biospecimen_collection: 'Age at Biospecimen Collection',
     bio_repository: 'Biorepository',
     // File

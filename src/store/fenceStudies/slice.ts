@@ -38,7 +38,6 @@ const fenceStudiesSlice = createSlice({
       };
     });
     builder.addCase(fetchFenceStudies.rejected, (state, action) => {
-      console.log(action)
       state.loadingStudiesForFences = removeLoadingFenceStudies(state, action.meta.arg.fenceName);
       state.fencesError = [...state.fencesError, action.meta.arg.fenceName];
     });

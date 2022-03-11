@@ -25,7 +25,7 @@ import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree
 import styles from './index.module.scss';
 
 const FIELD_NAME = 'observed_phenotype.name';
-const AUTO_EXPAND_TREE = 2;
+const AUTO_EXPAND_TREE = 1;
 const MIN_SEARCH_TEXT_LENGTH = 3;
 
 const HpoTreeFacet = () => {

@@ -18,12 +18,13 @@ import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
-
-import styles from './index.module.scss';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
-import { addFilter } from 'utils/sqons';
+import { addFilters, generateValueFilter } from 'utils/sqons';
+
+import styles from './index.module.scss';
+
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -43,8 +44,12 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilter(null, 'collection_sample_id', INDEXES.BIOSPECIMEN, [
-                collection_sample_id,
+              filters: addFilters(null, [
+                generateValueFilter(
+                  'collection_sample_id',
+                  [collection_sample_id],
+                  INDEXES.BIOSPECIMEN,
+                ),
               ]),
             }),
           }}

@@ -106,7 +106,7 @@ const getStudiesCountByNameAndAcl = async (
         ${studyIds
           .map(
             (studyId) => `
-          ${replaceDashByUnderscore(studyId)}: aggregations(filters: $${replaceDashByUnderscore(
+          ${studyId}: aggregations(filters: $${replaceDashByUnderscore(
               studyId,
             )}_sqon, aggregations_filter_themselves: true) {
             acl {

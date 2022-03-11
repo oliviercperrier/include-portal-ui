@@ -89,7 +89,7 @@ const getStudiesCountByNameAndAcl = async (
   const sqons = studyIds.reduce(
     (obj, studyId) => ({
       ...obj,
-      [`${studyId}_sqon`]: {
+      [`${replaceDashByUnderscore(studyId)}_sqon`]: {
         op: TermOperators.in,
         content: { field: 'participants.study.study_id', value: [studyId] },
       },
@@ -100,13 +100,15 @@ const getStudiesCountByNameAndAcl = async (
   const { data, error } = await ArrangerApi.graphqlRequest({
     query: `
     query StudyCountByNamesAndAcl(${studyIds.map(
-      (studyId) => `$${studyId}_sqon: JSON`,
+      (studyId) => `$${replaceDashByUnderscore(studyId)}_sqon: JSON`,
     )}) {          
       file {
         ${studyIds
           .map(
             (studyId) => `
-          ${studyId}: aggregations(filters: $${studyId}_sqon, aggregations_filter_themselves: true) {
+          ${replaceDashByUnderscore(studyId)}: aggregations(filters: $${replaceDashByUnderscore(
+              studyId,
+            )}_sqon, aggregations_filter_themselves: true) {
             acl {
               buckets {
                 key
@@ -144,7 +146,7 @@ const getStudiesCountByNameAndAcl = async (
       const agg = file[id];
 
       return {
-        acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes(id)),
+        acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes('.')),
         studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
         totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
         id,
@@ -236,5 +238,7 @@ export const computeAllFencesAuthStudies = (fenceStudies: TFenceStudies) => {
   }
   return flatMap(Object.values(fenceStudies), (studies) => studies.authorizedStudies);
 };
+
+const replaceDashByUnderscore = (value: string) => value.replace('-', '_');
 
 export { fetchFenceStudies, fetchAllFenceStudies };

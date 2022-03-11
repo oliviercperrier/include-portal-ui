@@ -150,7 +150,7 @@ const getStudiesCountByNameAndAcl = async (
         acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes('.')),
         studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
         totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
-        id: studyId,
+        id,
         authorizedFiles: studies[studyId].authorizedFiles,
       };
     }),

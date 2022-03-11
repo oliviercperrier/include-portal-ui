@@ -21,6 +21,7 @@ export const SEARCH_BIOSPECIMEN_QUERY = gql`
             volume_ul
             volume_unit
             biospecimen_storage
+            study_id
 
             participant {
               participant_id

@@ -14,7 +14,7 @@ import NotificationBanner from 'components/featureToggle/NotificationBanner';
 import { AlterTypes } from 'common/types';
 import { useKeycloak } from '@react-keycloak/web';
 import { IncludeKeycloakTokenParsed } from 'common/tokenTypes';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { userActions } from 'store/user/slice';
 
@@ -90,15 +90,6 @@ const Header = () => {
             trigger={['click']}
             overlay={
               <Menu>
-                <Menu.Item key="profile">
-                  <Link to={STATIC_ROUTES.MY_PROFILE}>
-                    {intl.get('layout.user.menu.myprofile')}
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="settings">
-                  <Link to={STATIC_ROUTES.SETTINGS}>{intl.get('layout.user.menu.settings')} </Link>
-                </Menu.Item>
-                <Menu.Divider key="divider 1" />
                 <Menu.Item key="logout" onClick={() => dispatch(userActions.cleanLogout())}>
                   {intl.get('layout.user.menu.logout')}
                 </Menu.Item>

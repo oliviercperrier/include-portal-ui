@@ -342,7 +342,7 @@ const fr = {
       sidemenu: {
         participant: 'Participant',
         biospecimen: 'Biospecimen',
-        datafiles: 'Data Files',
+        datafiles: 'Data File',
       },
       hpoTree: {
         modal: {
@@ -516,6 +516,7 @@ const fr = {
     sample_type: 'Sample Type',
     derived_sample_type: 'Derived Sample Type',
     ncit_id_tissue_type: 'Tissue Type (NCIT)',
+    status: 'Availability',
     age_at_biospecimen_collection: 'Age at Biospecimen Collection',
     bio_repository: 'Biorepository',
     // File

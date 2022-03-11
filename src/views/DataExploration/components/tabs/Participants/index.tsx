@@ -90,6 +90,20 @@ const defaultColumns: ProColumnType<any>[] = [
     ),
   },
   {
+    key: 'race',
+    title: 'Race',
+    dataIndex: 'race',
+    defaultHidden: true,
+    render: (race) => race || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'ethnicity',
+    title: 'Ethnicity',
+    dataIndex: 'ethnicity',
+    defaultHidden: true,
+    render: (ethnicity) => ethnicity || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
     key: 'family_type',
     title: 'Family Unit',
     dataIndex: 'family_type',

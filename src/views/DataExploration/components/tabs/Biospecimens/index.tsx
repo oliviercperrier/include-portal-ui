@@ -13,14 +13,14 @@ import { updateUserConfig } from 'store/user/thunks';
 import { Button, Tooltip } from 'antd';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
-import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
+import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { addFilters, generateValueFilter } from 'utils/sqons';
 
 import styles from './index.module.scss';
@@ -173,8 +173,16 @@ const defaultColumns: ProColumnType<any>[] = [
 const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const { filters }: { filters: ISyntheticSqon } = useFilters();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (selectedKeys.length) {
+      setSelectedKeys([]);
+    }
+    // eslint-disable-next-line
+  }, [filters.id]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length
@@ -189,6 +197,7 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.biospecimens?.columns}
       enableRowSelection={true}
+      initialSelectedKey={selectedKeys}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,

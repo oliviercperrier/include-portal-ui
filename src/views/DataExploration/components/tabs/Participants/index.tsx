@@ -22,14 +22,14 @@ import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { addFilters, generateValueFilter } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
-import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
+import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
-import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
@@ -243,8 +243,16 @@ const defaultColumns: ProColumnType<any>[] = [
 const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const { filters }: { filters: ISyntheticSqon } = useFilters();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (selectedKeys.length) {
+      setSelectedKeys([]);
+    }
+    // eslint-disable-next-line
+  }, [filters.id]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length
@@ -276,6 +284,7 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.participants?.columns}
       enableRowSelection={true}
+      initialSelectedKey={selectedKeys}
       headerConfig={{
         itemCount: {
           pageIndex: pagingConfig.index,

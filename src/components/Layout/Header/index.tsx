@@ -49,18 +49,21 @@ const Header = () => {
         subTitle={
           <nav className={style.headerList}>
             <HeaderLink
+              key="dashboard"
               currentPathName={currentPathName}
               to={STATIC_ROUTES.DASHBOARD}
               icon={<HomeOutlined />}
               title={intl.get('layout.main.menu.dashboard')}
             />
             <HeaderLink
+              key="studies"
               currentPathName={currentPathName}
               to={STATIC_ROUTES.STUDIES}
               icon={<ReadOutlined />}
               title={intl.get('layout.main.menu.studies')}
             />
             <HeaderLink
+              key="explore-data"
               currentPathName={currentPathName}
               to={[
                 STATIC_ROUTES.DATA_EXPLORATION,
@@ -82,7 +85,7 @@ const Header = () => {
             icon={<TeamOutlined />}
             title={intl.get('layout.main.menu.community')}
           />,
-          <ExternalLink href="https://includedcc.org">
+          <ExternalLink key="include-website" href="https://includedcc.org">
             <Button key="external-website" className={style.headerBtn}>
               {intl.get('layout.main.menu.website')}{' '}
               <ExternalLinkIcon className={style.icon} {...iconSize} />

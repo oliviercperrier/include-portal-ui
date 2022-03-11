@@ -10,7 +10,7 @@ import { getProTableDictionary } from 'utils/translation';
 import { useDispatch } from 'react-redux';
 import { useUser } from 'store/user';
 import { updateUserConfig } from 'store/user/thunks';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { ReportType } from 'services/api/reports/models';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
@@ -20,6 +20,10 @@ import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
+import { Link } from 'react-router-dom';
+import { STATIC_ROUTES } from 'utils/routes';
+import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
+import { addFilter } from 'utils/sqons';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -33,7 +37,23 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'collection_sample_id',
     title: 'Collection ID',
     dataIndex: 'collection_sample_id',
-    render: (collection_sample_id: string) => collection_sample_id || TABLE_EMPTY_PLACE_HOLDER,
+    render: (collection_sample_id: string) =>
+      collection_sample_id ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+            search: createQueryParams({
+              filters: addFilter(null, 'collection_sample_id', INDEXES.BIOSPECIMEN, [
+                collection_sample_id,
+              ]),
+            }),
+          }}
+        >
+          {collection_sample_id}
+        </Link>
+      ) : (
+        TABLE_EMPTY_PLACE_HOLDER
+      ),
   },
   {
     key: 'sample_id',
@@ -66,14 +86,21 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (participant: IParticipantEntity) => participant.participant_id,
   },
   {
+    key: 'study_id',
+    title: 'Study',
+    dataIndex: 'study_id',
+    render: (study_id) => study_id || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
     key: 'collection_sample_type',
-    title: 'Collected Simple Type',
+    title: 'Collected Sample Type',
     dataIndex: 'collection_sample_type',
     render: (collection_sample_type) => collection_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'age_at_biospecimen_collection',
-    title: 'Age at Biospecimen Collection',
+    title: <Tooltip title="Age at Biospecimen Collection">Age (days)</Tooltip>,
+    displayTitle: 'Age (days)',
     dataIndex: 'age_at_biospecimen_collection',
     render: (age_at_biospecimen_collection) =>
       age_at_biospecimen_collection || TABLE_EMPTY_PLACE_HOLDER,

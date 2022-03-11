@@ -29,7 +29,7 @@ import { beginAnalyse } from 'store/fenceCavatica/thunks';
 import { useFenceConnection } from 'store/fenceConnection';
 import { useFenceCavatica } from 'store/fenceCavatica';
 import { connectToFence } from 'store/fenceConnection/thunks';
-import { FENCE_NAMES } from 'common/fenceTypes';
+import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
@@ -42,7 +42,10 @@ interface OwnProps {
   sqon?: ISqonGroupFilter;
 }
 
-const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
+const getDefaultColumns = (
+  fenceAcls: string[],
+  isConnectedToCavatica: boolean,
+): ProColumnType<any>[] => [
   {
     key: 'lock',
     title: (
@@ -55,10 +58,11 @@ const getDefaultColumns = (fenceAcls: string[]): ProColumnType<any>[] => [
     render: (record: IFileEntity) => {
       const acl = record.acl || [];
       const hasAccess =
-        !acl ||
-        acl.length === 0 ||
-        intersection(fenceAcls, acl).length > 0 ||
-        record.controlled_access === FileAccessType.REGISTERED;
+        isConnectedToCavatica &&
+        (!acl ||
+          acl.length === 0 ||
+          intersection(fenceAcls, acl).length > 0 ||
+          record.controlled_access === FileAccessType.REGISTERED);
 
       return hasAccess ? (
         <Tooltip title="Authorized">
@@ -139,7 +143,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const { isConnected, isInitializingAnalyse, beginAnalyseAfterConnection } = useFenceCavatica();
-  const { fencesAllAcls } = useFenceConnection();
+  const { fencesAllAcls, connectionStatus } = useFenceConnection();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
@@ -188,7 +192,10 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
     <>
       <ProTable<ITableFileEntity>
         tableId="datafiles_table"
-        columns={getDefaultColumns(fencesAllAcls)}
+        columns={getDefaultColumns(
+          fencesAllAcls,
+          connectionStatus.cavatica === FENCE_CONNECTION_STATUSES.connected,
+        )}
         wrapperClassName={styles.dataFilesTabWrapper}
         loading={results.loading}
         initialColumnState={userInfo?.config.data_exploration?.tables?.datafiles?.columns}
@@ -210,7 +217,10 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
             dispatch(
               fetchTsvReport({
                 columnStates: userInfo?.config.data_exploration?.tables?.datafiles?.columns,
-                columns: getDefaultColumns(fencesAllAcls),
+                columns: getDefaultColumns(
+                  fencesAllAcls,
+                  connectionStatus.cavatica === FENCE_CONNECTION_STATUSES.connected,
+                ),
                 index: INDEXES.FILE,
                 sqon:
                   selectedAllResults || !selectedKeys.length

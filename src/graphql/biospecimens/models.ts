@@ -16,6 +16,7 @@ export interface IBiospecimenEntity {
   container_id: string;
   age_at_biospecimen_collection: number;
   biospecimen_storage: string;
+  study_id: string;
   laboratory_procedure: string;
   collection_sample_id: string;
   collection_sample_type: string;

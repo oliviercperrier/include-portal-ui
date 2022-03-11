@@ -115,7 +115,7 @@ const defaultColumns: ProColumnType<any>[] = [
     defaultHidden: true,
   },
   {
-    key: 'mondo.name',
+    key: 'diagnosis.mondo_id_diagnosis',
     title: 'Diagnosis (Mondo)',
     dataIndex: 'mondo',
     className: styles.diagnosisCell,

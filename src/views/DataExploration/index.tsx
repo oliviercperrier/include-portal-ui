@@ -88,7 +88,13 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: ['data_category', 'data_type', 'file_format', 'controlled_access'],
+        fields: [
+          'data_category',
+          'sequencing_experiment__experiment_strategy',
+          'data_type',
+          'file_format',
+          'controlled_access',
+        ],
       },
     ],
   },

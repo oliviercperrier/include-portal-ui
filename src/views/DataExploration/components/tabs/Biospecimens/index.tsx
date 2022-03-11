@@ -25,7 +25,6 @@ import { addFilters, generateValueFilter } from 'utils/sqons';
 
 import styles from './index.module.scss';
 
-
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
   setPagingConfig: TPagingConfigCb;
@@ -137,7 +136,25 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'files.hits.total',
     title: 'Files',
-    render: (record) => record?.files?.hits?.total || 0,
+    render: (record: IBiospecimenEntity) => {
+      const nbFiles = record?.files?.hits?.total || 0;
+      return nbFiles ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
+            search: createQueryParams({
+              filters: addFilters(null, [
+                generateValueFilter('sample_id', [record.sample_id], INDEXES.BIOSPECIMEN),
+              ]),
+            }),
+          }}
+        >
+          {nbFiles}
+        </Link>
+      ) : (
+        nbFiles
+      );
+    },
   },
   {
     key: 'laboratory_procedure',

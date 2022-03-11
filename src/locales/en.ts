@@ -6,6 +6,9 @@ const filesFacets = {
   file_format: 'File Format',
   size: 'Size',
   access: 'Access',
+  sequencing_experiment: {
+    experiment_strategy: 'Experimental Strategy',
+  },
 };
 
 const fr = {

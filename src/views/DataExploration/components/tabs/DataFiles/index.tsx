@@ -20,7 +20,7 @@ import { Button, Modal, Tag, Tooltip } from 'antd';
 import AnalyseModal from 'views/Dashboard/components/DashboardCards/Cavatica/AnalyseModal';
 import { fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
-import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 import intl from 'react-intl-universal';
 import { IStudyEntity } from 'graphql/studies/models';
@@ -34,6 +34,7 @@ import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
+import { useFilters } from '@ferlab/ui/core/data/filters/utils';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -149,11 +150,19 @@ const getDefaultColumns = (
 const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const { filters }: { filters: ISyntheticSqon } = useFilters();
   const { isConnected, isInitializingAnalyse, beginAnalyseAfterConnection } = useFenceCavatica();
   const { fencesAllAcls, connectionStatus } = useFenceConnection();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [selectedRows, setSelectedRows] = useState<ITableFileEntity[]>([]);
+
+  useEffect(() => {
+    if (selectedKeys.length) {
+      setSelectedKeys([]);
+    }
+    // eslint-disable-next-line
+  }, [filters.id]);
 
   const onBeginAnalyse = () =>
     dispatch(
@@ -203,6 +212,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
           fencesAllAcls,
           connectionStatus.cavatica === FENCE_CONNECTION_STATUSES.connected,
         )}
+        initialSelectedKey={selectedKeys}
         wrapperClassName={styles.dataFilesTabWrapper}
         loading={results.loading}
         initialColumnState={userInfo?.config.data_exploration?.tables?.datafiles?.columns}

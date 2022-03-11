@@ -42,6 +42,7 @@ const AnalyseModal = () => {
 
   const handleCreateProject = () => {
     setDropdownOpen(false);
+    setSelectedTreeNode(undefined);
     // reset project tree
     setLocalProjectTree(projectsTree);
     // Need a timeout else the dropdown stay visible

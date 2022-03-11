@@ -106,7 +106,7 @@ const getStudiesCountByNameAndAcl = async (
         ${studyIds
           .map(
             (studyId) => `
-          ${studyId}: aggregations(filters: $${replaceDashByUnderscore(
+          ${replaceDashByUnderscore(studyId)}: aggregations(filters: $${replaceDashByUnderscore(
               studyId,
             )}_sqon, aggregations_filter_themselves: true) {
             acl {
@@ -143,14 +143,15 @@ const getStudiesCountByNameAndAcl = async (
 
   return {
     authorizedStudies: studyIds.map((id) => {
-      const agg = file[id];
+      const studyId = replaceDashByUnderscore(id);
+      const agg = file[studyId];
 
       return {
         acl: agg['acl']['buckets'].map((a: any) => a.key).filter((b: any) => b.includes('.')),
         studyShortName: agg['participants__study__study_name']['buckets'][0]['key'],
         totalFiles: agg['participants__study__study_name']['buckets'][0]['doc_count'],
-        id,
-        authorizedFiles: studies[id].authorizedFiles,
+        id: studyId,
+        authorizedFiles: studies[studyId].authorizedFiles,
       };
     }),
   };

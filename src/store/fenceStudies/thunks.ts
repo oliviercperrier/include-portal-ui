@@ -239,6 +239,6 @@ export const computeAllFencesAuthStudies = (fenceStudies: TFenceStudies) => {
   return flatMap(Object.values(fenceStudies), (studies) => studies.authorizedStudies);
 };
 
-const replaceDashByUnderscore = (value: string) => value.replace('-', '_');
+const replaceDashByUnderscore = (value: string) => value.replaceAll('-', '');
 
 export { fetchFenceStudies, fetchAllFenceStudies };

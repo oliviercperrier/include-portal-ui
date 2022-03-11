@@ -28,8 +28,8 @@ export const addFieldToActiveQuery = (
   const newSqonContent = {
     content: {
       field: fieldName,
+      index,
       value,
-      index: index,
     },
     op: TermOperators.in,
   };

@@ -223,6 +223,7 @@ const startBulkImportJob = createAsyncThunk<
 
   const cavaticaDRSItems = selectedFiles.map((file) => ({
     drs_uri: file.access_urls,
+    name: file.file_name,
     [isProject ? 'project' : 'parent']: node.id,
   }));
 

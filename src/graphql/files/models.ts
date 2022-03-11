@@ -19,6 +19,7 @@ export interface IFileEntity {
   file_format: string;
   file_id: string;
   size: number;
+  file_name: string;
   type_of_omics: string;
   repository: string;
   study: IStudyEntity;

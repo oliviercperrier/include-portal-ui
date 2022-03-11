@@ -5,6 +5,11 @@ import { TFenceStudy } from 'store/fenceStudies/types';
 import { numberWithCommas } from 'utils/string';
 
 import styles from './index.module.scss';
+import { Link } from 'react-router-dom';
+import { STATIC_ROUTES } from 'utils/routes';
+import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
+import { addFilters, generateValueFilter } from 'utils/sqons';
+import { INDEXES } from 'graphql/constants';
 
 interface OwnProps {
   id: any;
@@ -25,13 +30,36 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
         description={
           <div className={styles.filesCount}>
             {intl.get('screen.dashboard.cards.authorizedStudies.authorization')}:{' '}
-            <Button className={styles.fileLink} type="link">
-              <span>{numberWithCommas(data.authorizedFiles)}</span>
-            </Button>{' '}
+            <Link
+              to={{
+                pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
+                search: createQueryParams({
+                  filters: addFilters(null, [
+                    generateValueFilter('study_id', [data.id], INDEXES.PARTICIPANT),
+                    generateValueFilter('acl', data.acl, INDEXES.FILE),
+                  ]),
+                }),
+              }}
+            >
+              <Button className={styles.fileLink} type="link">
+                <span>{numberWithCommas(data.authorizedFiles)}</span>
+              </Button>
+            </Link>{' '}
             {intl.get('screen.dashboard.cards.authorizedStudies.of')}{' '}
-            <Button className={styles.fileLink} type="link">
-              <span>{numberWithCommas(data.totalFiles)}</span>
-            </Button>{' '}
+            <Link
+              to={{
+                pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
+                search: createQueryParams({
+                  filters: addFilters(null, [
+                    generateValueFilter('study_id', [data.id], INDEXES.PARTICIPANT),
+                  ]),
+                }),
+              }}
+            >
+              <Button className={styles.fileLink} type="link">
+                <span>{numberWithCommas(data.totalFiles)}</span>
+              </Button>
+            </Link>{' '}
             {intl.get('screen.dashboard.cards.authorizedStudies.files')}
           </div>
         }

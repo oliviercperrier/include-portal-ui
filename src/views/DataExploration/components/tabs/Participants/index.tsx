@@ -25,7 +25,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { addFilter } from 'utils/sqons';
+import { addFilters, generateValueFilter } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
@@ -203,8 +203,8 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
-                record.participant_id,
+              filters: addFilters(null, [
+                generateValueFilter('participant_id', [record.participant_id], INDEXES.PARTICIPANT),
               ]),
             }),
           }}
@@ -217,26 +217,24 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'files.hits.total',
+    key: 'nb_files',
     title: 'Files',
     render: (record: ITableParticipantEntity) => {
-      const total = record?.files?.hits?.total;
-
-      return total ? (
+      return record.nb_files ? (
         <Link
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
             search: createQueryParams({
-              filters: addFilter(null, 'participant_id', INDEXES.PARTICIPANT, [
-                record.participant_id,
+              filters: addFilters(null, [
+                generateValueFilter('participant_id', [record.participant_id], INDEXES.PARTICIPANT),
               ]),
             }),
           }}
         >
-          {total}
+          {record.nb_files}
         </Link>
       ) : (
-        total || 0
+        record.nb_files || 0
       );
     },
   },

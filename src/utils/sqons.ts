@@ -47,29 +47,35 @@ export const addFieldToActiveQuery = (
   updateQueryParam(history, 'filters', newSqon);
 };
 
-export const addFilter = (
+export const addFilters = (
   filters: ISyntheticSqon | null,
-  field: string,
-  index: INDEXES,
-  value: string[],
+  newFilters: IValueFilter[],
   operator: BooleanOperators = BooleanOperators.and,
 ): ISyntheticSqon => {
-  const newFilter = { content: { field, value, index }, op: TermOperators.in };
-
   if (isEmpty(filters)) {
     return {
       id: v4(),
-      content: [newFilter],
+      content: newFilters,
       op: operator,
     };
   }
 
   return {
-    id: v4(),
-    ...filters!,
-    content: [...filters!.content, newFilter],
+    id: filters?.id || v4(),
+    op: filters?.op || operator,
+    content: [...filters!.content, ...newFilters],
   };
 };
+
+export const generateValueFilter = (
+  field: string,
+  value: string[],
+  index: INDEXES,
+  operator: TermOperators = TermOperators.in,
+) => ({
+  content: { field, value, index },
+  op: operator,
+});
 
 export const findSqonValueByField = (
   field: string,

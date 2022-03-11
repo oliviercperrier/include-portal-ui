@@ -105,20 +105,21 @@ const getDefaultColumns = (
     dataIndex: 'file_id',
   },
   {
-    key: 'participant_id',
-    title: 'Participant ID',
-    defaultHidden: true,
-  },
-  {
     key: 'study_id',
     title: 'Study Code',
     dataIndex: 'study',
     render: (study: IStudyEntity) => study.study_id,
   },
   {
-    key: 'type_of_omics',
+    key: 'data_category',
     title: 'Data Category',
-    dataIndex: 'type_of_omics',
+    dataIndex: 'data_category',
+  },
+  {
+    key: 'sequencing_experiment__experiment_strategy',
+    title: 'Experimental Strategy',
+    render: (record: IFileEntity) =>
+      record.sequencing_experiment?.experiment_strategy || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'data_type',
@@ -130,6 +131,12 @@ const getDefaultColumns = (
     key: 'file_format',
     title: 'Format',
     dataIndex: 'file_format',
+  },
+  {
+    key: 'size',
+    title: 'Size',
+    dataIndex: 'size',
+    render: (size) => formatFileSize(size, { output: 'string' }),
   },
   {
     key: 'size',

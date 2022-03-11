@@ -14,21 +14,6 @@ interface IFieldPrefixMap {
   prefix: string;
 }
 
-const filePrefixMap: IFieldPrefixMap = {
-  index: INDEXES.FILE,
-  prefix: 'files.',
-};
-
-const participantPrefixMap: IFieldPrefixMap = {
-  index: INDEXES.PARTICIPANT,
-  prefix: 'participants.',
-};
-
-//const biospecimenPrefixMap: IFieldPrefixMap = {
-//  index: INDEXES.BIOSPECIMEN,
-//  prefix: "biospecimen.",
-//};
-
 const getPrefix = (field: IValueContent, fieldPrefixMaps: IFieldPrefixMap[]) => {
   const fieldPrefixMap = fieldPrefixMaps.find((config) => config.index === field.index);
   return fieldPrefixMap ? fieldPrefixMap.prefix : '';
@@ -65,19 +50,34 @@ const recursiveMap = (
 
 export const mapFilterForParticipant = (sqonFilters: ISqonGroupFilter) =>
   recursiveMap(sqonFilters, [
-    filePrefixMap,
-    //biospecimenPrefixMap
+    {
+      index: INDEXES.FILE,
+      prefix: 'files.',
+    },
+    {
+      index: INDEXES.BIOSPECIMEN,
+      prefix: 'files.biospecimens.',
+    },
   ]);
 
 export const mapFilterForFiles = (sqonFilters: ISqonGroupFilter) =>
   recursiveMap(sqonFilters, [
-    participantPrefixMap,
-    //biospecimenPrefixMap
+    {
+      index: INDEXES.PARTICIPANT,
+      prefix: 'participants.',
+    },
+    {
+      index: INDEXES.BIOSPECIMEN,
+      prefix: 'participants.biospecimens.',
+    },
   ]);
 
 export const mapFilterForBiospecimen = (sqonFilters: ISqonGroupFilter) =>
   recursiveMap(sqonFilters, [
-    filePrefixMap,
+    {
+      index: INDEXES.FILE,
+      prefix: 'files.',
+    },
     {
       // Biospecimen only 1 participant so no 's'
       index: INDEXES.PARTICIPANT,

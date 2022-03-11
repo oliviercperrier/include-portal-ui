@@ -23,6 +23,9 @@ export const SEARCH_FILES_QUERY = gql`
               study_id
               study_name
             }
+            sequencing_experiment {
+              experiment_strategy
+            }
           }
         }
       }

@@ -5,6 +5,7 @@ import logger from 'redux-logger';
 import { persistStore, persistReducer } from 'redux-persist';
 import EnvVariables from 'helpers/EnvVariables';
 import { RootState } from 'store/types';
+import createFilter from 'redux-persist-transform-filter';
 // Reducers
 import GlobalReducer from 'store/global';
 import UserReducer from 'store/user';
@@ -21,6 +22,7 @@ const persistConfig = {
   key: 'root',
   storage,
   whitelist: ['global'],
+  transforms: [createFilter('global', ['lang'])],
 };
 
 const rootReducer = combineReducers<RootState>({

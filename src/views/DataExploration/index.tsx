@@ -47,7 +47,7 @@ export const filterGroups: {
         fields: [
           'study_id',
           'down_syndrome_status',
-          'mondo__name',
+          'diagnosis__mondo_id_diagnosis',
           //'observed_phenotype__name',
           //'phenotype__hpo_phenotype_observed',
           'family_type',

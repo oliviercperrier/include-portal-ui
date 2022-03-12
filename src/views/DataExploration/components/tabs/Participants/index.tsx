@@ -1,8 +1,8 @@
 import {
   ITableParticipantEntity,
   IParticipantEntity,
-  IParticipantMondo,
   IParticipantObservedPhenotype,
+  IParticipantDiagnosis,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
 import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
@@ -117,10 +117,10 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'diagnosis.mondo_id_diagnosis',
     title: 'Diagnosis (Mondo)',
-    dataIndex: 'mondo',
+    dataIndex: 'diagnosis',
     className: styles.diagnosisCell,
-    render: (mondo: ArrangerResultsTree<IParticipantMondo>) => {
-      const mondoNames = mondo?.hits?.edges.filter((m) => m.node.is_tagged).map((m) => m.node.name);
+    render: (mondo: ArrangerResultsTree<IParticipantDiagnosis>) => {
+      const mondoNames = mondo?.hits?.edges.map((m) => m.node.mondo_id_diagnosis);
 
       if (!mondoNames || mondoNames.length === 0) {
         return TABLE_EMPTY_PLACE_HOLDER;
@@ -130,8 +130,8 @@ const defaultColumns: ProColumnType<any>[] = [
         <ExpandableCell
           nbToShow={1}
           dataSource={mondoNames}
-          renderItem={(modo_id, index): React.ReactNode => {
-            const mondoInfo = extractMondoTitleAndCode(modo_id);
+          renderItem={(mondo_id, index): React.ReactNode => {
+            const mondoInfo = extractMondoTitleAndCode(mondo_id);
 
             return mondoInfo ? (
               <div key={index}>

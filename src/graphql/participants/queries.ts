@@ -20,31 +20,32 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             ethnicity
             race
             nb_files
+
             files {
               hits {
                 total
-                edges{
-                  node{
-                    biospecimens{
-                      hits{
+                edges {
+                  node {
+                    biospecimens {
+                      hits {
                         total
-                        edges{
-                           node{
-                             sample_id
+                        edges {
+                          node {
+                            sample_id
                           }
                         }
                       }
                     }
                   }
-                }  
+                }
               }
             }
-            mondo {
+
+            diagnosis {
               hits {
                 edges {
                   node {
-                    name
-                    is_tagged
+                    mondo_id_diagnosis
                   }
                 }
               }

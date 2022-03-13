@@ -21,6 +21,7 @@ import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/con
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
+import { mapFilterForParticipant } from '../../utils/mapper';
 
 import styles from './index.module.scss';
 
@@ -90,18 +91,20 @@ const HpoTreeFacet = () => {
 
   useEffect(() => {
     if (visible) {
+      const resolvedSqon = resolveSyntheticSqon(allSqons, filters);
+      const participantResolvedSqon = mapFilterForParticipant(
+        resolveSyntheticSqon(allSqons, filters),
+      );
+
       setIsLoading(true);
-      phenotypeStore.current.fetch('observed_phenotype').then(() => {
+      phenotypeStore.current.fetch('observed_phenotype', participantResolvedSqon).then(() => {
         const rootNode = phenotypeStore.current.getRootNode()!;
         setTreeData(rootNode);
         setRootNode(rootNode);
         setIsLoading(false);
 
         const flatTree = getFlattenTree(rootNode!);
-        const selectedValues = findSqonValueByField(
-          FIELD_NAME,
-          resolveSyntheticSqon(allSqons, filters),
-        );
+        const selectedValues = findSqonValueByField(FIELD_NAME, resolvedSqon);
 
         if (selectedValues) {
           const targetKeys = flatTree

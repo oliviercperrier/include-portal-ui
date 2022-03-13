@@ -168,7 +168,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
     dispatch(
       beginAnalyse({
         sqon: sqon!,
-        fileIds: selectedKeys,
+        fileIds: selectedAllResults ? [] : selectedKeys,
       }),
     );
 

@@ -134,10 +134,22 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (status: string) => (status.toLowerCase() === 'available' ? 'Yes' : 'No'),
   },
   {
-    key: 'files.hits.total',
+    key: 'laboratory_procedure',
+    title: 'Laboratory Procedure',
+    dataIndex: 'laboratory_procedure',
+    defaultHidden: true,
+  },
+  {
+    key: 'biospecimen_storage',
+    title: 'Biospecimen Storage',
+    dataIndex: 'biospecimen_storage',
+    defaultHidden: true,
+  },
+  {
+    key: 'nb_files',
     title: 'Files',
     render: (record: IBiospecimenEntity) => {
-      const nbFiles = record?.files?.hits?.total || 0;
+      const nbFiles = record?.nb_files || 0;
       return nbFiles ? (
         <Link
           to={{
@@ -155,18 +167,6 @@ const defaultColumns: ProColumnType<any>[] = [
         nbFiles
       );
     },
-  },
-  {
-    key: 'laboratory_procedure',
-    title: 'Laboratory Procedure',
-    dataIndex: 'laboratory_procedure',
-    defaultHidden: true,
-  },
-  {
-    key: 'biospecimen_storage',
-    title: 'Biospecimen Storage',
-    dataIndex: 'biospecimen_storage',
-    defaultHidden: true,
   },
 ];
 

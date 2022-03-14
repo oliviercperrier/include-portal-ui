@@ -5,7 +5,7 @@ import BarChart from 'components/uiKit/charts/Bar';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import intl from 'react-intl-universal';
 import { truncateString } from 'utils/string';
-import { addFieldToActiveQuery } from 'utils/sqons';
+import {addFieldToActiveQuery, MISSING} from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 
@@ -94,7 +94,15 @@ const AvailableDataGraphCard = ({
                 legendPosition: 'middle',
                 legendOffset: 35,
               }}
-              onClick={(datum) => addToQuery('data_type', datum.indexValue as string, history)}
+              onClick={(datum) =>
+                addToQuery(
+                  'data_type',
+                  (datum.indexValue as string).toLowerCase() === 'no data'
+                    ? MISSING
+                    : (datum.indexValue as string),
+                  history,
+                )
+              }
               {...graphSetting}
             />
           </Col>

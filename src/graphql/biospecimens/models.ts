@@ -25,5 +25,6 @@ export interface IBiospecimenEntity {
   sample_id: string;
   sample_type: string;
   files: ArrangerResultsTree<IFileEntity>;
+  nb_files: number;
   participant: IParticipantEntity;
 }

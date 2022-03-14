@@ -13,14 +13,14 @@ interface OwnProps {
   className?: string;
   loading?: boolean;
   dataTypeData: RawAggregation;
-  typeOfOmicsData: RawAggregation;
+  dataCategoryData: RawAggregation;
 }
 
 const transformDataType = (results: RawAggregation) =>
   (results?.data?.participant?.aggregations?.files__data_type.buckets || []).map(toChartData);
 
-const transformTypeOfOmics = (results: RawAggregation) =>
-  (results?.data?.participant?.aggregations?.files__type_of_omics.buckets || []).map(toChartData);
+const transformDataCategory = (results: RawAggregation) =>
+  (results?.data?.participant?.aggregations?.files__data_category.buckets || []).map(toChartData);
 
 const graphSetting: any = {
   height: 300,
@@ -41,7 +41,7 @@ const AvailableDataGraphCard = ({
   className = '',
   loading = false,
   dataTypeData,
-  typeOfOmicsData,
+  dataCategoryData,
 }: OwnProps) => {
   const history = useHistory();
 
@@ -60,10 +60,10 @@ const AvailableDataGraphCard = ({
         <Row gutter={[48, 24]}>
           <Col span={12}>
             <BarChart
-              title="Participants by Type of Omics"
-              data={transformTypeOfOmics(typeOfOmicsData)}
+              title="Participants by Data Category"
+              data={transformDataCategory(dataCategoryData)}
               axisLeft={{
-                legend: 'Type of Omics',
+                legend: 'Data Category',
                 legendPosition: 'middle',
                 legendOffset: -120,
                 format: (title: string) => truncateString(title, 15),
@@ -74,6 +74,7 @@ const AvailableDataGraphCard = ({
                 legendPosition: 'middle',
                 legendOffset: 35,
               }}
+              onClick={(datum) => addToQuery('data_category', datum.indexValue as string, history)}
               {...graphSetting}
             />
           </Col>

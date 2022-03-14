@@ -146,10 +146,10 @@ const defaultColumns: ProColumnType<any>[] = [
     defaultHidden: true,
   },
   {
-    key: 'files.hits.total',
+    key: 'nb_files',
     title: 'Files',
     render: (record: IBiospecimenEntity) => {
-      const nbFiles = record?.files?.hits?.total || 0;
+      const nbFiles = record?.nb_files || 0;
       return nbFiles ? (
         <Link
           to={{

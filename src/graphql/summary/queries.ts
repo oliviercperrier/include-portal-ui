@@ -40,11 +40,11 @@ export const DATATYPE_QUERY = `
   }
 `;
 
-export const TYPE_OF_OMICS_QUERY = `
+export const DATA_CATEGORY_QUERY = `
   query($sqon: JSON) {
     participant {
       aggregations(filters: $sqon, aggregations_filter_themselves: true) {
-        files__type_of_omics {
+        files__data_category {
           buckets {
             key
             doc_count

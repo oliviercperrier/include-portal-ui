@@ -23,6 +23,8 @@ export interface IFileEntity {
   type_of_omics: string;
   repository: string;
   study: IStudyEntity;
+  nb_participants: number;
+  nb_biospecimens: number;
   sequencing_experiment: {
     experiment_strategy: string;
   };

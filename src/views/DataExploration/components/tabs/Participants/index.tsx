@@ -58,13 +58,16 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'study_external_id',
     title: 'dbGaP',
     dataIndex: 'study_external_id',
-    render: (study_external_id: string) => (
-      <ExternalLink
-        href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_external_id}`}
-      >
-        {study_external_id}
-      </ExternalLink>
-    ),
+    render: (study_external_id: string) =>
+      study_external_id ? (
+        <ExternalLink
+          href={`https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=${study_external_id}`}
+        >
+          {study_external_id}
+        </ExternalLink>
+      ) : (
+        TABLE_EMPTY_PLACE_HOLDER
+      ),
   },
   {
     key: 'down_syndrome_status',
@@ -190,7 +193,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'biospecimen',
-    title: 'Biospecimen',
+    title: 'Biospecimens',
     render: (record: ITableParticipantEntity) => {
       const total = new Set([
         ...record.files.hits.edges.flatMap((e) =>

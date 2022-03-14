@@ -19,6 +19,8 @@ export const SEARCH_FILES_QUERY = gql`
             acl
             file_name
             repository
+            nb_participants
+            nb_biospecimens
             study {
               study_id
               study_name

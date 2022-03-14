@@ -32,9 +32,12 @@ import { connectToFence } from 'store/fenceConnection/thunks';
 import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
+import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
+import { Link } from 'react-router-dom';
+import { STATIC_ROUTES } from 'utils/routes';
+import { addFilters, generateValueFilter } from 'utils/sqons';
 
 import styles from './index.module.scss';
-import { useFilters } from '@ferlab/ui/core/data/filters/utils';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -140,10 +143,50 @@ const getDefaultColumns = (
     render: (size) => formatFileSize(size, { output: 'string' }),
   },
   {
-    key: 'size',
-    title: 'Size',
-    dataIndex: 'size',
-    render: (size) => formatFileSize(size, { output: 'string' }),
+    key: 'nb_biospecimens',
+    title: 'Biospecimens',
+    render: (record: IFileEntity) => {
+      const nb_biospecimens = record?.nb_biospecimens || 0;
+      return nb_biospecimens ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+            search: createQueryParams({
+              filters: addFilters(null, [
+                generateValueFilter('file_id', [record.file_id], INDEXES.FILE),
+              ]),
+            }),
+          }}
+        >
+          {nb_biospecimens}
+        </Link>
+      ) : (
+        nb_biospecimens
+      );
+    },
+  },
+  {
+    key: 'nb_participants',
+    title: 'Participants',
+    render: (record: IFileEntity) => {
+      const nb_participants = record?.nb_participants || 0;
+      return nb_participants ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
+            search: createQueryParams({
+              filters: addFilters(null, [
+                generateValueFilter('file_id', [record.file_id], INDEXES.FILE),
+              ]),
+            }),
+          }}
+        >
+          {nb_participants}
+        </Link>
+      ) : (
+        nb_participants
+      );
+    },
   },
 ];
 

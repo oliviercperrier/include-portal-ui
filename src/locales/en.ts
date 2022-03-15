@@ -110,7 +110,7 @@ const fr = {
           import: {
             copySuccess: 'Your files have been copied to: <strong>{destination}</strong>',
             possibleDelays:
-              'If you have uploaded more than 500 files in the last 5 minutes, the import may take a little longer.',
+              'If you have uploaded more than 10000 files in the last 5 minutes, the import may take a little longer.',
             openProject: 'Open project in Cavatica',
           },
         },

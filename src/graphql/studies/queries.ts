@@ -16,6 +16,7 @@ export const FETCH_STUDIES_QUERY = gql`
             participant_count
             family_count
             attribution
+            data_category
           }
         }
       }

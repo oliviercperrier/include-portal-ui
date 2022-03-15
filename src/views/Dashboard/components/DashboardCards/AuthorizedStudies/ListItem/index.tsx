@@ -75,7 +75,7 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
       <Progress
         className={styles.progress}
         size="small"
-        percent={(data.authorizedFiles / data.totalFiles) * 100}
+        percent={Math.round((data.authorizedFiles / data.totalFiles) * 100)}
       ></Progress>
     </List.Item>
   );

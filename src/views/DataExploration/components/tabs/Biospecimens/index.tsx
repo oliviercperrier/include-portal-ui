@@ -268,7 +268,7 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
           }
         },
       }}
-      dataSource={results.data.map((i) => ({ ...i, key: i.id }))} //FIXME use biospecimen_id from data
+      dataSource={results.data.map((i) => ({ ...i, key: i.id }))}
       dictionary={getProTableDictionary()}
     />
   );

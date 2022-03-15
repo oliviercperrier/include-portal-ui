@@ -19,6 +19,18 @@ import styles from './index.module.scss';
 
 const { Title } = Typography;
 
+const enum DataCategory {
+  METABOLOMIC = 'Metabolomic',
+  GENOMIC = 'Genomic',
+  PROTEOMIC = 'Proteomic',
+  TRANSCRIPTOMIC = 'Transcriptomic',
+  CLINICAL = 'Clinical',
+  IMMUNE_MAP = 'Immune-Map',
+}
+
+const hasDataCategory = (dataCategory: string[], category: DataCategory) =>
+  dataCategory ? dataCategory.includes(category) ? <CheckOutlined /> : undefined : undefined;
+
 const columns: ProColumnType<any>[] = [
   {
     key: 'study_id',
@@ -86,32 +98,36 @@ const columns: ProColumnType<any>[] = [
   },
   {
     key: 'genomic',
-    title: 'Genomic',
+    title: DataCategory.GENOMIC,
     align: 'center',
-    render: () => <CheckOutlined />,
+    render: (record: IStudyEntity) => hasDataCategory(record.data_category, DataCategory.GENOMIC),
   },
   {
     key: 'transcriptomic',
-    title: 'Transcriptomic',
+    title: DataCategory.TRANSCRIPTOMIC,
     align: 'center',
+    render: (record: IStudyEntity) =>
+      hasDataCategory(record.data_category, DataCategory.TRANSCRIPTOMIC),
   },
   {
     key: 'proteomic',
     title: 'Proteomic',
     align: 'center',
-    render: () => <></>,
+    render: (record: IStudyEntity) => hasDataCategory(record.data_category, DataCategory.PROTEOMIC),
   },
   {
     key: 'immune_map',
     title: 'Immune Map',
     align: 'center',
-    render: () => <></>,
+    render: (record: IStudyEntity) =>
+      hasDataCategory(record.data_category, DataCategory.IMMUNE_MAP),
   },
   {
     key: 'metabolic',
     title: 'Metabolomic',
     align: 'center',
-    render: () => <></>,
+    render: (record: IStudyEntity) =>
+      hasDataCategory(record.data_category, DataCategory.METABOLOMIC),
   },
 ];
 

@@ -9,7 +9,7 @@ import { TUser } from 'services/api/user/models';
 import styles from './index.module.scss';
 
 const { Title, Text } = Typography;
-const DEFAULT_PAGE_SIZE = 15;
+const DEFAULT_PAGE_SIZE = 25;
 
 const CommunityPage = () => {
   const [users, setUsers] = useState<TUser[]>([]);
@@ -64,6 +64,7 @@ const CommunityPage = () => {
                 },
                 size: 'small',
                 hideOnSinglePage: true,
+                showSizeChanger: false,
               }}
               loading={isLoading}
               itemLayout="vertical"

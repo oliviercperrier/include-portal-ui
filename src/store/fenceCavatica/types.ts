@@ -5,7 +5,6 @@ export type initialState = {
   isAnalyseModalOpen: boolean;
   isCreateProjectModalOpen: boolean;
   isCreatingProject: boolean;
-  isCopyingFiles: boolean;
   isFetchingBillingGroup: boolean;
   isInitializingAnalyse: boolean;
   isBulkImportLoading: boolean;

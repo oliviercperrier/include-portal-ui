@@ -23,7 +23,7 @@ const AnalyseModal = () => {
     isLoading,
     bulkImportData,
     newlyCreatedProject,
-    isCopyingFiles,
+    isBulkImportLoading,
   } = useFenceCavatica();
   const dispatch = useDispatch();
   const [selectedTreeNode, setSelectedTreeNode] = useState<ICavaticaTreeNode | undefined>();
@@ -105,7 +105,7 @@ const AnalyseModal = () => {
       okText="Copy files"
       okButtonProps={{
         disabled: !selectedTreeNode?.id,
-        loading: isCopyingFiles,
+        loading: isBulkImportLoading,
       }}
       onOk={handleOnOk}
       onCancel={handleOnCancel}

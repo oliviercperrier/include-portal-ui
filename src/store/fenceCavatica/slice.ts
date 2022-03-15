@@ -13,7 +13,6 @@ export const FenceCavaticaState: initialState = {
   isAnalyseModalOpen: false,
   isCreateProjectModalOpen: false,
   isCreatingProject: false,
-  isCopyingFiles: false,
   isFetchingBillingGroup: false,
   isInitializingAnalyse: false,
   isBulkImportLoading: false,

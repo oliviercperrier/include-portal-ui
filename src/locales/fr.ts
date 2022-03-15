@@ -1,5 +1,4 @@
 const filesFacets = {
-  type_of_omics: 'Data Category',
   data_category: 'Data Category',
   controlled_access: 'Access',
   data_type: 'Data Type',

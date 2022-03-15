@@ -1,6 +1,15 @@
+import EnvironmentVariables from 'helpers/EnvVariables';
 import md5 from 'md5';
 
-const Gravatar = ({ circle = false, email = '', d = 'retro', size = 100, ...props }) => (
+const Gravatar = ({
+  circle = false,
+  email = '',
+  d = encodeURIComponent(
+    `${EnvironmentVariables.configFor('INCLUDE_WEB_ROOT')}/avatar-placeholder.jpg`,
+  ),
+  size = 100,
+  ...props
+}) => (
   <img
     {...props}
     style={circle ? { borderRadius: '50%', ...props.style } : props.style}

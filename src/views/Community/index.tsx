@@ -70,7 +70,7 @@ const CommunityPage = () => {
               renderItem={(item) => (
                 <List.Item key={item.id} className={styles.usersListItem}>
                   <List.Item.Meta
-                    avatar={<Gravatar circle email={item.email || ''} size={50} />}
+                    avatar={<Gravatar circle email={item.email || ''} size={40} />}
                     title={<Text>{formatName(item)}</Text>}
                     description={
                       <Text type="secondary">

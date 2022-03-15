@@ -115,17 +115,20 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'container_id',
     title: 'Container ID',
     dataIndex: 'container_id',
+    defaultHidden: true,
     render: (container_id: string) => container_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'volume_ul',
     title: 'Volume',
     dataIndex: 'volume_ul',
+    defaultHidden: true,
     render: (volume_ul) => volume_ul || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'volume_unit',
     title: 'Volume Unit',
+    defaultHidden: true,
     render: (record: IBiospecimenEntity) =>
       record.volume_ul ? record.volume_unit : TABLE_EMPTY_PLACE_HOLDER,
   },

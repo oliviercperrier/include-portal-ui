@@ -110,6 +110,8 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'family_type',
     title: 'Family Unit',
     dataIndex: 'family_type',
+    defaultHidden: true,
+    render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'is_proband',
@@ -195,13 +197,9 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'biospecimen',
     title: 'Biospecimens',
     render: (record: ITableParticipantEntity) => {
-      const total = new Set([
-        ...record.files.hits.edges.flatMap((e) =>
-          e.node.biospecimens.hits.edges.map((e) => e.node.sample_id),
-        ),
-      ]).size;
+      const nb_biospecimens = record.nb_biospecimens || 0;
 
-      return total ? (
+      return nb_biospecimens ? (
         <Link
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
@@ -218,10 +216,10 @@ const defaultColumns: ProColumnType<any>[] = [
             }),
           }}
         >
-          {total}
+          {nb_biospecimens}
         </Link>
       ) : (
-        total
+        nb_biospecimens
       );
     },
   },

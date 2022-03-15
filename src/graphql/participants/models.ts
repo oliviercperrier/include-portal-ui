@@ -46,6 +46,7 @@ export interface IParticipantEntity {
   study_external_id: string;
   study_id: string;
   nb_files: number;
+  nb_biospecimens: number;
   mondo: ArrangerResultsTree<IParticipantMondo>;
   observed_phenotype: ArrangerResultsTree<IParticipantObservedPhenotype>;
   diagnosis: ArrangerResultsTree<IParticipantDiagnosis>;

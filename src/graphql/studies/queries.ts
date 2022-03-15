@@ -13,7 +13,6 @@ export const FETCH_STUDIES_QUERY = gql`
             study_name
             program
             external_id
-            type_of_omics	
             participant_count
             family_count
             attribution

@@ -38,7 +38,7 @@ const { Title } = Typography;
 const addToQuery = (field: string, key: string, history: any) =>
   addFieldToActiveQuery({
     field,
-    value: [key],
+    value: [key.toLowerCase() === 'no data' ? ArrangerValues.missing : key],
     history,
     index: INDEXES.FILE,
   });
@@ -100,15 +100,7 @@ const AvailableDataGraphCard = ({
                 legendPosition: 'middle',
                 legendOffset: 35,
               }}
-              onClick={(datum) =>
-                addToQuery(
-                  'data_type',
-                  (datum.indexValue as string).toLowerCase() === 'no data'
-                    ? ArrangerValues.missing
-                    : (datum.indexValue as string),
-                  history,
-                )
-              }
+              onClick={(datum) => addToQuery('data_type', datum.indexValue as string, history)}
               {...graphSetting}
             />
           </Col>

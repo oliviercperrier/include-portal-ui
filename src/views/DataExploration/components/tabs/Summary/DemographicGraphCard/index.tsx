@@ -8,6 +8,7 @@ import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
+import {ArrangerValues} from "@ferlab/ui/core/data/arranger/formatting";
 
 interface OwnProps {
   className?: string;
@@ -54,7 +55,7 @@ const { Title } = Typography;
 const addToQuery = (field: string, key: string, history: any) =>
   addFieldToActiveQuery({
     field,
-    value: [key],
+    value: [key.toLowerCase() === 'no data' ? ArrangerValues.missing : key],
     history,
     index: INDEXES.PARTICIPANT,
   });

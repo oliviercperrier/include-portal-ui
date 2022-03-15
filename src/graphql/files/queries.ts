@@ -9,7 +9,6 @@ export const SEARCH_FILES_QUERY = gql`
           node {
             id
             file_id
-            type_of_omics
             data_category
             data_type
             file_format

@@ -1,5 +1,5 @@
 import { Button, Space, Tree, Typography } from 'antd';
-import { addFieldToActiveQuery } from 'utils/sqons';
+import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import intl from 'react-intl-universal';
 import { INDEXES } from 'graphql/constants';
@@ -52,12 +52,12 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
         type="link"
         size="small"
         onClick={() => {
-          addFieldToActiveQuery(
-            'observed_phenotype.name',
-            [currentNode?.title!],
-            INDEXES.PARTICIPANT,
+          addFieldToActiveQuery({
+            field: 'observed_phenotype.name',
+            value: [currentNode?.title!],
             history,
-          );
+            index: INDEXES.PARTICIPANT,
+          });
         }}
       >
         {intl.get(

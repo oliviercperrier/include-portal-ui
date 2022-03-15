@@ -21,7 +21,7 @@ import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
-import { addFilters, generateValueFilter } from 'utils/sqons';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 
 import styles from './index.module.scss';
 
@@ -43,13 +43,15 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter(
-                  'collection_sample_id',
-                  [collection_sample_id],
-                  INDEXES.BIOSPECIMEN,
-                ),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter(
+                    'collection_sample_id',
+                    [collection_sample_id],
+                    INDEXES.BIOSPECIMEN,
+                  ),
+                ],
+              }),
             }),
           }}
         >
@@ -113,17 +115,20 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'container_id',
     title: 'Container ID',
     dataIndex: 'container_id',
+    defaultHidden: true,
     render: (container_id: string) => container_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'volume_ul',
     title: 'Volume',
     dataIndex: 'volume_ul',
+    defaultHidden: true,
     render: (volume_ul) => volume_ul || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'volume_unit',
     title: 'Volume Unit',
+    defaultHidden: true,
     render: (record: IBiospecimenEntity) =>
       record.volume_ul ? record.volume_unit : TABLE_EMPTY_PLACE_HOLDER,
   },
@@ -155,9 +160,11 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('sample_id', [record.sample_id], INDEXES.BIOSPECIMEN),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter('sample_id', [record.sample_id], INDEXES.BIOSPECIMEN),
+                ],
+              }),
             }),
           }}
         >
@@ -264,7 +271,7 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
           }
         },
       }}
-      dataSource={results.data.map((i) => ({ ...i, key: i.id }))} //FIXME use biospecimen_id from data
+      dataSource={results.data.map((i) => ({ ...i, key: i.id }))}
       dictionary={getProTableDictionary()}
     />
   );

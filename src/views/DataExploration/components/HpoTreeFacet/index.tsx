@@ -8,7 +8,7 @@ import {
   removeSameTerms,
 } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
-import { addFieldToActiveQuery, findSqonValueByField } from 'utils/sqons';
+import { addFieldToActiveQuery, findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
@@ -144,13 +144,13 @@ const HpoTreeFacet = () => {
             setExpandedKeys(getInitialExpandedKeys([treeData!]));
             updateQueryFilters(history, FIELD_NAME, []);
           } else {
-            addFieldToActiveQuery(
-              FIELD_NAME,
-              results,
-              INDEXES.PARTICIPANT,
+            addFieldToActiveQuery({
+              field: FIELD_NAME,
+              value: results,
               history,
-              MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
-            );
+              index: INDEXES.PARTICIPANT,
+              merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+            });
           }
 
           setVisible(false);

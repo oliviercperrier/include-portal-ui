@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Modal } from 'antd';
-import { intersection, isEmpty } from 'lodash';
+import { chunk, intersection, isEmpty } from 'lodash';
 import { CavaticaApi } from 'services/api/cavatica';
 import {
   CAVATICA_TYPE,
@@ -23,6 +23,7 @@ import EnvironmentVariables from 'helpers/EnvVariables';
 import { globalActions } from 'store/global';
 import { ArrangerApi } from 'services/api/arranger';
 
+const BATCH_SIZE = 100;
 const USER_BASE_URL = EnvironmentVariables.configFor('CAVATICA_USER_BASE_URL');
 
 const fetchAllProjects = createAsyncThunk<
@@ -227,13 +228,15 @@ const startBulkImportJob = createAsyncThunk<
     [isProject ? 'project' : 'parent']: node.id,
   }));
 
-  const { data, error } = await CavaticaApi.startBulkDrsImportJob({
-    items: cavaticaDRSItems,
-  });
+  const itemsChunks = chunk(cavaticaDRSItems, BATCH_SIZE);
+  const responses = await Promise.all(
+    itemsChunks.map((itemsChunk) => CavaticaApi.startBulkDrsImportJob({ items: itemsChunk })),
+  );
+  const responseWithError = responses.find((resp) => !!resp.error);
 
   return handleThunkApiReponse({
-    error,
-    data,
+    error: responseWithError?.error,
+    data: true,
     reject: thunkAPI.rejectWithValue,
     onError: () =>
       thunkAPI.dispatch(

@@ -35,7 +35,7 @@ import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { addFilters, generateValueFilter } from 'utils/sqons';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 
 import styles from './index.module.scss';
 
@@ -152,9 +152,9 @@ const getDefaultColumns = (
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('file_id', [record.file_id], INDEXES.FILE),
-              ]),
+              filters: generateFilters({
+                newFilters: [generateValueFilter('file_id', [record.file_id], INDEXES.FILE)],
+              }),
             }),
           }}
         >
@@ -175,9 +175,9 @@ const getDefaultColumns = (
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('file_id', [record.file_id], INDEXES.FILE),
-              ]),
+              filters: generateFilters({
+                newFilters: [generateValueFilter('file_id', [record.file_id], INDEXES.FILE)],
+              }),
             }),
           }}
         >

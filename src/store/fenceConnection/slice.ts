@@ -48,14 +48,6 @@ const fenceConnectionSlice = createSlice({
       state.connectionStatus[action.meta.arg] = FENCE_CONNECTION_STATUSES.connected;
       state.fencesInfo[action.meta.arg] = action.payload.info;
       state.fencesAcls[action.meta.arg] = action.payload.acls;
-      state.fencesAcls['gen3'] = [
-        'phs001138.c1',
-        'phs001138.c2',
-        'phs001138.c999',
-        'phs002330.c1',
-        'phs002330.c2',
-        'phs002330.c999',
-      ];
     });
     builder.addCase(connectToFence.rejected, (state, action) => {
       state.loadingFences = removeLoadingFences(state, action.meta.arg);

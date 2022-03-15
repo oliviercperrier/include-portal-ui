@@ -25,7 +25,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { addFilters, generateValueFilter } from 'utils/sqons';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
@@ -110,6 +110,8 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'family_type',
     title: 'Family Unit',
     dataIndex: 'family_type',
+    defaultHidden: true,
+    render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'is_proband',
@@ -195,27 +197,29 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'biospecimen',
     title: 'Biospecimens',
     render: (record: ITableParticipantEntity) => {
-      const total = new Set([
-        ...record.files.hits.edges.flatMap((e) =>
-          e.node.biospecimens.hits.edges.map((e) => e.node.sample_id),
-        ),
-      ]).size;
+      const nb_biospecimens = record.nb_biospecimens || 0;
 
-      return total ? (
+      return nb_biospecimens ? (
         <Link
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('participant_id', [record.participant_id], INDEXES.PARTICIPANT),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter(
+                    'participant_id',
+                    [record.participant_id],
+                    INDEXES.PARTICIPANT,
+                  ),
+                ],
+              }),
             }),
           }}
         >
-          {total}
+          {nb_biospecimens}
         </Link>
       ) : (
-        total
+        nb_biospecimens
       );
     },
   },
@@ -228,9 +232,15 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('participant_id', [record.participant_id], INDEXES.PARTICIPANT),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter(
+                    'participant_id',
+                    [record.participant_id],
+                    INDEXES.PARTICIPANT,
+                  ),
+                ],
+              }),
             }),
           }}
         >

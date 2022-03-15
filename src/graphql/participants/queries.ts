@@ -20,6 +20,7 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             ethnicity
             race
             nb_files
+            nb_biospecimens
 
             files {
               hits {

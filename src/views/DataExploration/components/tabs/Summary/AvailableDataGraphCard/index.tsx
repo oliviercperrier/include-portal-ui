@@ -5,9 +5,10 @@ import BarChart from 'components/uiKit/charts/Bar';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import intl from 'react-intl-universal';
 import { truncateString } from 'utils/string';
-import {addFieldToActiveQuery, MISSING} from 'utils/sqons';
+import { addFieldToActiveQuery } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
+import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
 
 interface OwnProps {
   className?: string;
@@ -98,7 +99,7 @@ const AvailableDataGraphCard = ({
                 addToQuery(
                   'data_type',
                   (datum.indexValue as string).toLowerCase() === 'no data'
-                    ? MISSING
+                    ? ArrangerValues.missing
                     : (datum.indexValue as string),
                   history,
                 )

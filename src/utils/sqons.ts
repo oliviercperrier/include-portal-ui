@@ -16,8 +16,6 @@ import { INDEXES } from 'graphql/constants';
 import { isEmpty } from 'lodash';
 import { v4 } from 'uuid';
 
-export const MISSING = '__missing__'
-
 export const addFieldToActiveQuery = (
   fieldName: string,
   value: Array<string | number | boolean>,

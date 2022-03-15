@@ -25,7 +25,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { addFilters, generateValueFilter } from 'utils/sqons';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
@@ -206,9 +206,15 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('participant_id', [record.participant_id], INDEXES.PARTICIPANT),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter(
+                    'participant_id',
+                    [record.participant_id],
+                    INDEXES.PARTICIPANT,
+                  ),
+                ],
+              }),
             }),
           }}
         >
@@ -228,9 +234,15 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('participant_id', [record.participant_id], INDEXES.PARTICIPANT),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter(
+                    'participant_id',
+                    [record.participant_id],
+                    INDEXES.PARTICIPANT,
+                  ),
+                ],
+              }),
             }),
           }}
         >

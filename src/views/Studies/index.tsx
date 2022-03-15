@@ -10,7 +10,7 @@ import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { IStudyEntity } from 'graphql/studies/models';
-import { addFilters, generateValueFilter } from 'utils/sqons';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { CheckOutlined } from '@ant-design/icons';
 import ExternalLink from 'components/uiKit/ExternalLink';
@@ -59,9 +59,11 @@ const columns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('study_id', [record.study_id], INDEXES.PARTICIPANT),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter('study_id', [record.study_id], INDEXES.PARTICIPANT),
+                ],
+              }),
             }),
           }}
         >

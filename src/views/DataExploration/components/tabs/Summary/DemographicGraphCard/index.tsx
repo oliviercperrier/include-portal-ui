@@ -5,7 +5,7 @@ import { toChartData } from 'utils/charts';
 import { SEX } from 'common/constants';
 import intl from 'react-intl-universal';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
-import { addFieldToActiveQuery } from 'utils/sqons';
+import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 
@@ -52,7 +52,12 @@ const graphSetting = {
 const { Title } = Typography;
 
 const addToQuery = (field: string, key: string, history: any) =>
-  addFieldToActiveQuery(field, [key], INDEXES.PARTICIPANT, history);
+  addFieldToActiveQuery({
+    field,
+    value: [key],
+    history,
+    index: INDEXES.PARTICIPANT,
+  });
 
 const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
   const history = useHistory();

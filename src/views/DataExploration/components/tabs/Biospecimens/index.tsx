@@ -21,7 +21,7 @@ import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
-import { addFilters, generateValueFilter } from 'utils/sqons';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 
 import styles from './index.module.scss';
 
@@ -43,13 +43,15 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter(
-                  'collection_sample_id',
-                  [collection_sample_id],
-                  INDEXES.BIOSPECIMEN,
-                ),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter(
+                    'collection_sample_id',
+                    [collection_sample_id],
+                    INDEXES.BIOSPECIMEN,
+                  ),
+                ],
+              }),
             }),
           }}
         >
@@ -155,9 +157,11 @@ const defaultColumns: ProColumnType<any>[] = [
           to={{
             pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
             search: createQueryParams({
-              filters: addFilters(null, [
-                generateValueFilter('sample_id', [record.sample_id], INDEXES.BIOSPECIMEN),
-              ]),
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter('sample_id', [record.sample_id], INDEXES.BIOSPECIMEN),
+                ],
+              }),
             }),
           }}
         >

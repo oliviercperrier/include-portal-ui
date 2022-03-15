@@ -7,6 +7,11 @@
   margin: auto;
   display: flex;
 
+  .userGravatar {
+    width: 40px;
+    height: 40px;
+  }
+
   .tableWrapper {
     width: 100%;
   }

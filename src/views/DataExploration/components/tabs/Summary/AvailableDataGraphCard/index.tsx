@@ -8,6 +8,7 @@ import { truncateString } from 'utils/string';
 import { addFieldToActiveQuery } from 'utils/sqons';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
+import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
 
 interface OwnProps {
   className?: string;
@@ -94,7 +95,15 @@ const AvailableDataGraphCard = ({
                 legendPosition: 'middle',
                 legendOffset: 35,
               }}
-              onClick={(datum) => addToQuery('data_type', datum.indexValue as string, history)}
+              onClick={(datum) =>
+                addToQuery(
+                  'data_type',
+                  (datum.indexValue as string).toLowerCase() === 'no data'
+                    ? ArrangerValues.missing
+                    : (datum.indexValue as string),
+                  history,
+                )
+              }
               {...graphSetting}
             />
           </Col>

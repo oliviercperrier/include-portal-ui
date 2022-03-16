@@ -259,7 +259,7 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [filters.id]);
+  }, [JSON.stringify(filters)]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length

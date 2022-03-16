@@ -217,7 +217,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [filters.id]);
+  }, [JSON.stringify(filters)]);
 
   const onBeginAnalyse = () =>
     dispatch(

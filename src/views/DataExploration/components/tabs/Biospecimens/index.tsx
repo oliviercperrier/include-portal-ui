@@ -193,7 +193,7 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [filters.id]);
+  }, [JSON.stringify(filters)]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length

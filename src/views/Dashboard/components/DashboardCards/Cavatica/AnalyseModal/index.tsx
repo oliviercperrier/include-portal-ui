@@ -40,11 +40,13 @@ const AnalyseModal = () => {
 
   const handleOnClear = () => setSelectedTreeNode(undefined);
 
+  const resetTreeAndSelection = () => {
+    setSelectedTreeNode(undefined);
+    setLocalProjectTree(projectsTree);
+  };
+
   const handleCreateProject = () => {
     setDropdownOpen(false);
-    setSelectedTreeNode(undefined);
-    // reset project tree
-    setLocalProjectTree(projectsTree);
     // Need a timeout else the dropdown stay visible
     // when the create project modal open
     setTimeout(() => {
@@ -60,6 +62,7 @@ const AnalyseModal = () => {
 
   useEffect(() => {
     if (isAnalyseModalOpen) {
+      resetTreeAndSelection();
       dispatch(fetchAllProjects());
     }
     // eslint-disable-next-line

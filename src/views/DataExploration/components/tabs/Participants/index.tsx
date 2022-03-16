@@ -114,12 +114,6 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: 'is_proband',
-    title: 'Proband',
-    dataIndex: 'is_proband',
-    defaultHidden: true,
-  },
-  {
     key: 'diagnosis.mondo_id_diagnosis',
     title: 'Diagnosis (Mondo)',
     dataIndex: 'diagnosis',

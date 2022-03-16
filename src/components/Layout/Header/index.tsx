@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { PageHeader, Dropdown, Button, Menu } from 'antd';
-import IncludeIcon from 'components/Icons/IncludeIcon';
+import IncludeIconBeta from 'components/Icons/IncludeIconBeta';
 import { ReadOutlined, HomeOutlined, FileSearchOutlined, TeamOutlined } from '@ant-design/icons';
 import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 import { DownOutlined } from '@ant-design/icons';
@@ -45,7 +45,7 @@ const Header = () => {
         closable
       />
       <PageHeader
-        title={<IncludeIcon className={style.logo} />}
+        title={<IncludeIconBeta className={style.logo} />}
         subTitle={
           <nav className={style.headerList}>
             <HeaderLink

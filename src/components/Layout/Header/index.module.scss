@@ -18,6 +18,10 @@
     height: 100%;
   }
 
+  span[class$="-header-heading-title"] {
+    margin-right: 28px;
+  }
+
   div[class$="-header-heading-left"] {
     margin: 0;
   }

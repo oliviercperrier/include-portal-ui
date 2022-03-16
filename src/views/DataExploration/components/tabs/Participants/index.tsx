@@ -200,11 +200,11 @@ const defaultColumns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter(
-                    'participant_id',
-                    [record.participant_id],
-                    INDEXES.PARTICIPANT,
-                  ),
+                  generateValueFilter({
+                    field: 'participant_id',
+                    value: [record.participant_id],
+                    index: INDEXES.PARTICIPANT,
+                  }),
                 ],
               }),
             }),
@@ -228,11 +228,11 @@ const defaultColumns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter(
-                    'participant_id',
-                    [record.participant_id],
-                    INDEXES.PARTICIPANT,
-                  ),
+                  generateValueFilter({
+                    field: 'participant_id',
+                    value: [record.participant_id],
+                    index: INDEXES.PARTICIPANT,
+                  }),
                 ],
               }),
             }),

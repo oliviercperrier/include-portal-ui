@@ -122,6 +122,7 @@ const PageContent = ({
   }, [filters.id]);
 
   const facetTransResolver = (key: string) => {
+    console.log(key)
     const title = intl.get(`facets.${key}`);
     return title
       ? title

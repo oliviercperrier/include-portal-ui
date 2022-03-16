@@ -153,7 +153,13 @@ const getDefaultColumns = (
             pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
             search: createQueryParams({
               filters: generateFilters({
-                newFilters: [generateValueFilter('file_id', [record.file_id], INDEXES.FILE)],
+                newFilters: [
+                  generateValueFilter({
+                    field: 'file_id',
+                    value: [record.file_id],
+                    index: INDEXES.FILE,
+                  }),
+                ],
               }),
             }),
           }}
@@ -176,7 +182,13 @@ const getDefaultColumns = (
             pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
             search: createQueryParams({
               filters: generateFilters({
-                newFilters: [generateValueFilter('file_id', [record.file_id], INDEXES.FILE)],
+                newFilters: [
+                  generateValueFilter({
+                    field: 'file_id',
+                    value: [record.file_id],
+                    index: INDEXES.FILE,
+                  }),
+                ],
               }),
             }),
           }}

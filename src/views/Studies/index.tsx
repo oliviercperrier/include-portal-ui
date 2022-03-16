@@ -73,7 +73,11 @@ const columns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter('study_id', [record.study_id], INDEXES.PARTICIPANT),
+                  generateValueFilter({
+                    field: 'study_id',
+                    value: [record.study_id],
+                    index: INDEXES.PARTICIPANT,
+                  }),
                 ],
               }),
             }),

@@ -285,7 +285,8 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
         )
       }
     >
-      <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
+      <Menu.Item key={ReportType.CLINICAL_DATA}>Selected participants</Menu.Item>
+      <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Selected participants & family</Menu.Item>
     </Menu>
   );
 

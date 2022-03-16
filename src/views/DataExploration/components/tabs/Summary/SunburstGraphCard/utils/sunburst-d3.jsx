@@ -144,6 +144,7 @@ const SunburstD3 = (
     })
     .on('click', function (p) {
       const data = d3.select(this).datum().current;
+      Tooltip.style('display', 'none');
       return arcVisible(data) ? clicked(p) : () => {};
     })
     .on('mousemove', mousemoveTooltip);

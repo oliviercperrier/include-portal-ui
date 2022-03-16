@@ -61,23 +61,24 @@ const FilterList = ({
                 {group.title}
               </Text>
             ) : null}
-            {group.fields.map((field) => (
-              <CustomFilterContainer
-                key={field}
-                index={index}
-                cacheKey={cacheKey}
-                classname={cx(styles.customFilterContainer, styles.filter)}
-                filterKey={field}
-                extendedMappingResults={extendedMappingResults}
-                filtersOpen={filtersOpen}
-                filterMapper={filterMapper}
-              />
-            ))}
-            {group.customs?.map((custom, i) => (
-              <div key={i} className={cx(styles.customFilterWrapper, styles.filter)}>
-                {custom}
-              </div>
-            ))}
+            {group.facets.map((facet) =>
+              typeof facet === 'string' ? (
+                <CustomFilterContainer
+                  key={facet}
+                  index={index}
+                  cacheKey={cacheKey}
+                  classname={cx(styles.customFilterContainer, styles.filter)}
+                  filterKey={facet}
+                  extendedMappingResults={extendedMappingResults}
+                  filtersOpen={filtersOpen}
+                  filterMapper={filterMapper}
+                />
+              ) : (
+                <div key={i} className={cx(styles.customFilterWrapper, styles.filter)}>
+                  {facet}
+                </div>
+              ),
+            )}
           </div>
         ))}
       </Layout>

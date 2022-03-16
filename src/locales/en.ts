@@ -250,6 +250,7 @@ const fr = {
         biospecimen: 'Biospecimen',
         datafiles: 'Data Files',
         website: 'Website',
+        help: 'Help',
         community: 'Community',
       },
     },
@@ -282,7 +283,7 @@ const fr = {
         studies: 'Studies',
         participants: 'Participants',
         biospecimens: 'Biospecimens',
-        datafiles: 'Data Files',
+        datafiles: 'Data File',
         variantSearch: 'Variant Search',
       },
       cards: {

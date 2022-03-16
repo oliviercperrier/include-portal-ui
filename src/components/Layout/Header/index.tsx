@@ -91,6 +91,12 @@ const Header = () => {
               <ExternalLinkIcon className={style.icon} {...iconSize} />
             </Button>
           </ExternalLink>,
+          <ExternalLink key="include-help" href="https://help.includedcc.org">
+            <Button key="external-help" className={style.headerBtn}>
+              {intl.get('layout.main.menu.help')}{' '}
+              <ExternalLinkIcon className={style.icon} {...iconSize} />
+            </Button>
+          </ExternalLink>,
           <Dropdown
             key="user-menu"
             trigger={['click']}

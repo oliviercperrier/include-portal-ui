@@ -151,7 +151,7 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'observed_phenotype.name',
+    key: 'phenotype.hpo_phenotype_observed',
     title: 'Phenotype (HPO)',
     dataIndex: 'observed_phenotype',
     className: styles.phenotypeCell,
@@ -188,7 +188,7 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'biospecimen',
+    key: 'nb_biospecimens',
     title: 'Biospecimens',
     render: (record: ITableParticipantEntity) => {
       const nb_biospecimens = record.nb_biospecimens || 0;

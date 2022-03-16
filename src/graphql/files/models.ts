@@ -24,6 +24,10 @@ export interface IFileEntity {
   study: IStudyEntity;
   nb_participants: number;
   nb_biospecimens: number;
+  index?: {
+    urls: string;
+    file_name: string;
+  };
   sequencing_experiment: {
     experiment_strategy: string;
   };

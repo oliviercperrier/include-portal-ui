@@ -69,6 +69,7 @@ export interface ICavaticaDRSImportItem {
   drs_uri: string;
   project?: string;
   parent?: string;
+  name?: string;
   metadata?: {
     [key: string]: any;
   };

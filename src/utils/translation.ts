@@ -122,6 +122,12 @@ export const getQueryBuilderDictionary = (
     },
     noQuery: intl.get('components.querybuilder.query.noQuery'),
     facet: facetResolver,
+    facetValueMapping: {
+      down_syndrome_status: {
+        D21: intl.get('facets.options.D21'),
+        T21: intl.get('facets.options.T21'),
+      },
+    },
   },
   actions: {
     new: intl.get('components.querybuilder.actions.new'),

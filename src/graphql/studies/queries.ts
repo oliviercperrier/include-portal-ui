@@ -17,6 +17,7 @@ export const FETCH_STUDIES_QUERY = gql`
             family_count
             attribution
             data_category
+            website
           }
         }
       }

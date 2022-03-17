@@ -236,7 +236,7 @@ const fr = {
       studies: 'Studies',
       participants: 'Participants',
       biospecimens: 'Biospecimens',
-      datafiles: 'Data Files',
+      datafiles: 'Data File',
     },
   },
   // LAYOUT
@@ -248,7 +248,7 @@ const fr = {
         explore: 'Data Exploration',
         participants: 'Participants',
         biospecimen: 'Biospecimen',
-        datafiles: 'Data Files',
+        datafiles: 'Data File',
         website: 'Website',
         help: 'Help',
         community: 'Community',
@@ -299,9 +299,9 @@ const fr = {
         authorizedStudies: {
           title: 'Authorized Studies {count, plural, =0 {} other {(#)}}',
           connectedNotice:
-            'You have access to all released INCLUDE controlled data through your NIH credentials.',
+            'You have access to the following INCLUDE controlled data through your NIH credentials.',
           disconnectedNotice:
-            'Access all released INCLUDE controlled data by connecting your account using your NIH credentials.',
+            'Access INCLUDE controlled-access data by connecting your account using your NIH Credentials',
           disconnect: 'Disconnect',
           noAvailableStudies: 'No available studies',
           authorization: 'Authorization',
@@ -387,7 +387,7 @@ const fr = {
           title: 'Biospecimens ({count})',
         },
         datafiles: {
-          title: 'Data Files ({count})',
+          title: 'Data File ({count})',
           cavatica: {
             analyseInCavatica: 'Analyze in Cavatica',
             bulkImportLimit: {
@@ -517,6 +517,11 @@ const fr = {
     observed_phenotype: {
       name: 'Phenotype (HPO)',
     },
+    options: {
+      D21: 'Disomy 21, euploid',
+      T21: 'Trisomy 21',
+    },
+
     // Biospecimen
     biospecimen_type: 'Biospecimen Type',
     sample_type: 'Sample Type',

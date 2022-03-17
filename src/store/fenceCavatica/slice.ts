@@ -20,7 +20,7 @@ export const FenceCavaticaState: initialState = {
   beginAnalyseAfterConnection: false,
   bulkImportData: {
     files: [],
-    authorizedFileCount: 0,
+    authorizedFiles: [],
   },
   projects: [],
   projectsTree: [],
@@ -69,7 +69,7 @@ const fenceCavaticaSlice = createSlice({
       ...state,
       bulkImportData: {
         files: [],
-        authorizedFileCount: 0,
+        authorizedFiles: [],
       },
       isAnalyseModalOpen: false,
     }),

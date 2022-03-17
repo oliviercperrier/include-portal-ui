@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Modal } from 'antd';
-import { chunk, intersection, isEmpty } from 'lodash';
+import { chunk, isEmpty } from 'lodash';
 import { CavaticaApi } from 'services/api/cavatica';
 import {
   CAVATICA_TYPE,
@@ -12,7 +12,7 @@ import {
 import { RootState } from 'store/types';
 import { IBulkImportData, ICavaticaTreeNode, TCavaticaProjectWithMembers } from './types';
 import intl from 'react-intl-universal';
-import { FileAccessType, IFileEntity, IFileResultTree } from 'graphql/files/models';
+import { IFileEntity, IFileResultTree } from 'graphql/files/models';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { SEARCH_FILES_QUERY } from 'graphql/files/queries';
 import { hydrateResults } from 'graphql/models';
@@ -23,6 +23,8 @@ import { handleThunkApiReponse } from 'store/utils';
 import EnvironmentVariables from 'helpers/EnvVariables';
 import { globalActions } from 'store/global';
 import { ArrangerApi } from 'services/api/arranger';
+import { userHasAccessToFile } from 'utils/dataFiles';
+import { FENCE_CONNECTION_STATUSES } from 'common/fenceTypes';
 
 const BATCH_SIZE = 100;
 const USER_BASE_URL = EnvironmentVariables.configFor('CAVATICA_USER_BASE_URL');
@@ -118,9 +120,14 @@ const beginAnalyse = createAsyncThunk<
 
   const files = hydrateResults(file?.hits?.edges || []);
 
-  const authorizedFileCount = getAuthorizedFilesCount(allFencesAcls, files);
+  const authorizedFiles = getAuthorizedFiles(
+    allFencesAcls,
+    files,
+    fenceConnection.connectionStatus.cavatica === FENCE_CONNECTION_STATUSES.connected,
+    fenceConnection.connectionStatus.gen3 === FENCE_CONNECTION_STATUSES.connected,
+  );
 
-  if (!authorizedFileCount) {
+  if (!authorizedFiles.length) {
     Modal.error({
       type: 'error',
       title: intl.get('api.cavatica.error.fileAuth.title'),
@@ -131,7 +138,7 @@ const beginAnalyse = createAsyncThunk<
 
   return {
     files,
-    authorizedFileCount: authorizedFileCount,
+    authorizedFiles,
   };
 });
 
@@ -220,7 +227,7 @@ const startBulkImportJob = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('cavatica/bulk/import', async (node, thunkAPI) => {
   const { fenceCavatica } = thunkAPI.getState();
-  const selectedFiles = fenceCavatica.bulkImportData.files;
+  const selectedFiles = fenceCavatica.bulkImportData.authorizedFiles;
   const isProject = node.type === CAVATICA_TYPE.PROJECT;
 
   const indexFileDrsItems: ICavaticaDRSImportItem[] = [];
@@ -293,20 +300,14 @@ const startBulkImportJob = createAsyncThunk<
   });
 });
 
-const getAuthorizedFilesCount = (userAcls: string[], files: IFileEntity[]) => {
-  let nbAuthorizedFiles = 0;
-  files.forEach(({ acl, controlled_access }) => {
-    const fileAcls = acl || [];
-    const hasAccess =
-      !acl ||
-      acl.length === 0 ||
-      controlled_access === FileAccessType.REGISTERED ||
-      intersection(userAcls, fileAcls).length > 0;
-    if (hasAccess) {
-      nbAuthorizedFiles += 1;
-    }
-  });
-  return nbAuthorizedFiles;
-};
+const getAuthorizedFiles = (
+  userAcls: string[],
+  files: IFileEntity[],
+  isConnectedToCavatica: boolean,
+  isConnectedToGen3: boolean,
+) =>
+  files.filter((file) =>
+    userHasAccessToFile(file, userAcls, isConnectedToCavatica, isConnectedToGen3),
+  );
 
 export { fetchAllProjects, fetchAllBillingGroups, createProjet, beginAnalyse, startBulkImportJob };

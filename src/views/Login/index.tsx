@@ -4,6 +4,8 @@ import intl from 'react-intl-universal';
 import { STATIC_ROUTES } from 'utils/routes';
 import IncludeIconBetaLogin from 'components/Icons/IncludeIconBetaLogin';
 import DataRelease from 'components/uiKit/DataRelease';
+import useQueryParams from 'hooks/useQueryParams';
+import { REDIRECT_URI_KEY } from 'common/constants';
 
 import styles from './index.module.scss';
 
@@ -11,11 +13,14 @@ const { Title } = Typography;
 
 const Login = (): React.ReactElement => {
   const { keycloak } = useKeycloak();
+  const query = useQueryParams();
 
   const handleSignin = async () => {
     const url = keycloak.createLoginUrl({
       // eslint-disable-next-line max-len
-      redirectUri: `${window.location.origin}/${STATIC_ROUTES.DASHBOARD}`,
+      redirectUri: `${window.location.origin}/${
+        query.get(REDIRECT_URI_KEY) || STATIC_ROUTES.DASHBOARD
+      }`,
     });
     window.location.assign(url);
   };

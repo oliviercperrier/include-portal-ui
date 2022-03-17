@@ -16,7 +16,7 @@ import {
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 import { getProTableDictionary } from 'utils/translation';
-import { Button, Dropdown, Menu, Tag } from 'antd';
+import { Button, Dropdown, Menu, Tag, Tooltip } from 'antd';
 import { useDispatch } from 'react-redux';
 import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
@@ -34,6 +34,8 @@ import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
+import intl from 'react-intl-universal';
+import { capitalize } from 'lodash';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
@@ -71,8 +73,20 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'down_syndrome_status',
-    title: 'DS Status',
+    title: (
+      <Tooltip placement="topLeft" title={'Down Syndrome Status'}>
+        DS Status
+      </Tooltip>
+    ),
+    displayTitle: 'DS Status',
     dataIndex: 'down_syndrome_status',
+    render: (down_syndrome_status: 'D21' | 'T21') => {
+      return (
+        <Tooltip placement="topLeft" title={intl.get(`facets.options.${down_syndrome_status}`)}>
+          {down_syndrome_status}
+        </Tooltip>
+      );
+    },
   },
   {
     key: 'sex',
@@ -88,7 +102,7 @@ const defaultColumns: ProColumnType<any>[] = [
             : ''
         }
       >
-        {sex}
+        {capitalize(sex)}
       </Tag>
     ),
   },
@@ -134,7 +148,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
             return mondoInfo ? (
               <div key={index}>
-                {mondoInfo.title} (MONDO:{' '}
+                {capitalize(mondoInfo.title)} (MONDO:{' '}
                 <ExternalLink
                   href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
                 >
@@ -173,7 +187,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
             return phenotypeInfo ? (
               <div key={index}>
-                {phenotypeInfo.title} (HP:{' '}
+                {capitalize(phenotypeInfo.title)} (HP:{' '}
                 <ExternalLink href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}>
                   {phenotypeInfo.code}
                 </ExternalLink>

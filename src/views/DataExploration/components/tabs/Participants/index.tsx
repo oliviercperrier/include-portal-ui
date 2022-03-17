@@ -77,6 +77,7 @@ const defaultColumns: ProColumnType<any>[] = [
         DS Status
       </Tooltip>
     ),
+    displayTitle: 'DS Status',
     dataIndex: 'down_syndrome_status',
     render: (down_syndrome_status: 'D21' | 'T21') => {
       return (

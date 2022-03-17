@@ -387,7 +387,7 @@ const fr = {
           title: 'Biospecimens ({count})',
         },
         datafiles: {
-          title: 'Data Files ({count})',
+          title: 'Data File ({count})',
           cavatica: {
             analyseInCavatica: 'Analyze in Cavatica',
             bulkImportLimit: {

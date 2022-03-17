@@ -24,7 +24,6 @@ import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/type
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 import intl from 'react-intl-universal';
 import { IStudyEntity } from 'graphql/studies/models';
-import { intersection } from 'lodash';
 import { beginAnalyse } from 'store/fenceCavatica/thunks';
 import { useFenceConnection } from 'store/fenceConnection';
 import { useFenceCavatica } from 'store/fenceCavatica';
@@ -36,6 +35,7 @@ import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/util
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { userHasAccessToFile } from 'utils/dataFiles';
 
 import styles from './index.module.scss';
 
@@ -49,6 +49,7 @@ interface OwnProps {
 const getDefaultColumns = (
   fenceAcls: string[],
   isConnectedToCavatica: boolean,
+  isConnectedToGen3: boolean,
 ): ProColumnType<any>[] => [
   {
     key: 'lock',
@@ -60,13 +61,12 @@ const getDefaultColumns = (
     displayTitle: 'File Authorization',
     align: 'center',
     render: (record: IFileEntity) => {
-      const acl = record.acl || [];
-      const hasAccess =
-        isConnectedToCavatica &&
-        (!acl ||
-          acl.length === 0 ||
-          intersection(fenceAcls, acl).length > 0 ||
-          record.controlled_access === FileAccessType.REGISTERED);
+      const hasAccess = userHasAccessToFile(
+        record,
+        fenceAcls,
+        isConnectedToCavatica,
+        isConnectedToGen3,
+      );
 
       return hasAccess ? (
         <Tooltip title="Authorized">
@@ -266,6 +266,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
         columns={getDefaultColumns(
           fencesAllAcls,
           connectionStatus.cavatica === FENCE_CONNECTION_STATUSES.connected,
+          connectionStatus.gen3 === FENCE_CONNECTION_STATUSES.connected,
         )}
         initialSelectedKey={selectedKeys}
         wrapperClassName={styles.dataFilesTabWrapper}
@@ -292,6 +293,7 @@ const DataFilesTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps
                 columns: getDefaultColumns(
                   fencesAllAcls,
                   connectionStatus.cavatica === FENCE_CONNECTION_STATUSES.connected,
+                  connectionStatus.gen3 === FENCE_CONNECTION_STATUSES.connected,
                 ),
                 index: INDEXES.FILE,
                 sqon:

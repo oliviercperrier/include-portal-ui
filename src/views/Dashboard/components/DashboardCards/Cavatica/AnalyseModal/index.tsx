@@ -167,7 +167,7 @@ const AnalyseModal = () => {
         <Text>
           <Text>You are authorized to copy</Text>{' '}
           <Tag className={styles.authorizedFilesTag} icon={<FileTextOutlined />}>
-            {bulkImportData.authorizedFileCount} files
+            {bulkImportData.authorizedFiles.length} files
           </Tag>{' '}
           <Text>(out of {bulkImportData.files.length} selected) to your Cavatica workspace.</Text>
         </Text>

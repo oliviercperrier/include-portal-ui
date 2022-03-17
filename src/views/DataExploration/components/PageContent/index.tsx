@@ -119,7 +119,7 @@ const PageContent = ({
       index: DEFAULT_PAGE_INDEX,
     });
     // eslint-disable-next-line
-  }, [filters.id, filters.content.length]);
+  }, [JSON.stringify(filters)]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);

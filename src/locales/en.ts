@@ -517,6 +517,11 @@ const fr = {
     observed_phenotype: {
       name: 'Phenotype (HPO)',
     },
+    options: {
+      D21: 'Disomy 21, euploid',
+      T21: 'Trisomy 21',
+    },
+
     // Biospecimen
     biospecimen_type: 'Biospecimen Type',
     sample_type: 'Sample Type',

@@ -236,7 +236,7 @@ const fr = {
       studies: 'Studies',
       participants: 'Participants',
       biospecimens: 'Biospecimens',
-      datafiles: 'Data Files',
+      datafiles: 'Data File',
     },
   },
   // LAYOUT
@@ -248,7 +248,7 @@ const fr = {
         explore: 'Data Exploration',
         participants: 'Participants',
         biospecimen: 'Biospecimen',
-        datafiles: 'Data Files',
+        datafiles: 'Data File',
         website: 'Website',
         help: 'Help',
         community: 'Community',
@@ -521,6 +521,7 @@ const fr = {
       D21: 'Disomy 21, euploid',
       T21: 'Trisomy 21',
     },
+
     // Biospecimen
     biospecimen_type: 'Biospecimen Type',
     sample_type: 'Sample Type',

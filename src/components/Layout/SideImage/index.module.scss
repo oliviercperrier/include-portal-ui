@@ -3,7 +3,7 @@
 .sideImagePageContainer {
   position: relative;
   height: 100vh;
-  overflow-y: hidden;
+  overflow-y: auto;
   min-width: 1024;
   background-color: $gray-8;
 

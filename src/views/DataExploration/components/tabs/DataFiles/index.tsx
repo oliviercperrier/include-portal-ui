@@ -109,6 +109,12 @@ const getDefaultColumns = (
     dataIndex: 'file_id',
   },
   {
+    key: 'file_name',
+    title: 'File Name',
+    dataIndex: 'file_name',
+    defaultHidden: true,
+  },
+  {
     key: 'study_id',
     title: 'Study Code',
     dataIndex: 'study',

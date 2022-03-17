@@ -35,6 +35,7 @@ import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 
 import styles from './index.module.scss';
 import intl from 'react-intl-universal';
+import { capitalize } from 'lodash';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
@@ -101,7 +102,7 @@ const defaultColumns: ProColumnType<any>[] = [
             : ''
         }
       >
-        {sex}
+        {capitalize(sex)}
       </Tag>
     ),
   },
@@ -147,7 +148,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
             return mondoInfo ? (
               <div key={index}>
-                {mondoInfo.title} (MONDO:{' '}
+                {capitalize(mondoInfo.title)} (MONDO:{' '}
                 <ExternalLink
                   href={`https://monarchinitiative.org/disease/MONDO:${mondoInfo.code}`}
                 >
@@ -186,7 +187,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
             return phenotypeInfo ? (
               <div key={index}>
-                {phenotypeInfo.title} (HP:{' '}
+                {capitalize(phenotypeInfo.title)} (HP:{' '}
                 <ExternalLink href={`https://hpo.jax.org/app/browse/term/HP:${phenotypeInfo.code}`}>
                   {phenotypeInfo.code}
                 </ExternalLink>

@@ -20,7 +20,7 @@ export type initialState = {
 
 export interface IBulkImportData {
   files: IFileEntity[];
-  authorizedFileCount: number;
+  authorizedFiles: IFileEntity[];
 }
 
 export type TCavaticaProjectWithMembers = ICavaticaProject & {

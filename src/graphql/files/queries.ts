@@ -20,6 +20,10 @@ export const SEARCH_FILES_QUERY = gql`
             repository
             nb_participants
             nb_biospecimens
+            index {
+              urls
+              file_name
+            }
             study {
               study_id
               study_name

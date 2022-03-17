@@ -6,6 +6,7 @@ import {
   CAVATICA_TYPE,
   ICavaticaBillingGroup,
   ICavaticaCreateProjectBody,
+  ICavaticaDRSImportItem,
   ICavaticaProject,
 } from 'services/api/cavatica/models';
 import { RootState } from 'store/types';
@@ -222,13 +223,28 @@ const startBulkImportJob = createAsyncThunk<
   const selectedFiles = fenceCavatica.bulkImportData.files;
   const isProject = node.type === CAVATICA_TYPE.PROJECT;
 
-  const cavaticaDRSItems = selectedFiles.map((file) => ({
-    drs_uri: file.access_urls,
-    name: file.file_name,
-    [isProject ? 'project' : 'parent']: node.id,
-  }));
+  const indexFileDrsItems: ICavaticaDRSImportItem[] = [];
+  const cavaticaDrsItems: ICavaticaDRSImportItem[] = selectedFiles.map((file) => {
+    const destKey = isProject ? 'project' : 'parent';
 
-  const itemsChunks = chunk(cavaticaDRSItems, BATCH_SIZE);
+    if (file.index) {
+      indexFileDrsItems.push({
+        drs_uri: file.index.urls,
+        name: file.index.file_name,
+        [destKey]: node.id,
+      });
+    }
+
+    return {
+      drs_uri: file.access_urls,
+      name: file.file_name,
+      [destKey]: node.id,
+    };
+  });
+
+  const drsItems = cavaticaDrsItems.concat(indexFileDrsItems);
+  const itemsChunks = chunk(drsItems, BATCH_SIZE);
+
   const responses = await Promise.all(
     itemsChunks.map((itemsChunk) => CavaticaApi.startBulkDrsImportJob({ items: itemsChunk })),
   );

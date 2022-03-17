@@ -114,12 +114,6 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
-    key: 'is_proband',
-    title: 'Proband',
-    dataIndex: 'is_proband',
-    defaultHidden: true,
-  },
-  {
     key: 'diagnosis.mondo_id_diagnosis',
     title: 'Diagnosis (Mondo)',
     dataIndex: 'diagnosis',
@@ -157,7 +151,7 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'observed_phenotype.name',
+    key: 'phenotype.hpo_phenotype_observed',
     title: 'Phenotype (HPO)',
     dataIndex: 'observed_phenotype',
     className: styles.phenotypeCell,
@@ -194,7 +188,7 @@ const defaultColumns: ProColumnType<any>[] = [
     },
   },
   {
-    key: 'biospecimen',
+    key: 'nb_biospecimens',
     title: 'Biospecimens',
     render: (record: ITableParticipantEntity) => {
       const nb_biospecimens = record.nb_biospecimens || 0;
@@ -206,11 +200,11 @@ const defaultColumns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter(
-                    'participant_id',
-                    [record.participant_id],
-                    INDEXES.PARTICIPANT,
-                  ),
+                  generateValueFilter({
+                    field: 'participant_id',
+                    value: [record.participant_id],
+                    index: INDEXES.PARTICIPANT,
+                  }),
                 ],
               }),
             }),
@@ -234,11 +228,11 @@ const defaultColumns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter(
-                    'participant_id',
-                    [record.participant_id],
-                    INDEXES.PARTICIPANT,
-                  ),
+                  generateValueFilter({
+                    field: 'participant_id',
+                    value: [record.participant_id],
+                    index: INDEXES.PARTICIPANT,
+                  }),
                 ],
               }),
             }),
@@ -265,7 +259,7 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [filters.id]);
+  }, [JSON.stringify(filters)]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length
@@ -285,7 +279,8 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
         )
       }
     >
-      <Menu.Item key={ReportType.CLINICAL_DATA}>Participant Only</Menu.Item>
+      <Menu.Item key={ReportType.CLINICAL_DATA}>Selected participants</Menu.Item>
+      <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Selected participants & family</Menu.Item>
     </Menu>
   );
 

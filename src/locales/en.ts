@@ -250,6 +250,7 @@ const fr = {
         biospecimen: 'Biospecimen',
         datafiles: 'Data Files',
         website: 'Website',
+        help: 'Help',
         community: 'Community',
       },
     },
@@ -282,7 +283,7 @@ const fr = {
         studies: 'Studies',
         participants: 'Participants',
         biospecimens: 'Biospecimens',
-        datafiles: 'Data Files',
+        datafiles: 'Data File',
         variantSearch: 'Variant Search',
       },
       cards: {
@@ -352,6 +353,7 @@ const fr = {
           okText: 'Apply',
         },
         searchPlaceholder: 'Search for ontology term - min 3 characters',
+        emptySelection: 'Select items from the left-hand pane in order to add to your query.',
         tags: {
           exact: 'Participants with this exact term',
           all: 'Participants including descendant terms',

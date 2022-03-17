@@ -5,8 +5,7 @@ import { SUGGESTION_TYPES } from '../Suggester';
 
 export interface FilterGroup {
   title?: string;
-  fields: string[];
-  customs?: React.ReactNode[];
+  facets: string[] | React.ReactNode[];
 }
 
 export interface FilterInfo {

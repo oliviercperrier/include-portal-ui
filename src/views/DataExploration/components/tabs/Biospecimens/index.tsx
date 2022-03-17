@@ -45,11 +45,11 @@ const defaultColumns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter(
-                    'collection_sample_id',
-                    [collection_sample_id],
-                    INDEXES.BIOSPECIMEN,
-                  ),
+                  generateValueFilter({
+                    field: 'collection_sample_id',
+                    value: [collection_sample_id],
+                    index: INDEXES.BIOSPECIMEN,
+                  }),
                 ],
               }),
             }),
@@ -162,7 +162,11 @@ const defaultColumns: ProColumnType<any>[] = [
             search: createQueryParams({
               filters: generateFilters({
                 newFilters: [
-                  generateValueFilter('sample_id', [record.sample_id], INDEXES.BIOSPECIMEN),
+                  generateValueFilter({
+                    field: 'sample_id',
+                    value: [record.sample_id],
+                    index: INDEXES.BIOSPECIMEN,
+                  }),
                 ],
               }),
             }),
@@ -189,7 +193,7 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [filters.id]);
+  }, [JSON.stringify(filters)]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length

@@ -7,8 +7,8 @@ import { numberWithCommas } from 'utils/string';
 import styles from './index.module.scss';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 import { INDEXES } from 'graphql/constants';
+import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 
 interface OwnProps {
@@ -36,8 +36,16 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
                 search: createQueryParams({
                   filters: generateFilters({
                     newFilters: [
-                      generateValueFilter('study_id', [data.id], INDEXES.PARTICIPANT),
-                      generateValueFilter('acl', data.acl, INDEXES.FILE),
+                      generateValueFilter({
+                        field: 'study_id',
+                        value: [data.id],
+                        index: INDEXES.PARTICIPANT,
+                      }),
+                      generateValueFilter({
+                        field: 'acl',
+                        value: data.acl,
+                        index: INDEXES.FILE,
+                      }),
                     ],
                   }),
                 }),
@@ -53,7 +61,13 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
                 pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
                 search: createQueryParams({
                   filters: generateFilters({
-                    newFilters: [generateValueFilter('study_id', [data.id], INDEXES.PARTICIPANT)],
+                    newFilters: [
+                      generateValueFilter({
+                        field: 'study_id',
+                        value: [data.id],
+                        index: INDEXES.PARTICIPANT,
+                      }),
+                    ],
                   }),
                 }),
               }}

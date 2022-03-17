@@ -22,6 +22,7 @@ import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 import { mapFilterForParticipant } from '../../utils/mapper';
+import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
 
@@ -182,6 +183,12 @@ const HpoTreeFacet = () => {
           }}
           locale={{
             searchPlaceholder: intl.get('screen.dataExploration.hpoTree.searchPlaceholder'),
+            notFoundContent: (
+              <Empty
+                imageType="grid"
+                description={intl.get('screen.dataExploration.hpoTree.emptySelection')}
+              />
+            ),
           }}
           filterOption={(inputValue, item) => item.title.indexOf(inputValue) !== -1}
           onSelectChange={(s, t) => {

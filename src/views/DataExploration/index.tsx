@@ -44,18 +44,16 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: [
+        facets: [
           'study_id',
           'down_syndrome_status',
           'diagnosis__mondo_id_diagnosis',
-          //'observed_phenotype__name',
-          //'phenotype__hpo_phenotype_observed',
+          <HpoTreeFacet />,
           'family_type',
           'sex',
           'race',
           'ethnicity',
         ],
-        customs: [<HpoTreeFacet />],
       },
     ],
   },
@@ -68,7 +66,7 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: [
+        facets: [
           'sample_type',
           'collection_sample_type',
           'age_at_biospecimen_collection',
@@ -88,7 +86,7 @@ export const filterGroups: {
     //},
     groups: [
       {
-        fields: [
+        facets: [
           'data_category',
           'sequencing_experiment__experiment_strategy',
           'data_type',

@@ -159,6 +159,7 @@ const fetchTsxReport = async (
           fileName: formattedFileName,
           fileType: 'tsv',
           sqon: args.sqon,
+          sort: [{ field: 'participant_id', order: 'asc' }],
           index: args.index,
           columns: tsvColumnsConfigWithHeader.sort((a, b) => {
             return columnKeyOrdered.indexOf(a.field) > columnKeyOrdered.indexOf(b.field) ? 1 : -1;

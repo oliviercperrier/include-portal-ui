@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { PageHeader, Dropdown, Button, Menu } from 'antd';
-import IncludeIcon from 'components/Icons/IncludeIcon';
+import IncludeIconBeta from 'components/Icons/IncludeIconBeta';
 import { ReadOutlined, HomeOutlined, FileSearchOutlined, TeamOutlined } from '@ant-design/icons';
 import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 import { DownOutlined } from '@ant-design/icons';
@@ -45,7 +45,7 @@ const Header = () => {
         closable
       />
       <PageHeader
-        title={<IncludeIcon className={style.logo} />}
+        title={<IncludeIconBeta className={style.logo} />}
         subTitle={
           <nav className={style.headerList}>
             <HeaderLink
@@ -88,6 +88,12 @@ const Header = () => {
           <ExternalLink key="include-website" href="https://includedcc.org">
             <Button key="external-website" className={style.headerBtn}>
               {intl.get('layout.main.menu.website')}{' '}
+              <ExternalLinkIcon className={style.icon} {...iconSize} />
+            </Button>
+          </ExternalLink>,
+          <ExternalLink key="include-help" href="https://help.includedcc.org">
+            <Button key="external-help" className={style.headerBtn}>
+              {intl.get('layout.main.menu.help')}{' '}
               <ExternalLinkIcon className={style.icon} {...iconSize} />
             </Button>
           </ExternalLink>,

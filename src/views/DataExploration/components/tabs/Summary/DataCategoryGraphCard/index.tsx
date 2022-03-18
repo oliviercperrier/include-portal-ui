@@ -59,7 +59,7 @@ const DataCategoryGraphCard = ({ className = '', loading = false, data }: OwnPro
       content={
         <>
           {isEmpty(dataCategoryResults) ? (
-            <Empty />
+            <Empty imageType='grid'/>
           ) : (
             <BarChart
               title="Participants by Data Category"

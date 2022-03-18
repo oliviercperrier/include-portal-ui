@@ -59,7 +59,7 @@ const DataTypeGraphCard = ({ className = '', loading = false, data }: OwnProps) 
       content={
         <>
           {isEmpty(dataTypeResults) ? (
-            <Empty />
+            <Empty imageType="grid" />
           ) : (
             <BarChart
               title="Participants by Data Type"

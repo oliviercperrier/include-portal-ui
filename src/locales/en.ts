@@ -369,7 +369,8 @@ const fr = {
             ethnicityTitle: 'Ethnicity',
           },
           availableData: {
-            cardTitle: 'Available Data',
+            dataCategoryTitle: 'Data Category',
+            dataTypeTitle: 'Data Type',
           },
           observedPhenotype: {
             cardTitle: 'Observed Phenotypes (HPO)',
@@ -404,8 +405,8 @@ const fr = {
               newProject: 'New project',
               copyFiles: 'Copy files',
               copyFilesTo: 'Copy files to...',
-              createProjectToPushFileTo: "Create a project to push your files to.",
-              youAreAuthorizedToCopy: "You are authorized to copy"
+              createProjectToPushFileTo: 'Create a project to push your files to.',
+              youAreAuthorizedToCopy: 'You are authorized to copy',
             },
           },
         },

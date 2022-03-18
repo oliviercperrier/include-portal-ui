@@ -23,7 +23,6 @@ import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 import intl from 'react-intl-universal';
-import { IStudyEntity } from 'graphql/studies/models';
 import { beginAnalyse } from 'store/fenceCavatica/thunks';
 import { useFenceConnection } from 'store/fenceConnection';
 import { useFenceCavatica } from 'store/fenceCavatica';
@@ -118,11 +117,10 @@ const getDefaultColumns = (
     defaultHidden: true,
   },
   {
-    key: 'study_id',
-    title: 'Study Code',
-    dataIndex: 'study',
+    key: 'study.study_id',
+    title: 'Study',
     sorter: { multiple: 1 },
-    render: (study: IStudyEntity) => study.study_id,
+    render: (record: IFileEntity) => record.study.study_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'data_category',
@@ -131,18 +129,18 @@ const getDefaultColumns = (
     sorter: { multiple: 1 },
   },
   {
-    key: 'sequencing_experiment__experiment_strategy',
-    title: 'Experimental Strategy',
-    sorter: { multiple: 1 },
-    render: (record: IFileEntity) =>
-      record.sequencing_experiment?.experiment_strategy || TABLE_EMPTY_PLACE_HOLDER,
-  },
-  {
     key: 'data_type',
     title: 'Data Type',
     dataIndex: 'data_type',
     sorter: { multiple: 1 },
     render: (data_type) => data_type || TABLE_EMPTY_PLACE_HOLDER,
+  },
+  {
+    key: 'sequencing_experiment__experiment_strategy',
+    title: 'Experimental Strategy',
+    sorter: { multiple: 1 },
+    render: (record: IFileEntity) =>
+      record.sequencing_experiment?.experiment_strategy || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'file_format',
@@ -156,36 +154,6 @@ const getDefaultColumns = (
     dataIndex: 'size',
     sorter: { multiple: 1 },
     render: (size) => formatFileSize(size, { output: 'string' }),
-  },
-  {
-    key: 'nb_biospecimens',
-    title: 'Biospecimens',
-    sorter: { multiple: 1 },
-    render: (record: IFileEntity) => {
-      const nb_biospecimens = record?.nb_biospecimens || 0;
-      return nb_biospecimens ? (
-        <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-            search: createQueryParams({
-              filters: generateFilters({
-                newFilters: [
-                  generateValueFilter({
-                    field: 'file_id',
-                    value: [record.file_id],
-                    index: INDEXES.FILE,
-                  }),
-                ],
-              }),
-            }),
-          }}
-        >
-          {nb_biospecimens}
-        </Link>
-      ) : (
-        nb_biospecimens
-      );
-    },
   },
   {
     key: 'nb_participants',
@@ -214,6 +182,36 @@ const getDefaultColumns = (
         </Link>
       ) : (
         nb_participants
+      );
+    },
+  },
+  {
+    key: 'nb_biospecimens',
+    title: 'Biospecimens',
+    sorter: { multiple: 1 },
+    render: (record: IFileEntity) => {
+      const nb_biospecimens = record?.nb_biospecimens || 0;
+      return nb_biospecimens ? (
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+            search: createQueryParams({
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter({
+                    field: 'file_id',
+                    value: [record.file_id],
+                    index: INDEXES.FILE,
+                  }),
+                ],
+              }),
+            }),
+          }}
+        >
+          {nb_biospecimens}
+        </Link>
+      ) : (
+        nb_biospecimens
       );
     },
   },

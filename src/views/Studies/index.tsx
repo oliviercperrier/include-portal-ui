@@ -98,11 +98,6 @@ const columns: ProColumnType<any>[] = [
     dataIndex: 'family_count',
   },
   {
-    key: 'clinical',
-    title: 'Clinical',
-    align: 'center',
-  },
-  {
     key: 'genomic',
     title: DataCategory.GENOMIC,
     align: 'center',

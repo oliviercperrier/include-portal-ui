@@ -1,21 +1,31 @@
-import { Link } from "react-router-dom";
-import { Space } from "antd";
+import { Link } from 'react-router-dom';
+import { Space } from 'antd';
+import MultiLabel, {
+  MultiLabelIconPositionEnum,
+} from '@ferlab/ui/core/components/labels/MultiLabel';
+import { ArrowRightOutlined } from '@ant-design/icons';
 
-import styles from "./index.module.scss";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import styles from './index.module.scss';
 
 interface OwnProps {
+  multiLabelClassName?: string;
   icon: React.ReactNode;
-  title: string;
+  label: string | number;
+  subLabel: string;
   href: string;
 }
 
-const LinkBox = ({ title, icon, href }: OwnProps) => (
+const LinkBox = ({ multiLabelClassName = '', label, subLabel, icon, href }: OwnProps) => (
   <Link to={href} className={styles.dataExploBox}>
-    <Space direction="horizontal" size={16}>
-      <div className={styles.linkIconWrapper}>{icon}</div>
-      <span className={styles.linkTitle}>{title}</span>
-      <ArrowRightOutlined className={styles.linkArrow}/>
+    <Space direction="horizontal" size={16} align="start">
+      <MultiLabel
+        iconPosition={MultiLabelIconPositionEnum.Top}
+        label={label}
+        Icon={icon}
+        className={multiLabelClassName}
+        subLabel={subLabel}
+      />
+      <ArrowRightOutlined className={styles.linkArrow} />
     </Space>
   </Link>
 );

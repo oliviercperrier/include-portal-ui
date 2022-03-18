@@ -1,54 +1,89 @@
-import React from 'react';
-import { Row, Col } from 'antd';
-import {
-  ExperimentOutlined,
-  FileTextOutlined,
-  ReadOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { useEffect } from 'react';
+import { Row, Col, Button } from 'antd';
+import { FileTextOutlined, ReadOutlined, UserOutlined } from '@ant-design/icons';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import LinkBox from './LinkBox';
 import { STATIC_ROUTES } from 'utils/routes';
 import intl from 'react-intl-universal';
-import { DashboardCardProps } from 'views/Dashboard/components/DashboardCards';
 import CardHeader from 'views/Dashboard/components/CardHeader';
+import { useDispatch } from 'react-redux';
+import { useGlobals } from 'store/global';
+import { fetchStats } from 'store/global/thunks';
+import { numberFormat } from '@ferlab/ui/core/utils/numberUtils';
+import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 
 import styles from './index.module.scss';
 
-const DataExplorationLinks = ({ id, className = '' }: DashboardCardProps) => {
+const formatStorage = (storage: string) => {
+  if (!storage) return;
+  const parts = storage.split(/\.| /);
+  return `${parts[0]}${parts[2]}`;
+};
+
+const DataExplorationLinks = () => {
+  const dispatch = useDispatch();
+  const { stats } = useGlobals();
+
+  useEffect(() => {
+    dispatch(fetchStats());
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <GridCard
-      theme="shade"
-      wrapperClassName={className}
-      title={<CardHeader id={id} title="Data Exploration" />}
+      wrapperClassName={styles.dataExplorationLinksWrapper}
+      title={
+        <CardHeader
+          id="data-exploration"
+          title="Data Exploration"
+          extra={[
+            <ExternalLink href="">
+              <Button type="link" className={styles.releaseNoteBtn}>
+                Data release 1.0
+                <ExternalLinkIcon />
+              </Button>
+            </ExternalLink>,
+          ]}
+        />
+      }
+      className={styles.dataExplorationLinksCard}
       content={
         <Row gutter={[16, 16]}>
           <Col flex="auto" className={styles.customCol}>
             <LinkBox
-              title={intl.get('screen.dashboard.links.studies')}
-              icon={<ReadOutlined />}
               href={STATIC_ROUTES.STUDIES}
+              multiLabelClassName={styles.dataReleaseStatsLabel}
+              label={numberFormat(stats?.studies!)}
+              subLabel={intl.get('components.dataRelease.studies')}
+              icon={<ReadOutlined className={styles.dataReleaseIcon} />}
             />
           </Col>
           <Col flex="auto" className={styles.customCol}>
             <LinkBox
-              title={intl.get('screen.dashboard.links.participants')}
-              icon={<UserOutlined />}
               href={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
+              multiLabelClassName={styles.dataReleaseStatsLabel}
+              label={numberFormat(stats?.participants!)}
+              subLabel={intl.get('components.dataRelease.participants')}
+              icon={<UserOutlined className={styles.dataReleaseIcon} />}
             />
           </Col>
           <Col flex="auto" className={styles.customCol}>
             <LinkBox
-              title={intl.get('screen.dashboard.links.biospecimens')}
-              icon={<ExperimentOutlined />}
               href={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
+              multiLabelClassName={styles.dataReleaseStatsLabel}
+              label={numberFormat(stats?.samples!)}
+              subLabel={intl.get('components.dataRelease.biospecimens')}
+              icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
             />
           </Col>
           <Col flex="auto" className={styles.customCol}>
             <LinkBox
-              title={intl.get('screen.dashboard.links.datafiles')}
-              icon={<FileTextOutlined />}
               href={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+              multiLabelClassName={styles.dataReleaseStatsLabel}
+              label={formatStorage(stats?.fileSize!) || '0TB'}
+              subLabel={intl.get('components.dataRelease.datafiles')}
+              icon={<FileTextOutlined className={styles.dataReleaseIcon} />}
             />
           </Col>
         </Row>

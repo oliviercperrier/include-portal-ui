@@ -1,11 +1,10 @@
-import { TSortableItems } from "@ferlab/ui/core/layout/SortableGrid/SortableItem";
-import AuthorizedStudies from "./AuthorizedStudies";
-import DataExplorationLinks from "./DataExplorationLinks";
-import cx from "classnames";
+import { TSortableItems } from '@ferlab/ui/core/layout/SortableGrid/SortableItem';
+import AuthorizedStudies from './AuthorizedStudies';
+import cx from 'classnames';
+import SavedFilters from './SavedFilters';
+import Cavatica from './Cavatica';
 
-import styles from "./index.module.scss";
-import SavedFilters from "./SavedFilters";
-import Cavatica from "./Cavatica";
+import styles from './index.module.scss';
 
 export interface DashboardCardProps {
   id: string;
@@ -16,12 +15,7 @@ export interface DashboardCardProps {
 // Its is used for user config
 export const dashboardCards: TSortableItems[] = [
   {
-    id: "0",
-    xs: 24,
-    component: <DataExplorationLinks id="0" className={styles.dashboardCard} />,
-  },
-  {
-    id: "1",
+    id: '1',
     xs: 24,
     md: 12,
     xxl: 8,
@@ -29,7 +23,7 @@ export const dashboardCards: TSortableItems[] = [
     component: <AuthorizedStudies id="1" className={styles.dashboardCard} />,
   },
   {
-    id: "2",
+    id: '2',
     xs: 24,
     md: 12,
     xxl: 8,
@@ -37,7 +31,7 @@ export const dashboardCards: TSortableItems[] = [
     component: <Cavatica id="2" className={styles.dashboardCard} />,
   },
   {
-    id: "3",
+    id: '3',
     xs: 24,
     md: 12,
     xxl: 8,

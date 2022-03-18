@@ -11,6 +11,7 @@ export interface IParticipantDiagnosis {
   id: string;
   score: number;
   mondo_id_diagnosis: string;
+  source_text: string;
 }
 
 export interface IParticipantPhenotype {

@@ -11,6 +11,7 @@ import { useFenceCavatica } from 'store/fenceCavatica';
 import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { fetchAllProjects, startBulkImportJob } from 'store/fenceCavatica/thunks';
 import { ICavaticaTreeNode } from 'store/fenceCavatica/types';
+import intl from 'react-intl-universal';
 
 import styles from './index.module.scss';
 
@@ -56,7 +57,7 @@ const AnalyseModal = () => {
 
   const NewProjectButton = () => (
     <Button size="small" icon={<PlusOutlined />} onClick={handleCreateProject}>
-      New project
+      {intl.get('screen.dataExploration.tabs.datafiles.cavatica.analyseModal.newProject')}
     </Button>
   );
 
@@ -103,9 +104,9 @@ const AnalyseModal = () => {
 
   return (
     <Modal
-      title="Analyse in Cavatica"
+      title={intl.get('screen.dataExploration.tabs.datafiles.cavatica.analyseInCavatica')}
       visible={isAnalyseModalOpen}
-      okText="Copy files"
+      okText={intl.get('screen.dataExploration.tabs.datafiles.cavatica.analyseModal.copyFiles')}
       okButtonProps={{
         disabled: !selectedTreeNode?.id,
         loading: isBulkImportLoading,
@@ -118,7 +119,9 @@ const AnalyseModal = () => {
     >
       <Space direction="vertical" size={24}>
         <Space direction="vertical" size={5} className={styles.treeSelectorWrapper}>
-          <Text strong>Copy files to...</Text>
+          <Text strong>
+            {intl.get('screen.dataExploration.tabs.datafiles.cavatica.analyseModal.copyFilesTo')}
+          </Text>
           <TreeSelect
             treeDataSimpleMode
             open={dropdownOpen}
@@ -132,7 +135,11 @@ const AnalyseModal = () => {
                 align="center"
                 size={16}
               >
-                <Text type="secondary">Create a project to push your files to.</Text>
+                <Text type="secondary">
+                  {intl.get(
+                    'screen.dataExploration.tabs.datafiles.cavatica.analyseModal.createProjectToPushFileTo',
+                  )}
+                </Text>
                 <NewProjectButton />
               </Space>
             }
@@ -165,7 +172,11 @@ const AnalyseModal = () => {
           />
         </Space>
         <Text>
-          <Text>You are authorized to copy</Text>{' '}
+          <Text>
+            {intl.get(
+              'screen.dataExploration.tabs.datafiles.cavatica.analyseModal.youAreAuthorizedToCopy',
+            )}
+          </Text>{' '}
           <Tag className={styles.authorizedFilesTag} icon={<FileTextOutlined />}>
             {bulkImportData.authorizedFiles.length} files
           </Tag>{' '}

@@ -27,8 +27,6 @@ export const formatQuerySortList = (sorter: SorterResult<any> | SorterResult<any
     order: getOrderFromAntdValue(sorter.order!),
   }));
 
-  console.log(r)
-
   return r
 };
 

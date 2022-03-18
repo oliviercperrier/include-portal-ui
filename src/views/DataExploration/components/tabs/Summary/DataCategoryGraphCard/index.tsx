@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from 'antd';
+import { Typography } from 'antd';
 import { RawAggregation } from 'graphql/models';
 import { toChartData } from 'utils/charts';
 import BarChart from 'components/uiKit/charts/Bar';
@@ -9,16 +9,14 @@ import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
+import { isEmpty } from 'lodash';
+import Empty from '@ferlab/ui/core/components/Empty';
 
 interface OwnProps {
   className?: string;
   loading?: boolean;
-  dataTypeData: RawAggregation;
-  dataCategoryData: RawAggregation;
+  data: RawAggregation;
 }
-
-const transformDataType = (results: RawAggregation) =>
-  (results?.data?.participant?.aggregations?.files__data_type.buckets || []).map(toChartData);
 
 const transformDataCategory = (results: RawAggregation) =>
   (results?.data?.participant?.aggregations?.files__data_category.buckets || []).map(toChartData);
@@ -43,13 +41,9 @@ const addToQuery = (field: string, key: string, history: any) =>
     index: INDEXES.FILE,
   });
 
-const AvailableDataGraphCard = ({
-  className = '',
-  loading = false,
-  dataTypeData,
-  dataCategoryData,
-}: OwnProps) => {
+const DataCategoryGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
   const history = useHistory();
+  const dataCategoryResults = transformDataCategory(data);
 
   return (
     <GridCard
@@ -59,15 +53,17 @@ const AvailableDataGraphCard = ({
       loadingType="spinner"
       title={
         <Title level={4}>
-          {intl.get('screen.dataExploration.tabs.summary.availableData.cardTitle')}
+          {intl.get('screen.dataExploration.tabs.summary.availableData.dataCategoryTitle')}
         </Title>
       }
       content={
-        <Row gutter={[48, 24]}>
-          <Col span={12}>
+        <>
+          {isEmpty(dataCategoryResults) ? (
+            <Empty />
+          ) : (
             <BarChart
               title="Participants by Data Category"
-              data={transformDataCategory(dataCategoryData)}
+              data={dataCategoryResults}
               axisLeft={{
                 legend: 'Data Category',
                 legendPosition: 'middle',
@@ -83,31 +79,11 @@ const AvailableDataGraphCard = ({
               onClick={(datum) => addToQuery('data_category', datum.indexValue as string, history)}
               {...graphSetting}
             />
-          </Col>
-          <Col span={12}>
-            <BarChart
-              title="Participants by Data Type"
-              data={transformDataType(dataTypeData)}
-              axisLeft={{
-                legend: 'Data Types',
-                legendPosition: 'middle',
-                legendOffset: -120,
-                format: (title: string) => truncateString(title, 15),
-              }}
-              tooltipLabel={(node) => node.data.id}
-              axisBottom={{
-                legend: '# of participants',
-                legendPosition: 'middle',
-                legendOffset: 35,
-              }}
-              onClick={(datum) => addToQuery('data_type', datum.indexValue as string, history)}
-              {...graphSetting}
-            />
-          </Col>
-        </Row>
+          )}
+        </>
       }
     />
   );
 };
 
-export default AvailableDataGraphCard;
+export default DataCategoryGraphCard;

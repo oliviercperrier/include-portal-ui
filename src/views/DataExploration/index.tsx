@@ -87,11 +87,11 @@ export const filterGroups: {
     groups: [
       {
         facets: [
-          'data_category',
-          'sequencing_experiment__experiment_strategy',
-          'data_type',
-          'file_format',
           'controlled_access',
+          'data_category',
+          'data_type',
+          'sequencing_experiment__experiment_strategy',
+          'file_format',
         ],
       },
     ],

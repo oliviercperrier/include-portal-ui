@@ -4,7 +4,8 @@ import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { DATATYPE_QUERY, DEMOGRAPHIC_QUERY, DATA_CATEGORY_QUERY } from 'graphql/summary/queries';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import DemographicsGraphCard from './DemographicGraphCard';
-import AvailableDataGraphCard from './AvailableDataGraphCard';
+import DataCategoryGraphCard from './DataCategoryGraphCard';
+import DataTypeGraphCard from './DataTypeGraphCard';
 import SunburstGraphCard from './SunburstGraphCard';
 
 import styles from './index.module.scss';
@@ -47,12 +48,18 @@ const SummaryTab = ({ sqon }: OwnProps) => {
       <Col xs={24} md={18}>
         <SunburstGraphCard className={styles.summaryGrapCard} sqon={sqon} />
       </Col>
-      <Col span={24}>
-        <AvailableDataGraphCard
+      <Col span={12}>
+        <DataCategoryGraphCard
           loading={loading}
           className={styles.summaryGrapCard}
-          dataTypeData={result ? result[1] : null}
-          dataCategoryData={result ? result[2] : null}
+          data={result ? result[2] : null}
+        />
+      </Col>
+      <Col span={12}>
+        <DataTypeGraphCard
+          loading={loading}
+          className={styles.summaryGrapCard}
+          data={result ? result[1] : null}
         />
       </Col>
     </Row>

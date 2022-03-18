@@ -236,7 +236,7 @@ const fr = {
       studies: 'Studies',
       participants: 'Participants',
       biospecimens: 'Biospecimens',
-      datafiles: 'Data File',
+      datafiles: 'Data Files',
     },
   },
   // LAYOUT
@@ -248,7 +248,7 @@ const fr = {
         explore: 'Data Exploration',
         participants: 'Participants',
         biospecimen: 'Biospecimen',
-        datafiles: 'Data File',
+        datafiles: 'Data Files',
         website: 'Website',
         help: 'Help',
         community: 'Community',
@@ -283,7 +283,7 @@ const fr = {
         studies: 'Studies',
         participants: 'Participants',
         biospecimens: 'Biospecimens',
-        datafiles: 'Data File',
+        datafiles: 'Data Files',
         variantSearch: 'Variant Search',
       },
       cards: {
@@ -345,7 +345,7 @@ const fr = {
       sidemenu: {
         participant: 'Participant',
         biospecimen: 'Biospecimen',
-        datafiles: 'Data File',
+        datafiles: 'Data Files',
       },
       hpoTree: {
         modal: {
@@ -369,7 +369,8 @@ const fr = {
             ethnicityTitle: 'Ethnicity',
           },
           availableData: {
-            cardTitle: 'Available Data',
+            dataCategoryTitle: 'Data Category',
+            dataTypeTitle: 'Data Type',
           },
           observedPhenotype: {
             cardTitle: 'Observed Phenotypes (HPO)',
@@ -404,8 +405,8 @@ const fr = {
               newProject: 'New project',
               copyFiles: 'Copy files',
               copyFilesTo: 'Copy files to...',
-              createProjectToPushFileTo: "Create a project to push your files to.",
-              youAreAuthorizedToCopy: "You are authorized to copy"
+              createProjectToPushFileTo: 'Create a project to push your files to.',
+              youAreAuthorizedToCopy: 'You are authorized to copy',
             },
           },
         },

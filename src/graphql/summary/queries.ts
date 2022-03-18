@@ -28,7 +28,7 @@ export const DEMOGRAPHIC_QUERY = `
 export const DATATYPE_QUERY = `
   query($sqon: JSON) {
     participant {
-      aggregations(filters: $sqon, aggregations_filter_themselves: true) {
+      aggregations(filters: $sqon, aggregations_filter_themselves: true, include_missing: false) {
         files__data_type {
           buckets {
             key
@@ -43,7 +43,7 @@ export const DATATYPE_QUERY = `
 export const DATA_CATEGORY_QUERY = `
   query($sqon: JSON) {
     participant {
-      aggregations(filters: $sqon, aggregations_filter_themselves: true) {
+      aggregations(filters: $sqon, aggregations_filter_themselves: true, include_missing: false) {
         files__data_category {
           buckets {
             key

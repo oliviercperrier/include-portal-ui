@@ -34,10 +34,12 @@
     }
 
     div[class$='-card-head'] {
-      border-bottom: 1px solid $gray-8;
+      border-bottom: none
     }
 
     div[class$='-head-title'] {
+      padding-bottom: 0 !important;
+
       :global(.ant-typography) {
         color: $gray-6;
       }

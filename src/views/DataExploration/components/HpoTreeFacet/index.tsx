@@ -11,7 +11,7 @@ import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
 import {
   addFieldToActiveQuery,
   findSqonValueByField,
-  isBooleanOperator,
+  removeValueFilterFromSqon,
 } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
@@ -23,17 +23,13 @@ import {
 } from '@ferlab/ui/core/data/filters/utils';
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
-import {
-  ISqonGroupFilter,
-  IValueFilter,
-  MERGE_VALUES_STRATEGIES,
-  TSqonContent,
-} from '@ferlab/ui/core/data/sqon/types';
+import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 import { mapFilterForParticipant } from '../../utils/mapper';
 import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
+import { isEmpty } from 'lodash';
 
 const FIELD_NAME = 'observed_phenotype.name';
 const AUTO_EXPAND_TREE = 1;
@@ -99,17 +95,6 @@ const HpoTreeFacet = () => {
     setTargetKeys(removeSameTerms([], hasChildAlreadyChecked ? [key] : [...checkedKeys, key]));
   };
 
-  const removeValueFilterFromSqon = (field: string, sqon: ISqonGroupFilter) => ({
-    ...sqon,
-    content: sqon.content.filter(function f(sqon: any): boolean {
-      if (isBooleanOperator(sqon)) {
-        return (sqon.content as TSqonContent).filter(f).length > 0;
-      }
-
-      return !((sqon as IValueFilter).content.field === field);
-    }),
-  });
-
   useEffect(() => {
     if (visible) {
       const participantResolvedSqon = mapFilterForParticipant(
@@ -124,22 +109,27 @@ const HpoTreeFacet = () => {
       setIsLoading(true);
       phenotypeStore.current.fetch('observed_phenotype', filteredParticipantSqon).then(() => {
         const rootNode = phenotypeStore.current.getRootNode()!;
-        setTreeData(rootNode);
-        setRootNode(rootNode);
+
         setIsLoading(false);
 
-        const flatTree = getFlattenTree(rootNode!);
-        const selectedValues = findSqonValueByField(FIELD_NAME, participantResolvedSqon);
+        if (rootNode) {
+          setTreeData(rootNode);
+          setRootNode(rootNode);
 
-        if (selectedValues) {
-          const targetKeys = flatTree
-            .filter(({ title }) => selectedValues.includes(title))
-            .map(({ key }) => key);
+          const flatTree = getFlattenTree(rootNode!);
+          const selectedValues = findSqonValueByField(FIELD_NAME, participantResolvedSqon);
 
-          setExpandedKeys(getExpandedKeys(targetKeys));
-          setTargetKeys(removeSameTerms([], targetKeys));
-        } else {
-          setExpandedKeys(getInitialExpandedKeys([rootNode!]));
+          if (selectedValues) {
+            const targetKeys = flatTree
+              .filter(({ title }) => selectedValues.includes(title))
+              .map(({ key }) => key);
+
+            setExpandedKeys(getExpandedKeys(targetKeys));
+            setTargetKeys(removeSameTerms([], targetKeys));
+          } else {
+            setExpandedKeys(getInitialExpandedKeys([rootNode!]));
+            setTargetKeys([]);
+          }
         }
       });
     }
@@ -159,6 +149,7 @@ const HpoTreeFacet = () => {
         className={styles.hpoTreeModal}
         title={intl.get('screen.dataExploration.hpoTree.modal.title')}
         okText={intl.get('screen.dataExploration.hpoTree.modal.okText')}
+        okButtonProps={{disabled: isEmpty(targetKeys) && isEmpty(treeData)}}
         onOk={() => {
           const flatTreeData = getFlattenTree(treeData!);
           const results = flatTreeData
@@ -180,11 +171,15 @@ const HpoTreeFacet = () => {
 
           setVisible(false);
         }}
-        onCancel={() => setVisible(false)}
+        onCancel={() => {
+          setVisible(false);
+          setTreeData(undefined);
+          setRootNode(undefined);
+        }}
       >
         <Transfer<TreeNode>
           className={styles.hpoTransfer}
-          showSearch={true}
+          showSearch={!isEmpty(treeData)}
           targetKeys={targetKeys}
           selectedKeys={[]}
           oneWay
@@ -230,7 +225,7 @@ const HpoTreeFacet = () => {
           showSelectAll={false}
           operationStyle={{ visibility: 'hidden', width: '5px' }}
         >
-          {({ direction, onItemSelect, selectedKeys, dataSource }) => {
+          {({ direction, onItemSelect, selectedKeys }) => {
             if (direction === 'left') {
               const checkedKeys = [...removeSameTerms(selectedKeys, targetKeys)];
               const halfCheckedKeys = checkedKeys
@@ -238,52 +233,60 @@ const HpoTreeFacet = () => {
                 .flatMap((k) => k.halfcheck);
               return (
                 <Spin spinning={isLoading}>
-                  <Row justify="space-between" className={styles.phenotypeTreeHeader}>
-                    <Col></Col>
-                    <Col>
-                      <Row style={{ width: 100 }}>
-                        <Col span={12} className={styles.phenotypeTreeCountTag}>
-                          <Tooltip title={intl.get('screen.dataExploration.hpoTree.tags.exact')}>
-                            <UserOutlined />
-                          </Tooltip>
-                        </Col>
-                        <Col span={12} className={styles.phenotypeTreeCountTag}>
-                          <Tooltip title={intl.get('screen.dataExploration.hpoTree.tags.all')}>
-                            <BranchesOutlined />
-                          </Tooltip>
+                  {isEmpty(treeData) ? (
+                    <Empty imageType="grid" />
+                  ) : (
+                    <>
+                      <Row justify="space-between" className={styles.phenotypeTreeHeader}>
+                        <Col></Col>
+                        <Col>
+                          <Row style={{ width: 100 }}>
+                            <Col span={12} className={styles.phenotypeTreeCountTag}>
+                              <Tooltip
+                                title={intl.get('screen.dataExploration.hpoTree.tags.exact')}
+                              >
+                                <UserOutlined />
+                              </Tooltip>
+                            </Col>
+                            <Col span={12} className={styles.phenotypeTreeCountTag}>
+                              <Tooltip title={intl.get('screen.dataExploration.hpoTree.tags.all')}>
+                                <BranchesOutlined />
+                              </Tooltip>
+                            </Col>
+                          </Row>
                         </Col>
                       </Row>
-                    </Col>
-                  </Row>
-                  <Tree
-                    checkable
-                    checkStrictly
-                    height={600}
-                    expandedKeys={expandedKeys}
-                    onExpand={(keys) => setExpandedKeys(keys as string[])}
-                    checkedKeys={{
-                      checked: checkedKeys,
-                      halfChecked: halfCheckedKeys,
-                    }}
-                    titleRender={(node) => node.name}
-                    treeData={treeData ? generateTree([treeData], checkedKeys) : []}
-                    onCheck={(_, { node: { key, children } }) =>
-                      onCheckOrSelect(
-                        onItemSelect,
-                        key as string,
-                        checkedKeys,
-                        children as TreeNode[],
-                      )
-                    }
-                    onSelect={(_, { node: { key, children } }) =>
-                      onCheckOrSelect(
-                        onItemSelect,
-                        key as string,
-                        checkedKeys,
-                        children as TreeNode[],
-                      )
-                    }
-                  />
+                      <Tree
+                        checkable
+                        checkStrictly
+                        height={600}
+                        expandedKeys={expandedKeys}
+                        onExpand={(keys) => setExpandedKeys(keys as string[])}
+                        checkedKeys={{
+                          checked: checkedKeys,
+                          halfChecked: halfCheckedKeys,
+                        }}
+                        titleRender={(node) => node.name}
+                        treeData={treeData ? generateTree([treeData], checkedKeys) : []}
+                        onCheck={(_, { node: { key, children } }) =>
+                          onCheckOrSelect(
+                            onItemSelect,
+                            key as string,
+                            checkedKeys,
+                            children as TreeNode[],
+                          )
+                        }
+                        onSelect={(_, { node: { key, children } }) =>
+                          onCheckOrSelect(
+                            onItemSelect,
+                            key as string,
+                            checkedKeys,
+                            children as TreeNode[],
+                          )
+                        }
+                      />
+                    </>
+                  )}
                 </Spin>
               );
             }

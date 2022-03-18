@@ -128,6 +128,27 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
+    key: 'diagnosis.source_text',
+    title: 'Diagnosis (Source Text)',
+    dataIndex: 'diagnosis',
+    defaultHidden: true,
+    render: (mondo: ArrangerResultsTree<IParticipantDiagnosis>) => {
+      const sourceTexts = mondo?.hits?.edges.map((m) => m.node.source_text);
+
+      if (!sourceTexts || sourceTexts.length === 0) {
+        return TABLE_EMPTY_PLACE_HOLDER;
+      }
+
+      return (
+        <ExpandableCell
+          nbToShow={1}
+          dataSource={sourceTexts}
+          renderItem={(sourceText, index): React.ReactNode => <div key={index}>{sourceText}</div>}
+        />
+      );
+    },
+  },
+  {
     key: 'diagnosis.mondo_id_diagnosis',
     title: 'Diagnosis (Mondo)',
     dataIndex: 'diagnosis',

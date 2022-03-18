@@ -246,6 +246,9 @@ const startBulkImportJob = createAsyncThunk<
       drs_uri: file.access_urls,
       name: file.file_name,
       [destKey]: node.id,
+      metadata: {
+        fhir_document_reference: file.fhir_document_reference,
+      },
     };
   });
 

@@ -24,6 +24,7 @@ export interface IFileEntity {
   study: IStudyEntity;
   nb_participants: number;
   nb_biospecimens: number;
+  fhir_document_reference: string;
   index?: {
     urls: string;
     file_name: string;

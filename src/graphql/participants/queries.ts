@@ -47,6 +47,7 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
                 edges {
                   node {
                     mondo_id_diagnosis
+                    source_text
                   }
                 }
               }

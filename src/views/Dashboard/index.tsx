@@ -1,33 +1,31 @@
-import { Space, Typography } from "antd";
-import { useUser } from "store/user";
-import DataReleaseCard from "./components/DataReleaseCard";
-import intl from "react-intl-universal";
-import SortableGrid from "@ferlab/ui/core/layout/SortableGrid";
-import { getFTEnvVarByKey } from "helpers/EnvVariables";
-import { AlterTypes } from "common/types";
-import NotificationBanner from "components/featureToggle/NotificationBanner";
-import { dashboardCards } from "./components/DashboardCards";
+import { Space, Typography } from 'antd';
+import { useUser } from 'store/user';
+import intl from 'react-intl-universal';
+import SortableGrid from '@ferlab/ui/core/layout/SortableGrid';
+import { getFTEnvVarByKey } from 'helpers/EnvVariables';
+import { AlterTypes } from 'common/types';
+import NotificationBanner from 'components/featureToggle/NotificationBanner';
+import { dashboardCards } from './components/DashboardCards';
+import { TSortableItems } from '@ferlab/ui/core/layout/SortableGrid/SortableItem';
+import { useDispatch } from 'react-redux';
+import { updateUserConfig } from 'store/user/thunks';
+import DataExplorationLinks from './components/DashboardCards/DataExplorationLinks';
 
-import styles from "./index.module.scss";
-import { TSortableItems } from "@ferlab/ui/core/layout/SortableGrid/SortableItem";
-import { useDispatch } from "react-redux";
-import { updateUserConfig } from "store/user/thunks";
+import styles from './index.module.scss';
 
 const { Title } = Typography;
 
-const FT_FLAG_KEY = "DASHBOARD_BANNER";
-const BANNER_TYPE_KEY = FT_FLAG_KEY + "_TYPE";
-const BANNER_MSG_KEY = FT_FLAG_KEY + "_MSG";
+const FT_FLAG_KEY = 'DASHBOARD_BANNER';
+const BANNER_TYPE_KEY = FT_FLAG_KEY + '_TYPE';
+const BANNER_MSG_KEY = FT_FLAG_KEY + '_MSG';
 
 const orderCardIfNeeded = (
   dashboardCards: TSortableItems[],
-  userCardConfig: string[] | undefined
+  userCardConfig: string[] | undefined,
 ) =>
   userCardConfig
     ? dashboardCards.sort((a, b) => {
-        return userCardConfig.indexOf(a.id) > userCardConfig.indexOf(b.id)
-          ? 1
-          : -1;
+        return userCardConfig.indexOf(a.id) > userCardConfig.indexOf(b.id) ? 1 : -1;
       })
     : dashboardCards;
 
@@ -40,15 +38,15 @@ const Dashboard = () => {
       <Space className={styles.dataIntroWrapper} direction="vertical" size={16}>
         <NotificationBanner
           featureToggleKey={FT_FLAG_KEY}
-          type={getFTEnvVarByKey<AlterTypes>(BANNER_TYPE_KEY, "info")}
+          type={getFTEnvVarByKey<AlterTypes>(BANNER_TYPE_KEY, 'info')}
           message={getFTEnvVarByKey(BANNER_MSG_KEY)}
           closable
           showIcon
         />
         <Title level={4} className={styles.greeting}>
-          {intl.get("screen.dashboard.hello")}, {userInfo?.first_name}
+          {intl.get('screen.dashboard.hello')}, {userInfo?.first_name}
         </Title>
-        <DataReleaseCard />
+        <DataExplorationLinks />
       </Space>
       <SortableGrid
         onReorder={(ids) =>
@@ -59,13 +57,10 @@ const Dashboard = () => {
                   order: ids,
                 },
               },
-            })
+            }),
           )
         }
-        items={orderCardIfNeeded(
-          dashboardCards,
-          userInfo?.config.dashboard?.cards?.order
-        )}
+        items={orderCardIfNeeded(dashboardCards, userInfo?.config.dashboard?.cards?.order)}
         gutter={[24, 24]}
       />
     </Space>

@@ -400,6 +400,13 @@ const fr = {
               description:
                 'In order to analyze your files you must first connect your Cavatica account. Once you are connected, you will be redirected back to this page.',
             },
+            analyseModal: {
+              newProject: 'New project',
+              copyFiles: 'Copy files',
+              copyFilesTo: 'Copy files to...',
+              createProjectToPushFileTo: "Create a project to push your files to.",
+              youAreAuthorizedToCopy: "You are authorized to copy"
+            },
           },
         },
       },
@@ -495,6 +502,7 @@ const fr = {
     },
   },
   facets: {
+    file_id: 'File ID',
     // Participant
     participant_id: 'Participant ID',
     study_id: 'Study Code',

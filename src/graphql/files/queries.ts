@@ -20,6 +20,7 @@ export const SEARCH_FILES_QUERY = gql`
             repository
             nb_participants
             nb_biospecimens
+            fhir_document_reference
             index {
               urls
               file_name

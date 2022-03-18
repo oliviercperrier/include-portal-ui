@@ -299,9 +299,9 @@ const fr = {
         authorizedStudies: {
           title: 'Authorized Studies {count, plural, =0 {} other {(#)}}',
           connectedNotice:
-            'You have access to all released INCLUDE controlled data through your NIH credentials.',
+            'You have access to the following INCLUDE controlled data through your NIH credentials.',
           disconnectedNotice:
-            'Access all released INCLUDE controlled data by connecting your account using your NIH credentials.',
+            'Access INCLUDE controlled-access data by connecting your account using your NIH Credentials',
           disconnect: 'Disconnect',
           noAvailableStudies: 'No available studies',
           authorization: 'Authorization',
@@ -387,7 +387,7 @@ const fr = {
           title: 'Biospecimens ({count})',
         },
         datafiles: {
-          title: 'Data Files ({count})',
+          title: 'Data File ({count})',
           cavatica: {
             analyseInCavatica: 'Analyze in Cavatica',
             bulkImportLimit: {
@@ -399,6 +399,13 @@ const fr = {
               title: 'You are not connected to Cavatica',
               description:
                 'In order to analyze your files you must first connect your Cavatica account. Once you are connected, you will be redirected back to this page.',
+            },
+            analyseModal: {
+              newProject: 'New project',
+              copyFiles: 'Copy files',
+              copyFilesTo: 'Copy files to...',
+              createProjectToPushFileTo: "Create a project to push your files to.",
+              youAreAuthorizedToCopy: "You are authorized to copy"
             },
           },
         },
@@ -495,6 +502,7 @@ const fr = {
     },
   },
   facets: {
+    file_id: 'File ID',
     // Participant
     participant_id: 'Participant ID',
     study_id: 'Study Code',

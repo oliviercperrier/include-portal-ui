@@ -108,32 +108,32 @@ const getDefaultColumns = (
     key: 'file_id',
     title: 'File ID',
     dataIndex: 'file_id',
-    sorter: true,
+    sorter: { multiple: 1 },
   },
   {
     key: 'file_name',
     title: 'File Name',
     dataIndex: 'file_name',
-    sorter: true,
+    sorter: { multiple: 1 },
     defaultHidden: true,
   },
   {
     key: 'study_id',
     title: 'Study Code',
     dataIndex: 'study',
-    sorter: true,
+    sorter: { multiple: 1 },
     render: (study: IStudyEntity) => study.study_id,
   },
   {
     key: 'data_category',
     title: 'Data Category',
     dataIndex: 'data_category',
-    sorter: true,
+    sorter: { multiple: 1 },
   },
   {
     key: 'sequencing_experiment__experiment_strategy',
     title: 'Experimental Strategy',
-    sorter: true,
+    sorter: { multiple: 1 },
     render: (record: IFileEntity) =>
       record.sequencing_experiment?.experiment_strategy || TABLE_EMPTY_PLACE_HOLDER,
   },
@@ -141,26 +141,26 @@ const getDefaultColumns = (
     key: 'data_type',
     title: 'Data Type',
     dataIndex: 'data_type',
-    sorter: true,
+    sorter: { multiple: 1 },
     render: (data_type) => data_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'file_format',
     title: 'Format',
     dataIndex: 'file_format',
-    sorter: true,
+    sorter: { multiple: 1 },
   },
   {
     key: 'size',
     title: 'Size',
     dataIndex: 'size',
-    sorter: true,
+    sorter: { multiple: 1 },
     render: (size) => formatFileSize(size, { output: 'string' }),
   },
   {
     key: 'nb_biospecimens',
     title: 'Biospecimens',
-    sorter: true,
+    sorter: { multiple: 1 },
     render: (record: IFileEntity) => {
       const nb_biospecimens = record?.nb_biospecimens || 0;
       return nb_biospecimens ? (
@@ -190,7 +190,7 @@ const getDefaultColumns = (
   {
     key: 'nb_participants',
     title: 'Participants',
-    sorter: true,
+    sorter: { multiple: 1 },
     render: (record: IFileEntity) => {
       const nb_participants = record?.nb_participants || 0;
       return nb_participants ? (

@@ -38,7 +38,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'collection_sample_id',
     title: 'Collection ID',
     dataIndex: 'collection_sample_id',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (collection_sample_id: string) =>
       collection_sample_id ? (
         <Link
@@ -67,49 +67,49 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'sample_id',
     title: 'Sample ID',
     dataIndex: 'sample_id',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (sample_id: string) => sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'sample_type',
     title: 'Sample Type',
     dataIndex: 'sample_type',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (sample_type: string) => sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'parent_sample_id',
     title: 'Parent Sample ID',
     dataIndex: 'parent_sample_id',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (parent_sample_id) => parent_sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'parent_sample_type',
     title: 'Parent Sample Type',
     dataIndex: 'parent_sample_type',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (parent_sample_type) => parent_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'participant.participant_id',
     title: 'Participant ID',
     dataIndex: 'participant',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (participant: IParticipantEntity) => participant.participant_id,
   },
   {
     key: 'study_id',
     title: 'Study',
     dataIndex: 'study_id',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (study_id) => study_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'collection_sample_type',
     title: 'Collected Sample Type',
     dataIndex: 'collection_sample_type',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (collection_sample_type) => collection_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -145,7 +145,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'status',
     title: 'Sample Availability',
     dataIndex: 'status',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (status: string) => (status.toLowerCase() === 'available' ? 'Yes' : 'No'),
   },
   {
@@ -163,7 +163,7 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'nb_files',
     title: 'Files',
-    sorter: true,
+    sorter: {multiple: 1},
     render: (record: IBiospecimenEntity) => {
       const nbFiles = record?.nb_files || 0;
       return nbFiles ? (

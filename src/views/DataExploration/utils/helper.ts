@@ -22,10 +22,14 @@ export const formatQuerySortList = (sorter: SorterResult<any> | SorterResult<any
     (sorter) => !!sorter.column || !!sorter.order,
   );
 
-  return sorters.map((sorter) => ({
+  const r =  sorters.map((sorter) => ({
     field: (sorter.field?.toString()! || sorter.columnKey?.toString()!).replaceAll('__', '.'),
     order: getOrderFromAntdValue(sorter.order!),
   }));
+
+  console.log(r)
+
+  return r
 };
 
 // Format is like: Sleep apnea (MONDO:0010535)

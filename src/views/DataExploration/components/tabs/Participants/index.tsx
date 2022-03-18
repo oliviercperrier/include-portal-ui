@@ -50,13 +50,17 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'participant_id',
     title: 'Participant ID',
     dataIndex: 'participant_id',
-    sorter: true,
+    sorter: {
+      multiple: 1,
+    },
   },
   {
     key: 'study_id',
     title: 'Study Code',
     dataIndex: 'study_id',
-    sorter: true,
+    sorter: {
+      multiple: 1,
+    },
     className: styles.studyIdCell,
   },
   {
@@ -81,7 +85,9 @@ const defaultColumns: ProColumnType<any>[] = [
         DS Status
       </Tooltip>
     ),
-    sorter: true,
+    sorter: {
+      multiple: 1,
+    },
     displayTitle: 'DS Status',
     dataIndex: 'down_syndrome_status',
     render: (down_syndrome_status: 'D21' | 'T21') => {
@@ -118,6 +124,9 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Race',
     dataIndex: 'race',
     defaultHidden: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (race) => race || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -125,6 +134,9 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Ethnicity',
     dataIndex: 'ethnicity',
     defaultHidden: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (ethnicity) => ethnicity || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -132,6 +144,9 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Family Unit',
     dataIndex: 'family_type',
     defaultHidden: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -232,7 +247,9 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'nb_biospecimens',
     title: 'Biospecimens',
-    sorter: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (record: ITableParticipantEntity) => {
       const nb_biospecimens = record.nb_biospecimens || 0;
 
@@ -264,7 +281,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'nb_files',
     title: 'Files',
     sorter: {
-      multiple: 2,
+      multiple: 1,
     },
     render: (record: ITableParticipantEntity) => {
       return record.nb_files ? (

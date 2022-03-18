@@ -290,6 +290,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
         loading={results.loading}
         initialColumnState={userInfo?.config.data_exploration?.tables?.datafiles?.columns}
         enableRowSelection={true}
+        showSorterTooltip={false}
         onChange={({ current, pageSize }, _, sorter) =>
           setQueryConfig({
             pageIndex: current!,

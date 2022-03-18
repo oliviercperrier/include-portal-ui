@@ -8,7 +8,11 @@ import {
   removeSameTerms,
 } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
-import { addFieldToActiveQuery, findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
+import {
+  addFieldToActiveQuery,
+  findSqonValueByField,
+  isBooleanOperator,
+} from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
@@ -19,7 +23,12 @@ import {
 } from '@ferlab/ui/core/data/filters/utils';
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
-import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
+import {
+  ISqonGroupFilter,
+  IValueFilter,
+  MERGE_VALUES_STRATEGIES,
+  TSqonContent,
+} from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 import { mapFilterForParticipant } from '../../utils/mapper';
 import Empty from '@ferlab/ui/core/components/Empty';
@@ -90,22 +99,37 @@ const HpoTreeFacet = () => {
     setTargetKeys(removeSameTerms([], hasChildAlreadyChecked ? [key] : [...checkedKeys, key]));
   };
 
+  const removeValueFilterFromSqon = (field: string, sqon: ISqonGroupFilter) => ({
+    ...sqon,
+    content: sqon.content.filter(function f(sqon: any): boolean {
+      if (isBooleanOperator(sqon)) {
+        return (sqon.content as TSqonContent).filter(f).length > 0;
+      }
+
+      return !((sqon as IValueFilter).content.field === field);
+    }),
+  });
+
   useEffect(() => {
     if (visible) {
-      const resolvedSqon = resolveSyntheticSqon(allSqons, filters);
       const participantResolvedSqon = mapFilterForParticipant(
         resolveSyntheticSqon(allSqons, filters),
       );
 
+      const filteredParticipantSqon = removeValueFilterFromSqon(
+        FIELD_NAME,
+        participantResolvedSqon,
+      );
+
       setIsLoading(true);
-      phenotypeStore.current.fetch('observed_phenotype', participantResolvedSqon).then(() => {
+      phenotypeStore.current.fetch('observed_phenotype', filteredParticipantSqon).then(() => {
         const rootNode = phenotypeStore.current.getRootNode()!;
         setTreeData(rootNode);
         setRootNode(rootNode);
         setIsLoading(false);
 
         const flatTree = getFlattenTree(rootNode!);
-        const selectedValues = findSqonValueByField(FIELD_NAME, resolvedSqon);
+        const selectedValues = findSqonValueByField(FIELD_NAME, participantResolvedSqon);
 
         if (selectedValues) {
           const targetKeys = flatTree

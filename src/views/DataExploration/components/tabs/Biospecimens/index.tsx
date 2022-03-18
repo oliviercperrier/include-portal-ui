@@ -219,6 +219,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.biospecimens?.columns}
       enableRowSelection={true}
+      showSorterTooltip={false}
       initialSelectedKey={selectedKeys}
       onChange={({ current, pageSize }, _, sorter) =>
         setQueryConfig({

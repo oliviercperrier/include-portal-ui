@@ -80,11 +80,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'down_syndrome_status',
-    title: (
-      <Tooltip placement="topLeft" title={'Down Syndrome Status'}>
-        DS Status
-      </Tooltip>
-    ),
+    title: <Tooltip title={'Down Syndrome Status'}>DS Status</Tooltip>,
     sorter: {
       multiple: 1,
     },
@@ -92,7 +88,7 @@ const defaultColumns: ProColumnType<any>[] = [
     dataIndex: 'down_syndrome_status',
     render: (down_syndrome_status: 'D21' | 'T21') => {
       return (
-        <Tooltip placement="topLeft" title={intl.get(`facets.options.${down_syndrome_status}`)}>
+        <Tooltip title={intl.get(`facets.options.${down_syndrome_status}`)}>
           {down_syndrome_status}
         </Tooltip>
       );
@@ -356,6 +352,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
       initialColumnState={userInfo?.config.data_exploration?.tables?.participants?.columns}
       enableRowSelection={true}
       initialSelectedKey={selectedKeys}
+      showSorterTooltip={false}
       onChange={({ current, pageSize }, _, sorter) =>
         setQueryConfig({
           pageIndex: current!,

@@ -6,12 +6,13 @@ import {
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
 import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
-import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ExpandableCell from 'components/uiKit/table/ExpendableCell';
 import {
   extractMondoTitleAndCode,
   extractPhenotypeTitleAndCode,
+  formatQuerySortList,
 } from 'views/DataExploration/utils/helper';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -32,15 +33,15 @@ import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
-
-import styles from './index.module.scss';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
 
+import styles from './index.module.scss';
+
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
-  setPagingConfig: TPagingConfigCb;
-  pagingConfig: TPagingConfig;
+  setQueryConfig: TQueryConfigCb;
+  queryConfig: IQueryConfig;
   sqon?: ISqonGroupFilter;
 }
 
@@ -49,11 +50,17 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'participant_id',
     title: 'Participant ID',
     dataIndex: 'participant_id',
+    sorter: {
+      multiple: 1,
+    },
   },
   {
     key: 'study_id',
     title: 'Study Code',
     dataIndex: 'study_id',
+    sorter: {
+      multiple: 1,
+    },
     className: styles.studyIdCell,
   },
   {
@@ -73,16 +80,15 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'down_syndrome_status',
-    title: (
-      <Tooltip placement="topLeft" title={'Down Syndrome Status'}>
-        DS Status
-      </Tooltip>
-    ),
+    title: <Tooltip title={'Down Syndrome Status'}>DS Status</Tooltip>,
+    sorter: {
+      multiple: 1,
+    },
     displayTitle: 'DS Status',
     dataIndex: 'down_syndrome_status',
     render: (down_syndrome_status: 'D21' | 'T21') => {
       return (
-        <Tooltip placement="topLeft" title={intl.get(`facets.options.${down_syndrome_status}`)}>
+        <Tooltip title={intl.get(`facets.options.${down_syndrome_status}`)}>
           {down_syndrome_status}
         </Tooltip>
       );
@@ -92,6 +98,9 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'sex',
     title: 'Sex',
     dataIndex: 'sex',
+    sorter: {
+      multiple: 1,
+    },
     render: (sex: string) => (
       <Tag
         color={
@@ -111,6 +120,9 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Race',
     dataIndex: 'race',
     defaultHidden: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (race) => race || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -118,6 +130,9 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Ethnicity',
     dataIndex: 'ethnicity',
     defaultHidden: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (ethnicity) => ethnicity || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -125,6 +140,9 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Family Unit',
     dataIndex: 'family_type',
     defaultHidden: true,
+    sorter: {
+      multiple: 1,
+    },
     render: (family_type) => family_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -225,6 +243,9 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'nb_biospecimens',
     title: 'Biospecimens',
+    sorter: {
+      multiple: 1,
+    },
     render: (record: ITableParticipantEntity) => {
       const nb_biospecimens = record.nb_biospecimens || 0;
 
@@ -255,6 +276,9 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'nb_files',
     title: 'Files',
+    sorter: {
+      multiple: 1,
+    },
     render: (record: ITableParticipantEntity) => {
       return record.nb_files ? (
         <Link
@@ -282,7 +306,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
+const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const { filters }: { filters: ISyntheticSqon } = useFilters();
@@ -328,10 +352,18 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       initialColumnState={userInfo?.config.data_exploration?.tables?.participants?.columns}
       enableRowSelection={true}
       initialSelectedKey={selectedKeys}
+      showSorterTooltip={false}
+      onChange={({ current, pageSize }, _, sorter) =>
+        setQueryConfig({
+          pageIndex: current!,
+          size: pageSize!,
+          sort: formatQuerySortList(sorter),
+        })
+      }
       headerConfig={{
         itemCount: {
-          pageIndex: pagingConfig.index,
-          pageSize: pagingConfig.size,
+          pageIndex: queryConfig.pageIndex,
+          pageSize: queryConfig.size,
           total: results.total,
         },
         enableColumnSort: true,
@@ -368,18 +400,10 @@ const ParticipantsTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPr
       bordered
       size="small"
       pagination={{
-        current: pagingConfig.index,
-        pageSize: pagingConfig.size,
+        current: queryConfig.pageIndex,
+        pageSize: queryConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
-        onChange: (page, size) => {
-          if (pagingConfig.index !== page || pagingConfig.size !== size) {
-            setPagingConfig({
-              index: page,
-              size: size!,
-            });
-          }
-        },
       }}
       dataSource={results.data.map((i) => ({ ...i, key: i.participant_id }))}
       dictionary={getProTableDictionary()}

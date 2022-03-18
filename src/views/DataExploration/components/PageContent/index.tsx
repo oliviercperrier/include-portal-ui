@@ -9,7 +9,7 @@ import {
   DATA_EPLORATION_FILTER_TAG,
   DATA_EXPLORATION_REPO_CACHE_KEY,
   DEFAULT_PAGE_INDEX,
-  DEFAULT_PAGING_CONFIG,
+  DEFAULT_QUERY_CONFIG,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
 import intl from 'react-intl-universal';
@@ -47,6 +47,7 @@ import { useHistory } from 'react-router-dom';
 import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 
 import styles from './index.module.scss';
+import { isEmpty } from 'lodash';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -71,33 +72,40 @@ const PageContent = ({
   const { filters }: { filters: ISyntheticSqon } = useFilters();
   const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
-  const [pagingConfigParticipant, setPagingConfigParticipant] = useState(DEFAULT_PAGING_CONFIG);
-  const [pagingConfigBiospecimen, setPagingConfigBiospecimen] = useState(DEFAULT_PAGING_CONFIG);
-  const [pagingConfigFile, setPagingConfigFile] = useState(DEFAULT_PAGING_CONFIG);
+
+  const [participantQueryConfig, setParticipantQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
+  const [biospecimenQueryConfig, setBiospecimenQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
+  const [datafilesQueryConfig, setDatafilesQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
 
   const participantResolvedSqon = mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters));
   const biospecimenResolvedSqon = mapFilterForBiospecimen(resolveSyntheticSqon(allSqons, filters));
   const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, filters));
 
   const participantResults = useParticipants({
-    first: pagingConfigParticipant.size,
-    offset: pagingConfigParticipant.size * (pagingConfigParticipant.index - 1),
+    first: participantQueryConfig.size,
+    offset: participantQueryConfig.size * (participantQueryConfig.pageIndex - 1),
     sqon: participantResolvedSqon,
-    sort: [{ field: 'participant_id', order: 'asc' }],
+    sort: isEmpty(participantQueryConfig.sort)
+      ? [{ field: 'participant_id', order: 'asc' }]
+      : participantQueryConfig.sort,
   });
 
   const fileResults = useDataFiles({
-    first: pagingConfigFile.size,
-    offset: pagingConfigFile.size * (pagingConfigFile.index - 1),
+    first: datafilesQueryConfig.size,
+    offset: datafilesQueryConfig.size * (datafilesQueryConfig.pageIndex - 1),
     sqon: fileResolvedSqon,
-    sort: [{ field: 'file_id', order: 'asc' }],
+    sort: isEmpty(datafilesQueryConfig.sort)
+      ? [{ field: 'file_id', order: 'asc' }]
+      : datafilesQueryConfig.sort,
   });
 
   const biospecimenResults = useBiospecimen({
-    first: pagingConfigBiospecimen.size,
-    offset: pagingConfigBiospecimen.size * (pagingConfigBiospecimen.index - 1),
+    first: biospecimenQueryConfig.size,
+    offset: biospecimenQueryConfig.size * (biospecimenQueryConfig.pageIndex - 1),
     sqon: biospecimenResolvedSqon,
-    sort: [{ field: 'sample_id', order: 'asc' }],
+    sort: isEmpty(biospecimenQueryConfig.sort)
+      ? [{ field: 'sample_id', order: 'asc' }]
+      : biospecimenQueryConfig.sort,
   });
 
   useEffect(() => {
@@ -106,17 +114,17 @@ const PageContent = ({
   }, []);
 
   useEffect(() => {
-    setPagingConfigParticipant({
-      ...pagingConfigParticipant,
-      index: DEFAULT_PAGE_INDEX,
+    setParticipantQueryConfig({
+      ...participantQueryConfig,
+      pageIndex: DEFAULT_PAGE_INDEX,
     });
-    setPagingConfigBiospecimen({
-      ...pagingConfigParticipant,
-      index: DEFAULT_PAGE_INDEX,
+    setBiospecimenQueryConfig({
+      ...biospecimenQueryConfig,
+      pageIndex: DEFAULT_PAGE_INDEX,
     });
-    setPagingConfigFile({
-      ...pagingConfigParticipant,
-      index: DEFAULT_PAGE_INDEX,
+    setDatafilesQueryConfig({
+      ...datafilesQueryConfig,
+      pageIndex: DEFAULT_PAGE_INDEX,
     });
     // eslint-disable-next-line
   }, [JSON.stringify(filters)]);
@@ -200,8 +208,8 @@ const PageContent = ({
         >
           <ParticipantsTab
             results={participantResults}
-            setPagingConfig={setPagingConfigParticipant}
-            pagingConfig={pagingConfigParticipant}
+            setQueryConfig={setParticipantQueryConfig}
+            queryConfig={participantQueryConfig}
             sqon={participantResolvedSqon}
           />
         </Tabs.TabPane>
@@ -218,8 +226,8 @@ const PageContent = ({
         >
           <BiospecimensTab
             results={biospecimenResults}
-            setPagingConfig={setPagingConfigBiospecimen}
-            pagingConfig={pagingConfigBiospecimen}
+            setQueryConfig={setBiospecimenQueryConfig}
+            queryConfig={biospecimenQueryConfig}
             sqon={biospecimenResolvedSqon}
           />
         </Tabs.TabPane>
@@ -236,8 +244,8 @@ const PageContent = ({
         >
           <DataFilesTabs
             results={fileResults}
-            setPagingConfig={setPagingConfigFile}
-            pagingConfig={pagingConfigFile}
+            setQueryConfig={setDatafilesQueryConfig}
+            queryConfig={datafilesQueryConfig}
             sqon={fileResolvedSqon}
           />
         </Tabs.TabPane>

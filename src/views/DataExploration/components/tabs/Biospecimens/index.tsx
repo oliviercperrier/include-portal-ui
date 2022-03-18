@@ -1,7 +1,7 @@
 import { IQueryResults } from 'graphql/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
-import { TPagingConfig, TPagingConfigCb } from 'views/DataExploration/utils/types';
+import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
 import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
 import { IParticipantEntity } from 'graphql/participants/models';
 import ProTable from '@ferlab/ui/core/components/ProTable';
@@ -22,13 +22,14 @@ import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { formatQuerySortList } from 'views/DataExploration/utils/helper';
 
 import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
-  setPagingConfig: TPagingConfigCb;
-  pagingConfig: TPagingConfig;
+  setQueryConfig: TQueryConfigCb;
+  queryConfig: IQueryConfig;
   sqon?: ISqonGroupFilter;
 }
 
@@ -37,6 +38,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'collection_sample_id',
     title: 'Collection ID',
     dataIndex: 'collection_sample_id',
+    sorter: {multiple: 1},
     render: (collection_sample_id: string) =>
       collection_sample_id ? (
         <Link
@@ -65,42 +67,49 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'sample_id',
     title: 'Sample ID',
     dataIndex: 'sample_id',
+    sorter: {multiple: 1},
     render: (sample_id: string) => sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'sample_type',
     title: 'Sample Type',
     dataIndex: 'sample_type',
+    sorter: {multiple: 1},
     render: (sample_type: string) => sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'parent_sample_id',
     title: 'Parent Sample ID',
     dataIndex: 'parent_sample_id',
+    sorter: {multiple: 1},
     render: (parent_sample_id) => parent_sample_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'parent_sample_type',
     title: 'Parent Sample Type',
     dataIndex: 'parent_sample_type',
+    sorter: {multiple: 1},
     render: (parent_sample_type) => parent_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'participant.participant_id',
     title: 'Participant ID',
     dataIndex: 'participant',
+    sorter: {multiple: 1},
     render: (participant: IParticipantEntity) => participant.participant_id,
   },
   {
     key: 'study_id',
     title: 'Study',
     dataIndex: 'study_id',
+    sorter: {multiple: 1},
     render: (study_id) => study_id || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
     key: 'collection_sample_type',
     title: 'Collected Sample Type',
     dataIndex: 'collection_sample_type',
+    sorter: {multiple: 1},
     render: (collection_sample_type) => collection_sample_type || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
@@ -136,6 +145,7 @@ const defaultColumns: ProColumnType<any>[] = [
     key: 'status',
     title: 'Sample Availability',
     dataIndex: 'status',
+    sorter: {multiple: 1},
     render: (status: string) => (status.toLowerCase() === 'available' ? 'Yes' : 'No'),
   },
   {
@@ -153,6 +163,7 @@ const defaultColumns: ProColumnType<any>[] = [
   {
     key: 'nb_files',
     title: 'Files',
+    sorter: {multiple: 1},
     render: (record: IBiospecimenEntity) => {
       const nbFiles = record?.nb_files || 0;
       return nbFiles ? (
@@ -181,7 +192,7 @@ const defaultColumns: ProColumnType<any>[] = [
   },
 ];
 
-const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnProps) => {
+const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const { filters }: { filters: ISyntheticSqon } = useFilters();
@@ -208,11 +219,19 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.biospecimens?.columns}
       enableRowSelection={true}
+      showSorterTooltip={false}
       initialSelectedKey={selectedKeys}
+      onChange={({ current, pageSize }, _, sorter) =>
+        setQueryConfig({
+          pageIndex: current!,
+          size: pageSize!,
+          sort: formatQuerySortList(sorter),
+        })
+      }
       headerConfig={{
         itemCount: {
-          pageIndex: pagingConfig.index,
-          pageSize: pagingConfig.size,
+          pageIndex: queryConfig.pageIndex,
+          pageSize: queryConfig.size,
           total: results.total,
         },
         enableColumnSort: true,
@@ -262,18 +281,10 @@ const BioSpecimenTab = ({ results, setPagingConfig, pagingConfig, sqon }: OwnPro
       bordered
       size="small"
       pagination={{
-        current: pagingConfig.index,
-        pageSize: pagingConfig.size,
+        current: queryConfig.pageIndex,
+        pageSize: queryConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
-        onChange: (page, size) => {
-          if (pagingConfig.index !== page || pagingConfig.size !== size) {
-            setPagingConfig({
-              index: page,
-              size: size!,
-            });
-          }
-        },
       }}
       dataSource={results.data.map((i) => ({ ...i, key: i.id }))}
       dictionary={getProTableDictionary()}

@@ -163,7 +163,7 @@ const DataExploration = (props: OwnProps) => {
 
   return (
     <div className={styles.dataExplorationLayout}>
-      <SidebarMenu className={styles.sideMenu} menuItems={menuItems} defaultSelectedKey={tab} />
+      <SidebarMenu className={styles.sideMenu} menuItems={menuItems} /* defaultSelectedKey={tab} */ />
       <ScrollContent className={styles.scrollContent}>
         <PageContent
           fileMapping={fileMappingResults}

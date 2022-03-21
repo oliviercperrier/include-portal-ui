@@ -1,4 +1,4 @@
-@import "colors";
+@import 'colors';
 
 .hpoTransfer {
   div[class$='transfer-list'] {
@@ -12,6 +12,14 @@
       display: inherit;
     }
 
+    div[class$='-list-body-customize-wrapper'] {
+      height: 100%;
+
+      div[class^='ant-spin-'] {
+        height: 100%;
+      }
+    }
+
     &:last-child {
       div[class$='-list-body-search-wrapper'] {
         display: none;
@@ -19,9 +27,9 @@
     }
   }
 
-  li[class$="-list-content-item"] {
+  li[class$='-list-content-item'] {
     span[class$='-list-content-item-text'] {
-      flex: unset
+      flex: unset;
     }
 
     div[class$='-list-content-item-remove'] {
@@ -60,6 +68,6 @@
 
 .hpoTreeModalWrapper {
   .hpoTreeModal {
-    width: 80% !important;
+    width: 90% !important;
   }
 }

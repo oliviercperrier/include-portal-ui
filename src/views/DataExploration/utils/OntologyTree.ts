@@ -46,7 +46,10 @@ export const getFlattenTree = (root: TreeNode) => {
       flatten(item.children);
     });
   };
-  flatten([root]);
+
+  if (root) {
+    flatten([root]);
+  }
   return transferDataSource;
 };
 

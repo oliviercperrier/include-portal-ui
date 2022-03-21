@@ -1,3 +1,4 @@
+import { TSortableItems } from '@ferlab/ui/core/layout/SortableGrid/SortableItem';
 import { SorterResult } from 'antd/lib/table/interface';
 import { TSortDirection } from 'graphql/queries';
 import { isArray } from 'lodash';
@@ -22,12 +23,12 @@ export const formatQuerySortList = (sorter: SorterResult<any> | SorterResult<any
     (sorter) => !!sorter.column || !!sorter.order,
   );
 
-  const r =  sorters.map((sorter) => ({
+  const r = sorters.map((sorter) => ({
     field: (sorter.field?.toString()! || sorter.columnKey?.toString()!).replaceAll('__', '.'),
     order: getOrderFromAntdValue(sorter.order!),
   }));
 
-  return r
+  return r;
 };
 
 // Format is like: Sleep apnea (MONDO:0010535)
@@ -40,3 +41,10 @@ export const extractPhenotypeTitleAndCode = (phenotype: string) =>
 // Format is like: Feces (NCIT:C13234)
 export const extractNcitTissueTitleAndCode = (ncit: string) =>
   titleAndCodeExtractor(ncit, '(NCIT:');
+
+export const orderCardIfNeeded = (cards: TSortableItems[], userCardConfig: string[] | undefined) =>
+  userCardConfig
+    ? cards.sort((a, b) => {
+        return userCardConfig.indexOf(a.id) > userCardConfig.indexOf(b.id) ? 1 : -1;
+      })
+    : cards;

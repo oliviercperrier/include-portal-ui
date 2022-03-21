@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
 import { orderCardIfNeeded } from 'views/DataExploration/utils/helper';
+import StudiesGraphCard from './StudiesGraphCard';
 
 import styles from './index.module.scss';
 
@@ -35,25 +36,36 @@ const SummaryTab = () => {
             id: '1',
             lg: 24,
             xl: 12,
+            className: styles.summaryGrapCardCol,
             component: <DemographicsGraphCard id="1" className={styles.summaryGrapCard} />,
           },
           {
             id: '2',
             lg: 24,
             xl: 12,
+            className: styles.summaryGrapCardCol,
             component: <SunburstGraphCard id="2" className={styles.summaryGrapCard} />,
           },
           {
             id: '3',
             lg: 24,
             xl: 12,
+            className: styles.summaryGrapCardCol,
             component: <DataCategoryGraphCard id="3" className={styles.summaryGrapCard} />,
           },
           {
             id: '4',
             lg: 24,
             xl: 12,
+            className: styles.summaryGrapCardCol,
             component: <DataTypeGraphCard id="4" className={styles.summaryGrapCard} />,
+          },
+          {
+            id: '5',
+            lg: 24,
+            xl: 12,
+            className: styles.summaryGrapCardCol,
+            component: <StudiesGraphCard id="5" className={styles.summaryGrapCard} />,
           },
         ],
         userInfo?.config.data_exploration?.summary?.cards?.order,

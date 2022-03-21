@@ -1,9 +1,7 @@
-import { Typography } from 'antd';
 import { RawAggregation } from 'graphql/models';
 import { toChartData } from 'utils/charts';
 import BarChart from 'components/uiKit/charts/Bar';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
-import intl from 'react-intl-universal';
 import { truncateString } from 'utils/string';
 import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
@@ -11,11 +9,15 @@ import { useHistory } from 'react-router-dom';
 import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
 import { isEmpty } from 'lodash';
 import Empty from '@ferlab/ui/core/components/Empty';
+import { DATA_CATEGORY_QUERY } from 'graphql/summary/queries';
+import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
+import useApi from 'hooks/useApi';
+import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
+import CardHeader from 'views/Dashboard/components/CardHeader';
 
 interface OwnProps {
+  id: string;
   className?: string;
-  loading?: boolean;
-  data: RawAggregation;
 }
 
 const transformDataCategory = (results: RawAggregation) =>
@@ -31,8 +33,6 @@ const graphSetting: any = {
   layout: 'horizontal',
 };
 
-const { Title } = Typography;
-
 const addToQuery = (field: string, key: string, history: any) =>
   addFieldToActiveQuery({
     field,
@@ -41,9 +41,20 @@ const addToQuery = (field: string, key: string, history: any) =>
     index: INDEXES.FILE,
   });
 
-const DataCategoryGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
+const DataCategoryGraphCard = ({ id, className = '' }: OwnProps) => {
   const history = useHistory();
-  const dataCategoryResults = transformDataCategory(data);
+  const { sqon } = useParticipantResolvedSqon();
+  const { loading, result } = useApi<any>({
+    config: {
+      url: ARRANGER_API_PROJECT_URL,
+      method: 'POST',
+      data: {
+        query: DATA_CATEGORY_QUERY,
+        variables: { sqon },
+      },
+    },
+  });
+  const dataCategoryResults = transformDataCategory(result);
 
   return (
     <GridCard
@@ -51,18 +62,13 @@ const DataCategoryGraphCard = ({ className = '', loading = false, data }: OwnPro
       theme="shade"
       loading={loading}
       loadingType="spinner"
-      title={
-        <Title level={4}>
-          {intl.get('screen.dataExploration.tabs.summary.availableData.dataCategoryTitle')}
-        </Title>
-      }
+      title={<CardHeader id={id} title="Participants by Data Category" withHandle />}
       content={
         <>
           {isEmpty(dataCategoryResults) ? (
-            <Empty imageType='grid'/>
+            <Empty imageType="grid" />
           ) : (
             <BarChart
-              title="Participants by Data Category"
               data={dataCategoryResults}
               axisLeft={{
                 legend: 'Data Category',

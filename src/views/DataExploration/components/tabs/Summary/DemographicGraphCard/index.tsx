@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { RawAggregation } from 'graphql/models';
 import PieChart from 'components/uiKit/charts/Pie';
 import { toChartData } from 'utils/charts';
@@ -8,12 +8,18 @@ import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
-import {ArrangerValues} from "@ferlab/ui/core/data/arranger/formatting";
+import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
+import CardHeader from 'views/Dashboard/components/CardHeader';
+import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
+import { DEMOGRAPHIC_QUERY } from 'graphql/summary/queries';
+import useApi from 'hooks/useApi';
+import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
+
+import styles from "./index.module.scss";
 
 interface OwnProps {
+  id: string;
   className?: string;
-  loading?: boolean;
-  data: RawAggregation;
 }
 
 const getSexColor = (sex: SEX) => {
@@ -41,7 +47,7 @@ const transformData = (results: RawAggregation) => {
 };
 
 const graphSetting = {
-  height: 135,
+  height: 175,
   margin: {
     top: 12,
     bottom: 12,
@@ -49,8 +55,6 @@ const graphSetting = {
     right: 12,
   },
 };
-
-const { Title } = Typography;
 
 const addToQuery = (field: string, key: string, history: any) =>
   addFieldToActiveQuery({
@@ -60,42 +64,56 @@ const addToQuery = (field: string, key: string, history: any) =>
     index: INDEXES.PARTICIPANT,
   });
 
-const DemographicsGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
+const DemographicsGraphCard = ({ id, className = '' }: OwnProps) => {
   const history = useHistory();
+  const { sqon } = useParticipantResolvedSqon();
+  const { loading, result } = useApi<any>({
+    config: {
+      url: ARRANGER_API_PROJECT_URL,
+      method: 'POST',
+      data: {
+        query: DEMOGRAPHIC_QUERY,
+        variables: { sqon },
+      },
+    },
+  });
 
   return (
     <GridCard
       wrapperClassName={className}
+      contentClassName={styles.graphContentWrapper}
       theme="shade"
       loading={loading}
       loadingType="spinner"
       title={
-        <Title level={4}>
-          {intl.get('screen.dataExploration.tabs.summary.demographic.cardTitle')}
-        </Title>
+        <CardHeader
+          id={id}
+          title={intl.get('screen.dataExploration.tabs.summary.demographic.cardTitle')}
+          withHandle
+        />
       }
       content={
-        <Row gutter={[12, 24]}>
-          <Col span={12}>
+        <Row gutter={[12, 24]} className={styles.graphRowWrapper}>
+          <Col sm={12} md={12} lg={8}>
             <PieChart
               title={intl.get('screen.dataExploration.tabs.summary.demographic.sexTitle')}
-              data={data ? transformData(data).sex : []}
+              data={result ? transformData(result).sex : []}
               onClick={(datum) => addToQuery('sex', datum.id as string, history)}
               {...graphSetting}
             />
           </Col>
-          <Col span={12}>
+          <Col sm={12} md={12} lg={8}>
             <PieChart
               title={intl.get('screen.dataExploration.tabs.summary.demographic.raceTitle')}
-              data={data ? transformData(data).race : []}
+              data={result ? transformData(result).race : []}
               onClick={(datum) => addToQuery('race', datum.id as string, history)}
               {...graphSetting}
             />
           </Col>
-          <Col span={12}>
+          <Col sm={12} md={12} lg={8}>
             <PieChart
               title={intl.get('screen.dataExploration.tabs.summary.demographic.ethnicityTitle')}
-              data={data ? transformData(data).ethnicity : []}
+              data={result ? transformData(result).ethnicity : []}
               onClick={(datum) => addToQuery('ethnicity', datum.id as string, history)}
               {...graphSetting}
             />

@@ -45,9 +45,9 @@ import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
 import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { isEmpty } from 'lodash';
 
 import styles from './index.module.scss';
-import { isEmpty } from 'lodash';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -193,7 +193,7 @@ const PageContent = ({
           }
           key={TAB_IDS.SUMMARY}
         >
-          <SummaryTab sqon={participantResolvedSqon} />
+          <SummaryTab />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab={

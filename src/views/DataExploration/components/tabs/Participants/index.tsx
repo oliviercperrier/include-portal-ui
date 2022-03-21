@@ -80,7 +80,11 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'down_syndrome_status',
-    title: <Tooltip title={'Down Syndrome Status'}>DS Status</Tooltip>,
+    title: (
+      <Tooltip className="tooltip" title={'Down Syndrome Status'}>
+        DS Status
+      </Tooltip>
+    ),
     sorter: {
       multiple: 1,
     },

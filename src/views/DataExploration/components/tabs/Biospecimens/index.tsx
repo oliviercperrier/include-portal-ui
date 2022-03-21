@@ -114,7 +114,11 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'age_at_biospecimen_collection',
-    title: <Tooltip title="Age at Biospecimen Collection">Age (days)</Tooltip>,
+    title: (
+      <Tooltip className="tooltip" title="Age at Biospecimen Collection">
+        Age (days)
+      </Tooltip>
+    ),
     displayTitle: 'Age (days)',
     dataIndex: 'age_at_biospecimen_collection',
     render: (age_at_biospecimen_collection) =>

@@ -14,6 +14,7 @@ import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import useApi from 'hooks/useApi';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 import CardHeader from 'views/Dashboard/components/CardHeader';
+import intl from 'react-intl-universal';
 
 interface OwnProps {
   id: string;
@@ -62,7 +63,13 @@ const DataCategoryGraphCard = ({ id, className = '' }: OwnProps) => {
       theme="shade"
       loading={loading}
       loadingType="spinner"
-      title={<CardHeader id={id} title="Participants by Data Category" withHandle />}
+      title={
+        <CardHeader
+          id={id}
+          title={intl.get('screen.dataExploration.tabs.summary.availableData.dataCategoryTitle')}
+          withHandle
+        />
+      }
       content={
         <>
           {isEmpty(dataCategoryResults) ? (

@@ -369,8 +369,9 @@ const fr = {
             ethnicityTitle: 'Ethnicity',
           },
           availableData: {
-            dataCategoryTitle: 'Data Category',
-            dataTypeTitle: 'Data Type',
+            dataCategoryTitle: 'Participants by Data Category',
+            dataTypeTitle: "Participants by Data Type",
+            studiesTitle: "Participants by Study"
           },
           observedPhenotype: {
             cardTitle: 'Observed Phenotypes (HPO)',

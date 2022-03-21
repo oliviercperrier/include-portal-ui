@@ -7,6 +7,7 @@ import styles from './index.module.scss';
 type OwnProps = Omit<PieSvgProps<DefaultRawDatum>, 'width' | 'height'> & {
   title?: string;
   height: number;
+  width?: number | string;
 };
 
 const { Title } = Typography;
@@ -14,6 +15,7 @@ const { Title } = Typography;
 const PieChart = ({
   title,
   height,
+  width = 'unset',
   enableArcLabels = false,
   enableArcLinkLabels = false,
   ...rest
@@ -21,7 +23,7 @@ const PieChart = ({
   return (
     <div className={styles.pieChartWrapper}>
       {title && <Title level={5}>{title}</Title>}
-      <div className={styles.chartWrapper} style={{ height: height }}>
+      <div className={styles.chartWrapper} style={{ height: height, width: width }}>
         <ResponsivePie
           {...rest}
           colors={rest.colors || getCommonColors()}

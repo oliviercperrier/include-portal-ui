@@ -2,7 +2,6 @@ import { Col, Row } from 'antd';
 import { RawAggregation } from 'graphql/models';
 import PieChart from 'components/uiKit/charts/Pie';
 import { toChartData } from 'utils/charts';
-import { SEX } from 'common/constants';
 import intl from 'react-intl-universal';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
@@ -15,23 +14,12 @@ import { DEMOGRAPHIC_QUERY } from 'graphql/summary/queries';
 import useApi from 'hooks/useApi';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
 interface OwnProps {
   id: string;
   className?: string;
 }
-
-const getSexColor = (sex: SEX) => {
-  switch (sex.toLowerCase()) {
-    case SEX.FEMALE:
-      return '#ffadd2';
-    case SEX.MALE:
-      return '#adc6ff';
-    default:
-      return 'gray';
-  }
-};
 
 const transformData = (results: RawAggregation) => {
   const aggs = results?.data?.participant?.aggregations;
@@ -39,7 +27,6 @@ const transformData = (results: RawAggregation) => {
   return {
     race: (aggs?.race.buckets || []).map(toChartData),
     sex: (aggs?.sex.buckets || []).map((sex) => ({
-      color: getSexColor(sex.key as SEX),
       ...toChartData(sex),
     })),
     ethnicity: (aggs?.ethnicity.buckets || []).map(toChartData),

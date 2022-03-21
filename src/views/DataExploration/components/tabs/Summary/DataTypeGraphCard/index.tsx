@@ -14,6 +14,7 @@ import useApi from 'hooks/useApi';
 import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { DATATYPE_QUERY } from 'graphql/summary/queries';
 import CardHeader from 'views/Dashboard/components/CardHeader';
+import intl from 'react-intl-universal';
 
 interface OwnProps {
   id: string;
@@ -65,7 +66,7 @@ const DataTypeGraphCard = ({ id, className = '' }: OwnProps) => {
       title={
         <CardHeader
           id={id}
-          title="Participants by Data Type"
+          title={intl.get('screen.dataExploration.tabs.summary.availableData.dataTypeTitle')}
           withHandle
         />
       }

@@ -40,6 +40,21 @@ export const DATATYPE_QUERY = `
   }
 `;
 
+export const PARTICIPANT_BY_STUDIES_QUERY = `
+  query($sqon: JSON) {
+    participant {
+      aggregations(filters: $sqon, aggregations_filter_themselves: true, include_missing: false) {
+        study_id {
+          buckets {
+            key
+            doc_count
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const DATA_CATEGORY_QUERY = `
   query($sqon: JSON) {
     participant {

@@ -35,16 +35,27 @@ export type Aggs = TermAggs | RangeAggs;
 const isTermAgg = (obj: TermAggs) => !!obj.buckets;
 const isRangeAgg = (obj: RangeAggs) => !!obj.stats;
 
-export const generateFilters = (
-  aggregations: Aggregations,
-  extendedMapping: ExtendedMappingResults,
-  className: string = '',
-  filtersOpen: boolean = true,
-  filterFooter: boolean = false,
-  showSearchInput: boolean = false,
-  useFilterSelector: boolean = false,
-  history: any,
-) =>
+export const generateFilters = ({
+  aggregations,
+  extendedMapping,
+  className = '',
+  filtersOpen = true,
+  filterFooter = false,
+  showSearchInput = false,
+  useFilterSelector = false,
+  history,
+  index
+}: {
+  aggregations: Aggregations;
+  extendedMapping: ExtendedMappingResults;
+  className: string;
+  filtersOpen: boolean;
+  filterFooter: boolean;
+  showSearchInput: boolean;
+  useFilterSelector: boolean;
+  history: any;
+  index?: string;
+}) =>
   Object.keys(aggregations || []).map((key) => {
     const found = (extendedMapping?.data || []).find(
       (f: ExtendedMapping) => f.field === underscoreToDot(key),
@@ -64,7 +75,7 @@ export const generateFilters = (
           filterGroup={filterGroup}
           filters={filters}
           onChange={(fg, f) => {
-            updateFilters(history, fg, f);
+            updateFilters(history, fg, f, index);
           }}
           searchInputVisible={showSearchInput}
           selectedFilters={selectedFilters}

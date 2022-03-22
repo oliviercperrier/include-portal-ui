@@ -32,7 +32,7 @@ import SummaryTab from 'views/DataExploration/components/tabs/Summary';
 import BiospecimensTab from 'views/DataExploration/components/tabs/Biospecimens';
 import DataFilesTabs from 'views/DataExploration/components/tabs/DataFiles';
 import ParticipantsTab from 'views/DataExploration/components/tabs/Participants';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   createSavedFilter,
@@ -46,6 +46,10 @@ import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
 import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { isEmpty } from 'lodash';
+import GenericFilters from 'components/uiKit/FilterList/GenericFilters';
+import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
+import { AGGREGATION_QUERY } from 'graphql/queries';
+import { INDEXES } from 'graphql/constants';
 
 import styles from './index.module.scss';
 
@@ -72,6 +76,9 @@ const PageContent = ({
   const { filters }: { filters: ISyntheticSqon } = useFilters();
   const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
   const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+  const [selectedFilterContent, setSelectedFilterContent] = useState<ReactElement | undefined>(
+    undefined,
+  );
 
   const [participantQueryConfig, setParticipantQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
   const [biospecimenQueryConfig, setBiospecimenQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
@@ -138,6 +145,17 @@ const PageContent = ({
         )?.displayName || key;
   };
 
+  const getMappingByIndex = (index: INDEXES) => {
+    switch (index) {
+      case INDEXES.FILE:
+        return fileMapping;
+      case INDEXES.BIOSPECIMEN:
+        return biospecimenMapping;
+      default:
+        return participantMapping;
+    }
+  };
+
   const handleOnUpdateFilter = (filter: ISavedFilter) => dispatch(updateSavedFilter(filter));
   const handleOnSaveFilter = (filter: ISavedFilter) =>
     dispatch(createSavedFilter(addTagToFilter(filter)));
@@ -164,6 +182,26 @@ const PageContent = ({
           onSaveFilter: handleOnSaveFilter,
           onDeleteFilter: handleOnDeleteFilter,
           onSetAsFavorite: handleOnSaveAsFavorite,
+        }}
+        facetFilterConfig={{
+          enable: true,
+          onFacetClick: (filter) => {
+            console.log(filter)
+
+            const index = filter.content.index!;
+            const field = filter.content.field;
+            const mapping = getMappingByIndex(index as INDEXES);
+
+            setSelectedFilterContent(
+              <GenericFilters
+                index={filter.content.index!}
+                query={AGGREGATION_QUERY(index, [dotToUnderscore(field)], mapping)}
+                cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
+                extendedMappingResults={mapping}
+              />,
+            );
+          },
+          selectedFilterContent: selectedFilterContent,
         }}
         history={history}
         enableCombine

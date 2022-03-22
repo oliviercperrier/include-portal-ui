@@ -15,6 +15,7 @@ export const FETCH_STUDIES_QUERY = gql`
             external_id
             participant_count
             family_count
+            biospecimen_count
             attribution
             data_category
             website

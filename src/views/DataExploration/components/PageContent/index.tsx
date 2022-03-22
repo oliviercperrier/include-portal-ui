@@ -186,8 +186,6 @@ const PageContent = ({
         facetFilterConfig={{
           enable: true,
           onFacetClick: (filter) => {
-            console.log(filter)
-
             const index = filter.content.index!;
             const field = filter.content.field;
             const mapping = getMappingByIndex(index as INDEXES);

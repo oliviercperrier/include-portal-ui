@@ -2,7 +2,11 @@ import { IQueryResults } from 'graphql/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
-import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import {
+  DEFAULT_PAGE_SIZE,
+  SCROLL_WRAPPER_ID,
+  TAB_IDS,
+} from 'views/DataExploration/utils/constant';
 import { IParticipantEntity } from 'graphql/participants/models';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -23,6 +27,7 @@ import { STATIC_ROUTES } from 'utils/routes';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { formatQuerySortList } from 'views/DataExploration/utils/helper';
+import { scrollToTop } from 'utils/helper';
 
 import styles from './index.module.scss';
 
@@ -289,6 +294,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
         pageSize: queryConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
+        onChange: () => scrollToTop(SCROLL_WRAPPER_ID),
       }}
       dataSource={results.data.map((i) => ({ ...i, key: i.id }))}
       dictionary={getProTableDictionary()}

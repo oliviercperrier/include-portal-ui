@@ -5,6 +5,7 @@ import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types'
 import {
   CAVATICA_FILE_BATCH_SIZE,
   DEFAULT_PAGE_SIZE,
+  SCROLL_WRAPPER_ID,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
@@ -36,6 +37,7 @@ import { STATIC_ROUTES } from 'utils/routes';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { userHasAccessToFile } from 'utils/dataFiles';
 import { formatQuerySortList } from 'views/DataExploration/utils/helper';
+import { scrollToTop } from 'utils/helper';
 
 import styles from './index.module.scss';
 
@@ -374,6 +376,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
           pageSize: queryConfig.size,
           defaultPageSize: DEFAULT_PAGE_SIZE,
           total: results.total,
+          onChange: () => scrollToTop(SCROLL_WRAPPER_ID),
         }}
         dataSource={results.data.map((i) => ({ ...i, key: i.file_id }))}
         dictionary={getProTableDictionary()}

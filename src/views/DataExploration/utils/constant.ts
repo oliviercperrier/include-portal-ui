@@ -26,6 +26,8 @@ export const DEFAULT_QUERY_CONFIG: IQueryConfig = {
   sort: [],
 };
 
+export const SCROLL_WRAPPER_ID = 'data-explore-scroll-wrapper';
+
 export enum TAB_IDS {
   SUMMARY = 'summary',
   PARTICIPANTS = 'participants',

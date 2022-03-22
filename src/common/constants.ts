@@ -12,3 +12,5 @@ export enum SEX {
 export const REDIRECT_URI_KEY = 'redirect_path';
 
 export const TABLE_EMPTY_PLACE_HOLDER = '-';
+
+export const MAIN_SCROLL_WRAPPER_ID = 'main-scroll-wrapper'

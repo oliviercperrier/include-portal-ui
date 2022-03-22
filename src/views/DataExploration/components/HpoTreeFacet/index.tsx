@@ -16,20 +16,14 @@ import {
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
-import {
-  getQueryBuilderCache,
-  updateQueryFilters,
-  useFilters,
-} from '@ferlab/ui/core/data/filters/utils';
-import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
-import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
+import { updateQueryFilters } from '@ferlab/ui/core/data/filters/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
-import { mapFilterForParticipant } from '../../utils/mapper';
 import Empty from '@ferlab/ui/core/components/Empty';
+import { isEmpty } from 'lodash';
+import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 
 import styles from './index.module.scss';
-import { isEmpty } from 'lodash';
 
 const FIELD_NAME = 'observed_phenotype.name';
 const AUTO_EXPAND_TREE = 1;
@@ -44,8 +38,7 @@ const HpoTreeFacet = () => {
   const [rootNode, setRootNode] = useState<TreeNode>();
   const [treeData, setTreeData] = useState<TreeNode>();
   const history = useHistory();
-  const { filters } = useFilters();
-  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+  const { sqon } = useParticipantResolvedSqon();
 
   const getInitialExpandedKeys = (data: TreeNode[], collectedKeys: string[] = [], counter = 0) => {
     if (counter < AUTO_EXPAND_TREE) {
@@ -97,14 +90,7 @@ const HpoTreeFacet = () => {
 
   useEffect(() => {
     if (visible) {
-      const participantResolvedSqon = mapFilterForParticipant(
-        resolveSyntheticSqon(allSqons, filters),
-      );
-
-      const filteredParticipantSqon = removeValueFilterFromSqon(
-        FIELD_NAME,
-        participantResolvedSqon,
-      );
+      const filteredParticipantSqon = removeValueFilterFromSqon(FIELD_NAME, sqon);
 
       setIsLoading(true);
       phenotypeStore.current.fetch('observed_phenotype', filteredParticipantSqon).then(() => {
@@ -117,7 +103,7 @@ const HpoTreeFacet = () => {
           setRootNode(rootNode);
 
           const flatTree = getFlattenTree(rootNode!);
-          const selectedValues = findSqonValueByField(FIELD_NAME, participantResolvedSqon);
+          const selectedValues = findSqonValueByField(FIELD_NAME, sqon);
 
           if (selectedValues) {
             const targetKeys = flatTree
@@ -149,7 +135,7 @@ const HpoTreeFacet = () => {
         className={styles.hpoTreeModal}
         title={intl.get('screen.dataExploration.hpoTree.modal.title')}
         okText={intl.get('screen.dataExploration.hpoTree.modal.okText')}
-        okButtonProps={{disabled: isEmpty(targetKeys) && isEmpty(treeData)}}
+        okButtonProps={{ disabled: isEmpty(targetKeys) && isEmpty(treeData) }}
         onOk={() => {
           const flatTreeData = getFlattenTree(treeData!);
           const results = flatTreeData

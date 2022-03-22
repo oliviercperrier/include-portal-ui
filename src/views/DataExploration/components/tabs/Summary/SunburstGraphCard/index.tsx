@@ -1,6 +1,5 @@
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
-import { Col, Row, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import {
   generateNavTreeFormKey,
@@ -15,25 +14,27 @@ import { getCommonColors } from 'common/charts';
 import TreePanel from 'views/DataExploration/components/tabs/Summary/SunburstGraphCard/TreePanel';
 import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper';
 import Empty from '@ferlab/ui/core/components/Empty';
+import CardHeader from 'views/Dashboard/components/CardHeader';
+import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 
 import styles from './index.module.scss';
 
 interface OwnProps {
+  id: string;
   className?: string;
-  sqon: ISyntheticSqon;
 }
 
-const { Title } = Typography;
 const width = 335;
 const height = 335;
 
-const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
+const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [treeData, setTreeData] = useState<TreeNode[]>();
   const [currentNode, setCurrentNode] = useState<TreeNode>();
   const phenotypeStore = useRef(new PhenotypeStore());
   const sunburstRef = useRef<SVGSVGElement>(null);
   const updateSunburst = useRef<(key: any) => void>();
+  const { sqon } = useParticipantResolvedSqon();
 
   useEffect(() => {
     setIsLoading(true);
@@ -82,15 +83,17 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
       loadingType="spinner"
       loading={isLoading}
       title={
-        <Title level={4}>
-          {intl.get('screen.dataExploration.tabs.summary.observedPhenotype.cardTitle')}
-        </Title>
+        <CardHeader
+          id={id}
+          title={intl.get('screen.dataExploration.tabs.summary.observedPhenotype.cardTitle')}
+          withHandle
+        />
       }
       content={
         !isLoading &&
         (treeData && treeData?.length > 0 ? (
-          <Row gutter={[24, 24]} id="tooltip-wrapper">
-            <Col lg={8} xl={10}>
+          <Row gutter={[24, 24]} id="tooltip-wrapper" className={styles.sunburstRowWrapper}>
+            <Col lg={12} xl={10}>
               <svg
                 className={styles.sunburstChart}
                 width={width}
@@ -99,7 +102,7 @@ const SunburstGraphCard = ({ className = '', sqon }: OwnProps) => {
                 ref={sunburstRef}
               />
             </Col>
-            <Col lg={16} xl={14}>
+            <Col lg={12} xl={14}>
               <TreePanel
                 currentNode={currentNode!}
                 treeData={treeData!}

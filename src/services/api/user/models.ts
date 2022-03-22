@@ -1,4 +1,4 @@
-import { TColumnStates } from "@ferlab/ui/core/components/ProTable/types";
+import { TColumnStates } from '@ferlab/ui/core/components/ProTable/types';
 
 export type TUser = {
   id: string;
@@ -35,16 +35,18 @@ export type TUserConfig = {
       biospecimens?: TUserTableConfig;
       datafiles?: TUserTableConfig;
     };
+    summary?: {
+      cards?: {
+        order?: string[];
+      };
+    };
   };
   dashboard?: {
     cards?: {
-      order?: string[]
-    }
-  }
+      order?: string[];
+    };
+  };
 };
 
-export type TUserInsert = Omit<
-  TUser,
-  "id" | "keycloak_id" | "creation_date" | "update_date"
->;
+export type TUserInsert = Omit<TUser, 'id' | 'keycloak_id' | 'creation_date' | 'update_date'>;
 export type TUserUpdate = Partial<TUserInsert>;

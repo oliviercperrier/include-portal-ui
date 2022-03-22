@@ -7,7 +7,11 @@ import ApolloProvider from 'provider/ApolloProvider';
 import { Spin } from 'antd';
 import { ExtendedMappingResults } from 'graphql/models';
 import FilterList, { TCustomFilterMapper } from 'components/uiKit/FilterList';
-import { DATA_EXPLORATION_REPO_CACHE_KEY, TAB_IDS } from 'views/DataExploration/utils/constant';
+import {
+  DATA_EXPLORATION_REPO_CACHE_KEY,
+  SCROLL_WRAPPER_ID,
+  TAB_IDS,
+} from 'views/DataExploration/utils/constant';
 import { FilterInfo } from 'components/uiKit/FilterList/types';
 import { GraphqlBackend } from 'provider/types';
 import useGetExtendedMappings from 'hooks/graphql/useGetExtendedMappings';
@@ -163,8 +167,11 @@ const DataExploration = (props: OwnProps) => {
 
   return (
     <div className={styles.dataExplorationLayout}>
-      <SidebarMenu className={styles.sideMenu} menuItems={menuItems} /* defaultSelectedKey={tab} */ />
-      <ScrollContent className={styles.scrollContent}>
+      <SidebarMenu
+        className={styles.sideMenu}
+        menuItems={menuItems} /* defaultSelectedKey={tab} */
+      />
+      <ScrollContent id={SCROLL_WRAPPER_ID} className={styles.scrollContent}>
         <PageContent
           fileMapping={fileMappingResults}
           biospecimenMapping={biospecimenMappingResults}

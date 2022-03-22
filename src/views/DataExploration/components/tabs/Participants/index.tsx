@@ -5,7 +5,11 @@ import {
   IParticipantDiagnosis,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
-import { DEFAULT_PAGE_SIZE, TAB_IDS } from 'views/DataExploration/utils/constant';
+import {
+  DEFAULT_PAGE_SIZE,
+  SCROLL_WRAPPER_ID,
+  TAB_IDS,
+} from 'views/DataExploration/utils/constant';
 import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ExpandableCell from 'components/uiKit/table/ExpendableCell';
@@ -35,6 +39,7 @@ import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
+import { scrollToTop } from 'utils/helper';
 
 import styles from './index.module.scss';
 
@@ -80,7 +85,11 @@ const defaultColumns: ProColumnType<any>[] = [
   },
   {
     key: 'down_syndrome_status',
-    title: <Tooltip title={'Down Syndrome Status'}>DS Status</Tooltip>,
+    title: (
+      <Tooltip className="tooltip" title={'Down Syndrome Status'}>
+        DS Status
+      </Tooltip>
+    ),
     sorter: {
       multiple: 1,
     },
@@ -404,6 +413,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
         pageSize: queryConfig.size,
         defaultPageSize: DEFAULT_PAGE_SIZE,
         total: results.total,
+        onChange: () => scrollToTop(SCROLL_WRAPPER_ID),
       }}
       dataSource={results.data.map((i) => ({ ...i, key: i.participant_id }))}
       dictionary={getProTableDictionary()}

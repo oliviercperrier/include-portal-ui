@@ -1,10 +1,12 @@
 import TableHeader from '@ferlab/ui/core/components/ProTable/Header';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Space, Typography, List } from 'antd';
+import { MAIN_SCROLL_WRAPPER_ID } from 'common/constants';
 import Gravatar from 'components/uiKit/Gravatar';
 import { useEffect, useState } from 'react';
 import { UserApi } from 'services/api/user';
 import { TUser } from 'services/api/user/models';
+import { scrollToTop } from 'utils/helper';
 
 import styles from './index.module.scss';
 
@@ -61,6 +63,7 @@ const CommunityPage = () => {
                 pageSize: DEFAULT_PAGE_SIZE,
                 onChange: (page) => {
                   setCurrentPage(page - 1);
+                  scrollToTop(MAIN_SCROLL_WRAPPER_ID);
                 },
                 size: 'small',
                 hideOnSinglePage: true,

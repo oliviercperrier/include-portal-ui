@@ -1,9 +1,7 @@
-import { Typography } from 'antd';
 import { RawAggregation } from 'graphql/models';
 import { toChartData } from 'utils/charts';
 import BarChart from 'components/uiKit/charts/Bar';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
-import intl from 'react-intl-universal';
 import { truncateString } from 'utils/string';
 import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
@@ -11,11 +9,16 @@ import { useHistory } from 'react-router-dom';
 import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
 import { isEmpty } from 'lodash';
 import Empty from '@ferlab/ui/core/components/Empty';
+import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
+import useApi from 'hooks/useApi';
+import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
+import { DATATYPE_QUERY } from 'graphql/summary/queries';
+import CardHeader from 'views/Dashboard/components/CardHeader';
+import intl from 'react-intl-universal';
 
 interface OwnProps {
+  id: string;
   className?: string;
-  loading?: boolean;
-  data: RawAggregation;
 }
 
 const transformDataType = (results: RawAggregation) =>
@@ -31,8 +34,6 @@ const graphSetting: any = {
   layout: 'horizontal',
 };
 
-const { Title } = Typography;
-
 const addToQuery = (field: string, key: string, history: any) =>
   addFieldToActiveQuery({
     field,
@@ -41,9 +42,20 @@ const addToQuery = (field: string, key: string, history: any) =>
     index: INDEXES.FILE,
   });
 
-const DataTypeGraphCard = ({ className = '', loading = false, data }: OwnProps) => {
+const DataTypeGraphCard = ({ id, className = '' }: OwnProps) => {
   const history = useHistory();
-  const dataTypeResults = transformDataType(data);
+  const { sqon } = useParticipantResolvedSqon();
+  const { loading, result } = useApi<any>({
+    config: {
+      url: ARRANGER_API_PROJECT_URL,
+      method: 'POST',
+      data: {
+        query: DATATYPE_QUERY,
+        variables: { sqon },
+      },
+    },
+  });
+  const dataTypeResults = transformDataType(result);
 
   return (
     <GridCard
@@ -52,9 +64,11 @@ const DataTypeGraphCard = ({ className = '', loading = false, data }: OwnProps) 
       loading={loading}
       loadingType="spinner"
       title={
-        <Title level={4}>
-          {intl.get('screen.dataExploration.tabs.summary.availableData.dataTypeTitle')}
-        </Title>
+        <CardHeader
+          id={id}
+          title={intl.get('screen.dataExploration.tabs.summary.availableData.dataTypeTitle')}
+          withHandle
+        />
       }
       content={
         <>
@@ -62,7 +76,6 @@ const DataTypeGraphCard = ({ className = '', loading = false, data }: OwnProps) 
             <Empty imageType="grid" />
           ) : (
             <BarChart
-              title="Participants by Data Type"
               data={dataTypeResults}
               axisLeft={{
                 legend: 'Data Types',

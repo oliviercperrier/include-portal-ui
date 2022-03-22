@@ -30,7 +30,6 @@ enum FORM_FIELDS {
 
 enum EXTERNAL_ID_OPTIONS {
   ERA = 'era',
-  NIH = 'nih',
   NO = 'no',
 }
 
@@ -48,6 +47,9 @@ const RegistrationStep = () => {
     required: intl.get('global.forms.errors.requiredField'),
     types: {
       email: intl.get('global.forms.errors.enterValidEmail'),
+    },
+    string: {
+      min: `\${min} ${intl.get('global.forms.errors.minCharacters')}`,
     },
   };
 
@@ -101,10 +103,6 @@ const RegistrationStep = () => {
                 values[FORM_FIELDS.EXTERNAL_ID] === EXTERNAL_ID_OPTIONS.ERA
                   ? values[FORM_FIELDS.USER_ID]
                   : undefined,
-              nih_ned_id:
-                values[FORM_FIELDS.EXTERNAL_ID] === EXTERNAL_ID_OPTIONS.NIH
-                  ? values[FORM_FIELDS.USER_ID]
-                  : undefined,
               external_individual_fullname: values[FORM_FIELDS.FULL_NAME],
               external_individual_email: values[FORM_FIELDS.EXTERNAL_EMAIL],
               roles: removeOtherKey(values[FORM_FIELDS.ROLES], values[FORM_FIELDS.OTHER_ROLE]),
@@ -127,7 +125,7 @@ const RegistrationStep = () => {
         {intl.get('screen.join.registration.sections.identification')}
       </Title>
       <Text className={styles.allFieldRequiredNotice}>
-        All fields are required unless specified as optional.
+        {intl.get('screen.join.registration.notice')}
       </Text>
       <Form.Item
         name={FORM_FIELDS.FIRST_NAME}
@@ -157,11 +155,8 @@ const RegistrationStep = () => {
             <Radio value={EXTERNAL_ID_OPTIONS.ERA}>
               {intl.get('screen.join.registration.userIdOptions.1')}
             </Radio>
-            <Radio value={EXTERNAL_ID_OPTIONS.NIH}>
-              {intl.get('screen.join.registration.userIdOptions.2')}
-            </Radio>
             <Radio value={EXTERNAL_ID_OPTIONS.NO}>
-              {intl.get('screen.join.registration.userIdOptions.3')}
+              {intl.get('screen.join.registration.userIdOptions.2')}
             </Radio>
           </Space>
         </Radio.Group>
@@ -173,9 +168,7 @@ const RegistrationStep = () => {
         }
       >
         {({ getFieldValue }) =>
-          [EXTERNAL_ID_OPTIONS.ERA, EXTERNAL_ID_OPTIONS.NIH].includes(
-            getFieldValue(FORM_FIELDS.EXTERNAL_ID),
-          ) ? (
+          getFieldValue(FORM_FIELDS.EXTERNAL_ID) === EXTERNAL_ID_OPTIONS.ERA ? (
             <Form.Item
               className={cx(styles.withCustomHelp, styles.dynamicField)}
               label={intl.get('screen.join.registration.labels.enterUserId')}
@@ -207,6 +200,7 @@ const RegistrationStep = () => {
                 label={intl.get('screen.join.registration.labels.fullName')}
                 rules={[{ required: true }]}
                 className={styles.fullNameField}
+                required={false}
               >
                 <Input placeholder={intl.get('screen.join.placeHolders.firstLast')} />
               </Form.Item>
@@ -214,6 +208,7 @@ const RegistrationStep = () => {
                 name={FORM_FIELDS.EXTERNAL_EMAIL}
                 label={intl.get('screen.join.registration.labels.email')}
                 rules={[{ required: true, type: 'email' }]}
+                required={false}
               >
                 <Input
                   placeholder="name@domain.com"
@@ -369,7 +364,7 @@ const RegistrationStep = () => {
                     label={intl.get('screen.join.registration.labels.commercialUseReason')}
                     name={FORM_FIELDS.COMMERCIAL_USE_REASON}
                     required={false}
-                    rules={[{ required: true }]}
+                    rules={[{ required: true, min: 70 }]}
                   >
                     <Input />
                   </Form.Item>

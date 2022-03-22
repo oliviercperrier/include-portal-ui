@@ -5,6 +5,7 @@ import intl from 'react-intl-universal';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { RegexExtractPhenotype } from 'views/DataExploration/utils/PhenotypeStore';
+import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 
 import styles from './index.module.scss';
 
@@ -57,6 +58,7 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
             value: [currentNode?.title!],
             history,
             index: INDEXES.PARTICIPANT,
+            merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES
           });
         }}
       >

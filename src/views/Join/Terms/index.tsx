@@ -66,6 +66,7 @@ const TermsStep = () => {
               <li>{intl.get('screen.join.disclaimers.terms.bullets.3')}</li>
               <li>{intl.get('screen.join.disclaimers.terms.bullets.4')}</li>
               <li>{intl.get('screen.join.disclaimers.terms.bullets.5')}</li>
+              <li>{intl.get('screen.join.disclaimers.terms.bullets.6')}</li>
             </ul>
           </ScrollContent>
         }

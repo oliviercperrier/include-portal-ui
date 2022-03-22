@@ -1,5 +1,3 @@
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
-import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { Layout, Spin } from 'antd';
 import { DocumentNode } from '@apollo/client';
 import { generateFilters } from 'graphql/utils/Filters';
@@ -12,17 +10,15 @@ import styles from './Filters.module.scss';
 type OwnProps = {
   index: string;
   query: DocumentNode;
-  cacheKey: string;
+  sqon: any;
   extendedMappingResults: ExtendedMappingResults;
 };
 
-const GenericFilters = ({ index, query, cacheKey, extendedMappingResults }: OwnProps) => {
+const GenericFilters = ({ index, query, sqon, extendedMappingResults }: OwnProps) => {
   const history = useHistory();
-  const { filters } = useFilters();
-  const allSqons = getQueryBuilderCache(cacheKey).state;
   const results = useGetAggregations(
     {
-      sqon: resolveSyntheticSqon(allSqons, filters),
+      sqon,
     },
     query,
     index,
@@ -33,10 +29,7 @@ const GenericFilters = ({ index, query, cacheKey, extendedMappingResults }: OwnP
       <Layout className={`${styles.filterWrapper} ${styles.genericFilterWrapper}`}>
         {generateFilters({
           aggregations: results?.aggregations,
-          extendedMapping: {
-            loading: extendedMappingResults.loading,
-            data: extendedMappingResults.data,
-          },
+          extendedMapping: extendedMappingResults,
           className: styles.customFilterContainer,
           filtersOpen: true,
           filterFooter: true,

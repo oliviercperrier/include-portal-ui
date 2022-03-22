@@ -145,14 +145,23 @@ const PageContent = ({
         )?.displayName || key;
   };
 
-  const getMappingByIndex = (index: INDEXES) => {
+  const getSqonAndMappingByIndex = (index: INDEXES) => {
     switch (index) {
       case INDEXES.FILE:
-        return fileMapping;
+        return {
+          sqon: fileResolvedSqon,
+          mapping: fileMapping,
+        };
       case INDEXES.BIOSPECIMEN:
-        return biospecimenMapping;
+        return {
+          sqon: biospecimenResolvedSqon,
+          mapping: biospecimenMapping,
+        };
       default:
-        return participantMapping;
+        return {
+          sqon: participantResolvedSqon,
+          mapping: participantMapping,
+        };
     }
   };
 
@@ -188,13 +197,13 @@ const PageContent = ({
           onFacetClick: (filter) => {
             const index = filter.content.index!;
             const field = filter.content.field;
-            const mapping = getMappingByIndex(index as INDEXES);
+            const { sqon, mapping } = getSqonAndMappingByIndex(index as INDEXES);
 
             setSelectedFilterContent(
               <GenericFilters
-                index={filter.content.index!}
+                index={index}
                 query={AGGREGATION_QUERY(index, [dotToUnderscore(field)], mapping)}
-                cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
+                sqon={sqon}
                 extendedMappingResults={mapping}
               />,
             );

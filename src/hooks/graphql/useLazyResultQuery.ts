@@ -12,12 +12,12 @@ const useLazyResultQuery = <TData = any, TVariables = OperationVariables>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: QueryHookOptions<TData, TVariables>
 ): IBaseQueryResults<TData> => {
-  const { data, error, loading, previousData } = useQuery<TData, TVariables>(
+  const { data, error, loading } = useQuery<TData, TVariables>(
     query,
     options
   );
 
-  const result = data ? data : previousData;
+  const result = data;
   return { error, loading, result };
 };
 

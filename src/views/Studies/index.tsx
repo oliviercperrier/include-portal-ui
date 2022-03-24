@@ -99,26 +99,26 @@ const columns: ProColumnType<any>[] = [
       const biospecimenCount = record.biospecimen_count;
 
       return biospecimenCount ? (
-          <Link
-              to={{
-                pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-                search: createQueryParams({
-                  filters: generateFilters({
-                    newFilters: [
-                      generateValueFilter({
-                        field: 'study_id',
-                        value: [record.study_id],
-                        index: INDEXES.PARTICIPANT,
-                      }),
-                    ],
+        <Link
+          to={{
+            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+            search: createQueryParams({
+              filters: generateFilters({
+                newFilters: [
+                  generateValueFilter({
+                    field: 'study_id',
+                    value: [record.study_id],
+                    index: INDEXES.PARTICIPANT,
                   }),
-                }),
-              }}
-          >
-            {biospecimenCount}
-          </Link>
+                ],
+              }),
+            }),
+          }}
+        >
+          {biospecimenCount}
+        </Link>
       ) : (
-          biospecimenCount || 0
+        biospecimenCount || 0
       );
     },
   },
@@ -163,7 +163,14 @@ const columns: ProColumnType<any>[] = [
 ];
 
 const Studies = () => {
-  const { loading, data, total } = useStudies();
+  const { loading, data, total } = useStudies({
+    sort: [
+      {
+        field: 'study_id',
+        order: 'desc',
+      },
+    ],
+  });
 
   return (
     <Space direction="vertical" size={16} className={styles.studiesWrapper}>

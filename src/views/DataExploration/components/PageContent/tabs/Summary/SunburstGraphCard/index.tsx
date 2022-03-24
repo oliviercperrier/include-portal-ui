@@ -11,7 +11,7 @@ import { lightTreeNodeConstructor, TreeNode } from 'views/DataExploration/utils/
 import intl from 'react-intl-universal';
 import SunburstD3 from './utils/sunburst-d3';
 import { getCommonColors } from 'common/charts';
-import TreePanel from 'views/DataExploration/components/tabs/Summary/SunburstGraphCard/TreePanel';
+import TreePanel from 'views/DataExploration/components/PageContent/tabs/Summary/SunburstGraphCard/TreePanel';
 import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardHeader from 'views/Dashboard/components/CardHeader';

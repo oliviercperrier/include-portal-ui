@@ -15,7 +15,7 @@ export const useSavedFilter = (tag?: string) => {
   if (tag) {
     const filters = savedFilterState.savedFilters.filter((savedFilter) => savedFilter.tag === tag);
     const selectedFilterById = filters.find(({ id }) => id === params.get('filterId'));
-    const favoriteFilter = filters.find(({ favorite }) => !!favorite);
+    const favoriteFilter = filters.find(({ favorite }) => !!favorite); // Disabled right now
 
     // HACK ask olivier
     if (selectedFilterById || (favoriteFilter && tag === DATA_EPLORATION_FILTER_TAG)) {

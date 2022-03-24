@@ -66,14 +66,6 @@ const fr = {
   },
   // API
   api: {
-    riff: {
-      error: {
-        title: 'Error',
-        fetchUser: 'Unable to fetch Riff user',
-        saveFilter: 'Unable to save filter',
-        deleteFilter: 'Unable to delete filter',
-      },
-    },
     savedFilter: {
       error: {
         title: 'Error',

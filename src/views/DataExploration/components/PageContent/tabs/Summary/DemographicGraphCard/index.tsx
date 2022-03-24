@@ -13,6 +13,8 @@ import { ARRANGER_API_PROJECT_URL } from 'provider/ApolloProvider';
 import { DEMOGRAPHIC_QUERY } from 'graphql/summary/queries';
 import useApi from 'hooks/useApi';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
+import { BasicTooltip } from '@nivo/tooltip';
+import { capitalize } from 'lodash';
 
 import styles from './index.module.scss';
 
@@ -24,11 +26,15 @@ interface OwnProps {
 const transformData = (results: RawAggregation) => {
   const aggs = results?.data?.participant?.aggregations;
 
+  console.log({
+    race: (aggs?.race.buckets || []).map(toChartData),
+    sex: (aggs?.sex.buckets || []).map(toChartData),
+    ethnicity: (aggs?.ethnicity.buckets || []).map(toChartData),
+  });
+
   return {
     race: (aggs?.race.buckets || []).map(toChartData),
-    sex: (aggs?.sex.buckets || []).map((sex) => ({
-      ...toChartData(sex),
-    })),
+    sex: (aggs?.sex.buckets || []).map(toChartData),
     ethnicity: (aggs?.ethnicity.buckets || []).map(toChartData),
   };
 };
@@ -86,6 +92,13 @@ const DemographicsGraphCard = ({ id, className = '' }: OwnProps) => {
               title={intl.get('screen.dataExploration.tabs.summary.demographic.sexTitle')}
               data={result ? transformData(result).sex : []}
               onClick={(datum) => addToQuery('sex', datum.id as string, history)}
+              tooltip={(value) => (
+                <BasicTooltip
+                  id={capitalize(value.datum.id.toString())}
+                  value={value.datum.value}
+                  color={value.datum.color}
+                />
+              )}
               {...graphSetting}
             />
           </Col>

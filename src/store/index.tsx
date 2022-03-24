@@ -10,7 +10,6 @@ import createFilter from 'redux-persist-transform-filter';
 import GlobalReducer from 'store/global';
 import UserReducer from 'store/user';
 import FenceConnectionReducer from 'store/fenceConnection';
-import RiffReducer from 'store/riff';
 import ReportReducer from 'store/report';
 import SavedFilterReducer from 'store/savedFilter';
 import FenceCavaticaReducer from 'store/fenceCavatica';
@@ -31,7 +30,6 @@ const rootReducer = combineReducers<RootState>({
   report: ReportReducer,
   fenceConnection: FenceConnectionReducer,
   fenceStudies: FenceStudiesReducer,
-  riff: RiffReducer,
   savedFilter: SavedFilterReducer,
   fenceCavatica: FenceCavaticaReducer,
 });

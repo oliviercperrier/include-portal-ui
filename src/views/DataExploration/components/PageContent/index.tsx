@@ -28,10 +28,10 @@ import { isEmptySqon, resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/uti
 import { useParticipants } from 'graphql/participants/actions';
 import { useDataFiles } from 'graphql/files/actions';
 import { useBiospecimen } from 'graphql/biospecimens/actions';
-import SummaryTab from 'views/DataExploration/components/tabs/Summary';
-import BiospecimensTab from 'views/DataExploration/components/tabs/Biospecimens';
-import DataFilesTabs from 'views/DataExploration/components/tabs/DataFiles';
-import ParticipantsTab from 'views/DataExploration/components/tabs/Participants';
+import SummaryTab from 'views/DataExploration/components/PageContent/tabs/Summary';
+import BiospecimensTab from 'views/DataExploration/components/PageContent/tabs/Biospecimens';
+import DataFilesTabs from 'views/DataExploration/components/PageContent/tabs/DataFiles';
+import ParticipantsTab from 'views/DataExploration/components/PageContent/tabs/Participants';
 import { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {

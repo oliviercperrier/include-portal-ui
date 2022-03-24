@@ -1,26 +1,26 @@
 import { Layout, Spin } from 'antd';
-import { DocumentNode } from '@apollo/client';
 import { generateFilters } from 'graphql/utils/Filters';
 import useGetAggregations from 'hooks/graphql/useGetAggregations';
 import { ExtendedMappingResults } from 'graphql/models';
 import { useHistory } from 'react-router-dom';
+import { AGGREGATION_QUERY } from 'graphql/queries';
 
 import styles from './Filters.module.scss';
 
 type OwnProps = {
   index: string;
-  query: DocumentNode;
+  field: string;
   sqon: any;
   extendedMappingResults: ExtendedMappingResults;
 };
 
-const GenericFilters = ({ index, query, sqon, extendedMappingResults }: OwnProps) => {
+const GenericFilters = ({ index, field, sqon, extendedMappingResults }: OwnProps) => {
   const history = useHistory();
   const results = useGetAggregations(
     {
       sqon,
     },
-    query,
+    AGGREGATION_QUERY(index, [field], extendedMappingResults),
     index,
   );
 

@@ -48,7 +48,6 @@ import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { isEmpty } from 'lodash';
 import GenericFilters from 'components/uiKit/FilterList/GenericFilters';
 import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
-import { AGGREGATION_QUERY } from 'graphql/queries';
 import { INDEXES } from 'graphql/constants';
 
 import styles from './index.module.scss';
@@ -198,11 +197,10 @@ const PageContent = ({
             const index = filter.content.index!;
             const field = filter.content.field;
             const { sqon, mapping } = getSqonAndMappingByIndex(index as INDEXES);
-
             setSelectedFilterContent(
               <GenericFilters
                 index={index}
-                query={AGGREGATION_QUERY(index, [dotToUnderscore(field)], mapping)}
+                field={dotToUnderscore(field)}
                 sqon={sqon}
                 extendedMappingResults={mapping}
               />,

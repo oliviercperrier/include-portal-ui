@@ -539,6 +539,9 @@ const fr = {
     // File
     files: filesFacets,
     ...filesFacets,
+
+    //Other
+    collection_sample_type: "Collection Sample Type"
   },
 };
 

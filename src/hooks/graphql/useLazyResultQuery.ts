@@ -4,20 +4,17 @@ import {
   QueryHookOptions,
   TypedDocumentNode,
   useQuery,
-} from "@apollo/client";
-import { IBaseQueryResults } from "hooks/graphql/type";
-import { useEffect, useState } from "react";
+} from '@apollo/client';
+import { IBaseQueryResults } from 'hooks/graphql/type';
+import { useEffect, useState } from 'react';
 
 const useLazyResultQuery = <TData = any, TVariables = OperationVariables>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
-  options?: QueryHookOptions<TData, TVariables>
+  options?: QueryHookOptions<TData, TVariables>,
 ): IBaseQueryResults<TData> => {
-  const { data, error, loading } = useQuery<TData, TVariables>(
-    query,
-    options
-  );
+  const { data, error, loading, previousData } = useQuery<TData, TVariables>(query, options);
 
-  const result = data;
+  const result = data ?? previousData;
   return { error, loading, result };
 };
 
@@ -27,12 +24,9 @@ const useLazyResultQuery = <TData = any, TVariables = OperationVariables>(
  *
  * see example here: /views/screens/variant/Entity/index.tsx
  */
-export const useLazyResultQueryOnLoadOnly = <
-  TData = any,
-  TVariables = OperationVariables
->(
+export const useLazyResultQueryOnLoadOnly = <TData = any, TVariables = OperationVariables>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
-  options?: QueryHookOptions<TData, TVariables>
+  options?: QueryHookOptions<TData, TVariables>,
 ) => {
   const [customOptions, setCustomOptions] = useState<{
     skip?: boolean;
@@ -54,10 +48,7 @@ export const useLazyResultQueryOnLoadOnly = <
 
   return {
     loading,
-    result:
-      options?.skip || customOptions?.skip
-        ? customOptions.dataToReturn
-        : result,
+    result: options?.skip || customOptions?.skip ? customOptions.dataToReturn : result,
     error,
   };
 };

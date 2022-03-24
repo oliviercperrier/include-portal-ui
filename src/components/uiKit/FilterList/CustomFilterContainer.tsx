@@ -8,7 +8,7 @@ import { underscoreToDot } from '@ferlab/ui/core/data/arranger/formatting';
 import CustomFilterSelector from './CustomFilterSelector';
 import { getFiltersDictionary } from 'utils/translation';
 import { TCustomFilterMapper } from '.';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 type OwnProps = {
   classname: string;

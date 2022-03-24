@@ -25,13 +25,6 @@ interface OwnProps {
 
 const transformData = (results: RawAggregation) => {
   const aggs = results?.data?.participant?.aggregations;
-
-  console.log({
-    race: (aggs?.race.buckets || []).map(toChartData),
-    sex: (aggs?.sex.buckets || []).map(toChartData),
-    ethnicity: (aggs?.ethnicity.buckets || []).map(toChartData),
-  });
-
   return {
     race: (aggs?.race.buckets || []).map(toChartData),
     sex: (aggs?.sex.buckets || []).map(toChartData),

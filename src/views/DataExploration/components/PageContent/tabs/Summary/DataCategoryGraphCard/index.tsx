@@ -73,7 +73,7 @@ const DataCategoryGraphCard = ({ id, className = '' }: OwnProps) => {
       content={
         <>
           {isEmpty(dataCategoryResults) ? (
-            <Empty imageType="grid" />
+            <Empty imageType="grid" size="large" />
           ) : (
             <BarChart
               data={dataCategoryResults}

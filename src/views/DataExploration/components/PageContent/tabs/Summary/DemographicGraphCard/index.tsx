@@ -14,7 +14,8 @@ import { DEMOGRAPHIC_QUERY } from 'graphql/summary/queries';
 import useApi from 'hooks/useApi';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 import { BasicTooltip } from '@nivo/tooltip';
-import { capitalize } from 'lodash';
+import { capitalize, isEmpty } from 'lodash';
+import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
 
@@ -64,6 +65,10 @@ const DemographicsGraphCard = ({ id, className = '' }: OwnProps) => {
     },
   });
 
+  const sexData = result ? transformData(result).sex : [];
+  const raceData = result ? transformData(result).race : [];
+  const enthicityData = result ? transformData(result).ethnicity : [];
+
   return (
     <GridCard
       wrapperClassName={className}
@@ -81,35 +86,47 @@ const DemographicsGraphCard = ({ id, className = '' }: OwnProps) => {
       content={
         <Row gutter={[12, 24]} className={styles.graphRowWrapper}>
           <Col sm={12} md={12} lg={8}>
-            <PieChart
-              title={intl.get('screen.dataExploration.tabs.summary.demographic.sexTitle')}
-              data={result ? transformData(result).sex : []}
-              onClick={(datum) => addToQuery('sex', datum.id as string, history)}
-              tooltip={(value) => (
-                <BasicTooltip
-                  id={capitalize(value.datum.id.toString())}
-                  value={value.datum.value}
-                  color={value.datum.color}
-                />
-              )}
-              {...graphSetting}
-            />
+            {isEmpty(sexData) ? (
+              <Empty imageType="grid" />
+            ) : (
+              <PieChart
+                title={intl.get('screen.dataExploration.tabs.summary.demographic.sexTitle')}
+                data={sexData}
+                onClick={(datum) => addToQuery('sex', datum.id as string, history)}
+                tooltip={(value) => (
+                  <BasicTooltip
+                    id={capitalize(value.datum.id.toString())}
+                    value={value.datum.value}
+                    color={value.datum.color}
+                  />
+                )}
+                {...graphSetting}
+              />
+            )}
           </Col>
           <Col sm={12} md={12} lg={8}>
-            <PieChart
-              title={intl.get('screen.dataExploration.tabs.summary.demographic.raceTitle')}
-              data={result ? transformData(result).race : []}
-              onClick={(datum) => addToQuery('race', datum.id as string, history)}
-              {...graphSetting}
-            />
+            {isEmpty(raceData) ? (
+              <Empty imageType="grid" />
+            ) : (
+              <PieChart
+                title={intl.get('screen.dataExploration.tabs.summary.demographic.raceTitle')}
+                data={raceData}
+                onClick={(datum) => addToQuery('race', datum.id as string, history)}
+                {...graphSetting}
+              />
+            )}
           </Col>
           <Col sm={12} md={12} lg={8}>
-            <PieChart
-              title={intl.get('screen.dataExploration.tabs.summary.demographic.ethnicityTitle')}
-              data={result ? transformData(result).ethnicity : []}
-              onClick={(datum) => addToQuery('ethnicity', datum.id as string, history)}
-              {...graphSetting}
-            />
+            {isEmpty(enthicityData) ? (
+              <Empty imageType="grid" />
+            ) : (
+              <PieChart
+                title={intl.get('screen.dataExploration.tabs.summary.demographic.ethnicityTitle')}
+                data={enthicityData}
+                onClick={(datum) => addToQuery('ethnicity', datum.id as string, history)}
+                {...graphSetting}
+              />
+            )}
           </Col>
         </Row>
       }

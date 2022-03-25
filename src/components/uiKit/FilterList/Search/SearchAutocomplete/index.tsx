@@ -30,7 +30,7 @@ const { Text } = Typography;
 
 const SearchAutocomplete = ({
   className = '',
-  limit = 10,
+  limit = 5,
   onSearch,
   onSelect,
   onClose,
@@ -84,7 +84,7 @@ const SearchAutocomplete = ({
         options={newOptions}
         placeholder={placeHolder}
         value={itemSelected}
-        getPopupContainer={(trigger) => trigger.parentNode}
+        getPopupContainer={(trigger) => trigger.parentElement!}
         tagRender={({ onClose, value }) => (
           <Tag className={styles.tag} closable onClose={onClose} style={{ marginRight: 3 }}>
             {value}

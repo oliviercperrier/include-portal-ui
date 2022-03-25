@@ -23,6 +23,9 @@ import {
   mapFilterForParticipant,
 } from './utils/mapper';
 import HpoTreeFacet from './components/HpoTreeFacet';
+import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
+import FileSearch from './components/GlobalSearch/FileSearch';
+import BiospecimenSearch from './components/GlobalSearch/BiospecimenSearch';
 
 import styles from './index.module.scss';
 
@@ -40,12 +43,7 @@ export const filterGroups: {
   [type: string]: FilterInfo;
 } = {
   [FilterTypes.Participant]: {
-    //suggester: {
-    //  title: () => "Participant ID",
-    //  placeholder: () => "PT_0002D5K3",
-    //  suggestionType: SUGGESTION_TYPES.PARTICIPANT,
-    //  tooltipTitle: () => "Enter a participant ID",
-    //},
+    customSearches: [<ParticipantSearch />],
     groups: [
       {
         facets: [
@@ -62,12 +60,7 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Biospecimen]: {
-    //suggester: {
-    //  title: () => "Biospecimen ID",
-    //  placeholder: () => "DS02_Q1EE22NN",
-    //  suggestionType: SUGGESTION_TYPES.BIOSPECIMEN,
-    //  tooltipTitle: () => "Enter a biospecimen ID",
-    //},
+    customSearches: [<BiospecimenSearch />],
     groups: [
       {
         facets: [
@@ -82,12 +75,7 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Datafiles]: {
-    //suggester: {
-    //  title: () => "File ID",
-    //  placeholder: () => "GF_007F1GDE",
-    //  suggestionType: SUGGESTION_TYPES.FILE,
-    //  tooltipTitle: () => "Enter a file ID",
-    //},
+    customSearches: [<FileSearch />],
     groups: [
       {
         facets: [

@@ -69,3 +69,17 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
     }
   }
 `;
+
+export const PARTICIPANT_SEARCH_BY_ID_QUERY = gql`
+  query searchParticipantById($sqon: JSON) {
+    participant {
+      hits(filters: $sqon) {
+        edges {
+          node {
+            participant_id
+          }
+        }
+      }
+    }
+  }
+`;

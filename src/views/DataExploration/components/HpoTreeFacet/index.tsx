@@ -1,4 +1,4 @@
-import CollapseLikeFacet from 'components/uiKit/FilterList/CollapseLikeFacet.tsx';
+import CollapseLikeFacet from 'components/uiKit/FilterList/CollapsePlaceHolderFacet';
 import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree } from 'antd';
 import intl from 'react-intl-universal';
 import { useEffect, useRef, useState } from 'react';

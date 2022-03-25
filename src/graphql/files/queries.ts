@@ -38,3 +38,17 @@ export const SEARCH_FILES_QUERY = gql`
     }
   }
 `;
+
+export const FILE_SEARCH_BY_ID_QUERY = gql`
+  query searchFileById($sqon: JSON) {
+    file {
+      hits(filters: $sqon) {
+        edges {
+          node {
+            file_id
+          }
+        }
+      }
+    }
+  }
+`;

@@ -9,7 +9,7 @@ interface OwnProps {
   title: string;
 }
 
-const CollapseLikeFacet = ({ onClick = () => {}, title, className = '' }: OwnProps) => (
+const CollapsePlaceHolderFacet = ({ onClick = () => {}, title, className = '' }: OwnProps) => (
   <div onClick={onClick} className={cx(styles.collapseLikeFacet, className)}>
     <Collapse className={styles.collapse}>
       <Collapse.Panel collapsible="disabled" header={title} key="1"></Collapse.Panel>
@@ -17,4 +17,4 @@ const CollapseLikeFacet = ({ onClick = () => {}, title, className = '' }: OwnPro
   </div>
 );
 
-export default CollapseLikeFacet;
+export default CollapsePlaceHolderFacet;

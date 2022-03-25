@@ -47,6 +47,7 @@ const GlobalSearch = <T,>({
             ];
         updateQueryFilters(history, field, filter);
       }}
+      searchValueTransformer={(value) => value.toUpperCase()}
       index={index}
       emptyDescription={emptyDescription}
       placeHolder={placeholder}

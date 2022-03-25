@@ -1,3 +1,5 @@
+import { UserOutlined } from '@ant-design/icons';
+import SelectItem from 'components/uiKit/select/SelectItem';
 import { INDEXES } from 'graphql/constants';
 import { IParticipantEntity } from 'graphql/participants/models';
 import { PARTICIPANT_SEARCH_BY_ID_QUERY } from 'graphql/participants/queries';
@@ -18,7 +20,12 @@ const ParticipantSearch = () => {
       sqon={sqon}
       optionsFormatter={(options, matchRegex, search) => {
         return options.map((option) => ({
-          label: highlightSearchMatch(option.participant_id, matchRegex, search),
+          label: (
+            <SelectItem
+              icon={<UserOutlined />}
+              title={highlightSearchMatch(option.participant_id, matchRegex, search)}
+            />
+          ),
           value: option.participant_id,
         }));
       }}

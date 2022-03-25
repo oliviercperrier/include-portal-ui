@@ -1,8 +1,11 @@
+import { ExperimentOutlined } from '@ant-design/icons';
+import SelectItem from 'components/uiKit/select/SelectItem';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { BIOSPECIMEN_SEARCH_BY_ID_QUERY } from 'graphql/biospecimens/queries';
 import useBiospecimenResolvedSqon from 'graphql/biospecimens/useBiospecimenResolvedSqon';
 import { INDEXES } from 'graphql/constants';
 import GlobalSearch from '.';
+import { highlightSearchMatch } from './utils';
 
 const BiospecimenSearch = () => {
   const { sqon } = useBiospecimenResolvedSqon();
@@ -15,9 +18,14 @@ const BiospecimenSearch = () => {
       emptyDescription={'No biospecimens found'}
       query={BIOSPECIMEN_SEARCH_BY_ID_QUERY}
       sqon={sqon}
-      optionsFormatter={(options) =>
+      optionsFormatter={(options, matchRegex, search) =>
         options.map((option) => ({
-          label: option.sample_id,
+          label: (
+            <SelectItem
+              icon={<ExperimentOutlined />}
+              title={highlightSearchMatch(option.sample_id, matchRegex, search)}
+            />
+          ),
           value: option.sample_id,
         }))
       }

@@ -16,6 +16,7 @@ interface IGlobalSearch<T> {
   index: INDEXES;
   searchKey: string[];
   setCurrentOptions: (result: T[], search: string) => OptionsType[];
+  searchValueTransformer?: (search: string) => string;
   onSelect: (values: string[]) => void;
 }
 
@@ -29,6 +30,7 @@ const Search = <T,>({
   searchKey,
   selectedItems = [],
   setCurrentOptions,
+  searchValueTransformer,
   ...props
 }: TGlobalSearch<T>) => {
   const [search, setSearch] = useState('');
@@ -63,7 +65,9 @@ const Search = <T,>({
 
   return (
     <SearchAutocomplete
-      onSearch={(value) => setSearch(value)}
+      onSearch={(value) =>
+        setSearch(searchValueTransformer ? searchValueTransformer(value) : value)
+      }
       onSelect={(values) => {
         setSearch('');
         onSelect(values);

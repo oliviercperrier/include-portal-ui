@@ -31,8 +31,6 @@ const FilterList = ({
 }: OwnProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  console.log(filtersOpen)
-
   return (
     <>
       {!isEmpty(filterInfo.customSearches) && (

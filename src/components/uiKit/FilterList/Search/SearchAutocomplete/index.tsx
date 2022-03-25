@@ -79,6 +79,7 @@ const SearchAutocomplete = ({
             onClose();
           }
         }}
+        autoClearSearchValue={true}
         notFoundContent={<Empty size="mini" imageType="grid" description={emptyDescription} />}
         onSearch={(value) => debounceSearch(value)}
         options={newOptions}

@@ -14,7 +14,7 @@ const ParticipantSearch = () => {
     <GlobalSearch<IParticipantEntity>
       field="participant_id"
       index={INDEXES.PARTICIPANT}
-      placeholder={'Search'}
+      placeholder={'e.g. PT_WFB3TQP4'}
       emptyDescription={'No participants found'}
       query={PARTICIPANT_SEARCH_BY_ID_QUERY}
       sqon={sqon}

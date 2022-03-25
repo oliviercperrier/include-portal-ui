@@ -14,7 +14,7 @@ const FileSearch = () => {
     <GlobalSearch<IFileEntity>
       field="file_id"
       index={INDEXES.FILE}
-      placeholder={'Search'}
+      placeholder={'e.g. GF_001CSF26'}
       emptyDescription={'No files found'}
       query={FILE_SEARCH_BY_ID_QUERY}
       sqon={sqon}

@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
 import { orderCardIfNeeded } from 'views/DataExploration/utils/helper';
+import cx from 'classnames';
 
 import styles from './index.module.scss';
 
@@ -41,7 +42,12 @@ const SummaryTab = () => {
             id: '2',
             lg: 24,
             xl: 12,
-            component: <SunburstGraphCard id="2" className={styles.summaryGrapCard} />,
+            component: (
+              <SunburstGraphCard
+                id="2"
+                className={cx(styles.summaryGrapCard, styles.sunburstGraphCard)}
+              />
+            ),
           },
           {
             id: '3',

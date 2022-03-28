@@ -17,7 +17,6 @@ const SummaryTab = () => {
 
   return (
     <SortableGrid
-
       onReorder={(ids) =>
         dispatch(
           updateUserConfig({

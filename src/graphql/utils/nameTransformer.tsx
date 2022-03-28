@@ -1,4 +1,7 @@
-import { extractMondoTitleAndCode } from 'views/DataExploration/utils/helper';
+import {
+  extractMondoTitleAndCode,
+  extractPhenotypeTitleAndCode,
+} from 'views/DataExploration/utils/helper';
 import { Typography } from 'antd';
 
 const { Text } = Typography;
@@ -9,6 +12,14 @@ export const transformNameIfNeeded = (field: string, name: string) => {
     return (
       <Text>
         {mondo?.title} <Text type="secondary">(MONDO:{mondo?.code})</Text>
+      </Text>
+    );
+  }
+  if (field === 'observed_phenotype__name') {
+    const mondo = extractPhenotypeTitleAndCode(name);
+    return (
+      <Text>
+        {mondo?.title} <Text type="secondary">(HP:{mondo?.code})</Text>
       </Text>
     );
   }

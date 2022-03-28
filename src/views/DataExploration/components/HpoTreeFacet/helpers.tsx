@@ -74,6 +74,7 @@ export const searchInTree = (
 
   if (!treeNode.hidden) {
     hitTreeNodes.push(treeNode.key);
+
     if (result) {
       const [before, hit, after] = treeNode.title.split(regex);
       treeNode.name = (

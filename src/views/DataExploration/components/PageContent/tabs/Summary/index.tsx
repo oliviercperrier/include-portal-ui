@@ -17,6 +17,7 @@ const SummaryTab = () => {
 
   return (
     <SortableGrid
+
       onReorder={(ids) =>
         dispatch(
           updateUserConfig({
@@ -36,12 +37,14 @@ const SummaryTab = () => {
             id: '1',
             lg: 24,
             xl: 12,
+            className: styles.summaryGraphCardCol,
             component: <DemographicsGraphCard id="1" className={styles.summaryGrapCard} />,
           },
           {
             id: '2',
             lg: 24,
             xl: 12,
+            className: styles.summaryGraphCardCol,
             component: (
               <SunburstGraphCard
                 id="2"
@@ -53,12 +56,14 @@ const SummaryTab = () => {
             id: '3',
             lg: 24,
             xl: 12,
+            className: styles.summaryGraphCardCol,
             component: <DataCategoryGraphCard id="3" className={styles.summaryGrapCard} />,
           },
           {
             id: '4',
             lg: 24,
             xl: 12,
+            className: styles.summaryGraphCardCol,
             component: <DataTypeGraphCard id="4" className={styles.summaryGrapCard} />,
           },
         ],

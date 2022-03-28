@@ -1,5 +1,5 @@
 import CollapseLikeFacet from 'components/uiKit/FilterList/CollapsePlaceHolderFacet';
-import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree } from 'antd';
+import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree, Button, Dropdown, Menu } from 'antd';
 import intl from 'react-intl-universal';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -24,6 +24,7 @@ import { isEmpty } from 'lodash';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 
 import styles from './index.module.scss';
+import { TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 
 const FIELD_NAME = 'observed_phenotype.name';
 const AUTO_EXPAND_TREE = 1;
@@ -88,6 +89,35 @@ const HpoTreeFacet = () => {
     setTargetKeys(removeSameTerms([], hasChildAlreadyChecked ? [key] : [...checkedKeys, key]));
   };
 
+  const handleCancel = () => {
+    setVisible(false);
+    setTreeData(undefined);
+    setRootNode(undefined);
+  };
+
+  const handleOnApply = (operator: TermOperators = TermOperators.in) => {
+    const flatTreeData = getFlattenTree(treeData!);
+    const results = flatTreeData
+      .filter(({ key }) => targetKeys.includes(key))
+      .map(({ title }) => title);
+
+    if (!results || results.length === 0) {
+      setExpandedKeys(getInitialExpandedKeys([treeData!]));
+      updateQueryFilters(history, FIELD_NAME, []);
+    } else {
+      addFieldToActiveQuery({
+        field: FIELD_NAME,
+        value: results,
+        operator,
+        history,
+        index: INDEXES.PARTICIPANT,
+        merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+      });
+    }
+
+    setVisible(false);
+  };
+
   useEffect(() => {
     if (visible) {
       const filteredParticipantSqon = removeValueFilterFromSqon(FIELD_NAME, sqon);
@@ -135,6 +165,25 @@ const HpoTreeFacet = () => {
         className={styles.hpoTreeModal}
         title={intl.get('screen.dataExploration.hpoTree.modal.title')}
         okText={intl.get('screen.dataExploration.hpoTree.modal.okText')}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Dropdown.Button
+            type="primary"
+            overlay={
+              <Menu onClick={(e) => handleOnApply(e.key as TermOperators)}>
+                <Menu.Item key={TermOperators.in}>Any of</Menu.Item>
+                <Menu.Item key={TermOperators.all}>All of</Menu.Item>
+                <Menu.Item key={TermOperators['not-in']}>None of</Menu.Item>
+              </Menu>
+            }
+            style={{marginLeft: "8px"}}
+            onClick={() => handleOnApply(TermOperators.in)}
+          >
+            Apply
+          </Dropdown.Button>,
+        ]}
         okButtonProps={{ disabled: isEmpty(targetKeys) && isEmpty(treeData) }}
         onOk={() => {
           const flatTreeData = getFlattenTree(treeData!);
@@ -157,11 +206,7 @@ const HpoTreeFacet = () => {
 
           setVisible(false);
         }}
-        onCancel={() => {
-          setVisible(false);
-          setTreeData(undefined);
-          setRootNode(undefined);
-        }}
+        onCancel={handleCancel}
       >
         <Transfer<TreeNode>
           className={styles.hpoTransfer}

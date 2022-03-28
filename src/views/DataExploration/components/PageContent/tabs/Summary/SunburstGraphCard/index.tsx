@@ -8,7 +8,6 @@ import {
 } from 'views/DataExploration/utils/PhenotypeStore';
 import {
   lightTreeNodeConstructor,
-  searchTree,
   TreeNode,
 } from 'views/DataExploration/utils/OntologyTree';
 
@@ -20,7 +19,6 @@ import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardHeader from 'views/Dashboard/components/CardHeader';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
-import { findSqonValueByField, removeValueFilterFromSqon } from '@ferlab/ui/core/data/sqon/utils';
 
 import styles from './index.module.scss';
 
@@ -40,23 +38,14 @@ const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
   const sunburstRef = useRef<SVGSVGElement>(null);
   const updateSunburst = useRef<(key: any) => void>();
   const { sqon } = useParticipantResolvedSqon();
-  const selectedValues = findSqonValueByField('observed_phenotype.name', sqon);
-  const filteredParticipantSqon = removeValueFilterFromSqon('observed_phenotype.name', sqon);
 
   useEffect(() => {
     setIsLoading(true);
-    phenotypeStore.current.fetch('observed_phenotype', filteredParticipantSqon).then(() => {
+    phenotypeStore.current.fetch('observed_phenotype', sqon).then(() => {
       let rootNode = phenotypeStore.current.getRootNode();
 
-      if (selectedValues) {
-        rootNode =
-          selectedValues.length > 1
-            ? undefined
-            : searchTree(rootNode!, selectedValues[0]) || rootNode;
-      }
-
       setCurrentNode(rootNode);
-      setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode?.key)] : []);
+      setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode.key!)] : []);
       setIsLoading(false);
 
       updateSunburst.current = SunburstD3(

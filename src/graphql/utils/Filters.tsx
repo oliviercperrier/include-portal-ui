@@ -14,6 +14,7 @@ import {
   keyEnhanceBooleanOnly,
   underscoreToDot,
 } from '@ferlab/ui/core/data/arranger/formatting';
+import { transformNameIfNeeded } from './nameTransformer';
 
 export interface RangeAggs {
   stats: {
@@ -44,7 +45,7 @@ export const generateFilters = ({
   showSearchInput = false,
   useFilterSelector = false,
   history,
-  index
+  index,
 }: {
   aggregations: Aggregations;
   extendedMapping: ExtendedMappingResults;
@@ -100,7 +101,7 @@ export const getFilters = (aggregations: Aggregations | null, key: string): IFil
             key: keyEnhanceBooleanOnly(f.key),
           },
           id: f.key,
-          name: name,
+          name: transformNameIfNeeded(key, name),
         };
       })
       .filter((f: any) => !(f.name === ''));
@@ -147,7 +148,6 @@ export const getFilterGroup = (
       .defaultMessage(extendedMapping?.displayName || ''),
     type: getFilterType(extendedMapping?.type || ''),
     config: {
-      nameMapping: [],
       withFooter: filterFooter,
     },
   };

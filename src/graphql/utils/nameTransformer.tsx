@@ -2,10 +2,10 @@ import { formatHpoTitleAndCode, formatMondoTitleAndCode } from 'views/DataExplor
 
 export const transformNameIfNeeded = (field: string, name: string) => {
   if (field === 'mondo__name') {
-    return formatHpoTitleAndCode(name);
+    return formatMondoTitleAndCode(name);
   }
   if (field === 'observed_phenotype__name') {
-    return formatMondoTitleAndCode(name);
+    return formatHpoTitleAndCode(name);
   }
   if (field === 'file_format') {
     return <span>{name.toLocaleLowerCase()}</span>;

@@ -21,7 +21,7 @@ interface IPhenotypeQueryPayload {
   errors?: any[];
 }
 
-export const RegexExtractPhenotype = new RegExp(/([A-Z].+?\(HP:\d+\))/, 'g');
+export const RegexExtractPhenotype = new RegExp(/([A-Za-z].*?\((HP|MONDO):[0-9]+\))/, 'g');
 
 export const generateNavTreeFormKey = (phenotypes: string[]): TreeNode[] => {
   if (!phenotypes.length) {

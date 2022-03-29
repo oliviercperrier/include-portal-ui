@@ -352,6 +352,18 @@ const fr = {
           all: 'Participants including descendant terms',
         },
       },
+      mondoTree: {
+        modal: {
+          title: 'Diagnosis (MONDO) Browser',
+          okText: 'Apply',
+        },
+        searchPlaceholder: 'Search for ontology term - min 3 characters',
+        emptySelection: 'Select items from the left-hand pane in order to add to your query.',
+        tags: {
+          exact: 'Participants with this exact term',
+          all: 'Participants including descendant terms',
+        },
+      },
       tabs: {
         summary: {
           title: 'Summary',
@@ -368,6 +380,14 @@ const fr = {
           },
           observedPhenotype: {
             cardTitle: 'Observed Phenotypes (HPO)',
+            phenotypeTree: {
+              nbParticipant: '{count} participants (including descendant terms on this path)',
+              addTermToQuery: 'Add term to active query',
+              currentPath: 'Current Path',
+            },
+          },
+          mondo: {
+            cardTitle: ' Diagnosis (MONDO)',
             phenotypeTree: {
               nbParticipant: '{count} participants (including descendant terms on this path)',
               addTermToQuery: 'Add term to active query',

@@ -15,7 +15,10 @@ import intl from 'react-intl-universal';
 import SunburstD3 from './utils/sunburst-d3';
 import { getCommonColors } from 'common/charts';
 import TreePanel from 'views/DataExploration/components/PageContent/tabs/Summary/SunburstGraphCard/TreePanel';
-import { extractPhenotypeTitleAndCode } from 'views/DataExploration/utils/helper';
+import {
+  extractMondoTitleAndCode,
+  extractPhenotypeTitleAndCode,
+} from 'views/DataExploration/utils/helper';
 import Empty from '@ferlab/ui/core/components/Empty';
 import CardHeader from 'views/Dashboard/components/CardHeader';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
@@ -25,12 +28,14 @@ import styles from './index.module.scss';
 interface OwnProps {
   id: string;
   className?: string;
+  field: string;
+  type: string;
 }
 
 const width = 335;
 const height = 335;
 
-const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
+const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [treeData, setTreeData] = useState<TreeNode[]>();
   const [currentNode, setCurrentNode] = useState<TreeNode>();
@@ -41,9 +46,8 @@ const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
 
   useEffect(() => {
     setIsLoading(true);
-    phenotypeStore.current.fetch('observed_phenotype', sqon).then(() => {
+    phenotypeStore.current.fetch(field, sqon).then(() => {
       let rootNode = phenotypeStore.current.getRootNode();
-
       setCurrentNode(rootNode);
       setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode.key!)] : []);
       setIsLoading(false);
@@ -62,13 +66,16 @@ const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
           centerTitleFormatter: (data: TreeNode) => data.results,
           centerSubtitleFormatter: (data: TreeNode) => 'Participants with',
           centerDescriptionFormatter: (data: TreeNode) =>
-            `HP:${extractPhenotypeTitleAndCode(data.title!)?.code}`,
+            type === 'observedPhenotype'
+              ? `HP:${extractPhenotypeTitleAndCode(data.title!)?.code}`
+              : `MONDO:${extractMondoTitleAndCode(data.title!)?.code}`,
           tooltipFormatter: (data: TreeNode) =>
             `<div>
               ${data.title}<br/><br/>
               Participants: <strong>${data.results}</strong>
             </div>`,
         },
+        type,
       );
     });
     // eslint-disable-next-line
@@ -89,14 +96,18 @@ const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
       title={
         <CardHeader
           id={id}
-          title={intl.get('screen.dataExploration.tabs.summary.observedPhenotype.cardTitle')}
+          title={intl.get(`screen.dataExploration.tabs.summary.${type}.cardTitle`)}
           withHandle
         />
       }
       content={
         !isLoading &&
         (treeData && treeData?.length > 0 ? (
-          <Row gutter={[24, 24]} id="tooltip-wrapper" className={styles.sunburstRowWrapper}>
+          <Row
+            gutter={[24, 24]}
+            id={`tooltip-wrapper-${type}`}
+            className={styles.sunburstRowWrapper}
+          >
             <Col lg={12} xl={10}>
               <svg
                 className={styles.sunburstChart}
@@ -112,6 +123,8 @@ const SunburstGraphCard = ({ id, className = '' }: OwnProps) => {
                 treeData={treeData!}
                 getSelectedPhenotype={getSelectedPhenotype}
                 updateSunburst={updateSunburst.current!}
+                field={field}
+                type={type}
               />
             </Col>
           </Row>

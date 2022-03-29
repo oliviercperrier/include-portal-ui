@@ -14,6 +14,8 @@ interface OwnProps {
   treeData: TreeNode[];
   getSelectedPhenotype: (node: TreeNode) => void;
   updateSunburst: (key: string) => void;
+  field: string;
+  type: string;
 }
 
 const { Title, Text } = Typography;
@@ -34,19 +36,23 @@ const getPath = (node: string, treeNodes: TreeNode[], path: string[] = []): stri
   return updatePath;
 };
 
-const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst }: OwnProps) => {
+const TreePanel = ({
+  currentNode,
+  treeData,
+  getSelectedPhenotype,
+  updateSunburst,
+  field,
+  type,
+}: OwnProps) => {
   const history = useHistory();
 
   return (
     <Space direction="vertical" className={styles.phenotypeSunburstTree}>
       <Title level={5}>{currentNode?.name}</Title>
       <Text>
-        {intl.get(
-          'screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.nbParticipant',
-          {
-            count: currentNode?.results,
-          },
-        )}
+        {intl.get(`screen.dataExploration.tabs.summary.${type}.phenotypeTree.nbParticipant`, {
+          count: currentNode?.results,
+        })}
       </Text>
       <Button
         className={styles.addTermBtn}
@@ -54,23 +60,19 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
         size="small"
         onClick={() => {
           addFieldToActiveQuery({
-            field: 'observed_phenotype.name',
+            field: `${field}.name`,
             value: [currentNode?.title!],
             history,
             index: INDEXES.PARTICIPANT,
-            merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES
+            merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
           });
         }}
       >
-        {intl.get(
-          'screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.addTermToQuery',
-        )}
+        {intl.get(`screen.dataExploration.tabs.summary.${type}.phenotypeTree.addTermToQuery`)}
       </Button>
       <Space className={styles.treeWrapper} direction="vertical" size={5}>
         <Text type="secondary">
-          {intl.get(
-            'screen.dataExploration.tabs.summary.observedPhenotype.phenotypeTree.currentPath',
-          )}
+          {intl.get(`screen.dataExploration.tabs.summary.${type}.phenotypeTree.currentPath`)}
         </Text>
         <Tree
           height={213}
@@ -94,7 +96,7 @@ const TreePanel = ({ currentNode, treeData, getSelectedPhenotype, updateSunburst
               return {};
             }
           }}
-        ></Tree>
+        />
       </Space>
     </Space>
   );

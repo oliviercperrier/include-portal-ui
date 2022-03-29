@@ -22,7 +22,7 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from './utils/mapper';
-import HpoTreeFacet from './components/HpoTreeFacet';
+import TreeFacet from './components/TreeFacet';
 import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
 import FileSearch from './components/GlobalSearch/FileSearch';
 import BiospecimenSearch from './components/GlobalSearch/BiospecimenSearch';
@@ -49,8 +49,8 @@ export const filterGroups: {
         facets: [
           'study_id',
           'down_syndrome_status',
-          'diagnosis__mondo_id_diagnosis',
-          <HpoTreeFacet />,
+          <TreeFacet type={'mondoTree'} title={'mondo'}/>,
+          <TreeFacet type={'hpoTree'} title={'observed_phenotype'}/>,
           'family_type',
           'sex',
           'race',

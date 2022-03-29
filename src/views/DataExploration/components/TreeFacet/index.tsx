@@ -1,7 +1,7 @@
 import CollapseLikeFacet from 'components/uiKit/FilterList/CollapsePlaceHolderFacet';
 import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree, Button, Dropdown, Menu } from 'antd';
 import intl from 'react-intl-universal';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   getFlattenTree,
   TreeNode,
@@ -26,11 +26,15 @@ import useParticipantResolvedSqon from 'graphql/participants/useParticipantResol
 import styles from './index.module.scss';
 import { TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 
-const FIELD_NAME = 'observed_phenotype.name';
 const AUTO_EXPAND_TREE = 1;
 const MIN_SEARCH_TEXT_LENGTH = 3;
 
-const HpoTreeFacet = () => {
+type Props = {
+  type: string;
+  title: string;
+};
+
+const HpoTreeFacet = ({ type, title }: Props) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -103,10 +107,10 @@ const HpoTreeFacet = () => {
 
     if (!results || results.length === 0) {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
-      updateQueryFilters(history, FIELD_NAME, []);
+      updateQueryFilters(history, `${title}.name`, []);
     } else {
       addFieldToActiveQuery({
-        field: FIELD_NAME,
+        field: `${title}.name`,
         value: results,
         operator,
         history,
@@ -120,10 +124,10 @@ const HpoTreeFacet = () => {
 
   useEffect(() => {
     if (visible) {
-      const filteredParticipantSqon = removeValueFilterFromSqon(FIELD_NAME, sqon);
+      const filteredParticipantSqon = removeValueFilterFromSqon(`${title}.name`, sqon);
 
       setIsLoading(true);
-      phenotypeStore.current.fetch('observed_phenotype', filteredParticipantSqon).then(() => {
+      phenotypeStore.current.fetch(title, filteredParticipantSqon).then(() => {
         const rootNode = phenotypeStore.current.getRootNode()!;
 
         setIsLoading(false);
@@ -133,7 +137,7 @@ const HpoTreeFacet = () => {
           setRootNode(rootNode);
 
           const flatTree = getFlattenTree(rootNode!);
-          const selectedValues = findSqonValueByField(FIELD_NAME, sqon);
+          const selectedValues = findSqonValueByField(`${title}.name`, sqon);
 
           if (selectedValues) {
             const targetKeys = flatTree
@@ -156,15 +160,15 @@ const HpoTreeFacet = () => {
   return (
     <>
       <CollapseLikeFacet
-        title={intl.get('facets.observed_phenotype.name')}
+        title={intl.get(`facets.${title}.name`)}
         onClick={() => setVisible(true)}
       />
       <Modal
         visible={visible}
         wrapClassName={styles.hpoTreeModalWrapper}
         className={styles.hpoTreeModal}
-        title={intl.get('screen.dataExploration.hpoTree.modal.title')}
-        okText={intl.get('screen.dataExploration.hpoTree.modal.okText')}
+        title={intl.get(`screen.dataExploration.${type}.modal.title`)}
+        okText={intl.get(`screen.dataExploration.${type}.modal.okText`)}
         footer={[
           <Button key="back" onClick={handleCancel}>
             Cancel
@@ -193,10 +197,10 @@ const HpoTreeFacet = () => {
 
           if (!results || results.length === 0) {
             setExpandedKeys(getInitialExpandedKeys([treeData!]));
-            updateQueryFilters(history, FIELD_NAME, []);
+            updateQueryFilters(history, `${title}.name`, []);
           } else {
             addFieldToActiveQuery({
-              field: FIELD_NAME,
+              field: `${title}.name`,
               value: results,
               history,
               index: INDEXES.PARTICIPANT,
@@ -232,11 +236,11 @@ const HpoTreeFacet = () => {
             }
           }}
           locale={{
-            searchPlaceholder: intl.get('screen.dataExploration.hpoTree.searchPlaceholder'),
+            searchPlaceholder: intl.get(`screen.dataExploration.${type}.searchPlaceholder`),
             notFoundContent: (
               <Empty
                 imageType="grid"
-                description={intl.get('screen.dataExploration.hpoTree.emptySelection')}
+                description={intl.get(`screen.dataExploration.${type}.emptySelection`)}
               />
             ),
           }}
@@ -274,13 +278,13 @@ const HpoTreeFacet = () => {
                           <Row style={{ width: 100 }}>
                             <Col span={12} className={styles.phenotypeTreeCountTag}>
                               <Tooltip
-                                title={intl.get('screen.dataExploration.hpoTree.tags.exact')}
+                                title={intl.get(`screen.dataExploration.${type}.tags.exact`)}
                               >
                                 <UserOutlined />
                               </Tooltip>
                             </Col>
                             <Col span={12} className={styles.phenotypeTreeCountTag}>
-                              <Tooltip title={intl.get('screen.dataExploration.hpoTree.tags.all')}>
+                              <Tooltip title={intl.get(`screen.dataExploration.${type}.tags.all`)}>
                                 <BranchesOutlined />
                               </Tooltip>
                             </Col>

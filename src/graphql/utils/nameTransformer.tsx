@@ -23,5 +23,8 @@ export const transformNameIfNeeded = (field: string, name: string) => {
       </Text>
     );
   }
+  if (field === 'file_format') {
+    return <span>{name.toLocaleLowerCase()}</span>;
+  }
   return name;
 };

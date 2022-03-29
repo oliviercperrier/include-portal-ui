@@ -34,4 +34,31 @@ const BiospecimenSearch = () => {
   );
 };
 
-export default BiospecimenSearch;
+const BiospecimenCollectionSearch = () => {
+  const { sqon } = useBiospecimenResolvedSqon();
+
+  return (
+    <GlobalSearch<IBiospecimenEntity>
+      field="collection_sample_id"
+      index={INDEXES.BIOSPECIMEN}
+      placeholder={'e.g. BS_00BPKP5F_Not Reported'}
+      emptyDescription={'No collection ID found'}
+      query={BIOSPECIMEN_SEARCH_BY_ID_QUERY}
+      sqon={sqon}
+      optionsFormatter={(options, matchRegex, search) =>
+        options.map((option) => ({
+          label: (
+            <SelectItem
+              icon={<ExperimentOutlined />}
+              title={highlightSearchMatch(option.collection_sample_id, matchRegex, search)}
+            />
+          ),
+          value: option.collection_sample_id,
+        }))
+      }
+      title={'Search by Collection ID'}
+    />
+  );
+};
+
+export { BiospecimenSearch, BiospecimenCollectionSearch };

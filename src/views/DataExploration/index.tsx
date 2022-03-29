@@ -25,7 +25,10 @@ import {
 import TreeFacet from './components/TreeFacet';
 import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
 import FileSearch from './components/GlobalSearch/FileSearch';
-import BiospecimenSearch from './components/GlobalSearch/BiospecimenSearch';
+import {
+  BiospecimenSearch,
+  BiospecimenCollectionSearch,
+} from './components/GlobalSearch/BiospecimenSearch';
 import { formatHpoTitleAndCode, formatMondoTitleAndCode } from './utils/helper';
 
 import styles from './index.module.scss';
@@ -65,7 +68,7 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Biospecimen]: {
-    customSearches: [<BiospecimenSearch />],
+    customSearches: [<BiospecimenSearch />, <BiospecimenCollectionSearch />],
     groups: [
       {
         facets: [

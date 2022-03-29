@@ -22,10 +22,14 @@ import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import {
+  addFieldToActiveQuery,
+  generateFilters,
+  generateValueFilter,
+} from '@ferlab/ui/core/data/sqon/utils';
 import { formatQuerySortList } from 'views/DataExploration/utils/helper';
 import { scrollToTop } from 'utils/helper';
 
@@ -38,7 +42,7 @@ interface OwnProps {
   sqon?: ISqonGroupFilter;
 }
 
-const defaultColumns: ProColumnType<any>[] = [
+const getDefaultColumns = (history: any): ProColumnType<any>[] => [
   {
     key: 'sample_id',
     title: 'Sample ID',
@@ -86,29 +90,24 @@ const defaultColumns: ProColumnType<any>[] = [
     title: 'Collection ID',
     dataIndex: 'collection_sample_id',
     sorter: { multiple: 1 },
-    render: (collection_sample_id: string) =>
-      collection_sample_id ? (
-        <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-            search: createQueryParams({
-              filters: generateFilters({
-                newFilters: [
-                  generateValueFilter({
-                    field: 'collection_sample_id',
-                    value: [collection_sample_id],
-                    index: INDEXES.BIOSPECIMEN,
-                  }),
-                ],
-              }),
-            }),
-          }}
+    render: (collection_sample_id: string) => {
+      return (
+        // eslint-disable-next-line
+        <a
+          type="link"
+          onClick={() =>
+            addFieldToActiveQuery({
+              field: 'collection_sample_id',
+              value: [collection_sample_id],
+              history,
+              index: INDEXES.BIOSPECIMEN,
+            })
+          }
         >
           {collection_sample_id}
-        </Link>
-      ) : (
-        TABLE_EMPTY_PLACE_HOLDER
-      ),
+        </a>
+      );
+    },
   },
   {
     key: 'collection_sample_type',
@@ -204,6 +203,7 @@ const defaultColumns: ProColumnType<any>[] = [
 const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
+  const history = useHistory();
   const { filters }: { filters: ISyntheticSqon } = useFilters();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -223,7 +223,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
   return (
     <ProTable
       tableId="biospecimen_table"
-      columns={defaultColumns}
+      columns={getDefaultColumns(history)}
       wrapperClassName={styles.biospecimenTabWrapper}
       loading={results.loading}
       initialColumnState={userInfo?.config.data_exploration?.tables?.biospecimens?.columns}
@@ -263,7 +263,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
           dispatch(
             fetchTsvReport({
               columnStates: userInfo?.config.data_exploration?.tables?.biospecimens?.columns,
-              columns: defaultColumns,
+              columns: getDefaultColumns(history),
               index: INDEXES.BIOSPECIMEN,
               sqon: getReportSqon(),
             }),

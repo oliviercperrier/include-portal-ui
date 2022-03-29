@@ -21,7 +21,7 @@ export const formatMondoTitleAndCode = (mondo: string) => {
   const mondoInfo = extractMondoTitleAndCode(mondo);
   return (
     <Text>
-      {mondoInfo?.title} <Text type="secondary">(MONDO:{mondoInfo?.code})</Text>
+      {mondoInfo?.title} <Text style={{ fontSize: '12px' }}>(MONDO:{mondoInfo?.code})</Text>
     </Text>
   );
 };
@@ -34,7 +34,7 @@ export const formatHpoTitleAndCode = (phenotype: string) => {
   const phenotypeInfo = extractPhenotypeTitleAndCode(phenotype);
   return (
     <Text>
-      {phenotypeInfo?.title} <Text type="secondary">(HP:{phenotypeInfo?.code})</Text>
+      {phenotypeInfo?.title} <Text style={{ fontSize: '12px' }}>(HP:{phenotypeInfo?.code})</Text>
     </Text>
   );
 };

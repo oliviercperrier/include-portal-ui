@@ -396,6 +396,7 @@ const fr = {
               addTermToQuery: 'Add term to active query',
               currentPath: 'Current Path',
             },
+            empty: 'No observed phenotypes reported for these participants',
           },
           mondo: {
             cardTitle: ' Diagnosis (MONDO)',
@@ -404,6 +405,7 @@ const fr = {
               addTermToQuery: 'Add term to active query',
               currentPath: 'Current Path',
             },
+            empty: 'No diagnoses reported for these participants',
           },
         },
         participants: {
@@ -535,7 +537,7 @@ const fr = {
     // Participant
     participant_id: 'Participant ID',
     study_id: 'Study Code',
-    down_syndrome_status: 'DS Status',
+    down_syndrome_status: 'Down Syndrome Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',
     mondo: {
       name: 'Diagnosis (MONDO)',

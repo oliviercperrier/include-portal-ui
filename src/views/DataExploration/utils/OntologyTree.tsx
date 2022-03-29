@@ -1,5 +1,4 @@
 import { IPhenotypeSource } from 'graphql/summary/models';
-import { capitalize } from 'lodash';
 
 export type TreeNode = {
   title: string;
@@ -14,12 +13,14 @@ export type TreeNode = {
   disabled?: boolean;
   value?: number; // for d3
   valueText: number; // required by d3 for displaying the value
-  name: string | React.ReactElement;
+  name: React.ReactElement | string;
 };
+
+export type TTitleFormatter = (title: string) => React.ReactElement | string;
 
 export const lightTreeNodeConstructor = (key: string, children: TreeNode[] = []): TreeNode => {
   return {
-    title: capitalize(key),
+    title: key,
     key: key,
     children,
     valueText: 0,
@@ -72,9 +73,9 @@ export default class OntologyTree {
   phenotypes: IPhenotypeSource[] = [];
   tree: TreeNode | undefined = undefined;
 
-  constructor(data: IPhenotypeSource[], field: string) {
+  constructor(data: IPhenotypeSource[], field: string, titleFormatter?: TTitleFormatter) {
     this.phenotypes = data;
-    this.tree = this.generateTree(field);
+    this.tree = this.generateTree(field, titleFormatter);
   }
 
   private getChildrenValue = (childrenNodes: TreeNode[], sourceValue: number) =>
@@ -82,37 +83,61 @@ export default class OntologyTree {
       ? childrenNodes.reduce((accumulator, n) => accumulator + (n.valueText || 0), 0)
       : sourceValue || 0;
 
-  private populateNodeChild = (
-    source: IPhenotypeSource,
-    field: string,
-    depth: number = 0,
-    parentKey: string,
-  ): TreeNode[] => {
+  private populateNodeChild = ({
+    source,
+    field,
+    depth = 0,
+    parentKey,
+    titleFormatter,
+  }: {
+    source: IPhenotypeSource;
+    field: string;
+    depth: number;
+    parentKey: string;
+    titleFormatter?: TTitleFormatter;
+  }): TreeNode[] => {
     const nodes: TreeNode[] = [];
     this.phenotypes.forEach((phenotype: IPhenotypeSource) => {
       if (phenotype.top_hits.parents.includes(source.key)) {
-        const childrenNodes = this.populateNodeChild(
-          phenotype,
+        const childrenNodes = this.populateNodeChild({
+          source: phenotype,
           field,
-          depth + 1,
-          `${parentKey}-${phenotype.key}`,
-        );
-        const node = this.createNodeFromSource(phenotype, childrenNodes, depth, parentKey);
+          depth: depth + 1,
+          parentKey: `${parentKey}-${phenotype.key}`,
+          titleFormatter,
+        });
+        const node = this.createNodeFromSource({
+          source: phenotype,
+          children: childrenNodes,
+          depth,
+          parentKey,
+          titleFormatter,
+        });
         nodes.push(node);
       }
     });
     return nodes;
   };
 
-  generateTree = (field: string) => {
+  generateTree = (field: string, titleFormatter?: TTitleFormatter) => {
     let rootNode: TreeNode | undefined = undefined;
     const workingPhenotypes = [...this.phenotypes];
     workingPhenotypes.forEach((sourcePhenotype) => {
       let phenotype: TreeNode;
       // start from root and then look for each element inhereting from that node
       if (!sourcePhenotype.top_hits.parents.length || workingPhenotypes.length === 1) {
-        const children = this.populateNodeChild(sourcePhenotype, field, 1, sourcePhenotype.key);
-        phenotype = this.createNodeFromSource(sourcePhenotype, children);
+        const children = this.populateNodeChild({
+          source: sourcePhenotype,
+          field,
+          depth: 1,
+          parentKey: sourcePhenotype.key,
+          titleFormatter,
+        });
+        phenotype = this.createNodeFromSource({
+          source: sourcePhenotype,
+          children,
+          titleFormatter,
+        });
         phenotype.children = children;
         rootNode = phenotype;
       }
@@ -120,12 +145,19 @@ export default class OntologyTree {
     return rootNode;
   };
 
-  createNodeFromSource = (
-    source: IPhenotypeSource,
-    children: TreeNode[] = [],
-    depth: number = 0,
-    parentKey?: string,
-  ): TreeNode => {
+  createNodeFromSource = ({
+    source,
+    children = [],
+    depth = 0,
+    parentKey,
+    titleFormatter,
+  }: {
+    source: IPhenotypeSource;
+    children: TreeNode[];
+    depth?: number;
+    parentKey?: string;
+    titleFormatter?: TTitleFormatter;
+  }): TreeNode => {
     const value = this.getChildrenValue(children, source.doc_count);
 
     const result: TreeNode = {
@@ -134,7 +166,7 @@ export default class OntologyTree {
       children,
       results: source.doc_count,
       exactTagCount: source.filter_by_term?.doc_count || 0,
-      name: capitalize(source.key),
+      name: titleFormatter ? titleFormatter(source.key) : source.key,
       depth,
       disabled: false,
       valueText: value,

@@ -15,7 +15,6 @@ interface OwnProps {
   getSelectedPhenotype: (node: TreeNode) => void;
   updateSunburst: (key: string) => void;
   field: string;
-  type: string;
 }
 
 const { Title, Text } = Typography;
@@ -42,7 +41,6 @@ const TreePanel = ({
   getSelectedPhenotype,
   updateSunburst,
   field,
-  type,
 }: OwnProps) => {
   const history = useHistory();
 
@@ -50,7 +48,7 @@ const TreePanel = ({
     <Space direction="vertical" className={styles.phenotypeSunburstTree}>
       <Title level={5}>{currentNode?.name}</Title>
       <Text>
-        {intl.get(`screen.dataExploration.tabs.summary.${type}.phenotypeTree.nbParticipant`, {
+        {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.nbParticipant`, {
           count: currentNode?.results,
         })}
       </Text>
@@ -68,11 +66,11 @@ const TreePanel = ({
           });
         }}
       >
-        {intl.get(`screen.dataExploration.tabs.summary.${type}.phenotypeTree.addTermToQuery`)}
+        {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.addTermToQuery`)}
       </Button>
       <Space className={styles.treeWrapper} direction="vertical" size={5}>
         <Text type="secondary">
-          {intl.get(`screen.dataExploration.tabs.summary.${type}.phenotypeTree.currentPath`)}
+          {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.currentPath`)}
         </Text>
         <Tree
           height={213}

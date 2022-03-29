@@ -6,10 +6,7 @@ import {
   PhenotypeStore,
   RegexExtractPhenotype,
 } from 'views/DataExploration/utils/PhenotypeStore';
-import {
-  lightTreeNodeConstructor,
-  TreeNode,
-} from 'views/DataExploration/utils/OntologyTree';
+import { lightTreeNodeConstructor, TreeNode } from 'views/DataExploration/utils/OntologyTree';
 
 import intl from 'react-intl-universal';
 import SunburstD3 from './utils/sunburst-d3';
@@ -29,13 +26,12 @@ interface OwnProps {
   id: string;
   className?: string;
   field: string;
-  type: string;
 }
 
 const width = 335;
 const height = 335;
 
-const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
+const SunburstGraphCard = ({ id, className = '', field }: OwnProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [treeData, setTreeData] = useState<TreeNode[]>();
   const [currentNode, setCurrentNode] = useState<TreeNode>();
@@ -46,7 +42,7 @@ const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
 
   useEffect(() => {
     setIsLoading(true);
-    phenotypeStore.current.fetch(field, sqon).then(() => {
+    phenotypeStore.current.fetch({ field, sqon }).then(() => {
       let rootNode = phenotypeStore.current.getRootNode();
       setCurrentNode(rootNode);
       setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode.key!)] : []);
@@ -66,7 +62,7 @@ const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
           centerTitleFormatter: (data: TreeNode) => data.results,
           centerSubtitleFormatter: (data: TreeNode) => 'Participants with',
           centerDescriptionFormatter: (data: TreeNode) =>
-            type === 'observedPhenotype'
+            field === 'observed_phenotype'
               ? `HP:${extractPhenotypeTitleAndCode(data.title!)?.code}`
               : `MONDO:${extractMondoTitleAndCode(data.title!)?.code}`,
           tooltipFormatter: (data: TreeNode) =>
@@ -75,7 +71,7 @@ const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
               Participants: <strong>${data.results}</strong>
             </div>`,
         },
-        type,
+        field,
       );
     });
     // eslint-disable-next-line
@@ -96,7 +92,7 @@ const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
       title={
         <CardHeader
           id={id}
-          title={intl.get(`screen.dataExploration.tabs.summary.${type}.cardTitle`)}
+          title={intl.get(`screen.dataExploration.tabs.summary.${field}.cardTitle`)}
           withHandle
         />
       }
@@ -105,7 +101,7 @@ const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
         (treeData && treeData?.length > 0 ? (
           <Row
             gutter={[24, 24]}
-            id={`tooltip-wrapper-${type}`}
+            id={`tooltip-wrapper-${field}`}
             className={styles.sunburstRowWrapper}
           >
             <Col lg={12} xl={10}>
@@ -124,7 +120,6 @@ const SunburstGraphCard = ({ id, className = '', field, type }: OwnProps) => {
                 getSelectedPhenotype={getSelectedPhenotype}
                 updateSunburst={updateSunburst.current!}
                 field={field}
-                type={type}
               />
             </Col>
           </Row>

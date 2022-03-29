@@ -1,11 +1,12 @@
 import CollapseLikeFacet from 'components/uiKit/FilterList/CollapsePlaceHolderFacet';
 import { Col, Modal, Row, Spin, Tooltip, Transfer, Tree, Button, Dropdown, Menu } from 'antd';
 import intl from 'react-intl-universal';
-import React, { useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import {
   getFlattenTree,
   TreeNode,
   removeSameTerms,
+  TTitleFormatter,
 } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
 import {
@@ -20,11 +21,11 @@ import { updateQueryFilters } from '@ferlab/ui/core/data/filters/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 import Empty from '@ferlab/ui/core/components/Empty';
-import { isEmpty } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
+import { TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 
 import styles from './index.module.scss';
-import { TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 
 const AUTO_EXPAND_TREE = 1;
 const MIN_SEARCH_TEXT_LENGTH = 3;
@@ -32,9 +33,10 @@ const MIN_SEARCH_TEXT_LENGTH = 3;
 type Props = {
   type: string;
   field: string;
+  titleFormatter?: TTitleFormatter;
 };
 
-const TreeFacet = ({ type, field }: Props) => {
+const TreeFacet = ({ type, field, titleFormatter }: Props) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -127,31 +129,37 @@ const TreeFacet = ({ type, field }: Props) => {
       const filteredParticipantSqon = removeValueFilterFromSqon(`${field}.name`, sqon);
 
       setIsLoading(true);
-      phenotypeStore.current.fetch(field, filteredParticipantSqon).then(() => {
-        const rootNode = phenotypeStore.current.getRootNode()!;
+      phenotypeStore.current
+        .fetch({
+          field,
+          sqon: filteredParticipantSqon,
+          titleFormatter,
+        })
+        .then(() => {
+          const rootNode = phenotypeStore.current.getRootNode()!;
 
-        setIsLoading(false);
+          setIsLoading(false);
 
-        if (rootNode) {
-          setTreeData(rootNode);
-          setRootNode(rootNode);
+          if (rootNode) {
+            setTreeData(rootNode);
+            setRootNode(rootNode);
 
-          const flatTree = getFlattenTree(rootNode!);
-          const selectedValues = findSqonValueByField(`${field}.name`, sqon);
+            const flatTree = getFlattenTree(rootNode!);
+            const selectedValues = findSqonValueByField(`${field}.name`, sqon);
 
-          if (selectedValues) {
-            const targetKeys = flatTree
-              .filter(({ title }) => selectedValues.includes(title))
-              .map(({ key }) => key);
+            if (selectedValues) {
+              const targetKeys = flatTree
+                .filter(({ title }) => selectedValues.includes(title))
+                .map(({ key }) => key);
 
-            setExpandedKeys(getExpandedKeys(targetKeys));
-            setTargetKeys(removeSameTerms([], targetKeys));
-          } else {
-            setExpandedKeys(getInitialExpandedKeys([rootNode!]));
-            setTargetKeys([]);
+              setExpandedKeys(getExpandedKeys(targetKeys));
+              setTargetKeys(removeSameTerms([], targetKeys));
+            } else {
+              setExpandedKeys(getInitialExpandedKeys([rootNode!]));
+              setTargetKeys([]);
+            }
           }
-        }
-      });
+        });
     }
 
     // eslint-disable-next-line
@@ -227,7 +235,7 @@ const TreeFacet = ({ type, field }: Props) => {
           onSearch={(_, value) => {
             if (value && value.length > MIN_SEARCH_TEXT_LENGTH) {
               const hits: string[] = [];
-              const tree = JSON.parse(JSON.stringify(treeData));
+              const tree = cloneDeep(treeData)!;
               searchInTree(value, tree, hits);
               setExpandedKeys(hits);
               setTreeData(tree);
@@ -257,7 +265,9 @@ const TreeFacet = ({ type, field }: Props) => {
             );
           }}
           dataSource={treeData ? getFlattenTree(treeData) : []}
-          render={(item) => item.title}
+          render={(item) =>
+            (titleFormatter ? titleFormatter(item.title) : item.title) as ReactElement
+          }
           showSelectAll={false}
           operationStyle={{ visibility: 'hidden', width: '5px' }}
         >

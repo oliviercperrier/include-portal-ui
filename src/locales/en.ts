@@ -378,7 +378,7 @@ const fr = {
             dataTypeTitle: 'Participants by Data Type',
             studiesTitle: 'Participants by Study',
           },
-          observedPhenotype: {
+          observed_phenotype: {
             cardTitle: 'Observed Phenotypes (HPO)',
             phenotypeTree: {
               nbParticipant: '{count} participants (including descendant terms on this path)',

@@ -1,5 +1,6 @@
 import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import TreeNodeTitle from './TreeNodeTitle';
+import { Typography } from 'antd';
 
 import styles from './index.module.scss';
 
@@ -78,11 +79,11 @@ export const searchInTree = (
     if (result) {
       const [before, hit, after] = treeNode.title.split(regex);
       treeNode.name = (
-        <span>
+        <Typography.Text>
           {before}
           <div className={styles.highlight}>{hit}</div>
           {after}
-        </span>
+        </Typography.Text>
       );
     }
   }

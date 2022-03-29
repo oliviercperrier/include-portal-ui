@@ -1,27 +1,11 @@
-import {
-  extractMondoTitleAndCode,
-  extractPhenotypeTitleAndCode,
-} from 'views/DataExploration/utils/helper';
-import { Typography } from 'antd';
-
-const { Text } = Typography;
+import { formatHpoTitleAndCode, formatMondoTitleAndCode } from 'views/DataExploration/utils/helper';
 
 export const transformNameIfNeeded = (field: string, name: string) => {
   if (field === 'mondo__name') {
-    const mondo = extractMondoTitleAndCode(name);
-    return (
-      <Text>
-        {mondo?.title} <Text type="secondary">(MONDO:{mondo?.code})</Text>
-      </Text>
-    );
+    return formatHpoTitleAndCode(name);
   }
   if (field === 'observed_phenotype__name') {
-    const mondo = extractPhenotypeTitleAndCode(name);
-    return (
-      <Text>
-        {mondo?.title} <Text type="secondary">(HP:{mondo?.code})</Text>
-      </Text>
-    );
+    return formatMondoTitleAndCode(name);
   }
   if (field === 'file_format') {
     return <span>{name.toLocaleLowerCase()}</span>;

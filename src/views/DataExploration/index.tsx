@@ -26,6 +26,7 @@ import TreeFacet from './components/TreeFacet';
 import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
 import FileSearch from './components/GlobalSearch/FileSearch';
 import BiospecimenSearch from './components/GlobalSearch/BiospecimenSearch';
+import { formatHpoTitleAndCode, formatMondoTitleAndCode } from './utils/helper';
 
 import styles from './index.module.scss';
 
@@ -49,8 +50,12 @@ export const filterGroups: {
         facets: [
           'study_id',
           'down_syndrome_status',
-          <TreeFacet type={'mondoTree'} field={'mondo'} />,
-          <TreeFacet type={'hpoTree'} field={'observed_phenotype'} />,
+          <TreeFacet type={'mondoTree'} field={'mondo'} titleFormatter={formatMondoTitleAndCode} />,
+          <TreeFacet
+            type={'hpoTree'}
+            field={'observed_phenotype'}
+            titleFormatter={formatHpoTitleAndCode}
+          />,
           'family_type',
           'sex',
           'race',

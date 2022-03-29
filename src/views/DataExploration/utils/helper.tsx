@@ -2,6 +2,9 @@ import { TSortableItems } from '@ferlab/ui/core/layout/SortableGrid/SortableItem
 import { SorterResult } from 'antd/lib/table/interface';
 import { TSortDirection } from 'graphql/queries';
 import { isArray } from 'lodash';
+import { Typography } from 'antd';
+
+const { Text } = Typography;
 
 const titleAndCodeExtractor = (value: string, codeSubstring: string) => {
   if (!value) {
@@ -34,9 +37,27 @@ export const formatQuerySortList = (sorter: SorterResult<any> | SorterResult<any
 // Format is like: Sleep apnea (MONDO:0010535)
 export const extractMondoTitleAndCode = (mondo: string) => titleAndCodeExtractor(mondo, '(MONDO:');
 
+export const formatMondoTitleAndCode = (mondo: string) => {
+  const mondoInfo = extractMondoTitleAndCode(mondo);
+  return (
+    <Text>
+      {mondoInfo?.title} <Text type="secondary">(MONDO:{mondoInfo?.code})</Text>
+    </Text>
+  );
+};
+
 // Format is like: Alzheimer disease (HP:0002511)
 export const extractPhenotypeTitleAndCode = (phenotype: string) =>
   titleAndCodeExtractor(phenotype, '(HP:');
+
+export const formatHpoTitleAndCode = (phenotype: string) => {
+  const phenotypeInfo = extractPhenotypeTitleAndCode(phenotype);
+  return (
+    <Text>
+      {phenotypeInfo?.title} <Text type="secondary">(HP:{phenotypeInfo?.code})</Text>
+    </Text>
+  );
+};
 
 // Format is like: Feces (NCIT:C13234)
 export const extractNcitTissueTitleAndCode = (ncit: string) =>

@@ -49,7 +49,6 @@ const SummaryTab = () => {
                 id="2"
                 className={cx(styles.summaryGrapCard, styles.sunburstGraphCard)}
                 field={'observed_phenotype'}
-                type={'observedPhenotype'}
               />
             ),
           },
@@ -63,7 +62,6 @@ const SummaryTab = () => {
                 id="3"
                 className={cx(styles.summaryGrapCard, styles.sunburstGraphCard)}
                 field={'mondo'}
-                type={'mondo'}
               />
             ),
           },

@@ -22,7 +22,7 @@ import {
   mapFilterForFiles,
   mapFilterForParticipant,
 } from './utils/mapper';
-import TreeFacet from './components/HpoTreeFacet';
+import TreeFacet from './components/TreeFacet';
 import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
 import FileSearch from './components/GlobalSearch/FileSearch';
 import BiospecimenSearch from './components/GlobalSearch/BiospecimenSearch';

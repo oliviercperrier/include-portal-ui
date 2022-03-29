@@ -1,4 +1,5 @@
 import { IPhenotypeSource } from 'graphql/summary/models';
+import { capitalize } from 'lodash';
 
 export type TreeNode = {
   title: string;
@@ -18,7 +19,7 @@ export type TreeNode = {
 
 export const lightTreeNodeConstructor = (key: string, children: TreeNode[] = []): TreeNode => {
   return {
-    title: key,
+    title: capitalize(key),
     key: key,
     children,
     valueText: 0,
@@ -133,7 +134,7 @@ export default class OntologyTree {
       children,
       results: source.doc_count,
       exactTagCount: source.filter_by_term?.doc_count || 0,
-      name: source.key,
+      name: capitalize(source.key),
       depth,
       disabled: false,
       valueText: value,

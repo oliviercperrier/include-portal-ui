@@ -7,7 +7,7 @@ import { Typography } from 'antd';
 const { Text } = Typography;
 
 export const transformNameIfNeeded = (field: string, name: string) => {
-  if (field === 'diagnosis__mondo_id_diagnosis') {
+  if (field === 'mondo__name') {
     const mondo = extractMondoTitleAndCode(name);
     return (
       <Text>

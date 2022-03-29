@@ -31,10 +31,10 @@ const MIN_SEARCH_TEXT_LENGTH = 3;
 
 type Props = {
   type: string;
-  title: string;
+  field: string;
 };
 
-const TreeFacet = ({ type, title }: Props) => {
+const TreeFacet = ({ type, field }: Props) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -107,10 +107,10 @@ const TreeFacet = ({ type, title }: Props) => {
 
     if (!results || results.length === 0) {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
-      updateQueryFilters(history, `${title}.name`, []);
+      updateQueryFilters(history, `${field}.name`, []);
     } else {
       addFieldToActiveQuery({
-        field: `${title}.name`,
+        field: `${field}.name`,
         value: results,
         operator,
         history,
@@ -124,10 +124,10 @@ const TreeFacet = ({ type, title }: Props) => {
 
   useEffect(() => {
     if (visible) {
-      const filteredParticipantSqon = removeValueFilterFromSqon(`${title}.name`, sqon);
+      const filteredParticipantSqon = removeValueFilterFromSqon(`${field}.name`, sqon);
 
       setIsLoading(true);
-      phenotypeStore.current.fetch(title, filteredParticipantSqon).then(() => {
+      phenotypeStore.current.fetch(field, filteredParticipantSqon).then(() => {
         const rootNode = phenotypeStore.current.getRootNode()!;
 
         setIsLoading(false);
@@ -137,7 +137,7 @@ const TreeFacet = ({ type, title }: Props) => {
           setRootNode(rootNode);
 
           const flatTree = getFlattenTree(rootNode!);
-          const selectedValues = findSqonValueByField(`${title}.name`, sqon);
+          const selectedValues = findSqonValueByField(`${field}.name`, sqon);
 
           if (selectedValues) {
             const targetKeys = flatTree
@@ -160,7 +160,7 @@ const TreeFacet = ({ type, title }: Props) => {
   return (
     <>
       <CollapseLikeFacet
-        title={intl.get(`facets.${title}.name`)}
+        title={intl.get(`facets.${field}.name`)}
         onClick={() => setVisible(true)}
       />
       <Modal
@@ -182,7 +182,7 @@ const TreeFacet = ({ type, title }: Props) => {
                 <Menu.Item key={TermOperators['not-in']}>None of</Menu.Item>
               </Menu>
             }
-            style={{marginLeft: "8px"}}
+            style={{ marginLeft: '8px' }}
             onClick={() => handleOnApply(TermOperators.in)}
           >
             Apply
@@ -197,10 +197,10 @@ const TreeFacet = ({ type, title }: Props) => {
 
           if (!results || results.length === 0) {
             setExpandedKeys(getInitialExpandedKeys([treeData!]));
-            updateQueryFilters(history, `${title}.name`, []);
+            updateQueryFilters(history, `${field}.name`, []);
           } else {
             addFieldToActiveQuery({
-              field: `${title}.name`,
+              field: `${field}.name`,
               value: results,
               history,
               index: INDEXES.PARTICIPANT,

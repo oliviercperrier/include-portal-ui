@@ -9,7 +9,7 @@ interface OwnProps {
 }
 
 const TreeNodeTitle = (props: OwnProps) => (
-  <Row justify="space-between">
+  <Row justify="space-between" align="middle">
     <Col>{props.title}</Col>
     <Col style={{ width: 100 }}>
       <Row>

@@ -49,8 +49,8 @@ export const filterGroups: {
         facets: [
           'study_id',
           'down_syndrome_status',
-          <TreeFacet type={'mondoTree'} title={'mondo'}/>,
-          <TreeFacet type={'hpoTree'} title={'observed_phenotype'}/>,
+          <TreeFacet type={'mondoTree'} field={'mondo'} />,
+          <TreeFacet type={'hpoTree'} field={'observed_phenotype'} />,
           'family_type',
           'sex',
           'race',

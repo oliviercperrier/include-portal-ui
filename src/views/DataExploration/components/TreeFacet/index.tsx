@@ -160,6 +160,7 @@ const TreeFacet = ({ type, field }: Props) => {
   return (
     <>
       <CollapseLikeFacet
+        key={field}
         title={intl.get(`facets.${field}.name`)}
         onClick={() => setVisible(true)}
       />

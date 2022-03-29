@@ -102,6 +102,7 @@ const filtersContainer = (
 
   return (
     <FilterList
+      key={index}
       index={index}
       cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
       extendedMappingResults={mappingResults}

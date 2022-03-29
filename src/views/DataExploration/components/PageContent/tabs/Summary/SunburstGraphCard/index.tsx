@@ -127,7 +127,7 @@ const SunburstGraphCard = ({ id, className = '', field }: OwnProps) => {
           <Empty
             imageType="grid"
             size="large"
-            description="No observed phenotypes reported for these participants"
+            description={intl.get(`screen.dataExploration.tabs.summary.${field}.empty`)}
           />
         ))
       }

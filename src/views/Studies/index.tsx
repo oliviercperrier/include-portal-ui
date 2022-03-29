@@ -93,39 +93,39 @@ const columns: ProColumnType<any>[] = [
     },
   },
   {
+    key: 'family_count',
+    title: 'Families',
+    dataIndex: 'family_count',
+  },
+  {
     key: 'biospecimen_count',
     title: 'Biospecimens',
     render: (record: IStudyEntity) => {
       const biospecimenCount = record.biospecimen_count;
 
       return biospecimenCount ? (
-        <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-            search: createQueryParams({
-              filters: generateFilters({
-                newFilters: [
-                  generateValueFilter({
-                    field: 'study_id',
-                    value: [record.study_id],
-                    index: INDEXES.PARTICIPANT,
+          <Link
+              to={{
+                pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
+                search: createQueryParams({
+                  filters: generateFilters({
+                    newFilters: [
+                      generateValueFilter({
+                        field: 'study_id',
+                        value: [record.study_id],
+                        index: INDEXES.PARTICIPANT,
+                      }),
+                    ],
                   }),
-                ],
-              }),
-            }),
-          }}
-        >
-          {biospecimenCount}
-        </Link>
+                }),
+              }}
+          >
+            {biospecimenCount}
+          </Link>
       ) : (
-        biospecimenCount || 0
+          biospecimenCount || 0
       );
     },
-  },
-  {
-    key: 'family_count',
-    title: 'Families',
-    dataIndex: 'family_count',
   },
   {
     key: 'genomic',

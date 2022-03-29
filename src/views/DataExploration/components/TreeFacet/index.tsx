@@ -188,7 +188,7 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
               <Menu onClick={(e) => handleOnApply(e.key as TermOperators)}>
                 <Menu.Item key={TermOperators.in}>Any of</Menu.Item>
                 <Menu.Item key={TermOperators.all}>All of</Menu.Item>
-                <Menu.Item key={TermOperators['not-in']}>None of</Menu.Item>
+                <Menu.Item key={TermOperators['some-not-in']}>None of</Menu.Item>
               </Menu>
             }
             style={{ marginLeft: '8px' }}

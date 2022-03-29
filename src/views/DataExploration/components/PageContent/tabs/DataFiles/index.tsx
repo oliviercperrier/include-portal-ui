@@ -145,6 +145,13 @@ const getDefaultColumns = (
       record.sequencing_experiment?.experiment_strategy || TABLE_EMPTY_PLACE_HOLDER,
   },
   {
+    key: 'access_urls',
+    title: 'Access Url',
+    dataIndex: 'access_urls',
+    sorter: { multiple: 1 },
+    defaultHidden: true,
+  },
+  {
     key: 'file_format',
     title: 'Format',
     dataIndex: 'file_format',

@@ -34,7 +34,7 @@ type Props = {
   title: string;
 };
 
-const HpoTreeFacet = ({ type, title }: Props) => {
+const TreeFacet = ({ type, title }: Props) => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -332,4 +332,4 @@ const HpoTreeFacet = ({ type, title }: Props) => {
   );
 };
 
-export default HpoTreeFacet;
+export default TreeFacet;

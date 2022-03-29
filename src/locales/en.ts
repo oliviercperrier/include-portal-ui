@@ -146,6 +146,7 @@ const fr = {
       noResultsFound: 'No results found',
     },
     querybuilder: {
+      defaultTitle: 'Untitled Filter',
       header: {
         modal: {
           edit: {
@@ -331,10 +332,20 @@ const fr = {
         },
       },
     },
-    dataExploration: {
-      queryBuilder: {
-        defaultTitle: 'Untitled Filter',
+    variants: {
+      sidemenu: {
+        variant: 'Variant',
       },
+      tabs: {
+        summary: {
+          title: 'Summary',
+        },
+        variants: {
+          title: 'Variants',
+        },
+      },
+    },
+    dataExploration: {
       sidemenu: {
         participant: 'Participant',
         biospecimen: 'Biospecimen',
@@ -561,7 +572,7 @@ const fr = {
     ...filesFacets,
 
     //Other
-    collection_sample_type: "Collection Sample Type"
+    collection_sample_type: 'Collection Sample Type',
   },
 };
 

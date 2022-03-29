@@ -6,8 +6,8 @@ import SortableGrid from '@ferlab/ui/core/layout/SortableGrid';
 import { useDispatch } from 'react-redux';
 import { updateUserConfig } from 'store/user/thunks';
 import { useUser } from 'store/user';
-import { orderCardIfNeeded } from 'views/DataExploration/utils/helper';
 import cx from 'classnames';
+import { orderCardIfNeeded } from 'utils/helper';
 
 import styles from './index.module.scss';
 

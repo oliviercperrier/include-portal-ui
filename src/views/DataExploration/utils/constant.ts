@@ -1,5 +1,5 @@
+import { IQueryConfig } from 'common/searchPageTypes';
 import { STATIC_ROUTES } from 'utils/routes';
-import { IQueryConfig } from './types';
 
 export const DATA_EXPLORATION_REPO_CACHE_KEY = 'data-exploration-repo-key';
 

@@ -21,7 +21,7 @@ import {
   mapFilterForBiospecimen,
   mapFilterForFiles,
   mapFilterForParticipant,
-} from './utils/mapper';
+} from 'utils/fieldMapper';
 import TreeFacet from './components/TreeFacet';
 import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
 import FileSearch from './components/GlobalSearch/FileSearch';

@@ -10,13 +10,12 @@ import {
   SCROLL_WRAPPER_ID,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
-import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
+import { IQueryConfig, TQueryConfigCb } from 'common/searchPageTypes';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import ExpandableCell from 'components/uiKit/table/ExpendableCell';
 import {
   extractMondoTitleAndCode,
   extractPhenotypeTitleAndCode,
-  formatQuerySortList,
 } from 'views/DataExploration/utils/helper';
 import ProTable from '@ferlab/ui/core/components/ProTable';
 import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
@@ -39,7 +38,7 @@ import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
-import { scrollToTop } from 'utils/helper';
+import { scrollToTop, formatQuerySortList } from 'utils/helper';
 
 import styles from './index.module.scss';
 

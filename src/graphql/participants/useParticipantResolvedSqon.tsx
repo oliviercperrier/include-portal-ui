@@ -3,7 +3,7 @@ import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { useParams } from 'react-router-dom';
 import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
-import { mapFilterForParticipant } from 'views/DataExploration/utils/mapper';
+import { mapFilterForParticipant } from 'utils/fieldMapper';
 
 const useParticipantResolvedSqon = () => {
   useParams(); // sync with query builder

@@ -35,6 +35,7 @@ const Studies = loadable(() => import('views/Studies'), loadableProps);
 const MyProfile = loadable(() => import('views/MyProfile'), loadableProps);
 const Settings = loadable(() => import('views/Settings'), loadableProps);
 const DataExploration = loadable(() => import('views/DataExploration'), loadableProps);
+const Variants = loadable(() => import('views/Variants'), loadableProps);
 const JoinPage = loadable(() => import('views/Join'), loadableProps);
 
 const App = () => {
@@ -92,6 +93,9 @@ const App = () => {
                 </ProtectedRoute>
                 <ProtectedRoute exact path={DYNAMIC_ROUTES.DATA_EXPLORATION} layout={PageLayout}>
                   <DataExploration />
+                </ProtectedRoute>
+                <ProtectedRoute exact path={DYNAMIC_ROUTES.VARIANT} layout={PageLayout}>
+                  <Variants />
                 </ProtectedRoute>
                 <ProtectedRoute exact path={STATIC_ROUTES.MY_PROFILE} layout={PageLayout}>
                   <MyProfile />

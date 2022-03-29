@@ -1,7 +1,7 @@
 import { FileAccessType, IFileEntity, ITableFileEntity } from 'graphql/files/models';
 import { CloudUploadOutlined, LockOutlined, SafetyOutlined, UnlockFilled } from '@ant-design/icons';
 import { IQueryResults } from 'graphql/models';
-import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
+import { IQueryConfig, TQueryConfigCb } from 'common/searchPageTypes';
 import {
   CAVATICA_FILE_BATCH_SIZE,
   DEFAULT_PAGE_SIZE,
@@ -36,8 +36,7 @@ import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { userHasAccessToFile } from 'utils/dataFiles';
-import { formatQuerySortList } from 'views/DataExploration/utils/helper';
-import { scrollToTop } from 'utils/helper';
+import { scrollToTop, formatQuerySortList } from 'utils/helper';
 
 import styles from './index.module.scss';
 

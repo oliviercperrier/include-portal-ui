@@ -1,4 +1,4 @@
-import { TSortDirection } from "graphql/queries";
+import { TSortDirection } from 'graphql/queries';
 
 export type TPagingConfig = {
   index: number;

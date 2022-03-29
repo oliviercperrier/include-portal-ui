@@ -23,7 +23,7 @@ import {
   mapFilterForBiospecimen,
   mapFilterForFiles,
   mapFilterForParticipant,
-} from 'views/DataExploration/utils/mapper';
+} from 'utils/fieldMapper';
 import { isEmptySqon, resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { useParticipants } from 'graphql/participants/actions';
 import { useDataFiles } from 'graphql/files/actions';
@@ -178,7 +178,7 @@ const PageContent = ({
         headerConfig={{
           showHeader: true,
           showTools: true,
-          defaultTitle: intl.get('screen.dataExploration.queryBuilder.defaultTitle'),
+          defaultTitle: intl.get('components.querybuilder.defaultTitle'),
           options: {
             enableEditTitle: true,
             enableDuplicate: true,

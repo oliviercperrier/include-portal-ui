@@ -1,7 +1,7 @@
 import { IQueryResults } from 'graphql/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
-import { IQueryConfig, TQueryConfigCb } from 'views/DataExploration/utils/types';
+import { IQueryConfig, TQueryConfigCb } from 'common/searchPageTypes';
 import {
   DEFAULT_PAGE_SIZE,
   SCROLL_WRAPPER_ID,
@@ -30,8 +30,7 @@ import {
   generateFilters,
   generateValueFilter,
 } from '@ferlab/ui/core/data/sqon/utils';
-import { formatQuerySortList } from 'views/DataExploration/utils/helper';
-import { scrollToTop } from 'utils/helper';
+import { formatQuerySortList, scrollToTop } from 'utils/helper';
 
 import styles from './index.module.scss';
 

@@ -107,10 +107,10 @@ const HpoTreeFacet = ({ type, title }: Props) => {
 
     if (!results || results.length === 0) {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
-      updateQueryFilters(history, FIELD_NAME, []);
+      updateQueryFilters(history, `${title}.name`, []);
     } else {
       addFieldToActiveQuery({
-        field: FIELD_NAME,
+        field: `${title}.name`,
         value: results,
         operator,
         history,

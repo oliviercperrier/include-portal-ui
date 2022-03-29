@@ -17,6 +17,7 @@ const SunburstD3 = (
     centerSubtitleFormatter: (node) => {},
     centerDescriptionFormatter: (node) => {},
   },
+  type,
 ) => {
   const {
     tooltipFormatter,
@@ -99,15 +100,15 @@ const SunburstD3 = (
       arcVisible(d.current) ? (d.children ? fillOpacityWithChild : fillOpacityWithoutChild) : 0,
     );
 
-  [...document.getElementsByClassName('tooltipsunburst')].map((n) => n && n.remove());
+  [...document.getElementsByClassName(`tooltipsunburst-${type}`)].map((n) => n && n.remove());
 
   const Tooltip = d3
-    .select('#tooltip-wrapper')
+    .select(`#tooltip-wrapper-${type}`)
     .append('div')
     .style('position', 'absolute')
     .style('display', 'none')
     .style('box-shadow', '0.5px 0.5px 2px 0.5px rgba(0,0,0,0.2)')
-    .attr('class', 'tooltipsunburst')
+    .attr('class', `tooltipsunburst-${type}`)
     .style('background-color', 'white')
     .style('border-radius', '2px')
     .style('padding', '8px')
@@ -205,7 +206,7 @@ const SunburstD3 = (
         .attr('y', y)
         .attr('dy', dy + 'em');
 
-      const currentNode = data || centerText.datum().current.data;
+      const currentNode = data || centerText.datum().current.data;
 
       while ((word = words.pop())) {
         if (!regexTermNumber.test(word)) {

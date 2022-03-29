@@ -48,6 +48,8 @@ const SummaryTab = () => {
               <SunburstGraphCard
                 id="2"
                 className={cx(styles.summaryGrapCard, styles.sunburstGraphCard)}
+                field={'observed_phenotype'}
+                type={'observedPhenotype'}
               />
             ),
           },
@@ -56,14 +58,27 @@ const SummaryTab = () => {
             lg: 24,
             xl: 12,
             className: styles.summaryGraphCardCol,
-            component: <DataCategoryGraphCard id="3" className={styles.summaryGrapCard} />,
+            component: (
+              <SunburstGraphCard
+                id="3"
+                className={cx(styles.summaryGrapCard, styles.sunburstGraphCard)}
+                field={'mondo'}
+                type={'mondo'}
+              />
+            ),
           },
           {
             id: '4',
             lg: 24,
             xl: 12,
             className: styles.summaryGraphCardCol,
-            component: <DataTypeGraphCard id="4" className={styles.summaryGrapCard} />,
+            component: <DataCategoryGraphCard id="4" className={styles.summaryGrapCard} />,
+          },
+          {
+            id: '5',
+            lg: 24,
+            xl: 12,
+            component: <DataTypeGraphCard id="5" className={styles.summaryGrapCard} />,
           },
         ],
         userInfo?.config.data_exploration?.summary?.cards?.order,

@@ -15,7 +15,7 @@ const BiospecimenSearch = () => {
       field="sample_id"
       index={INDEXES.BIOSPECIMEN}
       placeholder={'e.g. BS_011DYZ2J, HTP0001B2_Plasma'}
-      emptyDescription={'No biospecimens found'}
+      emptyDescription={'No samples found'}
       query={BIOSPECIMEN_SEARCH_BY_ID_QUERY}
       sqon={sqon}
       optionsFormatter={(options, matchRegex, search) =>
@@ -29,7 +29,7 @@ const BiospecimenSearch = () => {
           value: option.sample_id,
         }))
       }
-      title={'Search by Biospecimen ID'}
+      title={'Search by Sample ID'}
     />
   );
 };
@@ -41,7 +41,7 @@ const BiospecimenCollectionSearch = () => {
     <GlobalSearch<IBiospecimenEntity>
       field="collection_sample_id"
       index={INDEXES.BIOSPECIMEN}
-      placeholder={'e.g. BS_00BPKP5F_Not Reported'}
+      placeholder={'e.g. HTP0001B2_Whole blood, BS_1YEZ2XR4_Saliva'}
       emptyDescription={'No collection ID found'}
       query={BIOSPECIMEN_SEARCH_BY_ID_QUERY}
       sqon={sqon}

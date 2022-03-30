@@ -51,6 +51,7 @@ import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
 import { INDEXES } from 'graphql/constants';
 
 import styles from './index.module.scss';
+import { numberWithCommas } from 'utils/string';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -244,7 +245,7 @@ const PageContent = ({
             <span>
               <UserOutlined />
               {intl.get('screen.dataExploration.tabs.participants.title', {
-                count: participantResults.total,
+                count: numberWithCommas(participantResults.total),
               })}
             </span>
           }
@@ -262,7 +263,7 @@ const PageContent = ({
             <span>
               <ExperimentOutlined />
               {intl.get('screen.dataExploration.tabs.biospecimens.title', {
-                count: biospecimenResults.total,
+                count: numberWithCommas(biospecimenResults.total),
               })}
             </span>
           }
@@ -280,7 +281,7 @@ const PageContent = ({
             <span>
               <FileTextOutlined />
               {intl.get('screen.dataExploration.tabs.datafiles.title', {
-                count: fileResults.total,
+                count: numberWithCommas(fileResults.total),
               })}
             </span>
           }

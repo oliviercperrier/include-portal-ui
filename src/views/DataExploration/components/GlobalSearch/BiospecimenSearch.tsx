@@ -4,6 +4,7 @@ import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { BIOSPECIMEN_SEARCH_BY_ID_QUERY } from 'graphql/biospecimens/queries';
 import useBiospecimenResolvedSqon from 'graphql/biospecimens/useBiospecimenResolvedSqon';
 import { INDEXES } from 'graphql/constants';
+import { uniqBy } from 'lodash';
 import GlobalSearch from '.';
 import { highlightSearchMatch } from './utils';
 
@@ -19,7 +20,7 @@ const BiospecimenSearch = () => {
       query={BIOSPECIMEN_SEARCH_BY_ID_QUERY}
       sqon={sqon}
       optionsFormatter={(options, matchRegex, search) =>
-        options.map((option) => ({
+        uniqBy(options, (opt) => opt.sample_id).map((option) => ({
           label: (
             <SelectItem
               icon={<ExperimentOutlined />}
@@ -46,7 +47,7 @@ const BiospecimenCollectionSearch = () => {
       query={BIOSPECIMEN_SEARCH_BY_ID_QUERY}
       sqon={sqon}
       optionsFormatter={(options, matchRegex, search) =>
-        options.map((option) => ({
+        uniqBy(options, (opt) => opt.collection_sample_id).map((option) => ({
           label: (
             <SelectItem
               icon={<ExperimentOutlined />}

@@ -14,7 +14,7 @@ export type TCustomFilterMapper = (filters: ISqonGroupFilter) => ISyntheticSqon;
 
 type OwnProps = {
   index: string;
-  cacheKey: string;
+  queryBuilderId: string;
   extendedMappingResults: ExtendedMappingResults;
   filterInfo: FilterInfo;
   filterMapper?: TCustomFilterMapper;
@@ -24,7 +24,7 @@ const { Text } = Typography;
 
 const FilterList = ({
   index,
-  cacheKey,
+  queryBuilderId,
   extendedMappingResults,
   filterInfo,
   filterMapper,
@@ -60,7 +60,7 @@ const FilterList = ({
                 <CustomFilterContainer
                   key={facet}
                   index={index}
-                  cacheKey={cacheKey}
+                  queryBuilderId={queryBuilderId}
                   classname={cx(styles.customFilterContainer, styles.filter)}
                   filterKey={facet}
                   extendedMappingResults={extendedMappingResults}

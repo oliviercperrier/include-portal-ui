@@ -2,20 +2,25 @@ import { Layout, Spin } from 'antd';
 import { generateFilters } from 'graphql/utils/Filters';
 import useGetAggregations from 'hooks/graphql/useGetAggregations';
 import { ExtendedMappingResults } from 'graphql/models';
-import { useHistory } from 'react-router-dom';
 import { AGGREGATION_QUERY } from 'graphql/queries';
 
 import styles from './Filters.module.scss';
 
 type OwnProps = {
+  queryBuilderId: string;
   index: string;
   field: string;
   sqon: any;
   extendedMappingResults: ExtendedMappingResults;
 };
 
-const GenericFilters = ({ index, field, sqon, extendedMappingResults }: OwnProps) => {
-  const history = useHistory();
+const GenericFilters = ({
+  queryBuilderId,
+  index,
+  field,
+  sqon,
+  extendedMappingResults,
+}: OwnProps) => {
   const results = useGetAggregations(
     {
       sqon,
@@ -28,6 +33,7 @@ const GenericFilters = ({ index, field, sqon, extendedMappingResults }: OwnProps
     <Spin size="large" spinning={results.loading}>
       <Layout className={`${styles.filterWrapper} ${styles.genericFilterWrapper}`}>
         {generateFilters({
+          queryBuilderId,
           aggregations: results?.aggregations,
           extendedMapping: extendedMappingResults,
           className: styles.customFilterContainer,
@@ -35,7 +41,6 @@ const GenericFilters = ({ index, field, sqon, extendedMappingResults }: OwnProps
           filterFooter: true,
           showSearchInput: true,
           useFilterSelector: true,
-          history,
           index,
         })}
       </Layout>

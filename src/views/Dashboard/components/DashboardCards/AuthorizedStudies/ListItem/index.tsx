@@ -3,13 +3,14 @@ import { Button, List, Progress, Typography } from 'antd';
 import intl from 'react-intl-universal';
 import { TFenceStudy } from 'store/fenceStudies/types';
 import { numberWithCommas } from 'utils/string';
-
-import styles from './index.module.scss';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { INDEXES } from 'graphql/constants';
-import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { addQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   id: any;
@@ -31,10 +32,11 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
           <div className={styles.filesCount}>
             {intl.get('screen.dashboard.cards.authorizedStudies.authorization')}:{' '}
             <Link
-              to={{
-                pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
-                search: createQueryParams({
-                  filters: generateFilters({
+              to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+              onClick={() =>
+                addQuery({
+                  queryBuilderId: DATA_EXPLORATION_QB_ID,
+                  query: generateFilters({
                     newFilters: [
                       generateValueFilter({
                         field: 'study_id',
@@ -48,8 +50,9 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
                       }),
                     ],
                   }),
-                }),
-              }}
+                  setAsActive: true,
+                })
+              }
             >
               <Button className={styles.fileLink} type="link">
                 <span>{numberWithCommas(data.authorizedFiles)}</span>
@@ -57,10 +60,11 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
             </Link>{' '}
             {intl.get('screen.dashboard.cards.authorizedStudies.of')}{' '}
             <Link
-              to={{
-                pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
-                search: createQueryParams({
-                  filters: generateFilters({
+              to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+              onClick={() =>
+                addQuery({
+                  queryBuilderId: DATA_EXPLORATION_QB_ID,
+                  query: generateFilters({
                     newFilters: [
                       generateValueFilter({
                         field: 'study_id',
@@ -69,8 +73,9 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
                       }),
                     ],
                   }),
-                }),
-              }}
+                  setAsActive: true,
+                })
+              }
             >
               <Button className={styles.fileLink} type="link">
                 <span>{numberWithCommas(data.totalFiles)}</span>

@@ -1,17 +1,12 @@
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
-import { useParams } from 'react-router-dom';
-import { DATA_EXPLORATION_REPO_CACHE_KEY } from 'views/DataExploration/utils/constant';
 import { mapFilterForParticipant } from 'utils/fieldMapper';
+import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
-const useParticipantResolvedSqon = () => {
-  useParams(); // sync with query builder
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
-  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+const useParticipantResolvedSqon = (queryBuilderId: string) => {
+  const { queryList, activeQuery } = useQueryBuilderState(queryBuilderId);
 
   return {
-    sqon: mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters)),
+    sqon: mapFilterForParticipant(resolveSyntheticSqon(queryList, activeQuery)),
   };
 };
 

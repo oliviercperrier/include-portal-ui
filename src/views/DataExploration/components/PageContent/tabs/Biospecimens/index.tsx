@@ -3,6 +3,7 @@ import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
 import { IQueryConfig, TQueryConfigCb } from 'common/searchPageTypes';
 import {
+  DATA_EXPLORATION_QB_ID,
   DEFAULT_PAGE_SIZE,
   SCROLL_WRAPPER_ID,
   TAB_IDS,
@@ -20,17 +21,16 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
-import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { Link, useHistory } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
-import {
-  addFieldToActiveQuery,
-  generateFilters,
-  generateValueFilter,
-} from '@ferlab/ui/core/data/sqon/utils';
+import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { formatQuerySortList, scrollToTop } from 'utils/helper';
+import useQueryBuilderState, {
+  updateActiveQueryField,
+  addQuery,
+} from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
 
@@ -95,10 +95,10 @@ const getDefaultColumns = (history: any): ProColumnType<any>[] => [
         <a
           type="link"
           onClick={() =>
-            addFieldToActiveQuery({
+            updateActiveQueryField({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
               field: 'collection_sample_id',
               value: [collection_sample_id],
-              history,
               index: INDEXES.BIOSPECIMEN,
             })
           }
@@ -175,10 +175,11 @@ const getDefaultColumns = (history: any): ProColumnType<any>[] => [
       const nbFiles = record?.nb_files || 0;
       return nbFiles ? (
         <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
-            search: createQueryParams({
-              filters: generateFilters({
+          to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
                 newFilters: [
                   generateValueFilter({
                     field: 'sample_id',
@@ -187,8 +188,9 @@ const getDefaultColumns = (history: any): ProColumnType<any>[] => [
                   }),
                 ],
               }),
-            }),
-          }}
+              setAsActive: true,
+            })
+          }
         >
           {nbFiles}
         </Link>
@@ -203,7 +205,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
   const dispatch = useDispatch();
   const { userInfo } = useUser();
   const history = useHistory();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
+  const { activeQuery } = useQueryBuilderState(DATA_EXPLORATION_QB_ID);
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
@@ -212,7 +214,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length

@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import FilterContainer from '@ferlab/ui/core/components/filters/FilterContainer';
+import { updateActiveQueryFilters } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { IFilter, IFilterGroup } from '@ferlab/ui/core/components/filters/types';
-import { getSelectedFilters, updateFilters } from '@ferlab/ui/core/data/filters/utils';
 import { ExtendedMapping, ExtendedMappingResults, GqlResults } from 'graphql/models';
 import { getFilterGroup, getFilters } from 'graphql/utils/Filters';
 import { underscoreToDot } from '@ferlab/ui/core/data/arranger/formatting';
 import CustomFilterSelector from './CustomFilterSelector';
 import { getFiltersDictionary } from 'utils/translation';
 import { TCustomFilterMapper } from '.';
-import { useHistory } from 'react-router-dom';
+import { getSelectedFilters } from '@ferlab/ui/core/data/sqon/utils';
 
 type OwnProps = {
   classname: string;
   index: string;
-  cacheKey: string;
+  queryBuilderId: string;
   filterKey: string;
   extendedMappingResults: ExtendedMappingResults;
   filtersOpen: boolean;
@@ -23,13 +23,12 @@ type OwnProps = {
 const CustomFilterContainer = ({
   classname,
   index,
-  cacheKey,
+  queryBuilderId,
   filterKey,
   filtersOpen,
   extendedMappingResults,
   filterMapper,
 }: OwnProps) => {
-  const history = useHistory();
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [results, setResults] = useState<GqlResults<any>>();
   const found = (extendedMappingResults?.data || []).find(
@@ -37,13 +36,24 @@ const CustomFilterContainer = ({
   );
 
   const onChange = (fg: IFilterGroup, f: IFilter[]) => {
-    updateFilters(history, fg, f, index);
+    updateActiveQueryFilters({
+      queryBuilderId,
+      filterGroup: fg,
+      selectedFilters: f,
+      index,
+    });
   };
 
   const aggregations = results?.aggregations ? results?.aggregations[filterKey] : {};
   const filterGroup = getFilterGroup(found, aggregations, [], true);
   const filters = results?.data ? getFilters(results?.aggregations, filterKey) : [];
-  const selectedFilters = results?.data ? getSelectedFilters(filters, filterGroup) : [];
+  const selectedFilters = results?.data
+    ? getSelectedFilters({
+        queryBuilderId,
+        filters,
+        filterGroup,
+      })
+    : [];
 
   return (
     <div className={classname} key={`${filterKey}_${filtersOpen}`}>
@@ -58,7 +68,7 @@ const CustomFilterContainer = ({
         customContent={
           <CustomFilterSelector
             index={index}
-            cacheKey={cacheKey}
+            queryBuilderId={queryBuilderId}
             filterKey={filterKey}
             dictionary={getFiltersDictionary()}
             filters={filters}

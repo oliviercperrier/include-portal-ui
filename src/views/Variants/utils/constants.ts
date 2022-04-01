@@ -2,7 +2,7 @@ import { IQueryConfig } from 'common/searchPageTypes';
 
 export const SCROLL_WRAPPER_ID = 'variants-scroll-wrapper';
 
-export const VARIANT_REPO_CACHE_KEY = 'variant-repo-key';
+export const VARIANT_REPO_QB_ID = 'variant-repo-key';
 
 export const VARIANT_FILTER_TAG = 'variant';
 

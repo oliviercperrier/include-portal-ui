@@ -2,7 +2,6 @@ import QueryBuilder from '@ferlab/ui/core/components/QueryBuilder';
 import { PieChartOutlined, UserOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { STATIC_ROUTES } from 'utils/routes';
 import { getQueryBuilderDictionary } from 'utils/translation';
 import { Space, Tabs } from 'antd';
@@ -19,21 +18,21 @@ import {
 import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { isEmpty } from 'lodash';
 import {
   DEFAULT_PAGE_INDEX,
   DEFAULT_QUERY_CONFIG,
   TAB_IDS,
   VARIANT_FILTER_TAG,
-  VARIANT_REPO_CACHE_KEY,
+  VARIANT_REPO_QB_ID,
 } from 'views/Variants/utils/constants';
 import { useVariant } from 'graphql/variants/actions';
 import SummaryTab from './tabs/Summary';
 import { combineExtendedMappings } from 'utils/fieldMapper';
+import VariantsTab from './tabs/Variants';
+import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
-import VariantsTab from './tabs/Variants';
 
 type OwnProps = {
   variantMapping: ExtendedMappingResults;
@@ -48,12 +47,11 @@ const addTagToFilter = (filter: ISavedFilter) => ({
 const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
+  const { queryList, activeQuery } = useQueryBuilderState(VARIANT_REPO_QB_ID);
   const { savedFilters, defaultFilter } = useSavedFilter(VARIANT_FILTER_TAG);
-  const allSqons = getQueryBuilderCache(VARIANT_REPO_CACHE_KEY).state;
 
   const [variantQueryConfig, setVariantQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
-  const variantResolvedSqon = resolveSyntheticSqon(allSqons, filters);
+  const variantResolvedSqon = resolveSyntheticSqon(queryList, activeQuery);
 
   const variantResults = useVariant({
     first: variantQueryConfig.size,
@@ -75,7 +73,7 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
       pageIndex: DEFAULT_PAGE_INDEX,
     });
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
@@ -96,6 +94,7 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
   return (
     <Space direction="vertical" size={24} className={styles.variantsPageContent}>
       <QueryBuilder
+        id={VARIANT_REPO_QB_ID}
         className="variants-repo__query-builder"
         headerConfig={{
           showHeader: true,
@@ -113,12 +112,10 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
           onDeleteFilter: handleOnDeleteFilter,
           onSetAsFavorite: handleOnSaveAsFavorite,
         }}
-        history={history}
         enableCombine
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
-        cacheKey={VARIANT_REPO_CACHE_KEY}
-        currentQuery={isEmptySqon(filters) ? {} : filters}
+        currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
         loading={variantMapping.loading}
         total={variantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}

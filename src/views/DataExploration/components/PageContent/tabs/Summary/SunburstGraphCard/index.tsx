@@ -21,6 +21,7 @@ import CardHeader from 'views/Dashboard/components/CardHeader';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 
 import styles from './index.module.scss';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
 
 interface OwnProps {
   id: string;
@@ -38,7 +39,7 @@ const SunburstGraphCard = ({ id, className = '', field }: OwnProps) => {
   const phenotypeStore = useRef(new PhenotypeStore());
   const sunburstRef = useRef<SVGSVGElement>(null);
   const updateSunburst = useRef<(key: any) => void>();
-  const { sqon } = useParticipantResolvedSqon();
+  const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
 
   useEffect(() => {
     setIsLoading(true);
@@ -74,6 +75,10 @@ const SunburstGraphCard = ({ id, className = '', field }: OwnProps) => {
         field,
       );
     });
+
+    return () => {
+      updateSunburst.current = undefined;
+    };
     // eslint-disable-next-line
   }, [JSON.stringify(sqon)]);
 

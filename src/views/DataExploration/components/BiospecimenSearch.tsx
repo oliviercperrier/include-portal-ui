@@ -1,18 +1,19 @@
 import { ExperimentOutlined } from '@ant-design/icons';
+import GlobalSearch, { ICustomSearchProps } from 'components/uiKit/GlobalSearch';
+import { highlightSearchMatch } from 'components/uiKit/GlobalSearch/utils';
 import SelectItem from 'components/uiKit/select/SelectItem';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { BIOSPECIMEN_SEARCH_BY_ID_QUERY } from 'graphql/biospecimens/queries';
 import useBiospecimenResolvedSqon from 'graphql/biospecimens/useBiospecimenResolvedSqon';
 import { INDEXES } from 'graphql/constants';
 import { uniqBy } from 'lodash';
-import GlobalSearch from '.';
-import { highlightSearchMatch } from './utils';
 
-const BiospecimenSearch = () => {
-  const { sqon } = useBiospecimenResolvedSqon();
+const BiospecimenSearch = ({ queryBuilderId }: ICustomSearchProps) => {
+  const { sqon } = useBiospecimenResolvedSqon(queryBuilderId);
 
   return (
     <GlobalSearch<IBiospecimenEntity>
+      queryBuilderId={queryBuilderId}
       field="sample_id"
       index={INDEXES.BIOSPECIMEN}
       placeholder={'e.g. BS_011DYZ2J, HTP0001B2_Plasma'}
@@ -35,11 +36,12 @@ const BiospecimenSearch = () => {
   );
 };
 
-const BiospecimenCollectionSearch = () => {
-  const { sqon } = useBiospecimenResolvedSqon();
+const BiospecimenCollectionSearch = ({ queryBuilderId }: ICustomSearchProps) => {
+  const { sqon } = useBiospecimenResolvedSqon(queryBuilderId);
 
   return (
     <GlobalSearch<IBiospecimenEntity>
+      queryBuilderId={queryBuilderId}
       field="collection_sample_id"
       index={INDEXES.BIOSPECIMEN}
       placeholder={'e.g. HTP0001B2_Whole blood, BS_1YEZ2XR4_Saliva'}

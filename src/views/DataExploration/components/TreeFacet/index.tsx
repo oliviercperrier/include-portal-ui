@@ -9,11 +9,7 @@ import {
   TTitleFormatter,
 } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
-import {
-  addFieldToActiveQuery,
-  findSqonValueByField,
-  removeValueFilterFromSqon,
-} from '@ferlab/ui/core/data/sqon/utils';
+import { findSqonValueByField, removeValueFilterFromSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
@@ -24,6 +20,8 @@ import Empty from '@ferlab/ui/core/components/Empty';
 import { cloneDeep, isEmpty } from 'lodash';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 import { TermOperators } from '@ferlab/ui/core/data/sqon/operators';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
 
@@ -45,7 +43,7 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
   const [rootNode, setRootNode] = useState<TreeNode>();
   const [treeData, setTreeData] = useState<TreeNode>();
   const history = useHistory();
-  const { sqon } = useParticipantResolvedSqon();
+  const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
 
   const getInitialExpandedKeys = (data: TreeNode[], collectedKeys: string[] = [], counter = 0) => {
     if (counter < AUTO_EXPAND_TREE) {
@@ -111,13 +109,13 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
       updateQueryFilters(history, `${field}.name`, []);
     } else {
-      addFieldToActiveQuery({
+      updateActiveQueryField({
+        queryBuilderId: DATA_EXPLORATION_QB_ID,
         field: `${field}.name`,
         value: results,
         operator,
-        history,
         index: INDEXES.PARTICIPANT,
-        merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+        merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
       });
     }
 
@@ -198,27 +196,7 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
           </Dropdown.Button>,
         ]}
         okButtonProps={{ disabled: isEmpty(targetKeys) && isEmpty(treeData) }}
-        onOk={() => {
-          const flatTreeData = getFlattenTree(treeData!);
-          const results = flatTreeData
-            .filter(({ key }) => targetKeys.includes(key))
-            .map(({ title }) => title);
-
-          if (!results || results.length === 0) {
-            setExpandedKeys(getInitialExpandedKeys([treeData!]));
-            updateQueryFilters(history, `${field}.name`, []);
-          } else {
-            addFieldToActiveQuery({
-              field: `${field}.name`,
-              value: results,
-              history,
-              index: INDEXES.PARTICIPANT,
-              merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
-            });
-          }
-
-          setVisible(false);
-        }}
+        onOk={() => handleOnApply()}
         onCancel={handleCancel}
       >
         <Transfer<TreeNode>

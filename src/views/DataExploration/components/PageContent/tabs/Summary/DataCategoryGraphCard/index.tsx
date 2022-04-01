@@ -3,7 +3,6 @@ import { toChartData } from 'utils/charts';
 import BarChart from 'components/uiKit/charts/Bar';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { truncateString } from 'utils/string';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
@@ -15,6 +14,8 @@ import useApi from 'hooks/useApi';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 import CardHeader from 'views/Dashboard/components/CardHeader';
 import intl from 'react-intl-universal';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 interface OwnProps {
   id: string;
@@ -35,16 +36,16 @@ const graphSetting: any = {
 };
 
 const addToQuery = (field: string, key: string, history: any) =>
-  addFieldToActiveQuery({
+  updateActiveQueryField({
+    queryBuilderId: DATA_EXPLORATION_QB_ID,
     field,
     value: [key.toLowerCase() === 'no data' ? ArrangerValues.missing : key],
-    history,
     index: INDEXES.FILE,
   });
 
 const DataCategoryGraphCard = ({ id, className = '' }: OwnProps) => {
   const history = useHistory();
-  const { sqon } = useParticipantResolvedSqon();
+  const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
   const { loading, result } = useApi<any>({
     config: {
       url: ARRANGER_API_PROJECT_URL,

@@ -26,12 +26,13 @@ import {
   DEFAULT_QUERY_CONFIG,
   TAB_IDS,
   VARIANT_FILTER_TAG,
-  VARIANT_REPO_CACHE_KEY,
+  VARIANT_REPO_QB_ID,
 } from 'views/Variants/utils/constants';
 import { useVariant } from 'graphql/variants/actions';
 import SummaryTab from './tabs/Summary';
 import { combineExtendedMappings } from 'utils/fieldMapper';
 import VariantsTab from './tabs/Variants';
+import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
 
@@ -48,12 +49,11 @@ const addTagToFilter = (filter: ISavedFilter) => ({
 const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
+  const { queryList, activeQuery } = useQueryBuilderState(VARIANT_REPO_QB_ID);
   const { savedFilters, defaultFilter } = useSavedFilter(VARIANT_FILTER_TAG);
-  const allSqons = getQueryBuilderCache(VARIANT_REPO_CACHE_KEY).state;
 
   const [variantQueryConfig, setVariantQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
-  const variantResolvedSqon = resolveSyntheticSqon(allSqons, filters);
+  const variantResolvedSqon = resolveSyntheticSqon(queryList, activeQuery);
 
   const variantResults = useVariant({
     first: variantQueryConfig.size,
@@ -75,7 +75,7 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
       pageIndex: DEFAULT_PAGE_INDEX,
     });
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
@@ -96,7 +96,7 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
   return (
     <Space direction="vertical" size={24} className={styles.variantsPageContent}>
       <QueryBuilder
-        id={VARIANT_REPO_CACHE_KEY}
+        id={VARIANT_REPO_QB_ID}
         className="variants-repo__query-builder"
         headerConfig={{
           showHeader: true,
@@ -117,7 +117,7 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
         enableCombine
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
-        currentQuery={isEmptySqon(filters) ? {} : filters}
+        currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
         loading={variantMapping.loading}
         total={variantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}

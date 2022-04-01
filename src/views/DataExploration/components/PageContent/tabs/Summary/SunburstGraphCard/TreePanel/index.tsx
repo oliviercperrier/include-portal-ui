@@ -1,11 +1,11 @@
 import { Button, Space, Tree, Typography } from 'antd';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { TreeNode } from 'views/DataExploration/utils/OntologyTree';
 import intl from 'react-intl-universal';
 import { INDEXES } from 'graphql/constants';
-import { useHistory } from 'react-router-dom';
 import { RegexExtractPhenotype } from 'views/DataExploration/utils/PhenotypeStore';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
+import { addFieldToActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
 
 import styles from './index.module.scss';
 
@@ -41,63 +41,59 @@ const TreePanel = ({
   getSelectedPhenotype,
   updateSunburst,
   field,
-}: OwnProps) => {
-  const history = useHistory();
-
-  return (
-    <Space direction="vertical" className={styles.phenotypeSunburstTree}>
-      <Title level={5}>{currentNode?.name}</Title>
-      <Text>
-        {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.nbParticipant`, {
-          count: currentNode?.results,
-        })}
+}: OwnProps) => (
+  <Space direction="vertical" className={styles.phenotypeSunburstTree}>
+    <Title level={5}>{currentNode?.name}</Title>
+    <Text>
+      {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.nbParticipant`, {
+        count: currentNode?.results,
+      })}
+    </Text>
+    <Button
+      className={styles.addTermBtn}
+      type="link"
+      size="small"
+      onClick={() => {
+        addFieldToActiveQuery({
+          queryBuilderId: DATA_EXPLORATION_QB_ID,
+          field: `${field}.name`,
+          value: [currentNode?.title!],
+          index: INDEXES.PARTICIPANT,
+          merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+        });
+      }}
+    >
+      {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.addTermToQuery`)}
+    </Button>
+    <Space className={styles.treeWrapper} direction="vertical" size={5}>
+      <Text type="secondary">
+        {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.currentPath`)}
       </Text>
-      <Button
-        className={styles.addTermBtn}
-        type="link"
-        size="small"
-        onClick={() => {
-          addFieldToActiveQuery({
-            field: `${field}.name`,
-            value: [currentNode?.title!],
-            history,
-            index: INDEXES.PARTICIPANT,
-            merge_stategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
-          });
+      <Tree
+        height={213}
+        switcherIcon={<div />}
+        selectedKeys={getSelectedKeys(currentNode!)}
+        expandedKeys={getExpandedNode(currentNode!)}
+        className={styles.phenotypeTree}
+        treeData={treeData!}
+        onSelect={(keys) => {
+          if (keys.length) {
+            const key = getPath(keys[0] as string, treeData!).join('-');
+            getSelectedPhenotype({
+              title: keys[0] as string,
+              name: keys[0] as string,
+              key,
+              children: [],
+              valueText: 0,
+            });
+            updateSunburst(key);
+          } else {
+            return {};
+          }
         }}
-      >
-        {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.addTermToQuery`)}
-      </Button>
-      <Space className={styles.treeWrapper} direction="vertical" size={5}>
-        <Text type="secondary">
-          {intl.get(`screen.dataExploration.tabs.summary.${field}.phenotypeTree.currentPath`)}
-        </Text>
-        <Tree
-          height={213}
-          switcherIcon={<div />}
-          selectedKeys={getSelectedKeys(currentNode!)}
-          expandedKeys={getExpandedNode(currentNode!)}
-          className={styles.phenotypeTree}
-          treeData={treeData!}
-          onSelect={(keys) => {
-            if (keys.length) {
-              const key = getPath(keys[0] as string, treeData!).join('-');
-              getSelectedPhenotype({
-                title: keys[0] as string,
-                name: keys[0] as string,
-                key,
-                children: [],
-                valueText: 0,
-              });
-              updateSunburst(key);
-            } else {
-              return {};
-            }
-          }}
-        />
-      </Space>
+      />
     </Space>
-  );
-};
+  </Space>
+);
 
 export default TreePanel;

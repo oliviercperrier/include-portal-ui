@@ -8,7 +8,7 @@ import { Spin } from 'antd';
 import { ExtendedMappingResults } from 'graphql/models';
 import FilterList, { TCustomFilterMapper } from 'components/uiKit/FilterList';
 import {
-  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DATA_EXPLORATION_QB_ID,
   SCROLL_WRAPPER_ID,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
@@ -23,12 +23,9 @@ import {
   mapFilterForParticipant,
 } from 'utils/fieldMapper';
 import TreeFacet from './components/TreeFacet';
-import ParticipantSearch from './components/GlobalSearch/ParticipantSearch';
-import FileSearch from './components/GlobalSearch/FileSearch';
-import {
-  BiospecimenSearch,
-  BiospecimenCollectionSearch,
-} from './components/GlobalSearch/BiospecimenSearch';
+import ParticipantSearch from './components/ParticipantSearch';
+import FileSearch from './components/FileSearch';
+import { BiospecimenSearch, BiospecimenCollectionSearch } from './components/BiospecimenSearch';
 import { formatHpoTitleAndCode, formatMondoTitleAndCode } from './utils/helper';
 
 import styles from './index.module.scss';
@@ -47,7 +44,7 @@ export const filterGroups: {
   [type: string]: FilterInfo;
 } = {
   [FilterTypes.Participant]: {
-    customSearches: [<ParticipantSearch />],
+    customSearches: [<ParticipantSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />],
     groups: [
       {
         facets: [
@@ -68,7 +65,10 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Biospecimen]: {
-    customSearches: [<BiospecimenSearch />, <BiospecimenCollectionSearch />],
+    customSearches: [
+      <BiospecimenSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <BiospecimenCollectionSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+    ],
     groups: [
       {
         facets: [
@@ -83,7 +83,7 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Datafiles]: {
-    customSearches: [<FileSearch />],
+    customSearches: [<FileSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />],
     groups: [
       {
         facets: [
@@ -112,7 +112,7 @@ const filtersContainer = (
     <FilterList
       key={index}
       index={index}
-      cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
+      queryBuilderId={DATA_EXPLORATION_QB_ID}
       extendedMappingResults={mappingResults}
       filterInfo={filterGroups[type]}
       filterMapper={filterMapper}

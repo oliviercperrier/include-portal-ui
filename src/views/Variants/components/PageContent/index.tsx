@@ -31,9 +31,9 @@ import {
 import { useVariant } from 'graphql/variants/actions';
 import SummaryTab from './tabs/Summary';
 import { combineExtendedMappings } from 'utils/fieldMapper';
+import VariantsTab from './tabs/Variants';
 
 import styles from './index.module.scss';
-import VariantsTab from './tabs/Variants';
 
 type OwnProps = {
   variantMapping: ExtendedMappingResults;
@@ -96,6 +96,7 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
   return (
     <Space direction="vertical" size={24} className={styles.variantsPageContent}>
       <QueryBuilder
+        id={VARIANT_REPO_CACHE_KEY}
         className="variants-repo__query-builder"
         headerConfig={{
           showHeader: true,
@@ -113,11 +114,9 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
           onDeleteFilter: handleOnDeleteFilter,
           onSetAsFavorite: handleOnSaveAsFavorite,
         }}
-        history={history}
         enableCombine
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
-        cacheKey={VARIANT_REPO_CACHE_KEY}
         currentQuery={isEmptySqon(filters) ? {} : filters}
         loading={variantMapping.loading}
         total={variantResults.total}

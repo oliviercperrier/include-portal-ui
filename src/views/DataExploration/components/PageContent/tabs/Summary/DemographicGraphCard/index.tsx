@@ -4,7 +4,6 @@ import PieChart from 'components/uiKit/charts/Pie';
 import { toChartData } from 'utils/charts';
 import intl from 'react-intl-universal';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { ArrangerValues } from '@ferlab/ui/core/data/arranger/formatting';
@@ -18,6 +17,8 @@ import { capitalize, isEmpty } from 'lodash';
 import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
+import { addFieldToActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 interface OwnProps {
   id: string;
@@ -45,15 +46,15 @@ const graphSetting = {
 
 const addToQuery = (field: string, key: string, history: any) =>
   addFieldToActiveQuery({
+    queryBuilderId: DATA_EXPLORATION_QB_ID,
     field,
     value: [key.toLowerCase() === 'no data' ? ArrangerValues.missing : key],
-    history,
     index: INDEXES.PARTICIPANT,
   });
 
 const DemographicsGraphCard = ({ id, className = '' }: OwnProps) => {
   const history = useHistory();
-  const { sqon } = useParticipantResolvedSqon();
+  const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
   const { loading, result } = useApi<any>({
     config: {
       url: ARRANGER_API_PROJECT_URL,

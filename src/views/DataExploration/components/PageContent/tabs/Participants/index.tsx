@@ -6,6 +6,7 @@ import {
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
 import {
+  DATA_EXPLORATION_QB_ID,
   DEFAULT_PAGE_SIZE,
   SCROLL_WRAPPER_ID,
   TAB_IDS,
@@ -31,14 +32,16 @@ import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
-import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
-import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
 import { scrollToTop, formatQuerySortList } from 'utils/helper';
+import useQueryBuilderState, {
+  addQuery,
+} from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
 
@@ -259,10 +262,11 @@ const defaultColumns: ProColumnType<any>[] = [
 
       return nb_biospecimens ? (
         <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-            search: createQueryParams({
-              filters: generateFilters({
+          to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
                 newFilters: [
                   generateValueFilter({
                     field: 'participant_id',
@@ -271,8 +275,9 @@ const defaultColumns: ProColumnType<any>[] = [
                   }),
                 ],
               }),
-            }),
-          }}
+              setAsActive: true,
+            })
+          }
         >
           {nb_biospecimens}
         </Link>
@@ -290,10 +295,11 @@ const defaultColumns: ProColumnType<any>[] = [
     render: (record: ITableParticipantEntity) => {
       return record.nb_files ? (
         <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_DATAFILES,
-            search: createQueryParams({
-              filters: generateFilters({
+          to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
                 newFilters: [
                   generateValueFilter({
                     field: 'participant_id',
@@ -302,8 +308,9 @@ const defaultColumns: ProColumnType<any>[] = [
                   }),
                 ],
               }),
-            }),
-          }}
+              setAsActive: true,
+            })
+          }
         >
           {record.nb_files}
         </Link>
@@ -317,7 +324,7 @@ const defaultColumns: ProColumnType<any>[] = [
 const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
+  const { activeQuery } = useQueryBuilderState(DATA_EXPLORATION_QB_ID);
   const [selectedAllResults, setSelectedAllResults] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
@@ -326,7 +333,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const getReportSqon = (): any =>
     selectedAllResults || !selectedKeys.length

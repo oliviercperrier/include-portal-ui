@@ -4,6 +4,7 @@ import { IQueryResults } from 'graphql/models';
 import { IQueryConfig, TQueryConfigCb } from 'common/searchPageTypes';
 import {
   CAVATICA_FILE_BATCH_SIZE,
+  DATA_EXPLORATION_QB_ID,
   DEFAULT_PAGE_SIZE,
   SCROLL_WRAPPER_ID,
   TAB_IDS,
@@ -21,7 +22,7 @@ import { Button, Modal, Tag, Tooltip } from 'antd';
 import AnalyseModal from 'views/Dashboard/components/DashboardCards/Cavatica/AnalyseModal';
 import { fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
-import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import CreateProjectModal from 'views/Dashboard/components/DashboardCards/Cavatica/CreateProjectModal';
 import intl from 'react-intl-universal';
 import { beginAnalyse } from 'store/fenceCavatica/thunks';
@@ -31,7 +32,6 @@ import { connectToFence } from 'store/fenceConnection/thunks';
 import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
-import { createQueryParams, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
@@ -39,6 +39,9 @@ import { userHasAccessToFile } from 'utils/dataFiles';
 import { scrollToTop, formatQuerySortList } from 'utils/helper';
 
 import styles from './index.module.scss';
+import useQueryBuilderState, {
+  addQuery,
+} from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -171,10 +174,11 @@ const getDefaultColumns = (
       const nb_participants = record?.nb_participants || 0;
       return nb_participants ? (
         <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
-            search: createQueryParams({
-              filters: generateFilters({
+          to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
                 newFilters: [
                   generateValueFilter({
                     field: 'file_id',
@@ -183,8 +187,9 @@ const getDefaultColumns = (
                   }),
                 ],
               }),
-            }),
-          }}
+              setAsActive: true,
+            })
+          }
         >
           {nb_participants}
         </Link>
@@ -201,10 +206,11 @@ const getDefaultColumns = (
       const nb_biospecimens = record?.nb_biospecimens || 0;
       return nb_biospecimens ? (
         <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-            search: createQueryParams({
-              filters: generateFilters({
+          to={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
                 newFilters: [
                   generateValueFilter({
                     field: 'file_id',
@@ -213,8 +219,9 @@ const getDefaultColumns = (
                   }),
                 ],
               }),
-            }),
-          }}
+              setAsActive: true,
+            })
+          }
         >
           {nb_biospecimens}
         </Link>
@@ -228,7 +235,7 @@ const getDefaultColumns = (
 const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) => {
   const dispatch = useDispatch();
   const { userInfo } = useUser();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
+  const { activeQuery } = useQueryBuilderState(DATA_EXPLORATION_QB_ID);
   const { isConnected, isInitializingAnalyse, beginAnalyseAfterConnection } = useFenceCavatica();
   const { fencesAllAcls, connectionStatus } = useFenceConnection();
   const [selectedAllResults, setSelectedAllResults] = useState(false);
@@ -240,7 +247,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
       setSelectedKeys([]);
     }
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const onBeginAnalyse = () =>
     dispatch(

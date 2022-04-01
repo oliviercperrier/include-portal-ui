@@ -6,7 +6,6 @@ import { useStudies } from 'graphql/studies/actions';
 import ApolloProvider from 'provider/ApolloProvider';
 import { GraphqlBackend } from 'provider/types';
 import { getProTableDictionary } from 'utils/translation';
-import { createQueryParams } from '@ferlab/ui/core/data/filters/utils';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { IStudyEntity } from 'graphql/studies/models';
@@ -14,6 +13,8 @@ import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/
 import { INDEXES } from 'graphql/constants';
 import { CheckOutlined } from '@ant-design/icons';
 import ExternalLink from 'components/uiKit/ExternalLink';
+import { addQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
 
 import styles from './index.module.scss';
 
@@ -70,10 +71,11 @@ const columns: ProColumnType<any>[] = [
 
       return participantCount ? (
         <Link
-          to={{
-            pathname: STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS,
-            search: createQueryParams({
-              filters: generateFilters({
+          to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
                 newFilters: [
                   generateValueFilter({
                     field: 'study_id',
@@ -82,8 +84,9 @@ const columns: ProColumnType<any>[] = [
                   }),
                 ],
               }),
-            }),
-          }}
+              setAsActive: true,
+            })
+          }
         >
           {participantCount}
         </Link>
@@ -104,26 +107,28 @@ const columns: ProColumnType<any>[] = [
       const biospecimenCount = record.biospecimen_count;
 
       return biospecimenCount ? (
-          <Link
-              to={{
-                pathname: STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS,
-                search: createQueryParams({
-                  filters: generateFilters({
-                    newFilters: [
-                      generateValueFilter({
-                        field: 'study_id',
-                        value: [record.study_id],
-                        index: INDEXES.PARTICIPANT,
-                      }),
-                    ],
+        <Link
+          to={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
+          onClick={() =>
+            addQuery({
+              queryBuilderId: DATA_EXPLORATION_QB_ID,
+              query: generateFilters({
+                newFilters: [
+                  generateValueFilter({
+                    field: 'study_id',
+                    value: [record.study_id],
+                    index: INDEXES.PARTICIPANT,
                   }),
-                }),
-              }}
-          >
-            {biospecimenCount}
-          </Link>
+                ],
+              }),
+              setAsActive: true,
+            })
+          }
+        >
+          {biospecimenCount}
+        </Link>
       ) : (
-          biospecimenCount || 0
+        biospecimenCount || 0
       );
     },
   },

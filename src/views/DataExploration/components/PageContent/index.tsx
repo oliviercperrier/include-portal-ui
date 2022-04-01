@@ -7,14 +7,13 @@ import {
 } from '@ant-design/icons';
 import {
   DATA_EPLORATION_FILTER_TAG,
-  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DATA_EXPLORATION_QB_ID,
   DEFAULT_PAGE_INDEX,
   DEFAULT_QUERY_CONFIG,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { STATIC_ROUTES } from 'utils/routes';
 import { getQueryBuilderDictionary } from 'utils/translation';
 import { Space, Tabs } from 'antd';
@@ -44,14 +43,14 @@ import {
 import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { isEmpty } from 'lodash';
 import GenericFilters from 'components/uiKit/FilterList/GenericFilters';
 import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
 import { INDEXES } from 'graphql/constants';
+import { numberWithCommas } from 'utils/string';
+import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
-import { numberWithCommas } from 'utils/string';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -73,9 +72,8 @@ const PageContent = ({
 }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
+  const { queryList, activeQuery } = useQueryBuilderState(DATA_EXPLORATION_QB_ID);
   const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
-  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
   const [selectedFilterContent, setSelectedFilterContent] = useState<ReactElement | undefined>(
     undefined,
   );
@@ -84,9 +82,13 @@ const PageContent = ({
   const [biospecimenQueryConfig, setBiospecimenQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
   const [datafilesQueryConfig, setDatafilesQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
 
-  const participantResolvedSqon = mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters));
-  const biospecimenResolvedSqon = mapFilterForBiospecimen(resolveSyntheticSqon(allSqons, filters));
-  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, filters));
+  const participantResolvedSqon = mapFilterForParticipant(
+    resolveSyntheticSqon(queryList, activeQuery),
+  );
+  const biospecimenResolvedSqon = mapFilterForBiospecimen(
+    resolveSyntheticSqon(queryList, activeQuery),
+  );
+  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(queryList, activeQuery));
 
   const participantResults = useParticipants({
     first: participantQueryConfig.size,
@@ -134,7 +136,7 @@ const PageContent = ({
       pageIndex: DEFAULT_PAGE_INDEX,
     });
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
@@ -175,6 +177,7 @@ const PageContent = ({
   return (
     <Space direction="vertical" size={24} className={styles.dataExplorePageContent}>
       <QueryBuilder
+        id={DATA_EXPLORATION_QB_ID}
         className="data-exploration-repo__query-builder"
         headerConfig={{
           showHeader: true,
@@ -200,6 +203,7 @@ const PageContent = ({
             const { sqon, mapping } = getSqonAndMappingByIndex(index as INDEXES);
             setSelectedFilterContent(
               <GenericFilters
+                queryBuilderId={DATA_EXPLORATION_QB_ID}
                 index={index}
                 field={dotToUnderscore(field)}
                 sqon={sqon}
@@ -210,12 +214,10 @@ const PageContent = ({
           selectedFilterContent: selectedFilterContent,
           blacklistedFacets: ['participant_id', 'sample_id', 'file_id'],
         }}
-        history={history}
         enableCombine
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
-        cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
-        currentQuery={isEmptySqon(filters) ? {} : filters}
+        currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
         loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}
         total={participantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}

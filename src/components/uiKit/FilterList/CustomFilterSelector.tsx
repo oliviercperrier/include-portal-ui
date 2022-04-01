@@ -1,7 +1,7 @@
 import FilterSelector, {
   FilterSelectorProps,
 } from '@ferlab/ui/core/components/filters/FilterSelector';
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
+import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { Spin } from 'antd';
 import { useEffect } from 'react';
@@ -12,7 +12,7 @@ import { TCustomFilterMapper } from '.';
 
 type OwnProps = FilterSelectorProps & {
   index: string;
-  cacheKey: string;
+  queryBuilderId: string;
   filterKey: string;
   onDataLoaded: Function;
   extendedMappingResults: ExtendedMappingResults;
@@ -21,7 +21,7 @@ type OwnProps = FilterSelectorProps & {
 
 const CustomFilterSelector = ({
   index,
-  cacheKey,
+  queryBuilderId,
   filterKey,
   dictionary,
   filters,
@@ -34,13 +34,11 @@ const CustomFilterSelector = ({
   extendedMappingResults,
   filterMapper,
 }: OwnProps) => {
-  const { filters: queryFilters } = useFilters();
-
-  const allSqons = getQueryBuilderCache(cacheKey).state;
+  const { queryList, activeQuery } = useQueryBuilderState(queryBuilderId);
 
   const resolvedSqon = filterMapper
-    ? filterMapper(resolveSyntheticSqon(allSqons, queryFilters))
-    : resolveSyntheticSqon(allSqons, queryFilters);
+    ? filterMapper(resolveSyntheticSqon(queryList, activeQuery))
+    : resolveSyntheticSqon(queryList, activeQuery);
   const results = useGetAggregations(
     {
       sqon: resolvedSqon,

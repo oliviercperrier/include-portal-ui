@@ -9,7 +9,7 @@ import {
   TTitleFormatter,
 } from 'views/DataExploration/utils/OntologyTree';
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
-import { findSqonValueByField, removeValueFilterFromSqon } from '@ferlab/ui/core/data/sqon/utils';
+import { findSqonValueByField, removeFieldFromSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
@@ -124,7 +124,7 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
 
   useEffect(() => {
     if (visible) {
-      const filteredParticipantSqon = removeValueFilterFromSqon(`${field}.name`, sqon);
+      const filteredParticipantSqon = removeFieldFromSqon(`${field}.name`, sqon);
 
       setIsLoading(true);
       phenotypeStore.current

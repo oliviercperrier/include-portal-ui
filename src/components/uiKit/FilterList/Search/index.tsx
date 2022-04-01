@@ -7,7 +7,7 @@ import SearchAutocomplete, {
 } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
 import { usePrevious } from 'hooks/usePrevious';
 import useLazyResultQuery from 'hooks/graphql/useLazyResultQuery';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
 
@@ -36,7 +36,7 @@ const Search = <T,>({
   const [search, setSearch] = useState('');
   const [options, setOptions] = useState<OptionsType[]>([]);
 
-  const searchFilter = generateFilters({
+  const searchFilter = generateQuery({
     operator: BooleanOperators.or,
     newFilters: searchKey.map((key) =>
       generateValueFilter({

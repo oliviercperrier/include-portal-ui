@@ -1,14 +1,15 @@
 import { INDEXES } from 'graphql/constants';
 import { FILE_SEARCH_BY_ID_QUERY } from 'graphql/files/queries';
 import { IFileEntity } from 'graphql/files/models';
-import useFileResolvedSqon from 'graphql/files/useFileResolvedSqon';
 import { FileTextOutlined } from '@ant-design/icons';
 import SelectItem from 'components/uiKit/select/SelectItem';
 import GlobalSearch, { ICustomSearchProps } from 'components/uiKit/GlobalSearch';
 import { highlightSearchMatch } from 'components/uiKit/GlobalSearch/utils';
+import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 
 const FileSearch = ({ queryBuilderId }: ICustomSearchProps) => {
-  const { sqon } = useFileResolvedSqon(queryBuilderId);
+  const { activeQuery } = useQueryBuilderState(queryBuilderId);
 
   return (
     <GlobalSearch<IFileEntity>
@@ -18,7 +19,7 @@ const FileSearch = ({ queryBuilderId }: ICustomSearchProps) => {
       placeholder={'e.g. GF_001CSF26'}
       emptyDescription={'No files found'}
       query={FILE_SEARCH_BY_ID_QUERY}
-      sqon={sqon}
+      sqon={activeQuery as ISqonGroupFilter}
       optionsFormatter={(options, matchRegex, search) =>
         options.map((option) => ({
           label: (

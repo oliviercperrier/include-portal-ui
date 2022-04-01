@@ -1,5 +1,5 @@
 import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
-import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import { ISqonGroupFilter, MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
 import Search from 'components/uiKit/FilterList/Search';
 import { OptionsType } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
@@ -43,6 +43,7 @@ const GlobalSearch = <T,>({
         field,
         value: values,
         index,
+        merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
       })
     }
     searchValueTransformer={(value) => value.toUpperCase()}

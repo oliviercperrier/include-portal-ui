@@ -6,7 +6,7 @@ import { numberWithCommas } from 'utils/string';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { INDEXES } from 'graphql/constants';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { addQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
 
@@ -36,7 +36,7 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
               onClick={() =>
                 addQuery({
                   queryBuilderId: DATA_EXPLORATION_QB_ID,
-                  query: generateFilters({
+                  query: generateQuery({
                     newFilters: [
                       generateValueFilter({
                         field: 'study_id',
@@ -64,7 +64,7 @@ const AuthorizedStudiesListItem = ({ id, data }: OwnProps) => {
               onClick={() =>
                 addQuery({
                   queryBuilderId: DATA_EXPLORATION_QB_ID,
-                  query: generateFilters({
+                  query: generateQuery({
                     newFilters: [
                       generateValueFilter({
                         field: 'study_id',

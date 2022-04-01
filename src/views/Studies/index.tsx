@@ -9,7 +9,7 @@ import { getProTableDictionary } from 'utils/translation';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { IStudyEntity } from 'graphql/studies/models';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { CheckOutlined } from '@ant-design/icons';
 import ExternalLink from 'components/uiKit/ExternalLink';
@@ -75,7 +75,7 @@ const columns: ProColumnType<any>[] = [
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'study_id',
@@ -112,7 +112,7 @@ const columns: ProColumnType<any>[] = [
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'study_id',

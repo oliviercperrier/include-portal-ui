@@ -25,7 +25,7 @@ import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { Link, useHistory } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { formatQuerySortList, scrollToTop } from 'utils/helper';
 import useQueryBuilderState, {
   updateActiveQueryField,
@@ -179,7 +179,7 @@ const getDefaultColumns = (history: any): ProColumnType<any>[] => [
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'sample_id',

@@ -30,7 +30,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
@@ -262,11 +262,11 @@ const defaultColumns: ProColumnType<any>[] = [
 
       return nb_biospecimens ? (
         <Link
-          to={STATIC_ROUTES.DATA_EXPLORATION_DATAFILES}
+          to={STATIC_ROUTES.DATA_EXPLORATION_BIOSPECIMENS}
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'participant_id',
@@ -299,7 +299,7 @@ const defaultColumns: ProColumnType<any>[] = [
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'participant_id',

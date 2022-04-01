@@ -34,14 +34,14 @@ import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
-import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { userHasAccessToFile } from 'utils/dataFiles';
 import { scrollToTop, formatQuerySortList } from 'utils/helper';
-
-import styles from './index.module.scss';
 import useQueryBuilderState, {
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -178,7 +178,7 @@ const getDefaultColumns = (
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'file_id',
@@ -210,7 +210,7 @@ const getDefaultColumns = (
           onClick={() =>
             addQuery({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
-              query: generateFilters({
+              query: generateQuery({
                 newFilters: [
                   generateValueFilter({
                     field: 'file_id',

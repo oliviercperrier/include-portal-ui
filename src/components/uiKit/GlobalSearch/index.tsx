@@ -1,11 +1,11 @@
-import { updateActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { findSqonValueByField, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
+import { findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
 import Search from 'components/uiKit/FilterList/Search';
 import { OptionsType } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
 import { DocumentNode } from 'graphql';
 import { INDEXES } from 'graphql/constants';
-import { get, isEmpty } from 'lodash';
+import { get } from 'lodash';
 
 export interface ICustomSearchProps {
   queryBuilderId: string;
@@ -37,22 +37,14 @@ const GlobalSearch = <T,>({
   optionsFormatter,
 }: OwnProps<T>) => (
   <Search<T>
-    onSelect={(values) => {
-      const sqonContent = isEmpty(values)
-        ? []
-        : [
-            generateValueFilter({
-              field,
-              value: values,
-              index,
-            }),
-          ];
-      updateActiveQuery({
+    onSelect={(values) =>
+      updateActiveQueryField({
         queryBuilderId,
         field,
-        sqonContent,
-      });
-    }}
+        value: values,
+        index,
+      })
+    }
     searchValueTransformer={(value) => value.toUpperCase()}
     index={index}
     emptyDescription={emptyDescription}

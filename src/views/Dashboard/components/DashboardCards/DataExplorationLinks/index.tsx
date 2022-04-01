@@ -38,7 +38,7 @@ const DataExplorationLinks = () => {
           id="data-exploration"
           title="Data Exploration"
           extra={[
-            <ExternalLink href="">
+            <ExternalLink href="" key="data-release">
               <Button type="link" className={styles.releaseNoteBtn}>
                 Data release 1.0
                 <ExternalLinkIcon />

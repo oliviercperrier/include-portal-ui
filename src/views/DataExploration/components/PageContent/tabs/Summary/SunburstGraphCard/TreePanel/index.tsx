@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { INDEXES } from 'graphql/constants';
 import { RegexExtractPhenotype } from 'views/DataExploration/utils/PhenotypeStore';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
 
 import styles from './index.module.scss';
@@ -54,7 +54,7 @@ const TreePanel = ({
       type="link"
       size="small"
       onClick={() => {
-        addFieldToActiveQuery({
+        updateActiveQueryField({
           queryBuilderId: DATA_EXPLORATION_QB_ID,
           field: `${field}.name`,
           value: [currentNode?.title!],

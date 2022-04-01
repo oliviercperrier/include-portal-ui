@@ -21,7 +21,7 @@ import { cloneDeep, isEmpty } from 'lodash';
 import useParticipantResolvedSqon from 'graphql/participants/useParticipantResolvedSqon';
 import { TermOperators } from '@ferlab/ui/core/data/sqon/operators';
 import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
 
@@ -109,7 +109,7 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
       updateQueryFilters(history, `${field}.name`, []);
     } else {
-      addFieldToActiveQuery({
+      updateActiveQueryField({
         queryBuilderId: DATA_EXPLORATION_QB_ID,
         field: `${field}.name`,
         value: results,

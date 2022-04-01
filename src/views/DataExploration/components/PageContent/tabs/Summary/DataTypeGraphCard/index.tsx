@@ -15,7 +15,7 @@ import { DATATYPE_QUERY } from 'graphql/summary/queries';
 import CardHeader from 'views/Dashboard/components/CardHeader';
 import intl from 'react-intl-universal';
 import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 interface OwnProps {
   id: string;
@@ -36,7 +36,7 @@ const graphSetting: any = {
 };
 
 const addToQuery = (field: string, key: string, history: any) =>
-  addFieldToActiveQuery({
+  updateActiveQueryField({
     queryBuilderId: DATA_EXPLORATION_QB_ID,
     field,
     value: [key.toLowerCase() === 'no data' ? ArrangerValues.missing : key],

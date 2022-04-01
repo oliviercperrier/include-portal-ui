@@ -75,6 +75,10 @@ const SunburstGraphCard = ({ id, className = '', field }: OwnProps) => {
         field,
       );
     });
+
+    return () => {
+      updateSunburst.current = undefined;
+    };
     // eslint-disable-next-line
   }, [JSON.stringify(sqon)]);
 

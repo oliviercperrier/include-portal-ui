@@ -15,10 +15,10 @@ import useParticipantResolvedSqon from 'graphql/participants/useParticipantResol
 import { BasicTooltip } from '@nivo/tooltip';
 import { capitalize, isEmpty } from 'lodash';
 import Empty from '@ferlab/ui/core/components/Empty';
+import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
-import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
-import { addFieldToActiveQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 interface OwnProps {
   id: string;
@@ -45,7 +45,7 @@ const graphSetting = {
 };
 
 const addToQuery = (field: string, key: string, history: any) =>
-  addFieldToActiveQuery({
+  updateActiveQueryField({
     queryBuilderId: DATA_EXPLORATION_QB_ID,
     field,
     value: [key.toLowerCase() === 'no data' ? ArrangerValues.missing : key],

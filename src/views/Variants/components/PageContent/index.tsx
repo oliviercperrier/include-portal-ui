@@ -2,7 +2,6 @@ import QueryBuilder from '@ferlab/ui/core/components/QueryBuilder';
 import { PieChartOutlined, UserOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { STATIC_ROUTES } from 'utils/routes';
 import { getQueryBuilderDictionary } from 'utils/translation';
 import { Space, Tabs } from 'antd';
@@ -19,7 +18,6 @@ import {
 import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { isEmpty } from 'lodash';
 import {
   DEFAULT_PAGE_INDEX,

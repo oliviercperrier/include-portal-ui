@@ -28,7 +28,7 @@ import { STATIC_ROUTES } from 'utils/routes';
 import { generateFilters, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { formatQuerySortList, scrollToTop } from 'utils/helper';
 import useQueryBuilderState, {
-  addFieldToActiveQuery,
+  updateActiveQueryField,
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
@@ -95,7 +95,7 @@ const getDefaultColumns = (history: any): ProColumnType<any>[] => [
         <a
           type="link"
           onClick={() =>
-            addFieldToActiveQuery({
+            updateActiveQueryField({
               queryBuilderId: DATA_EXPLORATION_QB_ID,
               field: 'collection_sample_id',
               value: [collection_sample_id],

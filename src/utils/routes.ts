@@ -9,10 +9,6 @@ export enum STATIC_ROUTES {
   COMMUNITY = '/community',
   ERROR = '/error',
 
-  JOIN = '/join',
-  JOIN_TERMS = '/join/terms',
-  JOIN_REGISTRATION = '/join/registration',
-
   DATA_EXPLORATION = '/data-exploration',
   DATA_EXPLORATION_SUMMARY = '/data-exploration/summary',
   DATA_EXPLORATION_PARTICIPANTS = '/data-exploration/participants',

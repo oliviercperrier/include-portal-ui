@@ -33,14 +33,6 @@ const ProtectedRoute = ({ children, layout, ...routeProps }: OwnProps) => {
     );
   }
 
-  if (
-    !userInfo.accepted_terms ||
-    !userInfo.understand_disclaimer ||
-    !userInfo.completed_registration
-  ) {
-    return <Redirect to={STATIC_ROUTES.JOIN} />;
-  }
-
   if (currentPath === STATIC_ROUTES.LOGIN) {
     return <Redirect to={STATIC_ROUTES.DASHBOARD} />;
   }

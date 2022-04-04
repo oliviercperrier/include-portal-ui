@@ -13,7 +13,7 @@ const useGetAggregations = (
 
   return {
     loading,
-    aggregations: result ? result[index].aggregations : null,
+    aggregations: result && index in result ? result[index].aggregations : null,
     data: [],
     total: 0,
   };

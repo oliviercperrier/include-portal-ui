@@ -54,18 +54,9 @@ const update = (body: TUserUpdate) =>
     data: body,
   });
 
-const completeRegistration = (body: TUserUpdate) =>
-  sendRequest<TUser>({
-    method: 'PUT',
-    url: `${USER_API_URL}/complete-registration`,
-    headers: headers(),
-    data: body,
-  });
-
 export const UserApi = {
   search,
   fetch,
   create,
   update,
-  completeRegistration,
 };

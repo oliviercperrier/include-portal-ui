@@ -3,5 +3,6 @@ export enum INDEXES {
     PARTICIPANT = "participant",
     FILE = "file",
     BIOSPECIMEN = "biospecimen",
-    SETS = "sets"
+    SETS = "sets",
+    VARIANT = "variant"
 }

@@ -11,7 +11,7 @@ export type Sort = {
 };
 
 export type QueryVariable = {
-  sqon: ISyntheticSqon;
+  sqon?: ISyntheticSqon;
   first?: number;
   offset?: number;
   sort?: Sort[];

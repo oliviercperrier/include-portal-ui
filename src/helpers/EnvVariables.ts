@@ -7,7 +7,6 @@ export default class EnvironmentVariables {
     ARRANGER_API: process.env.REACT_APP_ARRANGER_API_URL,
     ARRANGER_PROJECT_ID: process.env.REACT_APP_ARRANGER_PROJECT_ID,
     USERS_API: process.env.REACT_APP_USERS_API_URL,
-    RIFF_API: process.env.REACT_APP_RIFF_API_URL,
     // CAVATICA
     CAVATICA_USER_BASE_URL: process.env.REACT_APP_CAVATICA_USER_BASE_URL,
     // FENCES

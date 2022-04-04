@@ -7,14 +7,13 @@ import {
 } from '@ant-design/icons';
 import {
   DATA_EPLORATION_FILTER_TAG,
-  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DATA_EXPLORATION_QB_ID,
   DEFAULT_PAGE_INDEX,
   DEFAULT_QUERY_CONFIG,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
 import intl from 'react-intl-universal';
 import { ExtendedMapping, ExtendedMappingResults } from 'graphql/models';
-import { getQueryBuilderCache, useFilters } from '@ferlab/ui/core/data/filters/utils';
 import { STATIC_ROUTES } from 'utils/routes';
 import { getQueryBuilderDictionary } from 'utils/translation';
 import { Space, Tabs } from 'antd';
@@ -23,33 +22,31 @@ import {
   mapFilterForBiospecimen,
   mapFilterForFiles,
   mapFilterForParticipant,
-} from 'views/DataExploration/utils/mapper';
+} from 'utils/fieldMapper';
 import { isEmptySqon, resolveSyntheticSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { useParticipants } from 'graphql/participants/actions';
 import { useDataFiles } from 'graphql/files/actions';
 import { useBiospecimen } from 'graphql/biospecimens/actions';
-import SummaryTab from 'views/DataExploration/components/tabs/Summary';
-import BiospecimensTab from 'views/DataExploration/components/tabs/Biospecimens';
-import DataFilesTabs from 'views/DataExploration/components/tabs/DataFiles';
-import ParticipantsTab from 'views/DataExploration/components/tabs/Participants';
+import SummaryTab from 'views/DataExploration/components/PageContent/tabs/Summary';
+import BiospecimensTab from 'views/DataExploration/components/PageContent/tabs/Biospecimens';
+import DataFilesTabs from 'views/DataExploration/components/PageContent/tabs/DataFiles';
+import ParticipantsTab from 'views/DataExploration/components/PageContent/tabs/Participants';
 import { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   createSavedFilter,
   deleteSavedFilter,
-  fetchSavedFilters,
   setSavedFilterAsDefault,
   updateSavedFilter,
 } from 'store/savedFilter/thunks';
-import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
-import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
 import { isEmpty } from 'lodash';
 import GenericFilters from 'components/uiKit/FilterList/GenericFilters';
 import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
-import { AGGREGATION_QUERY } from 'graphql/queries';
 import { INDEXES } from 'graphql/constants';
+import { numberWithCommas } from 'utils/string';
+import useQBStateWithSavedFilters from 'hooks/useQBStateWithSavedFilters';
 
 import styles from './index.module.scss';
 
@@ -73,9 +70,9 @@ const PageContent = ({
 }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { filters }: { filters: ISyntheticSqon } = useFilters();
-  const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
-  const allSqons = getQueryBuilderCache(DATA_EXPLORATION_REPO_CACHE_KEY).state;
+  const { queryList, activeQuery, selectedSavedFilter, savedFilterList } =
+    useQBStateWithSavedFilters(DATA_EXPLORATION_QB_ID, DATA_EPLORATION_FILTER_TAG);
+
   const [selectedFilterContent, setSelectedFilterContent] = useState<ReactElement | undefined>(
     undefined,
   );
@@ -84,9 +81,13 @@ const PageContent = ({
   const [biospecimenQueryConfig, setBiospecimenQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
   const [datafilesQueryConfig, setDatafilesQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
 
-  const participantResolvedSqon = mapFilterForParticipant(resolveSyntheticSqon(allSqons, filters));
-  const biospecimenResolvedSqon = mapFilterForBiospecimen(resolveSyntheticSqon(allSqons, filters));
-  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(allSqons, filters));
+  const participantResolvedSqon = mapFilterForParticipant(
+    resolveSyntheticSqon(queryList, activeQuery),
+  );
+  const biospecimenResolvedSqon = mapFilterForBiospecimen(
+    resolveSyntheticSqon(queryList, activeQuery),
+  );
+  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(queryList, activeQuery));
 
   const participantResults = useParticipants({
     first: participantQueryConfig.size,
@@ -116,11 +117,6 @@ const PageContent = ({
   });
 
   useEffect(() => {
-    dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
     setParticipantQueryConfig({
       ...participantQueryConfig,
       pageIndex: DEFAULT_PAGE_INDEX,
@@ -134,7 +130,7 @@ const PageContent = ({
       pageIndex: DEFAULT_PAGE_INDEX,
     });
     // eslint-disable-next-line
-  }, [JSON.stringify(filters)]);
+  }, [JSON.stringify(activeQuery)]);
 
   const facetTransResolver = (key: string) => {
     const title = intl.get(`facets.${key}`);
@@ -175,18 +171,19 @@ const PageContent = ({
   return (
     <Space direction="vertical" size={24} className={styles.dataExplorePageContent}>
       <QueryBuilder
+        id={DATA_EXPLORATION_QB_ID}
         className="data-exploration-repo__query-builder"
         headerConfig={{
           showHeader: true,
           showTools: true,
-          defaultTitle: intl.get('screen.dataExploration.queryBuilder.defaultTitle'),
+          defaultTitle: intl.get('components.querybuilder.defaultTitle'),
           options: {
             enableEditTitle: true,
             enableDuplicate: true,
             enableFavoriteFilter: false,
           },
-          selectedSavedFilter: defaultFilter,
-          savedFilters: savedFilters,
+          selectedSavedFilter: selectedSavedFilter,
+          savedFilters: savedFilterList,
           onUpdateFilter: handleOnUpdateFilter,
           onSaveFilter: handleOnSaveFilter,
           onDeleteFilter: handleOnDeleteFilter,
@@ -198,24 +195,23 @@ const PageContent = ({
             const index = filter.content.index!;
             const field = filter.content.field;
             const { sqon, mapping } = getSqonAndMappingByIndex(index as INDEXES);
-
             setSelectedFilterContent(
               <GenericFilters
+                queryBuilderId={DATA_EXPLORATION_QB_ID}
                 index={index}
-                query={AGGREGATION_QUERY(index, [dotToUnderscore(field)], mapping)}
+                field={dotToUnderscore(field)}
                 sqon={sqon}
                 extendedMappingResults={mapping}
               />,
             );
           },
           selectedFilterContent: selectedFilterContent,
+          blacklistedFacets: ['participant_id', 'sample_id', 'file_id'],
         }}
-        history={history}
         enableCombine
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
-        cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
-        currentQuery={isEmptySqon(filters) ? {} : filters}
+        currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
         loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}
         total={participantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}
@@ -245,7 +241,7 @@ const PageContent = ({
             <span>
               <UserOutlined />
               {intl.get('screen.dataExploration.tabs.participants.title', {
-                count: participantResults.total,
+                count: numberWithCommas(participantResults.total),
               })}
             </span>
           }
@@ -263,7 +259,7 @@ const PageContent = ({
             <span>
               <ExperimentOutlined />
               {intl.get('screen.dataExploration.tabs.biospecimens.title', {
-                count: biospecimenResults.total,
+                count: numberWithCommas(biospecimenResults.total),
               })}
             </span>
           }
@@ -281,7 +277,7 @@ const PageContent = ({
             <span>
               <FileTextOutlined />
               {intl.get('screen.dataExploration.tabs.datafiles.title', {
-                count: fileResults.total,
+                count: numberWithCommas(fileResults.total),
               })}
             </span>
           }

@@ -1,5 +1,5 @@
-import  { Component, ReactNode } from "react";
-import ErrorPage from "views/Error";
+import { Component, ReactNode } from 'react';
+import ErrorPage from 'views/Error';
 
 interface Props {
   children: ReactNode;

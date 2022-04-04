@@ -8,7 +8,7 @@ import { Spin } from 'antd';
 import { ExtendedMappingResults } from 'graphql/models';
 import FilterList, { TCustomFilterMapper } from 'components/uiKit/FilterList';
 import {
-  DATA_EXPLORATION_REPO_CACHE_KEY,
+  DATA_EXPLORATION_QB_ID,
   SCROLL_WRAPPER_ID,
   TAB_IDS,
 } from 'views/DataExploration/utils/constant';
@@ -21,8 +21,12 @@ import {
   mapFilterForBiospecimen,
   mapFilterForFiles,
   mapFilterForParticipant,
-} from './utils/mapper';
-import HpoTreeFacet from './components/HpoTreeFacet';
+} from 'utils/fieldMapper';
+import TreeFacet from './components/TreeFacet';
+import ParticipantSearch from './components/ParticipantSearch';
+import FileSearch from './components/FileSearch';
+import { BiospecimenSearch, BiospecimenCollectionSearch } from './components/BiospecimenSearch';
+import { formatHpoTitleAndCode, formatMondoTitleAndCode } from './utils/helper';
 
 import styles from './index.module.scss';
 
@@ -40,19 +44,18 @@ export const filterGroups: {
   [type: string]: FilterInfo;
 } = {
   [FilterTypes.Participant]: {
-    //suggester: {
-    //  title: () => "Participant ID",
-    //  placeholder: () => "PT_0002D5K3",
-    //  suggestionType: SUGGESTION_TYPES.PARTICIPANT,
-    //  tooltipTitle: () => "Enter a participant ID",
-    //},
+    customSearches: [<ParticipantSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />],
     groups: [
       {
         facets: [
           'study_id',
           'down_syndrome_status',
-          'diagnosis__mondo_id_diagnosis',
-          <HpoTreeFacet />,
+          <TreeFacet type={'mondoTree'} field={'mondo'} titleFormatter={formatMondoTitleAndCode} />,
+          <TreeFacet
+            type={'hpoTree'}
+            field={'observed_phenotype'}
+            titleFormatter={formatHpoTitleAndCode}
+          />,
           'family_type',
           'sex',
           'race',
@@ -62,12 +65,10 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Biospecimen]: {
-    //suggester: {
-    //  title: () => "Biospecimen ID",
-    //  placeholder: () => "DS02_Q1EE22NN",
-    //  suggestionType: SUGGESTION_TYPES.BIOSPECIMEN,
-    //  tooltipTitle: () => "Enter a biospecimen ID",
-    //},
+    customSearches: [
+      <BiospecimenSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <BiospecimenCollectionSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+    ],
     groups: [
       {
         facets: [
@@ -82,12 +83,7 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Datafiles]: {
-    //suggester: {
-    //  title: () => "File ID",
-    //  placeholder: () => "GF_007F1GDE",
-    //  suggestionType: SUGGESTION_TYPES.FILE,
-    //  tooltipTitle: () => "Enter a file ID",
-    //},
+    customSearches: [<FileSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />],
     groups: [
       {
         facets: [
@@ -114,8 +110,9 @@ const filtersContainer = (
 
   return (
     <FilterList
+      key={index}
       index={index}
-      cacheKey={DATA_EXPLORATION_REPO_CACHE_KEY}
+      queryBuilderId={DATA_EXPLORATION_QB_ID}
       extendedMappingResults={mappingResults}
       filterInfo={filterGroups[type]}
       filterMapper={filterMapper}

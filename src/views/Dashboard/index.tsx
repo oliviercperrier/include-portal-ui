@@ -9,7 +9,7 @@ import { dashboardCards } from './components/DashboardCards';
 import { useDispatch } from 'react-redux';
 import { updateUserConfig } from 'store/user/thunks';
 import DataExplorationLinks from './components/DashboardCards/DataExplorationLinks';
-import { orderCardIfNeeded } from 'views/DataExploration/utils/helper';
+import { orderCardIfNeeded } from 'utils/helper';
 
 import styles from './index.module.scss';
 

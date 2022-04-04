@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from 'store/user/types';
 import keycloak from 'auth/keycloak-api/keycloak';
-import { completeRegistration, fetchUser, updateUser, updateUserConfig } from 'store/user/thunks';
+import { fetchUser, updateUser, updateUserConfig } from 'store/user/thunks';
 import { STATIC_ROUTES } from 'utils/routes';
 
 export const UserState: initialState = {
@@ -53,21 +53,6 @@ const userSlice = createSlice({
       isUpdating: false,
     }));
     builder.addCase(updateUser.rejected, (state, action) => ({
-      ...state,
-      error: action.payload,
-      isUpdating: false,
-    }));
-    // Complete Registration
-    builder.addCase(completeRegistration.pending, (state) => {
-      state.isUpdating = true;
-      state.error = undefined;
-    });
-    builder.addCase(completeRegistration.fulfilled, (state, action) => ({
-      ...state,
-      userInfo: action.payload,
-      isUpdating: false,
-    }));
-    builder.addCase(completeRegistration.rejected, (state, action) => ({
       ...state,
       error: action.payload,
       isUpdating: false,

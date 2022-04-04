@@ -1,7 +1,6 @@
 import { DocumentNode } from 'graphql';
 import { ExtendedMappingResults } from 'graphql/models';
 import React from 'react';
-import { SUGGESTION_TYPES } from '../Suggester';
 
 export interface FilterGroup {
   title?: string;
@@ -9,13 +8,8 @@ export interface FilterGroup {
 }
 
 export interface FilterInfo {
+  customSearches?: React.ReactNode[];
   groups: FilterGroup[];
-  suggester?: {
-    title: () => string;
-    placeholder: () => string;
-    suggestionType: SUGGESTION_TYPES;
-    tooltipTitle: () => string;
-  };
 }
 
 export type TAggregationFunction = (

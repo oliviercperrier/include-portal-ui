@@ -35,7 +35,7 @@ const Studies = loadable(() => import('views/Studies'), loadableProps);
 const MyProfile = loadable(() => import('views/MyProfile'), loadableProps);
 const Settings = loadable(() => import('views/Settings'), loadableProps);
 const DataExploration = loadable(() => import('views/DataExploration'), loadableProps);
-const JoinPage = loadable(() => import('views/Join'), loadableProps);
+const Variants = loadable(() => import('views/Variants'), loadableProps);
 
 const App = () => {
   const lang = useLang();
@@ -68,14 +68,6 @@ const App = () => {
                   </SideImageLayout>
                 </Route>
                 <Route
-                  path={STATIC_ROUTES.JOIN}
-                  render={() => (
-                    <SideImageLayout sideImgSrc={MainSideImage} theme="light" alignCenter={false}>
-                      <JoinPage />
-                    </SideImageLayout>
-                  )}
-                />
-                <Route
                   path={DYNAMIC_ROUTES.ERROR}
                   render={(props: RouteComponentProps<{ status?: any }>) => (
                     <ErrorPage status={props.match.params.status} />
@@ -92,6 +84,9 @@ const App = () => {
                 </ProtectedRoute>
                 <ProtectedRoute exact path={DYNAMIC_ROUTES.DATA_EXPLORATION} layout={PageLayout}>
                   <DataExploration />
+                </ProtectedRoute>
+                <ProtectedRoute exact path={DYNAMIC_ROUTES.VARIANT} layout={PageLayout}>
+                  <Variants />
                 </ProtectedRoute>
                 <ProtectedRoute exact path={STATIC_ROUTES.MY_PROFILE} layout={PageLayout}>
                   <MyProfile />

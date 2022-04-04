@@ -1,0 +1,29 @@
+@import 'colors';
+
+.container {
+  .title {
+    color: $gray-9;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .tooltipIcon {
+      margin-left: 0.5rem;
+      color: $gray-6;
+    }
+  }
+
+  .tag {
+    display: flex;
+    align-items: center;
+    background-color: $blue-8;
+    color: $gray-1;
+    > * {
+      color: $gray-1;
+    }
+  }
+
+  .search {
+    width: 100%;
+  }
+}

@@ -1,21 +1,20 @@
 import { useState } from 'react';
-import { Button, Layout, Typography } from 'antd';
+import { Button, Layout, Space, Typography } from 'antd';
 import CustomFilterContainer from './CustomFilterContainer';
 import intl from 'react-intl-universal';
 import { FilterGroup, FilterInfo } from './types';
 import { ExtendedMappingResults } from 'graphql/models';
 import { ISqonGroupFilter, ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
-import SuggesterWrapper from 'components/uiKit/Suggester/Wrapper';
-import Suggester from 'components/uiKit/Suggester';
 import cx from 'classnames';
 
 import styles from './Filters.module.scss';
+import { isEmpty } from 'lodash';
 
 export type TCustomFilterMapper = (filters: ISqonGroupFilter) => ISyntheticSqon;
 
 type OwnProps = {
   index: string;
-  cacheKey: string;
+  queryBuilderId: string;
   extendedMappingResults: ExtendedMappingResults;
   filterInfo: FilterInfo;
   filterMapper?: TCustomFilterMapper;
@@ -25,7 +24,7 @@ const { Text } = Typography;
 
 const FilterList = ({
   index,
-  cacheKey,
+  queryBuilderId,
   extendedMappingResults,
   filterInfo,
   filterMapper,
@@ -34,17 +33,12 @@ const FilterList = ({
 
   return (
     <>
-      {filterInfo.suggester && (
-        <SuggesterWrapper
-          tooltipMessage={filterInfo.suggester.tooltipTitle()}
-          title={filterInfo.suggester.title()}
-        >
-          <Suggester
-            suggestionType={filterInfo.suggester.suggestionType}
-            title={filterInfo.suggester.title()}
-            placeholderText={filterInfo.suggester.placeholder()}
-          />
-        </SuggesterWrapper>
+      {!isEmpty(filterInfo.customSearches) && (
+        <Space direction="vertical" size={16} className={styles.customSearchesWrapper}>
+          {filterInfo.customSearches?.map((search, index) => (
+            <div key={index}>{search}</div>
+          ))}
+        </Space>
       )}
       <div className={styles.filterExpandBtnWrapper}>
         <Button onClick={() => setFiltersOpen(!filtersOpen)} type="link">
@@ -66,7 +60,7 @@ const FilterList = ({
                 <CustomFilterContainer
                   key={facet}
                   index={index}
-                  cacheKey={cacheKey}
+                  queryBuilderId={queryBuilderId}
                   classname={cx(styles.customFilterContainer, styles.filter)}
                   filterKey={facet}
                   extendedMappingResults={extendedMappingResults}

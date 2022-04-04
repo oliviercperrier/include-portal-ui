@@ -67,14 +67,6 @@ const fr = {
   },
   // API
   api: {
-    riff: {
-      error: {
-        title: 'Error',
-        fetchUser: 'Unable to fetch Riff user',
-        saveFilter: 'Unable to save filter',
-        deleteFilter: 'Unable to delete filter',
-      },
-    },
     savedFilter: {
       error: {
         title: 'Error',
@@ -154,6 +146,7 @@ const fr = {
       noResultsFound: 'No results found',
     },
     querybuilder: {
+      defaultTitle: 'Untitled Filter',
       header: {
         modal: {
           edit: {
@@ -339,10 +332,20 @@ const fr = {
         },
       },
     },
-    dataExploration: {
-      queryBuilder: {
-        defaultTitle: 'Untitled Filter',
+    variants: {
+      sidemenu: {
+        variant: 'Variant',
       },
+      tabs: {
+        summary: {
+          title: 'Summary',
+        },
+        variants: {
+          title: 'Variants',
+        },
+      },
+    },
+    dataExploration: {
       sidemenu: {
         participant: 'Participant',
         biospecimen: 'Biospecimen',
@@ -351,6 +354,18 @@ const fr = {
       hpoTree: {
         modal: {
           title: 'Observed Phenotype (HPO) Browser',
+          okText: 'Apply',
+        },
+        searchPlaceholder: 'Search for ontology term - min 3 characters',
+        emptySelection: 'Select items from the left-hand pane in order to add to your query.',
+        tags: {
+          exact: 'Participants with this exact term',
+          all: 'Participants including descendant terms',
+        },
+      },
+      mondoTree: {
+        modal: {
+          title: 'Diagnosis (MONDO) Browser',
           okText: 'Apply',
         },
         searchPlaceholder: 'Search for ontology term - min 3 characters',
@@ -374,13 +389,23 @@ const fr = {
             dataTypeTitle: 'Participants by Data Type',
             studiesTitle: 'Participants by Study',
           },
-          observedPhenotype: {
+          observed_phenotype: {
             cardTitle: 'Observed Phenotypes (HPO)',
             phenotypeTree: {
               nbParticipant: '{count} participants (including descendant terms on this path)',
               addTermToQuery: 'Add term to active query',
               currentPath: 'Current Path',
             },
+            empty: 'No observed phenotypes reported for these participants',
+          },
+          mondo: {
+            cardTitle: ' Diagnosis (MONDO)',
+            phenotypeTree: {
+              nbParticipant: '{count} participants (including descendant terms on this path)',
+              addTermToQuery: 'Add term to active query',
+              currentPath: 'Current Path',
+            },
+            empty: 'No diagnoses reported for these participants',
           },
         },
         participants: {
@@ -512,7 +537,7 @@ const fr = {
     // Participant
     participant_id: 'Participant ID',
     study_id: 'Study Code',
-    down_syndrome_status: 'DS Status',
+    down_syndrome_status: 'Down Syndrome Status',
     down_syndrome_diagnosis: 'Down Syndrome Diagnosis',
     mondo: {
       name: 'Diagnosis (MONDO)',
@@ -547,6 +572,9 @@ const fr = {
     // File
     files: filesFacets,
     ...filesFacets,
+
+    //Other
+    collection_sample_type: 'Collection Sample Type',
   },
 };
 

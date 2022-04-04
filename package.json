@@ -1,6 +1,6 @@
 {
   "name": "include-portal-ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -51,18 +51,18 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@apollo/client": "^3.4.17",
+    "@apollo/client": "^3.5.10",
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/sortable": "^5.1.0",
-    "@ferlab/style": "^1.16.3",
-    "@ferlab/ui": "^3.2.2",
+    "@ferlab/style": "^1.16.6",
+    "@ferlab/ui": "^3.4.3",
     "@loadable/component": "^5.15.2",
     "@nivo/bar": "^0.79.1",
     "@nivo/pie": "^0.79.1",
     "@react-keycloak/web": "^3.4.0",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.15.0",
-    "antd": "^4.16.13",
+    "antd": "^4.19.3",
     "axios": "^0.24.0",
     "classnames": "^2.3.1",
     "d3": "^5.16.0",

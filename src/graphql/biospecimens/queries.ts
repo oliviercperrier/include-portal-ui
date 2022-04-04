@@ -39,3 +39,18 @@ export const SEARCH_BIOSPECIMEN_QUERY = gql`
     }
   }
 `;
+
+export const BIOSPECIMEN_SEARCH_BY_ID_QUERY = gql`
+  query searchBiospecimenById($sqon: JSON) {
+    biospecimen {
+      hits(filters: $sqon) {
+        edges {
+          node {
+            sample_id
+            collection_sample_id
+          }
+        }
+      }
+    }
+  }
+`;

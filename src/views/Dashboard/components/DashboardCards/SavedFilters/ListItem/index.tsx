@@ -6,12 +6,13 @@ import { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useDispatch } from 'react-redux';
 import { deleteSavedFilter } from 'store/savedFilter/thunks';
-import { FILTER_TAG_PAGE_MAPPING } from 'views/DataExploration/utils/constant';
 import { Link } from 'react-router-dom';
 import { distanceInWords } from 'date-fns';
 
 import styles from './index.module.scss';
 import EditModal from '../EditModal';
+import { setQueryBuilderState } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import { FILTER_TAG_PAGE_MAPPING, FILTER_TAG_QB_ID_MAPPING } from 'views/Dashboard/utils/constant';
 
 interface OwnProps {
   id: any;
@@ -66,6 +67,12 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
                 pathname: FILTER_TAG_PAGE_MAPPING[data.tag],
                 search: `?filterId=${data.id}`,
               }}
+              onClick={() =>
+                setQueryBuilderState(FILTER_TAG_QB_ID_MAPPING[data.tag], {
+                  active: data.queries[0].id,
+                  state: data.queries,
+                })
+              }
             >
               {data.title}
             </Link>

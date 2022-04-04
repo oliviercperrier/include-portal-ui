@@ -36,11 +36,9 @@ import { useDispatch } from 'react-redux';
 import {
   createSavedFilter,
   deleteSavedFilter,
-  fetchSavedFilters,
   setSavedFilterAsDefault,
   updateSavedFilter,
 } from 'store/savedFilter/thunks';
-import { useSavedFilter } from 'store/savedFilter';
 import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
@@ -48,7 +46,7 @@ import GenericFilters from 'components/uiKit/FilterList/GenericFilters';
 import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
 import { INDEXES } from 'graphql/constants';
 import { numberWithCommas } from 'utils/string';
-import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import useQBStateWithSavedFilters from 'hooks/useQBStateWithSavedFilters';
 
 import styles from './index.module.scss';
 
@@ -72,8 +70,9 @@ const PageContent = ({
 }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { queryList, activeQuery } = useQueryBuilderState(DATA_EXPLORATION_QB_ID);
-  const { savedFilters, defaultFilter } = useSavedFilter(DATA_EPLORATION_FILTER_TAG);
+  const { queryList, activeQuery, selectedSavedFilter, savedFilterList } =
+    useQBStateWithSavedFilters(DATA_EXPLORATION_QB_ID, DATA_EPLORATION_FILTER_TAG);
+
   const [selectedFilterContent, setSelectedFilterContent] = useState<ReactElement | undefined>(
     undefined,
   );
@@ -116,11 +115,6 @@ const PageContent = ({
       ? [{ field: 'sample_id', order: 'asc' }]
       : biospecimenQueryConfig.sort,
   });
-
-  useEffect(() => {
-    dispatch(fetchSavedFilters(DATA_EPLORATION_FILTER_TAG));
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     setParticipantQueryConfig({
@@ -188,8 +182,8 @@ const PageContent = ({
             enableDuplicate: true,
             enableFavoriteFilter: false,
           },
-          selectedSavedFilter: defaultFilter,
-          savedFilters: savedFilters,
+          selectedSavedFilter: selectedSavedFilter,
+          savedFilters: savedFilterList,
           onUpdateFilter: handleOnUpdateFilter,
           onSaveFilter: handleOnSaveFilter,
           onDeleteFilter: handleOnDeleteFilter,

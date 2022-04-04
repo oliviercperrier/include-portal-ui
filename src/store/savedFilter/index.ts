@@ -11,11 +11,11 @@ export const useSavedFilter = (tag?: string) => {
   if (tag) {
     const filters = savedFilterState.savedFilters.filter((savedFilter) => savedFilter.tag === tag);
     const selectedFilterById = filters.find(({ id }) => id === params.get('filterId'));
-    const favoriteFilter = filters.find(({ favorite }) => !!favorite); // Disabled right now
+    //const favoriteFilter = filters.find(({ favorite }) => !!favorite); // Disabled right now
 
     return {
       ...savedFilterState,
-      defaultFilter: selectedFilterById || favoriteFilter,
+      defaultFilter: selectedFilterById,
       savedFilters: filters,
     };
   }

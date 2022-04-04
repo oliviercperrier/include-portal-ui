@@ -15,7 +15,7 @@ import Spinner from 'components/uiKit/Spinner';
 import MainSideImage from 'components/assets/mainSideImage.jpg';
 import ProtectedRoute from 'ProtectedRoute';
 import PageLayout from 'components/Layout';
-import Authenticator from 'auth/Authenticator';
+import AuthMiddleware from 'middleware/AuthMiddleware';
 import ErrorPage from 'views/Error';
 import loadable from '@loadable/component';
 import { useLang } from 'store/global';
@@ -49,7 +49,7 @@ const App = () => {
     >
       <div className="App" id="appContainer">
         {keycloakIsReady ? (
-          <Authenticator>
+          <AuthMiddleware>
             <Router>
               <Switch>
                 <Route
@@ -98,7 +98,7 @@ const App = () => {
               </Switch>
               <NotificationContextHolder />
             </Router>
-          </Authenticator>
+          </AuthMiddleware>
         ) : (
           <Spinner size={'large'} />
         )}

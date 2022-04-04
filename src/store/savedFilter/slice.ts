@@ -4,13 +4,15 @@ import {
   createSavedFilter,
   deleteSavedFilter,
   fetchSavedFilters,
+  fetchSharedSavedFilter,
   setSavedFilterAsDefault,
   updateSavedFilter,
 } from './thunks';
 
 export const SavedFilterState: initialState = {
   savedFilters: [],
-  isLoading: true,
+  sharedSavedFilter: undefined,
+  isLoading: false,
   isUpdating: false,
   selectedId: undefined,
 };
@@ -36,6 +38,21 @@ const savedFilterSlice = createSlice({
       isLoading: false,
     }));
     builder.addCase(fetchSavedFilters.rejected, (state, action) => ({
+      ...state,
+      fetchingError: action.payload,
+      isLoading: false,
+    }));
+    // Fetch Shared
+    builder.addCase(fetchSharedSavedFilter.pending, (state) => {
+      state.isLoading = true;
+      state.fetchingError = undefined;
+    });
+    builder.addCase(fetchSharedSavedFilter.fulfilled, (state, action) => ({
+      ...state,
+      sharedSavedFilter: action.payload,
+      isLoading: false,
+    }));
+    builder.addCase(fetchSharedSavedFilter.rejected, (state, action) => ({
       ...state,
       fetchingError: action.payload,
       isLoading: false,

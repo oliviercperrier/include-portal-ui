@@ -47,8 +47,12 @@ import { dotToUnderscore } from '@ferlab/ui/core/data/arranger/formatting';
 import { INDEXES } from 'graphql/constants';
 import { numberWithCommas } from 'utils/string';
 import useQBStateWithSavedFilters from 'hooks/useQBStateWithSavedFilters';
+import copy from 'copy-to-clipboard';
 
 import styles from './index.module.scss';
+import { getCurrentUrl } from 'utils/helper';
+import { SHARED_FILTER_ID_QUERY_PARAM_KEY } from 'common/constants';
+import { globalActions } from 'store/global';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -167,6 +171,15 @@ const PageContent = ({
   const handleOnDeleteFilter = (id: string) => dispatch(deleteSavedFilter(id));
   const handleOnSaveAsFavorite = (filter: ISavedFilter) =>
     dispatch(setSavedFilterAsDefault(addTagToFilter(filter)));
+  const handleOnShareFilter = (filter: ISavedFilter) => {
+    copy(`${getCurrentUrl()}?${SHARED_FILTER_ID_QUERY_PARAM_KEY}=${filter.id}`);
+    dispatch(
+      globalActions.displayMessage({
+        content: 'Copied share url',
+        type: 'success',
+      }),
+    );
+  };
 
   return (
     <Space direction="vertical" size={24} className={styles.dataExplorePageContent}>
@@ -181,9 +194,11 @@ const PageContent = ({
             enableEditTitle: true,
             enableDuplicate: true,
             enableFavoriteFilter: false,
+            enableShare: true,
           },
           selectedSavedFilter: selectedSavedFilter,
           savedFilters: savedFilterList,
+          onShareFilter: handleOnShareFilter,
           onUpdateFilter: handleOnUpdateFilter,
           onSaveFilter: handleOnSaveFilter,
           onDeleteFilter: handleOnDeleteFilter,

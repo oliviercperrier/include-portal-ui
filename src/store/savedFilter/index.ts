@@ -1,3 +1,4 @@
+import { FILTER_ID_QUERY_PARAM_KEY } from 'common/constants';
 import useQueryParams from 'hooks/useQueryParams';
 import { useSelector } from 'react-redux';
 import { savedFilterSelector } from './selector';
@@ -10,7 +11,9 @@ export const useSavedFilter = (tag?: string) => {
 
   if (tag) {
     const filters = savedFilterState.savedFilters.filter((savedFilter) => savedFilter.tag === tag);
-    const selectedFilterById = filters.find(({ id }) => id === params.get('filterId'));
+    const selectedFilterById = filters.find(
+      ({ id }) => id === params.get(FILTER_ID_QUERY_PARAM_KEY),
+    );
     //const favoriteFilter = filters.find(({ favorite }) => !!favorite); // Disabled right now
 
     return {

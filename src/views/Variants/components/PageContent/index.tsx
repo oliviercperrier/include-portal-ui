@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 import {
   createSavedFilter,
   deleteSavedFilter,
-  fetchSavedFilters,
   setSavedFilterAsDefault,
   updateSavedFilter,
 } from 'store/savedFilter/thunks';
@@ -61,11 +60,6 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
       ? [{ field: 'variant_id', order: 'asc' }]
       : variantQueryConfig.sort,
   });
-
-  useEffect(() => {
-    dispatch(fetchSavedFilters(VARIANT_FILTER_TAG));
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     setVariantQueryConfig({

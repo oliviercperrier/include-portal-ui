@@ -96,32 +96,4 @@ const updateUserConfig = createAsyncThunk<
   },
 );
 
-const completeRegistration = createAsyncThunk<
-  TUser,
-  {
-    data: TUserUpdate;
-    callback?: () => void;
-  },
-  { rejectValue: string }
->(
-  'user/complete/registration',
-  async (args, thunkAPI) => {
-    const { data, error } = await UserApi.completeRegistration(args.data);
-
-    return handleThunkApiReponse({
-      error,
-      data: data!,
-      reject: thunkAPI.rejectWithValue,
-      onSuccess: args.callback,
-    });
-  },
-  {
-    condition: (args) => {
-      if (Object.keys(args.data).length < 1) {
-        return false;
-      }
-    },
-  },
-);
-
-export { fetchUser, updateUser, completeRegistration, updateUserConfig };
+export { fetchUser, updateUser, updateUserConfig };

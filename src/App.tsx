@@ -36,7 +36,6 @@ const MyProfile = loadable(() => import('views/MyProfile'), loadableProps);
 const Settings = loadable(() => import('views/Settings'), loadableProps);
 const DataExploration = loadable(() => import('views/DataExploration'), loadableProps);
 const Variants = loadable(() => import('views/Variants'), loadableProps);
-const JoinPage = loadable(() => import('views/Join'), loadableProps);
 
 const App = () => {
   const lang = useLang();
@@ -68,14 +67,6 @@ const App = () => {
                     <Login />
                   </SideImageLayout>
                 </Route>
-                <Route
-                  path={STATIC_ROUTES.JOIN}
-                  render={() => (
-                    <SideImageLayout sideImgSrc={MainSideImage} theme="light" alignCenter={false}>
-                      <JoinPage />
-                    </SideImageLayout>
-                  )}
-                />
                 <Route
                   path={DYNAMIC_ROUTES.ERROR}
                   render={(props: RouteComponentProps<{ status?: any }>) => (

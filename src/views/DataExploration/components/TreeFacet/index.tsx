@@ -13,7 +13,6 @@ import { findSqonValueByField, removeFieldFromSqon } from '@ferlab/ui/core/data/
 import { INDEXES } from 'graphql/constants';
 import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
-import { updateQueryFilters } from '@ferlab/ui/core/data/filters/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 import Empty from '@ferlab/ui/core/components/Empty';

@@ -107,7 +107,11 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
 
     if (!results || results.length === 0) {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
-      updateQueryFilters(history, `${field}.name`, []);
+      updateActiveQueryField({
+        queryBuilderId: DATA_EXPLORATION_QB_ID,
+        field: `${field}.name`,
+        value: []
+      })
     } else {
       updateActiveQueryField({
         queryBuilderId: DATA_EXPLORATION_QB_ID,

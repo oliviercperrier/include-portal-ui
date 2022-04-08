@@ -13,6 +13,11 @@
 
 @btn-text-hover-bg: @gray-2;
 
+.ant-btn-group .ant-btn-primary:last-child:not(:first-child)[disabled],
+.ant-btn-group .ant-btn-primary + .ant-btn-primacpry[disabled] {
+  border-left-color: @btn-disable-border;
+}
+
 .@{btn-prefix-cls} {
   &.iconRight {
     display: flex;

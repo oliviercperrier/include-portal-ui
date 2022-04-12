@@ -74,6 +74,19 @@ const fr = {
         messageDelete: 'Unable to delete filter',
       },
     },
+    savedSet: {
+      error: {
+        title: 'Error',
+        messageUpdate: 'Unable to update set',
+        messageDelete: 'Unable to delete set',
+        messageCreate: 'Unable to create set',
+      },
+      success: {
+        title: 'Success',
+        messageCreate: 'Your set has been saved.',
+        messageUpdate: 'The set was updated.',
+      },
+    },
     cavatica: {
       error: {
         title: 'Error',
@@ -226,6 +239,38 @@ const fr = {
         },
       },
     },
+    savedSets:{
+      modal: {
+        edit: {
+          title: 'Save this Set',
+          okText: 'Save',
+          cancelText: 'Cancel',
+          input: {
+            label: 'Set name',
+            placeholder: 'Untitled Set',
+            maximumLength: 'characters maximum',
+          },
+        },
+        addParticipants: {
+          title: 'Add to a participant set',
+          okText: 'Add to set',
+          cancelText: 'Cancel',
+        },
+        removeParticipants: {
+          title: 'Remove from a participant set',
+          okText: 'Remove from set',
+          cancelText: 'Cancel',
+        },
+      },
+      popupConfirm: {
+        delete: {
+          title: 'Permanently delete this set?',
+          okText: 'Delete set',
+          cancelText: 'Cancel',
+          content: 'You are about to permanently delete this set.',
+        },
+      },
+    },
     dataRelease: {
       studies: 'Studies',
       participants: 'Participants',
@@ -328,6 +373,11 @@ const fr = {
         savedFilters: {
           title: 'Saved Filters',
           noSavedFilters: 'You have no saved filters',
+          lastSaved: 'Last saved: {date} ago',
+        },
+        savedSets: {
+          title: 'Saved Sets',
+          noSavedFilters: 'You have no saved sets',
           lastSaved: 'Last saved: {date} ago',
         },
       },

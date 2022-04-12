@@ -38,7 +38,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
             icon={<EditFilled />}
             onClick={() => setModalVisible(true)}
             className={styles.editFilterAction}
-          ></Button>,
+          />,
           <Button
             className={styles.editFilterAction}
             type="text"
@@ -56,7 +56,7 @@ const SavedFiltersListItem = ({ id, data }: OwnProps) => {
                 onOk: () => dispatch(deleteSavedFilter(data.id)),
               })
             }
-          ></Button>,
+          />,
         ]}
       >
         <List.Item.Meta

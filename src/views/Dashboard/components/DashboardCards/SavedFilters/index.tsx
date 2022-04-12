@@ -14,8 +14,9 @@ import ExternalLink from 'components/uiKit/ExternalLink';
 
 const { Text } = Typography;
 
-const SavedFilters = ({ id, className = '' }: DashboardCardProps) => {
+const SavedFilters = ({ id, key, className = '' }: DashboardCardProps) => {
   const { savedFilters, isLoading, fetchingError } = useSavedFilter();
+
 
   return (
     <GridCard
@@ -24,6 +25,7 @@ const SavedFilters = ({ id, className = '' }: DashboardCardProps) => {
       title={
         <CardHeader
           id={id}
+          key={key}
           title={intl.get('screen.dashboard.cards.savedFilters.title')}
           withHandle
         />
@@ -31,6 +33,7 @@ const SavedFilters = ({ id, className = '' }: DashboardCardProps) => {
       content={
         <List<TUserSavedFilter>
           className={styles.savedFiltersList}
+          key="2"
           bordered
           locale={{
             emptyText: fetchingError ? (
@@ -56,7 +59,7 @@ const SavedFilters = ({ id, className = '' }: DashboardCardProps) => {
           dataSource={fetchingError ? [] : savedFilters}
           loading={isLoading}
           renderItem={(item) => <SavedFiltersListItem id={item.id} data={item} />}
-        ></List>
+        />
       }
     />
   );

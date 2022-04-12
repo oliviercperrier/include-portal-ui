@@ -1,4 +1,4 @@
-import { ISavedFilter } from "@ferlab/ui/core/components/QueryBuilder/types";
+import { ISavedFilter } from '@ferlab/ui/core/components/QueryBuilder/types';
 
 export type TUserSavedFilter = ISavedFilter & {
   keycloak_id: string;
@@ -9,8 +9,8 @@ export type TUserSavedFilter = ISavedFilter & {
 
 export type TUserSavedFilterInsert = Omit<
   TUserSavedFilter,
-  "keycloak_id" | "updated_date" | "creation_date"
+  'keycloak_id' | 'updated_date' | 'creation_date'
 >;
 export type TUserSavedFilterUpdate = Partial<
-  Omit<TUserSavedFilter, "keycloak_id" | "updated_date" | "creation_date">
+  Omit<TUserSavedFilter, 'keycloak_id' | 'updated_date' | 'creation_date'>
 >;

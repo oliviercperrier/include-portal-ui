@@ -12,6 +12,7 @@ import UserReducer from 'store/user';
 import FenceConnectionReducer from 'store/fenceConnection';
 import ReportReducer from 'store/report';
 import SavedFilterReducer from 'store/savedFilter';
+import SavedSetReducer from 'store/savedSet';
 import FenceCavaticaReducer from 'store/fenceCavatica';
 import FenceStudiesReducer from 'store/fenceStudies';
 
@@ -31,6 +32,7 @@ const rootReducer = combineReducers<RootState>({
   fenceConnection: FenceConnectionReducer,
   fenceStudies: FenceStudiesReducer,
   savedFilter: SavedFilterReducer,
+  savedSet: SavedSetReducer,
   fenceCavatica: FenceCavaticaReducer,
 });
 

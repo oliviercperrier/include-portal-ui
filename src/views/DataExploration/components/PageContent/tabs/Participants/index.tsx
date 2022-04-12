@@ -1,8 +1,8 @@
 import {
-  ITableParticipantEntity,
+  IParticipantDiagnosis,
   IParticipantEntity,
   IParticipantObservedPhenotype,
-  IParticipantDiagnosis,
+  ITableParticipantEntity,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
 import {
@@ -38,12 +38,14 @@ import ExternalLink from 'components/uiKit/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/report';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
-import { scrollToTop, formatQuerySortList } from 'utils/helper';
+import { formatQuerySortList, scrollToTop } from 'utils/helper';
 import useQueryBuilderState, {
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
+import SetsManagementDropdown from '../../../SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;
@@ -407,6 +409,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
         onSelectAllResultsChange: setSelectedAllResults,
         onSelectedRowsChange: (keys) => setSelectedKeys(keys),
         extra: [
+          <SetsManagementDropdown results={results} sqon={sqon} type={SetType.PARTCIPANT} />,
           <Dropdown disabled={selectedKeys.length === 0} overlay={menu} placement="bottomLeft">
             <Button icon={<DownloadOutlined />}>Download clinical data</Button>
           </Dropdown>,

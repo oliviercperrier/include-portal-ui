@@ -409,7 +409,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
         onSelectAllResultsChange: setSelectedAllResults,
         onSelectedRowsChange: (keys) => setSelectedKeys(keys),
         extra: [
-          <SetsManagementDropdown results={results} sqon={sqon} type={SetType.PARTCIPANT} />,
+          <SetsManagementDropdown results={results} sqon={sqon} type={SetType.PARTICIPANT} />,
           <Dropdown disabled={selectedKeys.length === 0} overlay={menu} placement="bottomLeft">
             <Button icon={<DownloadOutlined />}>Download clinical data</Button>
           </Dropdown>,

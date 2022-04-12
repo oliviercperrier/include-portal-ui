@@ -17,9 +17,10 @@ import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { useDispatch } from 'react-redux';
 import { useSavedSet } from 'store/savedSet';
 import { fetchSavedSet } from 'store/savedSet/thunks';
+import { IFileEntity } from '../../../../graphql/files/models';
 
 type Props = {
-  results: IQueryResults<IParticipantEntity[]>;
+  results: IQueryResults<IParticipantEntity[] | IFileEntity[]>;
   sqon?: ISqonGroupFilter;
   type: string;
 };
@@ -124,7 +125,6 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
 
   useEffect(() => {
     dispatch(fetchSavedSet());
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

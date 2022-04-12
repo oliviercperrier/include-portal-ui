@@ -42,6 +42,8 @@ import useQueryBuilderState, {
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
+import SetsManagementDropdown from "../../../SetsManagementDropdown";
+import {SetType} from "../../../../../../services/api/savedSet/models";
 
 interface OwnProps {
   results: IQueryResults<IFileEntity[]>;
@@ -353,6 +355,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
               }),
             ),
           extra: [
+            <SetsManagementDropdown results={results} sqon={sqon} type={SetType.FILE} />,
             <Button
               disabled={selectedKeys.length === 0}
               type="primary"

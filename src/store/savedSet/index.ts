@@ -9,11 +9,4 @@ export const MAX_LENGTH_NAME = 50;
 export const FILED_ID = 'fhir_id';
 export const PROJECT_ID = EnvironmentVariables.configFor('ARRANGER_PROJECT_ID');
 
-// export const useSavedSet = () => useSelector(savedSetSelector);
-
-export const useSavedSet = () => {
-  console.log('IN useSavedSet');
-  const toto = useSelector(savedSetSelector);
-  console.log(toto, 'TOTOTO');
-  return toto;
-};
+export const useSavedSet = () => useSelector(savedSetSelector);

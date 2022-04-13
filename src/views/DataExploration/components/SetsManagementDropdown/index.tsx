@@ -1,6 +1,8 @@
 import { Button, Dropdown, Menu, Tooltip } from 'antd';
 import {
   DownOutlined,
+  ExperimentOutlined,
+  FileTextOutlined,
   InfoCircleOutlined,
   PlusOutlined,
   UsergroupAddOutlined,
@@ -17,10 +19,12 @@ import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { useDispatch } from 'react-redux';
 import { useSavedSet } from 'store/savedSet';
 import { fetchSavedSet } from 'store/savedSet/thunks';
-import { IFileEntity } from '../../../../graphql/files/models';
+import { IFileEntity } from 'graphql/files/models';
+import { IBiospecimenEntity } from 'graphql/biospecimens/models';
+import { INDEXES } from '../../../../graphql/constants';
 
 type Props = {
-  results: IQueryResults<IParticipantEntity[] | IFileEntity[]>;
+  results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
   sqon?: ISqonGroupFilter;
   type: string;
 };
@@ -65,10 +69,41 @@ const modals = {
 const ROW_SELECTION_LIMIT = 10000;
 const exceedLimit = (participantCount: number) => participantCount > ROW_SELECTION_LIMIT;
 
+const itemIcon = (type: string, itemCount: number) => {
+  const color = exceedLimit(itemCount) ? '#dd1f2a' : '#a9adc0';
+  switch (type) {
+    case INDEXES.BIOSPECIMEN:
+      return (
+        <ExperimentOutlined
+          style={{ color }}
+          width="14px"
+          height="14px"
+        />
+      );
+    case INDEXES.FILE:
+      return (
+        <FileTextOutlined
+          style={{ color }}
+          width="14px"
+          height="14px"
+        />
+      );
+    default:
+      return (
+        <UserOutlined
+          style={{ color }}
+          width="14px"
+          height="14px"
+        />
+      );
+  }
+};
+
 const menu = (
   participantCount: number,
   onClick: MenuClickEventHandler,
   isEditDisabled: boolean,
+  type: string,
 ) => (
   <Menu className="save-set-option-menu" onClick={onClick}>
     <Menu.Item
@@ -76,15 +111,11 @@ const menu = (
       key="participant-count"
       className={'save-set-option' + (exceedLimit(participantCount) ? ' over' : '')}
       disabled
-      icon={
-        <UserOutlined
-          style={{ color: exceedLimit(participantCount) ? '#dd1f2a' : '#a9adc0' }}
-          width="14px"
-          height="14px"
-        />
-      }
+      icon={itemIcon(type, participantCount)}
     >
-      <span>{participantCount} participants selected</span>
+      <span>
+        {participantCount} {type} selected
+      </span>
       <Tooltip
         arrowPointAtCenter
         placement="topRight"
@@ -125,6 +156,7 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
 
   useEffect(() => {
     dispatch(fetchSavedSet());
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -141,10 +173,10 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
   };
 
   return (
-    <div id={'participant-set-dropdown-container'}>
+    <div id={`${type}-set-dropdown-container`}>
       {modal.showModalSave && sqon && (
         <SaveSetModal
-          title={'Save Participant Set'}
+          title={`Save ${type.charAt(0).toUpperCase() + type.slice(1)} Set`}
           sqon={sqon}
           setType={type}
           hideModalCb={() => setModal(modals.hideAll)}
@@ -163,11 +195,11 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
         />
       )}
       <Dropdown
-        overlay={menu(results.total, onClick, isEditDisabled)}
+        overlay={menu(results.total, onClick, isEditDisabled, type)}
         placement="bottomLeft"
         trigger={['click']}
         getPopupContainer={() =>
-          document.getElementById('participant-set-dropdown-container') as HTMLElement
+          document.getElementById(`${type}-set-dropdown-container`) as HTMLElement
         }
       >
         <Button className={'save-set-btn'} onClick={(e) => e.preventDefault()}>

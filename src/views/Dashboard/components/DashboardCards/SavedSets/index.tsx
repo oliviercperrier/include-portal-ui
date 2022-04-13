@@ -62,11 +62,7 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
   const dispatch = useDispatch();
   const { savedSets, isLoading, fetchingError } = useSavedSet();
 
-  console.log(savedSets, 'savedSets');
-
   useEffect(() => {
-    console.log('USE EFFECT');
-
     dispatch(fetchSavedSet());
     // eslint-disable-next-line
   }, []);

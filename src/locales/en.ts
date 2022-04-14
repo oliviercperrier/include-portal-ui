@@ -251,13 +251,13 @@ const fr = {
             maximumLength: 'characters maximum',
           },
         },
-        addParticipants: {
-          title: 'Add to a participant set',
+        add: {
+          title: 'Add to a {type} set',
           okText: 'Add to set',
           cancelText: 'Cancel',
         },
-        removeParticipants: {
-          title: 'Remove from a participant set',
+        remove: {
+          title: 'Remove from a {type} set',
           okText: 'Remove from set',
           cancelText: 'Cancel',
         },

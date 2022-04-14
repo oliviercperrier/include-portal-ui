@@ -21,7 +21,9 @@ import { useSavedSet } from 'store/savedSet';
 import { fetchSavedSet } from 'store/savedSet/thunks';
 import { IFileEntity } from 'graphql/files/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
-import { INDEXES } from '../../../../graphql/constants';
+import { INDEXES } from 'graphql/constants';
+
+import styles from './index.module.scss';
 
 type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
@@ -70,32 +72,13 @@ const ROW_SELECTION_LIMIT = 10000;
 const exceedLimit = (participantCount: number) => participantCount > ROW_SELECTION_LIMIT;
 
 const itemIcon = (type: string, itemCount: number) => {
-  const color = exceedLimit(itemCount) ? '#dd1f2a' : '#a9adc0';
   switch (type) {
     case INDEXES.BIOSPECIMEN:
-      return (
-        <ExperimentOutlined
-          style={{ color }}
-          width="14px"
-          height="14px"
-        />
-      );
+      return <ExperimentOutlined width="14px" height="14px" />;
     case INDEXES.FILE:
-      return (
-        <FileTextOutlined
-          style={{ color }}
-          width="14px"
-          height="14px"
-        />
-      );
+      return <FileTextOutlined width="14px" height="14px" />;
     default:
-      return (
-        <UserOutlined
-          style={{ color }}
-          width="14px"
-          height="14px"
-        />
-      );
+      return <UserOutlined width="14px" height="14px" />;
   }
 };
 
@@ -105,11 +88,15 @@ const menu = (
   isEditDisabled: boolean,
   type: string,
 ) => (
-  <Menu className="save-set-option-menu" onClick={onClick}>
+  <Menu className={styles.saveSetOptionMenu} onClick={onClick}>
     <Menu.Item
       id="participant-count"
       key="participant-count"
-      className={'save-set-option' + (exceedLimit(participantCount) ? ' over' : '')}
+      className={`${
+        exceedLimit(participantCount)
+          ? styles.saveSetOptionMenuInfoOver
+          : styles.saveSetOptionMenuInfo
+      }`}
       disabled
       icon={itemIcon(type, participantCount)}
     >
@@ -121,27 +108,17 @@ const menu = (
         placement="topRight"
         title={'Max. 10,000 participants at a time. The first 10,000 will be processed.'}
       >
-        <InfoCircleOutlined id="info" />
+        <InfoCircleOutlined className={styles.infoCircle} />
       </Tooltip>
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key={'create'} className="save-set-option" icon={<PlusOutlined />}>
+    <Menu.Item key={'create'} icon={<PlusOutlined />}>
       Save as new set
     </Menu.Item>
-    <Menu.Item
-      key={'add_ids'}
-      className="save-set-option"
-      icon={<UsergroupAddOutlined />}
-      disabled={isEditDisabled}
-    >
+    <Menu.Item key={'add_ids'} icon={<UsergroupAddOutlined />} disabled={isEditDisabled}>
       Add to existing set
     </Menu.Item>
-    <Menu.Item
-      key={'remove_ids'}
-      className="save-set-option"
-      icon={<UsergroupDeleteOutlined />}
-      disabled={isEditDisabled}
-    >
+    <Menu.Item key={'remove_ids'} icon={<UsergroupDeleteOutlined />} disabled={isEditDisabled}>
       Remove from existing set
     </Menu.Item>
   </Menu>
@@ -192,6 +169,7 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
             // clearQueryCache();
           }}
           userSets={savedSets}
+          type={type}
         />
       )}
       <Dropdown
@@ -203,7 +181,7 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
         }
       >
         <Button className={'save-set-btn'} onClick={(e) => e.preventDefault()}>
-          Save participants set
+          {`Save ${type} set`}
           <DownOutlined />
         </Button>
       </Dropdown>

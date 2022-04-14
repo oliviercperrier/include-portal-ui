@@ -1,4 +1,4 @@
-@import "colors";
+@import 'colors';
 
 .SavedFiltersListItem {
   .filterLink {
@@ -26,5 +26,9 @@
     &:focus {
       background-color: transparent;
     }
+  }
+
+  .countDisplay {
+    padding-right: 15px;
   }
 }

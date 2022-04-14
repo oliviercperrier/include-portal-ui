@@ -18,6 +18,7 @@ type OwnProps = {
   userSets: IUserSetOutput[];
   sqon?: ISqonGroupFilter;
   setActionType: SetActionType;
+  type: string;
 };
 
 const finishButtonText = (type: string) => {
@@ -31,27 +32,32 @@ const finishButtonText = (type: string) => {
   }
 };
 
-const formTitle = (type: string) => {
-  switch (type) {
+const formTitle = (setActionType: string, type: string) => {
+  switch (setActionType) {
     case SetActionType.ADD_IDS:
-      return intl.get('components.savedSets.modal.addParticipants.title');
+      return intl.get('components.savedSets.modal.add.title', { type });
     case SetActionType.REMOVE_IDS:
-      return intl.get('components.savedSets.modal.removeParticipants.title');
+      return intl.get('components.savedSets.modal.remove.title', { type });
     default:
       break;
   }
 };
 
 const AddRemoveSaveSetModal: FunctionComponent<OwnProps> = (props) => {
-  const { hideModalCb, userSets, setActionType, sqon } = props;
+  const { hideModalCb, userSets, setActionType, sqon, type } = props;
   const [isVisible, setIsVisible] = useState(true);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [hasSetSelection, setHasSetSelection] = useState(false);
   const dispatch = useDispatch();
 
   const onSuccessCreateCb = () => {
     setIsVisible(false);
     setIsUpdate(false);
     hideModalCb();
+  };
+
+  const onSelectionChange = (value: string) => {
+    setHasSetSelection(!!value);
   };
 
   const onFinish = async (values: Store) => {
@@ -87,7 +93,7 @@ const AddRemoveSaveSetModal: FunctionComponent<OwnProps> = (props) => {
 
   return (
     <Modal
-      title={formTitle(setActionType)}
+      title={formTitle(setActionType, type)}
       visible={isVisible}
       onCancel={onCancel}
       footer={[
@@ -102,13 +108,21 @@ const AddRemoveSaveSetModal: FunctionComponent<OwnProps> = (props) => {
             key="save"
             type="primary"
             loading={isUpdate}
+            disabled={!hasSetSelection}
           >
             {finishButtonText(setActionType)}
           </Button>
         </Form.Item>,
       ]}
     >
-      <UserSetsForm userSets={userSets} form={form} formName={FORM_NAME} onFinish={onFinish} />
+      <UserSetsForm
+        userSets={userSets.filter((s) => s.setType === type)}
+        form={form}
+        formName={FORM_NAME}
+        onFinish={onFinish}
+        onSelectionChange={onSelectionChange}
+        type={type}
+      />
     </Modal>
   );
 };

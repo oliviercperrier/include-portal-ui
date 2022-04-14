@@ -1,0 +1,25 @@
+@import 'colors';
+
+.saveSetOptionMenu {
+  .saveSetOptionMenuInfo {
+    &:hover {
+      cursor: default;
+    }
+
+    &Over {
+      color: $red-5;
+
+      &:hover {
+        cursor: default;
+      }
+
+      .infoCircle {
+        margin-left: 1rem;
+      }
+    }
+
+    .infoCircle {
+      margin-left: 1rem;
+    }
+  }
+}

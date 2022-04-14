@@ -9,15 +9,26 @@ type OwnProps = {
   formName: string;
   userSets: IUserSetOutput[];
   onFinish: (values: Store) => void;
+  onSelectionChange: (values: string) => void;
   form: FormInstance;
+  type: string;
 };
 
-type Props = OwnProps; //& PropsFromRedux;
-
-const UserSetsForm: FunctionComponent<Props> = ({ form, formName, userSets, onFinish }) => (
+const UserSetsForm: FunctionComponent<OwnProps> = ({
+  form,
+  formName,
+  userSets,
+  onFinish,
+  onSelectionChange,
+  type,
+}) => (
   <Form form={form} name={formName} onFinish={onFinish} layout="vertical">
-    <Form.Item label="Participant Set" name="setId" hasFeedback>
-      <Select placeholder="Choose a set">
+    <Form.Item
+      label={`${type.charAt(0).toUpperCase() + type.slice(1)} Set`}
+      name="setId"
+      hasFeedback
+    >
+      <Select placeholder="Choose a set" onSelect={(value: string) => onSelectionChange(value)}>
         {userSets.map((s: IUserSetOutput) => (
           <Select.Option key={s.id} value={s.id}>
             <Row>

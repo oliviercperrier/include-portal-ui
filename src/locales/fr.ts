@@ -79,10 +79,12 @@ const fr = {
         title: 'Error',
         messageUpdate: 'Unable to update set',
         messageDelete: 'Unable to delete set',
+        messageCreate: 'Unable to create set',
       },
       success: {
         title: 'Success',
-        messageUpdate: 'Your set has been saved.',
+        messageCreate: 'Your set has been saved.',
+        messageUpdate: 'The set was updated.',
       },
     },
     cavatica: {
@@ -102,7 +104,7 @@ const fr = {
         fileAuth: {
           title: 'Unauthorized files',
           description:
-            'You are not authorized to analyze the files you have selected. Learn more about data access.',
+              'You are not authorized to analyze the files you have selected. Learn more about data access.',
         },
       },
       success: {
@@ -114,7 +116,7 @@ const fr = {
           import: {
             copySuccess: 'Your files have been copied to: <strong>{destination}</strong>',
             possibleDelays:
-              'If you have uploaded more than 10000 files in the last 5 minutes, the import may take a little longer.',
+                'If you have uploaded more than 10000 files in the last 5 minutes, the import may take a little longer.',
             openProject: 'Open project in Cavatica',
           },
         },
@@ -146,7 +148,7 @@ const fr = {
       itemCount: {
         singlePage: '{count, plural, =0 {No result} other {<strong>#</strong> results}}',
         multiplePages:
-          'Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>',
+            'Results <strong>{from}</strong> - <strong>{to}</strong> of <strong>{total}</strong>',
       },
     },
     suggester: {
@@ -237,7 +239,7 @@ const fr = {
         },
       },
     },
-    savedSets: {
+    savedSets:{
       modal: {
         edit: {
           title: 'Save this Set',
@@ -248,6 +250,24 @@ const fr = {
             placeholder: 'Untitled Set',
             maximumLength: 'characters maximum',
           },
+        },
+        add: {
+          title: 'Add to a {type} set',
+          okText: 'Add to set',
+          cancelText: 'Cancel',
+        },
+        remove: {
+          title: 'Remove from a {type} set',
+          okText: 'Remove from set',
+          cancelText: 'Cancel',
+        },
+      },
+      popupConfirm: {
+        delete: {
+          title: 'Permanently delete this set?',
+          okText: 'Delete set',
+          cancelText: 'Cancel',
+          content: 'You are about to permanently delete this set.',
         },
       },
     },
@@ -292,7 +312,7 @@ const fr = {
       newInsights: 'new insights',
       biologyConditions: 'into the biology of Down Syndrome and co-occurring conditions.',
       accessLargeScale:
-        'Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and omics data.',
+          'Access large-scale data resources and explore custom built cohort datasets based on participant, biospecimen, clinical and omics data.',
       login: 'Login',
       signup: 'Sign up',
     },
@@ -309,7 +329,7 @@ const fr = {
         error: {
           title: 'Connection error',
           subtitle:
-            'We are currently unable to connect to this service. Please refresh the page and try again. If the problem persists, please',
+              'We are currently unable to connect to this service. Please refresh the page and try again. If the problem persists, please',
           contactSupport: 'contact support',
         },
         datarelease: {
@@ -318,9 +338,9 @@ const fr = {
         authorizedStudies: {
           title: 'Authorized Studies {count, plural, =0 {} other {(#)}}',
           connectedNotice:
-            'You have access to the following INCLUDE controlled data through your NIH credentials.',
+              'You have access to the following INCLUDE controlled data through your NIH credentials.',
           disconnectedNotice:
-            'Access INCLUDE controlled-access data by connecting your account using your NIH Credentials',
+              'Access INCLUDE controlled-access data by connecting your account using your NIH Credentials',
           disconnect: 'Disconnect',
           noAvailableStudies: 'No available studies',
           authorization: 'Authorization',
@@ -330,7 +350,7 @@ const fr = {
           infoPopover: {
             title: 'Accessing Data',
             content:
-              'Users requesting access to controlled data are required to have an eRA Commons account. Read more on',
+                'Users requesting access to controlled data are required to have an eRA Commons account. Read more on',
             applyingForDataAccess: 'applying for data access',
           },
         },
@@ -345,7 +365,7 @@ const fr = {
           infoPopover: {
             title: 'CAVATICA compute cloud platform',
             content:
-              'CAVATICA is a cloud-based data analysis platform where data, results, and workflows are shared among the world’s research community.',
+                'CAVATICA is a cloud-based data analysis platform where data, results, and workflows are shared among the world’s research community.',
             readMore: 'Read more',
           },
           newProject: 'New project',
@@ -451,12 +471,12 @@ const fr = {
             bulkImportLimit: {
               title: 'Maximum file count exceeded',
               description:
-                'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
+                  'You can copy a maximum of <strong>{limit} files</strong> at a time. Please select fewer files and try again.',
             },
             authWarning: {
               title: 'You are not connected to Cavatica',
               description:
-                'In order to analyze your files you must first connect your Cavatica account. Once you are connected, you will be redirected back to this page.',
+                  'In order to analyze your files you must first connect your Cavatica account. Once you are connected, you will be redirected back to this page.',
             },
             analyseModal: {
               newProject: 'New project',
@@ -477,7 +497,7 @@ const fr = {
       disclaimers: {
         title: 'INCLUDE Portal Registration Process',
         description:
-          'The INCLUDE Portal is the primary entry point to the INCLUDE Data Hub. The INCLUDE Portal enables searching, visualizing, and accessing INCLUDE-relevant data. Some datasets may require additional approvals (e.g., dbGaP) and terms and conditions of access and use.',
+            'The INCLUDE Portal is the primary entry point to the INCLUDE Data Hub. The INCLUDE Portal enables searching, visualizing, and accessing INCLUDE-relevant data. Some datasets may require additional approvals (e.g., dbGaP) and terms and conditions of access and use.',
         terms: {
           title: 'INCLUDE Portal Terms & Conditions',
           lastUpdate: 'Last Update: {date}',
@@ -504,7 +524,7 @@ const fr = {
       },
       registration: {
         notice:
-          'Information provided here will be shared with the INCLUDE community on the INCLUDE Portal. All fields are required unless specified as optional.',
+            'Information provided here will be shared with the INCLUDE community on the INCLUDE Portal. All fields are required unless specified as optional.',
         sections: {
           identification: 'Identification',
           roleAndAffiliation: 'Role & Affiliation',
@@ -516,7 +536,7 @@ const fr = {
           haveAUserID: 'I have an eRA Commons ID:',
           enterUserId: 'Please enter your eRA Commons ID',
           commercialUseReason:
-            'Please provide a minimum of 1-2 sentences to describe your commercial use:',
+              'Please provide a minimum of 1-2 sentences to describe your commercial use:',
           fullName: 'Full name',
           email: 'Email',
           iAmA: 'I am a:',
@@ -533,12 +553,12 @@ const fr = {
           checkAllThatApply: 'Check all that apply',
           describeUseBelow: 'For other purpose, you must describe your use below',
           provideBriefDescription:
-            'Provide a brief description and a link to your professional biography or organization website, if available',
+              'Provide a brief description and a link to your professional biography or organization website, if available',
           provideOrgAffiliation: 'Provide institutional or organizational affiliation',
         },
         noticeNotPublicInfo: 'This information will not be made public.',
         nameAndEmailOfIndividual:
-          'Please provide the name and email address of an individual at your institution, organization, or similar who is aware of your intended use of the data (We do not expect to contact this individual except in cases where we need to verify your identity).',
+            'Please provide the name and email address of an individual at your institution, organization, or similar who is aware of your intended use of the data (We do not expect to contact this individual except in cases where we need to verify your identity).',
         roleOptions: {
           1: 'Researcher at an academic or not-for-profit institution',
           2: 'Representative from a For-Profit or Commercial Entity',

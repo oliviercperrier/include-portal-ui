@@ -1,23 +1,29 @@
 import { Form, Input, Modal } from 'antd';
 import { WarningFilled } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import { useDispatch } from 'react-redux';
 
 import styles from './index.module.scss';
 import { IUserSetOutput } from 'services/api/savedSet/models';
-import { updateSavedSet } from 'store/savedSet/thunks';
-import { SetActionType } from '../../../../../DataExploration/components/SetsManagementDropdown';
 
 interface OwnProps {
   visible?: boolean;
   onCancel: () => void;
+  onTagRename: (setId: string, newTag: string) => void;
   set: IUserSetOutput;
+  hasError: boolean;
+  errorMessage: string;
 }
 
 const FILTER_NAME_MAX_LENGTH = 50;
 
-const EditModal = ({ visible = false, onCancel, set }: OwnProps) => {
-  const dispatch = useDispatch();
+const EditModal = ({
+  visible = false,
+  onCancel,
+  set,
+  onTagRename,
+  hasError,
+  errorMessage,
+}: OwnProps) => {
   const [editForm] = Form.useForm();
 
   return (
@@ -41,16 +47,8 @@ const EditModal = ({ visible = false, onCancel, set }: OwnProps) => {
         layout="vertical"
         onFinish={(value) => {
           if (set.tag !== value.title) {
-            dispatch(
-              updateSavedSet({
-                onCompleteCb(): void {},
-                id: set.id,
-                subAction: SetActionType.RENAME_TAG,
-                newTag: value.title,
-              }),
-            );
+            onTagRename(set.id, value.title);
           }
-          onCancel();
         }}
       >
         <Form.Item noStyle shouldUpdate>
@@ -58,6 +56,8 @@ const EditModal = ({ visible = false, onCancel, set }: OwnProps) => {
             <Form.Item
               name="title"
               label={intl.get('components.savedSets.modal.edit.input.label')}
+              validateStatus={hasError ? 'error' : 'success'}
+              help={errorMessage}
               rules={[
                 {
                   type: 'string',

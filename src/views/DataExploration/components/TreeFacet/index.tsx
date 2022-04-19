@@ -11,7 +11,6 @@ import {
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
 import { findSqonValueByField, removeFieldFromSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
-import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
@@ -41,7 +40,6 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
   const phenotypeStore = useRef(new PhenotypeStore());
   const [rootNode, setRootNode] = useState<TreeNode>();
   const [treeData, setTreeData] = useState<TreeNode>();
-  const history = useHistory();
   const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
 
   const getInitialExpandedKeys = (data: TreeNode[], collectedKeys: string[] = [], counter = 0) => {

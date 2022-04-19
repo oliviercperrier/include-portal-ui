@@ -33,6 +33,8 @@ import useQueryBuilderState, {
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
+import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -270,6 +272,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
             }),
           ),
         extra: [
+          <SetsManagementDropdown results={results} sqon={sqon} type={SetType.BIOSPECIMEN} />,
           <Button
             icon={<DownloadOutlined />}
             onClick={() =>

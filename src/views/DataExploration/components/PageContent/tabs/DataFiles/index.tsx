@@ -40,6 +40,8 @@ import { scrollToTop, formatQuerySortList } from 'utils/helper';
 import useQueryBuilderState, {
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
 
@@ -353,6 +355,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
               }),
             ),
           extra: [
+            <SetsManagementDropdown results={results} sqon={sqon} type={SetType.FILE} />,
             <Button
               disabled={selectedKeys.length === 0}
               type="primary"

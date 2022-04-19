@@ -1,0 +1,27 @@
+.savedFiltersList {
+  height: 100%;
+  overflow: auto;
+  min-height: 200px;
+
+  div[class$='-item-meta'] {
+    margin-bottom: 0;
+  }
+
+  *[class$='-item-meta-description'] {
+    font-size: 12px;
+  }
+}
+
+.setTabs {
+  :global(.ant-tabs-tab) {
+    padding-top: 0 !important;
+  }
+
+  &:global(.ant-tabs-top) {
+    :global(.ant-tabs-nav) {
+      &::before {
+        border: none;
+      }
+    }
+  }
+}

@@ -1,27 +1,34 @@
 import { Form, Input, Modal } from 'antd';
-import { TUserSavedFilter } from 'services/api/savedFilter/models';
 import { WarningFilled } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import { useDispatch } from 'react-redux';
-import { updateSavedFilter } from 'store/savedFilter/thunks';
 
 import styles from './index.module.scss';
+import { IUserSetOutput } from 'services/api/savedSet/models';
 
 interface OwnProps {
   visible?: boolean;
   onCancel: () => void;
-  filter: TUserSavedFilter;
+  onTagRename: (setId: string, newTag: string) => void;
+  set: IUserSetOutput;
+  hasError: boolean;
+  errorMessage: string;
 }
 
 const FILTER_NAME_MAX_LENGTH = 50;
 
-const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
-  const dispatch = useDispatch();
+const EditModal = ({
+  visible = false,
+  onCancel,
+  set,
+  onTagRename,
+  hasError,
+  errorMessage,
+}: OwnProps) => {
   const [editForm] = Form.useForm();
 
   return (
     <Modal
-      title={intl.get('components.querybuilder.header.modal.edit.title')}
+      title={intl.get('components.savedSets.modal.edit.title')}
       onCancel={() => {
         onCancel();
         editForm.resetFields();
@@ -34,27 +41,23 @@ const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
         fields={[
           {
             name: ['title'],
-            value: filter.title,
+            value: set.tag,
           },
         ]}
         layout="vertical"
-        onFinish={(values) => {
-          if (filter.title !== values.title) {
-            dispatch(
-              updateSavedFilter({
-                ...filter,
-                title: values.title,
-              }),
-            );
+        onFinish={(value) => {
+          if (set.tag !== value.title) {
+            onTagRename(set.id, value.title);
           }
-          onCancel();
         }}
       >
         <Form.Item noStyle shouldUpdate>
           {() => (
             <Form.Item
               name="title"
-              label={intl.get('components.querybuilder.header.modal.edit.input.label')}
+              label={intl.get('components.savedSets.modal.edit.input.label')}
+              validateStatus={hasError ? 'error' : 'success'}
+              help={errorMessage}
               rules={[
                 {
                   type: 'string',
@@ -62,26 +65,20 @@ const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
                   message: (
                     <span>
                       <WarningFilled /> {FILTER_NAME_MAX_LENGTH}{' '}
-                      {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
+                      {intl.get('components.savedSets.modal.edit.input.maximumLength')}
                     </span>
                   ),
-                  validateTrigger: 'onSubmit',
                 },
                 {
                   type: 'string',
                   required: true,
                   message: intl.get('global.forms.errors.requiredField'),
-                  validateTrigger: 'onSubmit',
                 },
               ]}
               required={false}
               className={styles.filterEditFormItem}
             >
-              <Input
-                placeholder={intl.get(
-                  'components.querybuilder.header.modal.edit.input.placeholder',
-                )}
-              />
+              <Input placeholder={intl.get('components.savedSets.modal.edit.input.placeholder')} />
             </Form.Item>
           )}
         </Form.Item>

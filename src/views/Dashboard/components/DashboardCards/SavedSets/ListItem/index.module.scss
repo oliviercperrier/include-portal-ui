@@ -1,6 +1,6 @@
 @import 'colors';
 
-.SavedFiltersListItem {
+.savedSetListItem {
   .filterLink {
     padding: 0;
     height: unset;
@@ -8,12 +8,16 @@
   }
 
   &:hover {
-    .filterLink {
+    .setLink {
       text-decoration: underline;
       &:hover {
         color: $gray-8;
         text-decoration: none;
       }
+    }
+
+    .countDisplay {
+      display: none;
     }
   }
 
@@ -21,7 +25,7 @@
     margin-bottom: 0px;
   }
 
-  .editFilterAction {
+  .editSetAction {
     &:hover,
     &:focus {
       background-color: transparent;
@@ -29,6 +33,6 @@
   }
 
   .countDisplay {
-    padding-right: 15px;
+    padding-right: 12px;
   }
 }

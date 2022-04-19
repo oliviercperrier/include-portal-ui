@@ -11,14 +11,15 @@ import {
 } from 'views/DataExploration/utils/constant';
 import { Link } from 'react-router-dom';
 import { distanceInWords } from 'date-fns';
-
-import styles from './index.module.scss';
 import EditModal from '../EditModal';
 import { deleteSavedSet, updateSavedSet } from 'store/savedSet/thunks';
 import { addQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
-import { SetActionType } from '../../../../../DataExploration/components/SetsManagementDropdown';
+import { SetActionType } from 'views/DataExploration/components/SetsManagementDropdown';
+import { SET_ID_PREFIX } from '@ferlab/ui/core/data/sqon/types';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   id: any;
@@ -42,7 +43,6 @@ const redirectToPage = (setType: string) => {
 
 const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [onFocus, setOnFocus] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
@@ -71,78 +71,68 @@ const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
   };
 
   return (
-    <div onMouseEnter={() => setOnFocus(true)} onMouseLeave={() => setOnFocus(false)}>
+    <>
       <List.Item
         key={id}
-        className={cx(styles.SavedFiltersListItem, 'with-action-on-hover')}
+        className={cx(styles.savedSetListItem, 'with-action-on-hover')}
+        actions={[
+          <Button
+            type="text"
+            icon={<EditFilled />}
+            onClick={() => setModalVisible(true)}
+            className={styles.editSetAction}
+          />,
+          <Button
+            className={styles.editSetAction}
+            type="text"
+            icon={<DeleteFilled />}
+            onClick={() =>
+              Modal.confirm({
+                title: intl.get('components.savedSets.popupConfirm.delete.title'),
+                icon: <ExclamationCircleOutlined />,
+                okText: intl.get('components.savedSets.popupConfirm.delete.okText'),
+                content: intl.get('components.savedSets.popupConfirm.delete.content'),
+                cancelText: intl.get('components.savedSets.popupConfirm.delete.cancelText'),
+                okButtonProps: { danger: true },
+                onOk: () => dispatch(deleteSavedSet(data.id)),
+              })
+            }
+          />,
+        ]}
         extra={
           <Row gutter={15} className={styles.countDisplay}>
-            {onFocus ? (
-              <>
-                <Col>
-                  <Button
-                    type="text"
-                    icon={<EditFilled />}
-                    onClick={() => setModalVisible(true)}
-                    className={styles.editFilterAction}
-                  />
-                </Col>
-                <Col>
-                  <Button
-                    className={styles.editFilterAction}
-                    type="text"
-                    icon={<DeleteFilled />}
-                    onClick={() =>
-                      Modal.confirm({
-                        title: intl.get('components.savedSets.popupConfirm.delete.title'),
-                        icon: <ExclamationCircleOutlined />,
-                        okText: intl.get('components.savedSets.popupConfirm.delete.okText'),
-                        content: intl.get('components.savedSets.popupConfirm.delete.content'),
-                        cancelText: intl.get('components.savedSets.popupConfirm.delete.cancelText'),
-                        okButtonProps: { danger: true },
-                        onOk: () => dispatch(deleteSavedSet(data.id)),
-                      })
-                    }
-                  />
-                </Col>
-              </>
-            ) : (
-              <>
-                <Col>{data.size}</Col>
-                <Col>{icon}</Col>
-              </>
-            )}
+            <Col>{data.size}</Col>
+            <Col>{icon}</Col>
           </Row>
         }
       >
         <List.Item.Meta
           title={
-            <>
-              <Link
-                className={styles.filterLink}
-                to={{
-                  pathname: redirectToPage(data.setType),
-                  search: `?setId=${data.id}`,
-                }}
-                onClick={() =>
-                  addQuery({
-                    queryBuilderId: DATA_EXPLORATION_QB_ID,
-                    query: generateQuery({
-                      newFilters: [
-                        generateValueFilter({
-                          field: 'fhir_id',
-                          value: [`set_id:${data.id}`],
-                          index: data.setType,
-                        }),
-                      ],
-                    }),
-                    setAsActive: true,
-                  })
-                }
-              >
-                {data.tag}
-              </Link>
-            </>
+            <Link
+              className={styles.setLink}
+              to={redirectToPage(data.setType)}
+              onClick={() => {
+                const setValue = `${SET_ID_PREFIX}${data.id}`;
+                addQuery({
+                  queryBuilderId: DATA_EXPLORATION_QB_ID,
+                  query: generateQuery({
+                    newFilters: [
+                      generateValueFilter({
+                        field: 'fhir_id',
+                        value: [setValue],
+                        index: data.setType,
+                        alternateName: {
+                          [setValue]: data.tag,
+                        },
+                      }),
+                    ],
+                  }),
+                  setAsActive: true,
+                });
+              }}
+            >
+              {data.tag}
+            </Link>
           }
           description={
             <Text type="secondary">
@@ -162,7 +152,7 @@ const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
         hasError={hasError}
         errorMessage={errorMessage}
       />
-    </div>
+    </>
   );
 };
 

@@ -5,16 +5,14 @@ import { DashboardCardProps } from 'views/Dashboard/components/DashboardCards';
 import CardHeader from 'views/Dashboard/components/CardHeader';
 import Empty from '@ferlab/ui/core/components/Empty';
 import ListItem from './ListItem';
-import { ReactElement, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchSavedSet } from 'store/savedSet/thunks';
+import { ReactElement } from 'react';
 import { useSavedSet } from 'store/savedSet';
 import { IUserSetOutput } from 'services/api/savedSet/models';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
-
-import styles from './index.module.scss';
 import ExternalLink from 'components/uiKit/ExternalLink';
 import { ExperimentOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons';
+
+import styles from './index.module.scss';
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -61,13 +59,7 @@ const getItemList = (
 };
 
 const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
-  const dispatch = useDispatch();
   const { savedSets, isLoading, fetchingError } = useSavedSet();
-
-  useEffect(() => {
-    dispatch(fetchSavedSet());
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <GridCard
@@ -82,7 +74,7 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
         />
       }
       content={
-        <Tabs defaultActiveKey="participants">
+        <Tabs className={styles.setTabs} defaultActiveKey="participants">
           <TabPane
             tab={
               <div>

@@ -14,7 +14,7 @@ import { IQueryResults } from 'graphql/models';
 import { IParticipantEntity } from 'graphql/participants/models';
 import { useEffect, useState } from 'react';
 import AddRemoveSaveSetModal from './AddRemoveSaveSetModal';
-import SaveSetModal from './SaveSetModal';
+import CreateModal from './CreateModal';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { useDispatch } from 'react-redux';
 import { useSavedSet } from 'store/savedSet';
@@ -152,7 +152,7 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
   return (
     <div id={`${type}-set-dropdown-container`}>
       {modal.showModalSave && sqon && (
-        <SaveSetModal
+        <CreateModal
           title={`Save ${type.charAt(0).toUpperCase() + type.slice(1)} Set`}
           sqon={sqon}
           setType={type}

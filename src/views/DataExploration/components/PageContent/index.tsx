@@ -221,7 +221,7 @@ const PageContent = ({
             );
           },
           selectedFilterContent: selectedFilterContent,
-          blacklistedFacets: ['participant_id', 'sample_id', 'file_id'],
+          blacklistedFacets: ['participant_id', 'sample_id', 'file_id', 'fhir_id'],
         }}
         enableCombine
         enableShowHideLabels

@@ -1,9 +1,10 @@
-import React, { FunctionComponent } from 'react';
 import { Col, Form, Row, Select } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { FormInstance } from 'antd/lib/form';
 import { IUserSetOutput } from 'services/api/savedSet/models';
 import { UserOutlined } from '@ant-design/icons';
+
+import styles from './index.module.scss';
 
 type OwnProps = {
   formName: string;
@@ -14,19 +15,19 @@ type OwnProps = {
   type: string;
 };
 
-const UserSetsForm: FunctionComponent<OwnProps> = ({
+const UserSetsForm = ({
   form,
   formName,
   userSets,
   onFinish,
   onSelectionChange,
   type,
-}) => (
+}: OwnProps) => (
   <Form form={form} name={formName} onFinish={onFinish} layout="vertical">
     <Form.Item
       label={`${type.charAt(0).toUpperCase() + type.slice(1)} Set`}
       name="setId"
-      hasFeedback
+      className={styles.setEditFormItem}
     >
       <Select placeholder="Choose a set" onSelect={(value: string) => onSelectionChange(value)}>
         {userSets.map((s: IUserSetOutput) => (

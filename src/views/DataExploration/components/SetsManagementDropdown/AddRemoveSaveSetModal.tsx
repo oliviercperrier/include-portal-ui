@@ -1,14 +1,13 @@
-import * as React from 'react';
-import { FunctionComponent, useState } from 'react';
-import { Button, Form, Modal } from 'antd';
-import UserSetsForm from './UserSetsForm';
+import { useState } from 'react';
+import { Form, Modal } from 'antd';
+import UserSetsForm from './UserSetForm';
 import { Store } from 'antd/lib/form/interface';
 import { SetActionType } from './index';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { IUserSetOutput } from 'services/api/savedSet/models';
 import { updateSavedSet } from 'store/savedSet/thunks';
 import { useDispatch } from 'react-redux';
-import { FILED_ID, PROJECT_ID } from 'store/savedSet';
+import { FILED_ID, PROJECT_ID, useSavedSet } from 'store/savedSet';
 import intl from 'react-intl-universal';
 
 const FORM_NAME = 'add-remove-set';
@@ -43,16 +42,15 @@ const formTitle = (setActionType: string, type: string) => {
   }
 };
 
-const AddRemoveSaveSetModal: FunctionComponent<OwnProps> = (props) => {
-  const { hideModalCb, userSets, setActionType, sqon, type } = props;
+const AddRemoveSaveSetModal = ({ hideModalCb, userSets, setActionType, sqon, type }: OwnProps) => {
+  const [form] = Form.useForm();
   const [isVisible, setIsVisible] = useState(true);
-  const [isUpdate, setIsUpdate] = useState(false);
   const [hasSetSelection, setHasSetSelection] = useState(false);
+  const { isUpdating } = useSavedSet();
   const dispatch = useDispatch();
 
   const onSuccessCreateCb = () => {
     setIsVisible(false);
-    setIsUpdate(false);
     hideModalCb();
   };
 
@@ -65,7 +63,6 @@ const AddRemoveSaveSetModal: FunctionComponent<OwnProps> = (props) => {
     switch (setActionType) {
       case SetActionType.ADD_IDS:
       case SetActionType.REMOVE_IDS:
-        setIsUpdate(true);
         dispatch(
           updateSavedSet({
             id: setId,
@@ -89,31 +86,14 @@ const AddRemoveSaveSetModal: FunctionComponent<OwnProps> = (props) => {
     hideModalCb();
   };
 
-  const [form] = Form.useForm();
-
   return (
     <Modal
       title={formTitle(setActionType, type)}
       visible={isVisible}
       onCancel={onCancel}
-      footer={[
-        <Button key="back" onClick={onCancel}>
-          Cancel
-        </Button>,
-        <Form.Item key={'submit'} noStyle>
-          <Button
-            id="EditSaveSets"
-            form={FORM_NAME}
-            htmlType="submit"
-            key="save"
-            type="primary"
-            loading={isUpdate}
-            disabled={!hasSetSelection}
-          >
-            {finishButtonText(setActionType)}
-          </Button>
-        </Form.Item>,
-      ]}
+      okText={finishButtonText(setActionType)}
+      onOk={() => form.submit()}
+      okButtonProps={{ disabled: !hasSetSelection, loading: isUpdating }}
     >
       <UserSetsForm
         userSets={userSets.filter((s) => s.setType === type)}

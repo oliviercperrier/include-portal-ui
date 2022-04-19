@@ -9,6 +9,7 @@ import { fetchSavedFilters, fetchSharedSavedFilter } from 'store/savedFilter/thu
 import { useSavedFilter } from 'store/savedFilter';
 import useQueryParams from 'hooks/useQueryParams';
 import { SHARED_FILTER_ID_QUERY_PARAM_KEY } from 'common/constants';
+import { fetchSavedSet } from 'store/savedSet/thunks';
 
 type Props = {
   children: React.ReactElement;
@@ -33,6 +34,7 @@ const AuthMiddleware = ({ children }: Props) => {
     if (keycloak.authenticated) {
       dispatch(fetchUser());
       dispatch(fetchSavedFilters());
+      dispatch(fetchSavedSet());
     } else {
       dispatch(userActions.setIsUserLoading(false));
     }

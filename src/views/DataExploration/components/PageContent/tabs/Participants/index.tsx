@@ -42,10 +42,10 @@ import { formatQuerySortList, scrollToTop } from 'utils/helper';
 import useQueryBuilderState, {
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
-import SetsManagementDropdown from '../../../SetsManagementDropdown';
-import { SetType } from 'services/api/savedSet/models';
 
 interface OwnProps {
   results: IQueryResults<IParticipantEntity[]>;

@@ -26,7 +26,6 @@ const getValues: TGetValues = (filters, sets) => {
 
 const MAX_VALUES = 6;
 
-// extend TFiltersToName
 const filtersToName = ({ filters, max = MAX_VALUES, sets = {}, length = Infinity }) => {
   if (!filters) return '';
 

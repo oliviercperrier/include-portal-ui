@@ -33,8 +33,8 @@ import useQueryBuilderState, {
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 
 import styles from './index.module.scss';
-import SetsManagementDropdown from '../../../SetsManagementDropdown';
-import { SetType } from '../../../../../../services/api/savedSet/models';
+import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;

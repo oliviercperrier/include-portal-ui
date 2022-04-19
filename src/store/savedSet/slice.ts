@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from 'store/savedSet/types';
-import {
-  createSavedSet,
-  deleteSavedSet,
-  fetchSavedSet,
-  setSavedSetAsDefault,
-  updateSavedSet,
-} from './thunks';
+import { createSavedSet, deleteSavedSet, fetchSavedSet, updateSavedSet } from './thunks';
 
 export const SavedSetState: initialState = {
   savedSets: [],
@@ -70,24 +64,6 @@ const savedSetSlice = createSlice({
       };
     });
     builder.addCase(updateSavedSet.rejected, (state, action) => ({
-      ...state,
-      error: action.payload,
-      isUpdating: false,
-    }));
-    // Set Default
-    builder.addCase(setSavedSetAsDefault.pending, (state) => {
-      state.isUpdating = true;
-      state.error = undefined;
-    });
-    builder.addCase(setSavedSetAsDefault.fulfilled, (state, action) => ({
-      ...state,
-      savedSets: state.savedSets.map((savedSet) => ({
-        ...savedSet,
-        // favorite: savedSet.id === action.payload.id,
-      })),
-      isUpdating: false,
-    }));
-    builder.addCase(setSavedSetAsDefault.rejected, (state, action) => ({
       ...state,
       error: action.payload,
       isUpdating: false,

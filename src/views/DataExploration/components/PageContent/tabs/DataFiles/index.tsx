@@ -31,7 +31,7 @@ import { useFenceCavatica } from 'store/fenceCavatica';
 import { connectToFence } from 'store/fenceConnection/thunks';
 import { FENCE_CONNECTION_STATUSES, FENCE_NAMES } from 'common/fenceTypes';
 import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
-import { generateSelectionSqon } from 'views/DataExploration/utils/report';
+import { generateSelectionSqon } from 'views/DataExploration/utils/selectionSqon';
 import { Link } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
@@ -259,6 +259,11 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
       }),
     );
 
+  const getCurrentSqon = (): any =>
+    selectedAllResults || !selectedKeys.length
+      ? sqon
+      : generateSelectionSqon(TAB_IDS.DATA_FILES, selectedKeys);
+
   const onCavaticaConnectionRequired = () =>
     Modal.confirm({
       type: 'warn',
@@ -355,7 +360,11 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
               }),
             ),
           extra: [
-            <SetsManagementDropdown results={results} sqon={sqon} type={SetType.FILE} />,
+            <SetsManagementDropdown
+              results={results}
+              sqon={getCurrentSqon()}
+              type={SetType.FILE}
+            />,
             <Button
               disabled={selectedKeys.length === 0}
               type="primary"

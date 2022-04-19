@@ -1,4 +1,4 @@
-import { BooleanOperators, TermOperators } from '@ferlab/ui/core/data/sqon/operators';
+import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { Key } from 'react';
 import { TAB_IDS } from 'views/DataExploration/utils/constant';
 
@@ -17,16 +17,12 @@ export const generateSelectionSqon = (type: Omit<TAB_IDS, TAB_IDS.SUMMARY>, ids:
       break;
   }
 
-  return {
-    op: BooleanOperators.and,
-    content: [
-      {
-        op: TermOperators.in,
-        content: {
-          field,
-          value: ids,
-        },
-      },
+  return generateQuery({
+    newFilters: [
+      generateValueFilter({
+        field,
+        value: ids as string[],
+      }),
     ],
-  };
+  });
 };

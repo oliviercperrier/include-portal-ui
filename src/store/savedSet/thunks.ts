@@ -5,7 +5,6 @@ import intl from 'react-intl-universal';
 import { globalActions } from 'store/global';
 import {
   IUserSetOutput,
-  TUserSavedSet,
   TUserSavedSetInsert,
   TUserSavedSetUpdate,
 } from 'services/api/savedSet/models';
@@ -86,21 +85,6 @@ const updateSavedSet = createAsyncThunk<
   });
 });
 
-const setSavedSetAsDefault = createAsyncThunk<
-  TUserSavedSet,
-  TUserSavedSetUpdate & { id: string },
-  { rejectValue: string }
->('savedsets/setDefault', async (filter, thunkAPI) => {
-  const { id, ...filterInfo } = filter;
-  const { data, error } = await SavedSetApi.setAsDefault(id, filterInfo);
-
-  return handleThunkApiReponse({
-    error,
-    data: data!,
-    reject: thunkAPI.rejectWithValue,
-  });
-});
-
 const deleteSavedSet = createAsyncThunk<string, string, { rejectValue: string }>(
   'savedsets/delete',
   async (id, thunkAPI) => {
@@ -122,4 +106,4 @@ const deleteSavedSet = createAsyncThunk<string, string, { rejectValue: string }>
   },
 );
 
-export { fetchSavedSet, createSavedSet, updateSavedSet, deleteSavedSet, setSavedSetAsDefault };
+export { fetchSavedSet, createSavedSet, updateSavedSet, deleteSavedSet };

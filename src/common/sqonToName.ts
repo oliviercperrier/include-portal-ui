@@ -2,12 +2,6 @@
 
 type TGetValues = (filters: Object, sets: Object) => string;
 
-// type TFiltersToName = ({
-//   filters?: Object,
-//   max?: number,
-//   sets: Object,
-//   length?: number,
-// }) => string;
 export const SET_DEFAULT_NAME = 'input set';
 
 const getValues: TGetValues = (filters, sets) => {
@@ -31,7 +25,6 @@ const getValues: TGetValues = (filters, sets) => {
 
 const MAX_VALUES = 6;
 
-// extend TFiltersToName
 const filtersToName = ({ filters, max = MAX_VALUES, sets = {}, length = Infinity }) => {
   if (!filters) return '';
   const values = getValues(

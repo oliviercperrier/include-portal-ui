@@ -9,9 +9,9 @@ import intl from 'react-intl-universal';
 import { FILED_ID, MAX_LENGTH_NAME, PROJECT_ID, useSavedSet } from 'store/savedSet';
 import { SetActionType } from 'views/DataExploration/components/SetsManagementDropdown';
 import { IUserSetOutput } from 'services/api/savedSet/models';
+import { WarningFilled } from '@ant-design/icons';
 
 import styles from './index.module.scss';
-import { WarningFilled } from '@ant-design/icons';
 
 const FORM_NAME = 'save-set';
 const SET_NAME_KEY = 'nameSet';
@@ -38,7 +38,7 @@ const CreateEditModal = ({
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(visible);
-  const { isLoading, savedSets } = useSavedSet();
+  const { isLoading, isUpdating, savedSets } = useSavedSet();
 
   const onSuccessCreateCb = () => {
     setIsVisible(false);
@@ -96,18 +96,9 @@ const CreateEditModal = ({
 
   const handleCancel = () => {
     setIsVisible(false);
+    form.resetFields();
     hideModalCb && hideModalCb();
   };
-
-  useEffect(() => {
-    if (saveSetActionType === SetActionType.UPDATE_SET && currentSaveSet) {
-      form.setFieldsValue({ [SET_NAME_KEY]: currentSaveSet.tag });
-    } else {
-      const defaultName = filtersToName({ filters: sqon });
-      form.setFieldsValue({ [SET_NAME_KEY]: defaultName });
-    }
-    // eslint-disable-next-line
-  }, [form, saveSetActionType, sqon]);
 
   return (
     <Modal
@@ -115,14 +106,24 @@ const CreateEditModal = ({
       visible={isVisible}
       onCancel={handleCancel}
       onOk={() => form.submit()}
-      okButtonProps={{ disabled: isLoading, loading: isLoading }}
+      okButtonProps={{ disabled: isLoading, loading: isLoading || isUpdating }}
       okText="Save"
+      destroyOnClose
     >
       <Form
         form={form}
         name={FORM_NAME}
         layout="vertical"
         onFinish={onFinish}
+        fields={[
+          {
+            name: [SET_NAME_KEY],
+            value:
+              saveSetActionType === SetActionType.UPDATE_SET && currentSaveSet
+                ? currentSaveSet.tag
+                : filtersToName({ filters: sqon }),
+          },
+        ]}
         validateMessages={{
           required: intl.get('global.forms.errors.requiredField'),
         }}

@@ -14,6 +14,7 @@ import { ProColumnType } from '@ferlab/ui/core/components/ProTable/types';
 import { globalActions } from 'store/global';
 import { ArrangerApi } from 'services/api/arranger';
 import { ArrangerColumnStateResults } from 'services/api/arranger/models';
+import { INDEXES } from 'graphql/constants';
 
 const showErrorReportNotif = (thunkApi: any) =>
   thunkApi.dispatch(
@@ -129,6 +130,19 @@ const fetchTsvReport = createAsyncThunk<void, TFetchTSVArgs, { rejectValue: stri
   },
 );
 
+const idField = (index: string) => {
+  switch (index) {
+    case INDEXES.PARTICIPANT:
+      return 'participant_id';
+    case INDEXES.FILE:
+      return 'file_id';
+    case INDEXES.BIOSPECIMEN:
+      return 'sample_id';
+    default:
+      return undefined;
+  }
+};
+
 const fetchTsxReport = async (
   args: TFetchTSVArgs,
   data: ArrangerColumnStateResults,
@@ -152,6 +166,8 @@ const fetchTsxReport = async (
     Header: getTitleFromColumns(args.columns, column.field),
   }));
 
+  const sortIdField = idField(args.index);
+
   const params = new URLSearchParams({
     params: JSON.stringify({
       files: [
@@ -159,7 +175,7 @@ const fetchTsxReport = async (
           fileName: formattedFileName,
           fileType: 'tsv',
           sqon: args.sqon,
-          sort: [{ field: 'participant_id', order: 'asc' }],
+          sort: sortIdField ? [{ field: sortIdField, order: 'asc' }] : [],
           index: args.index,
           columns: tsvColumnsConfigWithHeader.sort((a, b) => {
             return columnKeyOrdered.indexOf(a.field) > columnKeyOrdered.indexOf(b.field) ? 1 : -1;

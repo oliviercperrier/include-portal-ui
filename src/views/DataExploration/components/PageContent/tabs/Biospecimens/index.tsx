@@ -276,6 +276,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
             results={results}
             sqon={getCurrentSqon()}
             type={SetType.BIOSPECIMEN}
+            selectedKeys={selectedKeys}
           />,
           <Button
             icon={<DownloadOutlined />}

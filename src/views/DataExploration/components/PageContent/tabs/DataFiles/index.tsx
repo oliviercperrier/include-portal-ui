@@ -364,6 +364,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
               results={results}
               sqon={getCurrentSqon()}
               type={SetType.FILE}
+              selectedKeys={selectedKeys}
             />,
             <Button
               disabled={selectedKeys.length === 0}

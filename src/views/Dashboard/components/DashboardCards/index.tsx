@@ -38,7 +38,7 @@ export const dashboardCards: TSortableItems[] = [
     md: 12,
     xxl: 8,
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: <SavedFilters id="3" key="1" className={styles.dashboardCard} />,
+    component: <SavedFilters id="3" className={styles.dashboardCard} />,
   },
   {
     id: '4',
@@ -46,6 +46,6 @@ export const dashboardCards: TSortableItems[] = [
     md: 12,
     xxl: 8,
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
-    component: <SavedSets id="4" key="2" className={styles.dashboardCard} />,
+    component: <SavedSets id="4" className={styles.dashboardCard} />,
   },
 ];

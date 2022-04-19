@@ -14,15 +14,15 @@ import { IQueryResults } from 'graphql/models';
 import { IParticipantEntity } from 'graphql/participants/models';
 import { useEffect, useState } from 'react';
 import AddRemoveSaveSetModal from './AddRemoveSaveSetModal';
-import CreateModal from './CreateModal';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import { useSavedSet } from 'store/savedSet';
 import { IFileEntity } from 'graphql/files/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { INDEXES } from 'graphql/constants';
+import { isEmpty } from 'lodash';
+import CreateEditModal from 'views/Dashboard/components/DashboardCards/SavedSets/CreateEditModal';
 
 import styles from './index.module.scss';
-import { isEmpty } from 'lodash';
 
 type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
@@ -37,6 +37,7 @@ export enum SetActionType {
   REMOVE_IDS = 'REMOVE_IDS',
   CREATE_SET = 'CREATE_SET',
   HIDDEN = 'HIDDEN',
+  UPDATE_SET = 'UPDATE_SET',
 }
 
 type ModalState = {
@@ -145,7 +146,7 @@ const SetsManagementDropdown = ({ results, sqon, type, selectedKeys = [] }: Prop
   return (
     <div id={`${type}-set-dropdown-container`}>
       {modal.showModalSave && sqon && (
-        <CreateModal
+        <CreateEditModal
           title={`Save ${type.charAt(0).toUpperCase() + type.slice(1)} Set`}
           sqon={sqon}
           setType={type}

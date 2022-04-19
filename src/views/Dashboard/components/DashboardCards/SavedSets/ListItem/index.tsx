@@ -11,8 +11,8 @@ import {
 } from 'views/DataExploration/utils/constant';
 import { Link } from 'react-router-dom';
 import { distanceInWords } from 'date-fns';
-import EditModal from '../EditModal';
-import { deleteSavedSet, updateSavedSet } from 'store/savedSet/thunks';
+import CreateEditModal from '../CreateEditModal';
+import { deleteSavedSet } from 'store/savedSet/thunks';
 import { addQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
@@ -43,31 +43,10 @@ const redirectToPage = (setType: string) => {
 
 const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
-
-  const onTagRename = (setId: string, newTag: string) => {
-    if (saveSetTags.includes(newTag)) {
-      setHasError(true);
-      setErrorMessage('A set with this name already exists');
-    } else {
-      dispatch(
-        updateSavedSet({
-          onCompleteCb(): void {},
-          id: setId,
-          subAction: SetActionType.RENAME_TAG,
-          newTag: newTag,
-        }),
-      );
-      setModalVisible(false);
-    }
-  };
 
   const onCancel = () => {
     setModalVisible(false);
-    setErrorMessage('');
-    setHasError(false);
   };
 
   return (
@@ -144,13 +123,13 @@ const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
           className={styles.itemMeta}
         />
       </List.Item>
-      <EditModal
+      <CreateEditModal
+        title={intl.get('components.savedSets.modal.edit.title')}
+        setType={data.setType}
+        hideModalCb={onCancel}
         visible={modalVisible}
-        onCancel={onCancel}
-        set={data}
-        onTagRename={onTagRename}
-        hasError={hasError}
-        errorMessage={errorMessage}
+        currentSaveSet={data}
+        saveSetActionType={SetActionType.UPDATE_SET}
       />
     </>
   );

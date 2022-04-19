@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IUserSetOutput } from 'services/api/savedSet/models';
 import { initialState } from 'store/savedSet/types';
 import { createSavedSet, deleteSavedSet, fetchSavedSet, updateSavedSet } from './thunks';
 
@@ -8,6 +9,9 @@ export const SavedSetState: initialState = {
   isUpdating: false,
   selectedId: undefined,
 };
+
+const sortByUpdateDate = (sets: IUserSetOutput[]) =>
+  sets.sort((a, b) => (new Date(a.updated_date) < new Date(b.updated_date) ? 0 : -1));
 
 const savedSetSlice = createSlice({
   name: 'user',
@@ -26,7 +30,7 @@ const savedSetSlice = createSlice({
     });
     builder.addCase(fetchSavedSet.fulfilled, (state, action) => ({
       ...state,
-      savedSets: action.payload,
+      savedSets: sortByUpdateDate(action.payload),
       isLoading: false,
     }));
     builder.addCase(fetchSavedSet.rejected, (state, action) => ({
@@ -41,7 +45,7 @@ const savedSetSlice = createSlice({
     });
     builder.addCase(createSavedSet.fulfilled, (state, action) => ({
       ...state,
-      savedSets: [...state.savedSets, action.payload],
+      savedSets: sortByUpdateDate([...state.savedSets, action.payload]),
       isLoading: false,
     }));
     builder.addCase(createSavedSet.rejected, (state, action) => ({
@@ -55,11 +59,11 @@ const savedSetSlice = createSlice({
       state.error = undefined;
     });
     builder.addCase(updateSavedSet.fulfilled, (state, action) => {
-      const filters = [...state.savedSets.filter(({ id }) => action.payload.id !== id)];
+      const sets = [...state.savedSets.filter(({ id }) => action.payload.id !== id)];
 
       return {
         ...state,
-        savedSets: [...filters, action.payload],
+        savedSets: sortByUpdateDate([...sets, action.payload]),
         isUpdating: false,
       };
     });

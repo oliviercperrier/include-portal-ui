@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Form, Input, Modal } from 'antd';
 import { Store } from 'antd/lib/form/interface';
-import { SetActionType } from '..';
-import { createSavedSet } from 'store/savedSet/thunks';
+import { createSavedSet, updateSavedSet } from 'store/savedSet/thunks';
 import filtersToName from 'common/sqonToName';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import intl from 'react-intl-universal';
 import { FILED_ID, MAX_LENGTH_NAME, PROJECT_ID, useSavedSet } from 'store/savedSet';
+import { SetActionType } from 'views/DataExploration/components/SetsManagementDropdown';
+import { IUserSetOutput } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
 
@@ -16,28 +17,50 @@ const SET_NAME_KEY = 'nameSet';
 
 type OwnProps = {
   title: string;
+  visible?: boolean;
   saveSetActionType: SetActionType;
-  hideModalCb: Function;
+  hideModalCb?: Function;
   sqon?: ISqonGroupFilter;
   setType: string;
+  currentSaveSet?: IUserSetOutput;
 };
 
-const SaveSetModal = ({ sqon, hideModalCb, title, saveSetActionType, setType }: OwnProps) => {
+const CreateEditModal = ({
+  sqon,
+  hideModalCb,
+  title,
+  saveSetActionType,
+  setType,
+  visible = true,
+  currentSaveSet,
+}: OwnProps) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(visible);
   const { isLoading, savedSets } = useSavedSet();
 
   const onSuccessCreateCb = () => {
     setIsVisible(false);
-    hideModalCb();
+    hideModalCb && hideModalCb();
+  };
+
+  useEffect(() => {
+    if (visible !== isVisible) {
+      setIsVisible(visible);
+    }
+    // eslint-disable-next-line
+  }, [visible]);
+
+  const isSetNameExists = (setName: string) => {
+    const existingTagNames = savedSets.map((s) => s.tag);
+
+    return existingTagNames.filter((title) => currentSaveSet?.tag !== title).includes(setName);
   };
 
   const onFinish = async (value: Store) => {
-    const existingTagNames = savedSets.map((s) => s.tag);
     const { nameSet } = value;
 
-    if (existingTagNames.includes(nameSet)) {
+    if (isSetNameExists(nameSet)) {
       form.setFields([
         {
           name: SET_NAME_KEY,
@@ -45,28 +68,44 @@ const SaveSetModal = ({ sqon, hideModalCb, title, saveSetActionType, setType }: 
         },
       ]);
     } else {
-      dispatch(
-        createSavedSet({
-          idField: FILED_ID,
-          projectId: PROJECT_ID,
-          sort: [],
-          sqon: sqon!,
-          tag: nameSet,
-          type: setType,
-          onCompleteCb: onSuccessCreateCb,
-        }),
-      );
+      if (saveSetActionType === SetActionType.UPDATE_SET && currentSaveSet) {
+        dispatch(
+          updateSavedSet({
+            onCompleteCb: onSuccessCreateCb,
+            id: currentSaveSet?.id,
+            subAction: SetActionType.RENAME_TAG,
+            newTag: nameSet,
+          }),
+        );
+      } else {
+        dispatch(
+          createSavedSet({
+            idField: FILED_ID,
+            projectId: PROJECT_ID,
+            sort: [],
+            sqon: sqon!,
+            tag: nameSet,
+            type: setType,
+            onCompleteCb: onSuccessCreateCb,
+          }),
+        );
+      }
     }
   };
 
   const handleCancel = () => {
     setIsVisible(false);
-    hideModalCb();
+    hideModalCb && hideModalCb();
   };
 
   useEffect(() => {
-    const defaultName = filtersToName({ filters: sqon });
-    form.setFieldsValue({ [SET_NAME_KEY]: defaultName });
+    if (saveSetActionType === SetActionType.UPDATE_SET && currentSaveSet) {
+      form.setFieldsValue({ [SET_NAME_KEY]: currentSaveSet.tag });
+    } else {
+      const defaultName = filtersToName({ filters: sqon });
+      form.setFieldsValue({ [SET_NAME_KEY]: defaultName });
+    }
+    // eslint-disable-next-line
   }, [form, saveSetActionType, sqon]);
 
   return (
@@ -75,7 +114,7 @@ const SaveSetModal = ({ sqon, hideModalCb, title, saveSetActionType, setType }: 
       visible={isVisible}
       onCancel={handleCancel}
       onOk={() => form.submit()}
-      okButtonProps={{ disabled: isLoading }}
+      okButtonProps={{ disabled: isLoading, loading: isLoading }}
       okText="Save"
     >
       <Form
@@ -107,4 +146,4 @@ const SaveSetModal = ({ sqon, hideModalCb, title, saveSetActionType, setType }: 
   );
 };
 
-export default SaveSetModal;
+export default CreateEditModal;

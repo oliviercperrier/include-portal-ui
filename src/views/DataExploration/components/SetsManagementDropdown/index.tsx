@@ -16,18 +16,18 @@ import { useEffect, useState } from 'react';
 import AddRemoveSaveSetModal from './AddRemoveSaveSetModal';
 import CreateModal from './CreateModal';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { useDispatch } from 'react-redux';
 import { useSavedSet } from 'store/savedSet';
-import { fetchSavedSet } from 'store/savedSet/thunks';
 import { IFileEntity } from 'graphql/files/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { INDEXES } from 'graphql/constants';
 
 import styles from './index.module.scss';
+import { isEmpty } from 'lodash';
 
 type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
   sqon?: ISqonGroupFilter;
+  selectedKeys?: string[];
   type: string;
 };
 
@@ -71,7 +71,7 @@ const modals = {
 const ROW_SELECTION_LIMIT = 10000;
 const exceedLimit = (participantCount: number) => participantCount > ROW_SELECTION_LIMIT;
 
-const itemIcon = (type: string, itemCount: number) => {
+const itemIcon = (type: string) => {
   switch (type) {
     case INDEXES.BIOSPECIMEN:
       return <ExperimentOutlined width="14px" height="14px" />;
@@ -98,7 +98,7 @@ const menu = (
           : styles.saveSetOptionMenuInfo
       }`}
       disabled
-      icon={itemIcon(type, participantCount)}
+      icon={itemIcon(type)}
     >
       <span>
         {participantCount} {type} selected
@@ -124,17 +124,10 @@ const menu = (
   </Menu>
 );
 
-const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
+const SetsManagementDropdown = ({ results, sqon, type, selectedKeys = [] }: Props) => {
   const [isEditDisabled, setIsEditDisabled] = useState(true);
   const [modal, setModal] = useState<ModalState>(modals.hideAll);
-  // const { clearQueryCache } = useQueryResolverCache();
-  const dispatch = useDispatch();
   const { savedSets, isLoading, fetchingError } = useSavedSet();
-
-  useEffect(() => {
-    dispatch(fetchSavedSet());
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     if (savedSets && !isLoading && !fetchingError && sqon) {
@@ -173,7 +166,12 @@ const SetsManagementDropdown = ({ results, sqon, type }: Props) => {
         />
       )}
       <Dropdown
-        overlay={menu(results.total, onClick, isEditDisabled, type)}
+        overlay={menu(
+          isEmpty(selectedKeys) ? results.total : selectedKeys.length,
+          onClick,
+          isEditDisabled,
+          type,
+        )}
         placement="bottomLeft"
         trigger={['click']}
         getPopupContainer={() =>

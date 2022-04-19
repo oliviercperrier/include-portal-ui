@@ -13,6 +13,12 @@
 }
 
 .setTabs {
+  height: 100%;
+
+  :global(.ant-tabs-content) {
+    height: 100%;
+  }
+
   :global(.ant-tabs-tab) {
     padding-top: 0 !important;
   }

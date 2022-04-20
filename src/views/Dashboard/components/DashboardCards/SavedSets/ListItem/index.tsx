@@ -18,9 +18,9 @@ import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/ut
 import { INDEXES } from 'graphql/constants';
 import { SetActionType } from 'views/DataExploration/components/SetsManagementDropdown';
 import { SET_ID_PREFIX } from '@ferlab/ui/core/data/sqon/types';
+import { getSetFieldId } from 'store/savedSet';
 
 import styles from './index.module.scss';
-import { getSetFieldId } from 'store/savedSet';
 
 interface OwnProps {
   id: any;

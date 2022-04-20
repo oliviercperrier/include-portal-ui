@@ -76,7 +76,7 @@ const SetSearch = ({
     );
     setOptions(getOptions());
     // eslint-disable-next-line
-  }, [JSON.stringify(sqon)]);
+  }, [JSON.stringify(sqon), JSON.stringify(savedSets)]);
 
   return (
     <div className={`${styles.container} ${className}`}>

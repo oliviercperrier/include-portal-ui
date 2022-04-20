@@ -27,6 +27,9 @@ import ParticipantSearch from './components/ParticipantSearch';
 import FileSearch from './components/FileSearch';
 import { BiospecimenSearch, BiospecimenCollectionSearch } from './components/BiospecimenSearch';
 import { formatHpoTitleAndCode, formatMondoTitleAndCode } from './utils/helper';
+import ParticipantSetSearch from './components/ParticipantSetSearch';
+import FileSetSearch from './components/FileSetSearch';
+import BiospecimenSetSearch from './components/BiospecimenSetSearch';
 
 import styles from './index.module.scss';
 
@@ -44,7 +47,10 @@ export const filterGroups: {
   [type: string]: FilterInfo;
 } = {
   [FilterTypes.Participant]: {
-    customSearches: [<ParticipantSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />],
+    customSearches: [
+      <ParticipantSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <ParticipantSetSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+    ],
     groups: [
       {
         facets: [
@@ -66,8 +72,9 @@ export const filterGroups: {
   },
   [FilterTypes.Biospecimen]: {
     customSearches: [
-      <BiospecimenSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />,
-      <BiospecimenCollectionSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <BiospecimenSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <BiospecimenCollectionSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <BiospecimenSetSearch key={2} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
     ],
     groups: [
       {
@@ -83,7 +90,10 @@ export const filterGroups: {
     ],
   },
   [FilterTypes.Datafiles]: {
-    customSearches: [<FileSearch queryBuilderId={DATA_EXPLORATION_QB_ID} />],
+    customSearches: [
+      <FileSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <FileSetSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+    ],
     groups: [
       {
         facets: [

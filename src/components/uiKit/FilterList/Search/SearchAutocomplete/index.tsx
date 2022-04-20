@@ -3,13 +3,14 @@ import { Select, Tag, Tooltip, Typography } from 'antd';
 import debounce from 'lodash/debounce';
 import take from 'lodash/take';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import Empty from '@ferlab/ui/core/components/Empty';
 
 import styles from './index.module.scss';
-import Empty from '@ferlab/ui/core/components/Empty';
 
 export type OptionsType = {
   value: string;
   label: string | React.ReactNode;
+  [name: string]: any;
 };
 
 export interface ISearchAutocomplete {
@@ -80,7 +81,7 @@ const SearchAutocomplete = ({
           }
         }}
         autoClearSearchValue={true}
-        notFoundContent={<Empty size="mini" imageType="grid" description={emptyDescription} />}
+        notFoundContent={<Empty size="mini" showImage={false} description={emptyDescription} />}
         onSearch={(value) => debounceSearch(value)}
         options={newOptions}
         placeholder={placeHolder}

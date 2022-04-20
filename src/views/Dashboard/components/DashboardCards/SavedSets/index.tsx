@@ -7,7 +7,7 @@ import Empty from '@ferlab/ui/core/components/Empty';
 import ListItem from './ListItem';
 import { ReactElement } from 'react';
 import { useSavedSet } from 'store/savedSet';
-import { IUserSetOutput } from 'services/api/savedSet/models';
+import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
 import ExternalLink from 'components/uiKit/ExternalLink';
 import { ExperimentOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons';
@@ -18,7 +18,7 @@ const { Text } = Typography;
 const { TabPane } = Tabs;
 
 const getItemList = (
-  type: string,
+  type: SetType,
   savedSets: IUserSetOutput[],
   fetchingError: boolean,
   isLoading: boolean,
@@ -79,24 +79,30 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
             tab={
               <div>
                 <UserOutlined />
-                Participants ({savedSets.filter((s) => s.setType === 'participant').length})
+                Participants ({savedSets.filter((s) => s.setType === SetType.PARTICIPANT).length})
               </div>
             }
             key="participants"
           >
-            {getItemList('participant', savedSets, fetchingError, isLoading, <UserOutlined />)}
+            {getItemList(
+              SetType.PARTICIPANT,
+              savedSets,
+              fetchingError,
+              isLoading,
+              <UserOutlined />,
+            )}
           </TabPane>
           <TabPane
             tab={
               <div>
                 <ExperimentOutlined />
-                Biospecimen ({savedSets.filter((s) => s.setType === 'biospecimen').length})
+                Biospecimen ({savedSets.filter((s) => s.setType === SetType.BIOSPECIMEN).length})
               </div>
             }
             key="biospecimen"
           >
             {getItemList(
-              'biospecimen',
+              SetType.BIOSPECIMEN,
               savedSets,
               fetchingError,
               isLoading,
@@ -107,12 +113,12 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
             tab={
               <div>
                 <FileTextOutlined />
-                Files ({savedSets.filter((s) => s.setType === 'file').length})
+                Files ({savedSets.filter((s) => s.setType === SetType.FILE).length})
               </div>
             }
             key="files"
           >
-            {getItemList('file', savedSets, fetchingError, isLoading, <FileTextOutlined />)}
+            {getItemList(SetType.FILE, savedSets, fetchingError, isLoading, <FileTextOutlined />)}
           </TabPane>
         </Tabs>
       }

@@ -1,0 +1,124 @@
+import { InfoCircleFilled } from '@ant-design/icons';
+import Empty from '@ferlab/ui/core/components/Empty';
+import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import {
+  ISqonGroupFilter,
+  MERGE_VALUES_STRATEGIES,
+  SET_ID_PREFIX,
+} from '@ferlab/ui/core/data/sqon/types';
+import { findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
+import { Select, Tag, Tooltip, Typography } from 'antd';
+import { OptionsType } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
+import { INDEXES } from 'graphql/constants';
+import { intersection } from 'lodash';
+import { useEffect, useState } from 'react';
+import { SetType } from 'services/api/savedSet/models';
+import { useSavedSet } from 'store/savedSet';
+import { getAlternateNameByType } from 'utils/sets';
+
+import styles from './index.module.scss';
+
+interface OwnProps {
+  title: string;
+  index: INDEXES;
+  queryBuilderId: string;
+  type: SetType;
+  className?: string;
+  tooltipText?: string;
+  field?: string;
+  sqon: ISqonGroupFilter;
+  emptyDescription?: string;
+}
+
+const { Text } = Typography;
+
+const getDefaultValues = (field: string, sqon: ISqonGroupFilter) => {
+  const selectedValue = (findSqonValueByField(field, sqon) ?? []).map((value: string) =>
+    value.replace(SET_ID_PREFIX, ''),
+  );
+  return selectedValue;
+};
+
+const SetSearch = ({
+  title,
+  index,
+  queryBuilderId,
+  type,
+  className = '',
+  tooltipText,
+  field = 'fhir_id',
+  sqon,
+  emptyDescription = 'You have no sets',
+}: OwnProps) => {
+  const { savedSets } = useSavedSet();
+  const [values, setValues] = useState<string[]>(getDefaultValues(field, sqon));
+  const [options, setOptions] = useState<OptionsType[]>([]);
+
+  const getTypedSets = () => savedSets.filter((set) => set.setType === type);
+
+  const getSetName = (setId: string) => getTypedSets().find(({ id }) => id === setId)?.tag;
+
+  const getOptions = () =>
+    getTypedSets().map((set) => ({
+      label: set.tag,
+      value: set.id,
+    }));
+
+  useEffect(() => {
+    const selectedValue = (findSqonValueByField(field, sqon) ?? []).map((value: string) =>
+      value.replace(SET_ID_PREFIX, ''),
+    );
+
+    setValues(
+      intersection(
+        selectedValue,
+        getTypedSets().map(({ id }) => id),
+      ),
+    );
+    setOptions(getOptions());
+    // eslint-disable-next-line
+  }, [JSON.stringify(sqon)]);
+
+  return (
+    <div className={`${styles.container} ${className}`}>
+      <span className={styles.title}>
+        <Text strong>{title}</Text>
+        {tooltipText && (
+          <Tooltip arrowPointAtCenter placement="topLeft" title={tooltipText}>
+            <InfoCircleFilled className={styles.tooltipIcon} />
+          </Tooltip>
+        )}
+      </span>
+      <Select
+        className={styles.search}
+        allowClear
+        filterOption={false}
+        placeholder="Select a saved set"
+        mode="multiple"
+        maxTagCount={1}
+        value={values}
+        options={options}
+        onChange={(values: string[]) => {
+          setValues(values);
+          updateActiveQueryField({
+            queryBuilderId,
+            field,
+            value: values.map((value) => `${SET_ID_PREFIX}${value}`),
+            index,
+            merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+            alternateName: getAlternateNameByType(savedSets, type),
+          });
+        }}
+        notFoundContent={<Empty size="mini" showImage={false} description={emptyDescription} />}
+        getPopupContainer={(trigger) => trigger.parentElement!}
+        tagRender={({ onClose, value }) => (
+          <Tag className={styles.tag} closable onClose={onClose} style={{ marginRight: 3 }}>
+            {getSetName(value)}
+          </Tag>
+        )}
+      />
+    </div>
+  );
+};
+
+export default SetSearch;

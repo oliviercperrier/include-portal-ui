@@ -11,16 +11,14 @@ interface OwnProps {
 
 const { Text } = Typography;
 
-const SelectItem = ({ icon, title, caption }: OwnProps) => {
-  return (
-    <Space size={10} align="start">
-      <div className={styles.iconWrapper}>{icon}</div>
-      <Space direction="vertical" size={0}>
-        {title}
-        <Text type="secondary">{caption}</Text>
-      </Space>
+const SelectItem = ({ icon, title, caption }: OwnProps) => (
+  <Space size={10} align="start">
+    <div className={styles.iconWrapper}>{icon}</div>
+    <Space direction="vertical" size={0}>
+      {title}
+      <Text type="secondary">{caption}</Text>
     </Space>
-  );
-};
+  </Space>
+);
 
 export default SelectItem;

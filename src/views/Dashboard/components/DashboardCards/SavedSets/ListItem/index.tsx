@@ -79,9 +79,9 @@ const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
           />,
         ]}
         extra={
-          <Row gutter={15} className={styles.countDisplay}>
-            <Col>{data.size}</Col>
-            <Col>{icon}</Col>
+          <Row gutter={8} className={styles.countDisplay}>
+            <Col><Text className={styles.count}>{data.size}</Text></Col>
+            <Col><Text type="secondary">{icon}</Text></Col>
           </Row>
         }
       >

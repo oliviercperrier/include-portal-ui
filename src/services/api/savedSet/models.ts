@@ -15,8 +15,8 @@ export type IUserSetOutput = {
   updated_date: string;
   id: string;
   tag: string;
-  size: string;
-  setType: string;
+  size: number;
+  setType: SetType;
 };
 
 export type TUserSavedSetInsert = Omit<

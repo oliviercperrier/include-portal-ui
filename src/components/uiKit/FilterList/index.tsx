@@ -55,7 +55,7 @@ const FilterList = ({
                 {group.title}
               </Text>
             ) : null}
-            {group.facets.map((facet) =>
+            {group.facets.map((facet, ii) =>
               typeof facet === 'string' ? (
                 <CustomFilterContainer
                   key={facet}
@@ -68,7 +68,7 @@ const FilterList = ({
                   filterMapper={filterMapper}
                 />
               ) : (
-                <div key={i} className={cx(styles.customFilterWrapper, styles.filter)}>
+                <div key={i + ii} className={cx(styles.customFilterWrapper, styles.filter)}>
                   {facet}
                 </div>
               ),

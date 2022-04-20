@@ -221,7 +221,14 @@ const PageContent = ({
             );
           },
           selectedFilterContent: selectedFilterContent,
-          blacklistedFacets: ['participant_id', 'sample_id', 'file_id', 'fhir_id'],
+          blacklistedFacets: [
+            'participant_id',
+            'sample_id',
+            'file_id',
+            'participant_fhir_id',
+            'biospecimen_fhir_id',
+            'file_fhir_id',
+          ],
         }}
         enableCombine
         enableShowHideLabels

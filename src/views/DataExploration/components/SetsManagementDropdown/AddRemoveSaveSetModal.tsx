@@ -4,10 +4,10 @@ import UserSetsForm from './UserSetForm';
 import { Store } from 'antd/lib/form/interface';
 import { SetActionType } from './index';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { IUserSetOutput } from 'services/api/savedSet/models';
+import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import { updateSavedSet } from 'store/savedSet/thunks';
 import { useDispatch } from 'react-redux';
-import { FILED_ID, PROJECT_ID, useSavedSet } from 'store/savedSet';
+import { PROJECT_ID, useSavedSet } from 'store/savedSet';
 import intl from 'react-intl-universal';
 
 const FORM_NAME = 'add-remove-set';
@@ -17,7 +17,7 @@ type OwnProps = {
   userSets: IUserSetOutput[];
   sqon?: ISqonGroupFilter;
   setActionType: SetActionType;
-  type: string;
+  type: SetType;
 };
 
 const finishButtonText = (type: string) => {
@@ -31,7 +31,7 @@ const finishButtonText = (type: string) => {
   }
 };
 
-const formTitle = (setActionType: string, type: string) => {
+const formTitle = (setActionType: string, type: SetType) => {
   switch (setActionType) {
     case SetActionType.ADD_IDS:
       return intl.get('components.savedSets.modal.add.title', { type });
@@ -67,7 +67,7 @@ const AddRemoveSaveSetModal = ({ hideModalCb, userSets, setActionType, sqon, typ
           updateSavedSet({
             id: setId,
             subAction: setActionType,
-            idField: FILED_ID,
+            idField: 'fhir_id',
             projectId: PROJECT_ID,
             sqon: sqon!,
             onCompleteCb: onSuccessCreateCb,
@@ -92,7 +92,7 @@ const AddRemoveSaveSetModal = ({ hideModalCb, userSets, setActionType, sqon, typ
       visible={isVisible}
       onCancel={onCancel}
       okText={finishButtonText(setActionType)}
-      onOk={() => form.submit()}
+      onOk={() => form.submit()}
       okButtonProps={{ disabled: !hasSetSelection, loading: isUpdating }}
     >
       <UserSetsForm

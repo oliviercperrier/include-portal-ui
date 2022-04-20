@@ -21,6 +21,7 @@ import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { INDEXES } from 'graphql/constants';
 import { isEmpty } from 'lodash';
 import CreateEditModal from 'views/Dashboard/components/DashboardCards/SavedSets/CreateEditModal';
+import { SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
 
@@ -28,7 +29,7 @@ type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
   sqon?: ISqonGroupFilter;
   selectedKeys?: string[];
-  type: string;
+  type: SetType;
 };
 
 export enum SetActionType {

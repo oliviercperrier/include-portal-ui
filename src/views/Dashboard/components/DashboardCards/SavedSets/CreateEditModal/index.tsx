@@ -6,9 +6,9 @@ import { createSavedSet, updateSavedSet } from 'store/savedSet/thunks';
 import filtersToName from 'common/sqonToName';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import intl from 'react-intl-universal';
-import { FILED_ID, MAX_LENGTH_NAME, PROJECT_ID, useSavedSet } from 'store/savedSet';
+import { MAX_LENGTH_NAME, PROJECT_ID, useSavedSet } from 'store/savedSet';
 import { SetActionType } from 'views/DataExploration/components/SetsManagementDropdown';
-import { IUserSetOutput } from 'services/api/savedSet/models';
+import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import { WarningFilled } from '@ant-design/icons';
 
 import styles from './index.module.scss';
@@ -22,7 +22,7 @@ type OwnProps = {
   saveSetActionType: SetActionType;
   hideModalCb?: Function;
   sqon?: ISqonGroupFilter;
-  setType: string;
+  setType: SetType;
   currentSaveSet?: IUserSetOutput;
 };
 
@@ -81,7 +81,7 @@ const CreateEditModal = ({
       } else {
         dispatch(
           createSavedSet({
-            idField: FILED_ID,
+            idField: 'fhir_id',
             projectId: PROJECT_ID,
             sort: [],
             sqon: sqon!,

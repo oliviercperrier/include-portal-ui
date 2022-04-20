@@ -1,7 +1,7 @@
 import { Col, Form, Row, Select } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { FormInstance } from 'antd/lib/form';
-import { IUserSetOutput } from 'services/api/savedSet/models';
+import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import { UserOutlined } from '@ant-design/icons';
 
 import styles from './index.module.scss';
@@ -12,7 +12,7 @@ type OwnProps = {
   onFinish: (values: Store) => void;
   onSelectionChange: (values: string) => void;
   form: FormInstance;
-  type: string;
+  type: SetType;
 };
 
 const UserSetsForm = ({

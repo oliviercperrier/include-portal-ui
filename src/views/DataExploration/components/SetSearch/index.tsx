@@ -13,7 +13,7 @@ import { INDEXES } from 'graphql/constants';
 import { intersection } from 'lodash';
 import { useEffect, useState } from 'react';
 import { SetType } from 'services/api/savedSet/models';
-import { useSavedSet } from 'store/savedSet';
+import { getSetFieldId, useSavedSet } from 'store/savedSet';
 import { getAlternateNameByType } from 'utils/sets';
 
 import styles from './index.module.scss';
@@ -46,12 +46,11 @@ const SetSearch = ({
   type,
   className = '',
   tooltipText,
-  field = 'fhir_id',
   sqon,
   emptyDescription = 'You have no sets',
 }: OwnProps) => {
   const { savedSets } = useSavedSet();
-  const [values, setValues] = useState<string[]>(getDefaultValues(field, sqon));
+  const [values, setValues] = useState<string[]>(getDefaultValues(getSetFieldId(type), sqon));
   const [options, setOptions] = useState<OptionsType[]>([]);
 
   const getTypedSets = () => savedSets.filter((set) => set.setType === type);
@@ -65,8 +64,8 @@ const SetSearch = ({
     }));
 
   useEffect(() => {
-    const selectedValue = (findSqonValueByField(field, sqon) ?? []).map((value: string) =>
-      value.replace(SET_ID_PREFIX, ''),
+    const selectedValue = (findSqonValueByField(getSetFieldId(type), sqon) ?? []).map(
+      (value: string) => value.replace(SET_ID_PREFIX, ''),
     );
 
     setValues(
@@ -102,7 +101,7 @@ const SetSearch = ({
           setValues(values);
           updateActiveQueryField({
             queryBuilderId,
-            field,
+            field: getSetFieldId(type),
             value: values.map((value) => `${SET_ID_PREFIX}${value}`),
             index,
             merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,

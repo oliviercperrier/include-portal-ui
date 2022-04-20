@@ -20,6 +20,7 @@ import { SetActionType } from 'views/DataExploration/components/SetsManagementDr
 import { SET_ID_PREFIX } from '@ferlab/ui/core/data/sqon/types';
 
 import styles from './index.module.scss';
+import { getSetFieldId } from 'store/savedSet';
 
 interface OwnProps {
   id: any;
@@ -80,8 +81,12 @@ const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
         ]}
         extra={
           <Row gutter={8} className={styles.countDisplay}>
-            <Col><Text className={styles.count}>{data.size}</Text></Col>
-            <Col><Text type="secondary">{icon}</Text></Col>
+            <Col>
+              <Text className={styles.count}>{data.size}</Text>
+            </Col>
+            <Col>
+              <Text type="secondary">{icon}</Text>
+            </Col>
           </Row>
         }
       >
@@ -97,7 +102,7 @@ const ListItem = ({ id, data, icon, saveSetTags }: OwnProps) => {
                   query: generateQuery({
                     newFilters: [
                       generateValueFilter({
-                        field: 'fhir_id',
+                        field: getSetFieldId(data.setType),
                         value: [setValue],
                         index: data.setType,
                         alternateName: {

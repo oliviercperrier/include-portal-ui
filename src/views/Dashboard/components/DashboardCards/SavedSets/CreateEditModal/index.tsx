@@ -121,6 +121,8 @@ const CreateEditModal = ({
             value:
               saveSetActionType === SetActionType.UPDATE_SET && currentSaveSet
                 ? currentSaveSet.tag
+                : isLoading
+                ? form.getFieldValue(SET_NAME_KEY)
                 : filtersToName({ filters: sqon }),
           },
         ]}

@@ -31,10 +31,10 @@ import useQueryBuilderState, {
   updateActiveQueryField,
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
-
-import styles from './index.module.scss';
 import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
 import { SetType } from 'services/api/savedSet/models';
+
+import styles from './index.module.scss';
 
 interface OwnProps {
   results: IQueryResults<IBiospecimenEntity[]>;
@@ -305,7 +305,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
         total: results.total,
         onChange: () => scrollToTop(SCROLL_WRAPPER_ID),
       }}
-      dataSource={results.data.map((i) => ({ ...i, key: i.id }))}
+      dataSource={results.data.map((i) => ({ ...i, key: i.sample_id }))}
       dictionary={getProTableDictionary()}
     />
   );

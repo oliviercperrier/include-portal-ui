@@ -15,7 +15,7 @@ import { IParticipantEntity } from 'graphql/participants/models';
 import { useEffect, useState } from 'react';
 import AddRemoveSaveSetModal from './AddRemoveSaveSetModal';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { useSavedSet } from 'store/savedSet';
+import { MAX_LENGTH_NAME, useSavedSet } from 'store/savedSet';
 import { IFileEntity } from 'graphql/files/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { INDEXES } from 'graphql/constants';
@@ -24,6 +24,7 @@ import CreateEditModal from 'views/Dashboard/components/DashboardCards/SavedSets
 import { SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
+import { numberWithCommas } from 'utils/string';
 
 type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
@@ -108,7 +109,9 @@ const menu = (
       <Tooltip
         arrowPointAtCenter
         placement="topRight"
-        title={'Max. 10,000 participants at a time. The first 10,000 will be processed.'}
+        title={`Max. ${numberWithCommas(
+          ROW_SELECTION_LIMIT,
+        )} items at a time. The first 10,000 will be processed.`}
       >
         <InfoCircleOutlined className={styles.infoCircle} />
       </Tooltip>

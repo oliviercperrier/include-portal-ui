@@ -51,9 +51,7 @@ const getItemList = (
       }}
       dataSource={fetchingError ? [] : savedSets.filter((s) => s.setType === type)}
       loading={isLoading}
-      renderItem={(item) => (
-        <ListItem id={item.id} data={item} icon={icon} saveSetTags={savedSets.map((s) => s.tag)} />
-      )}
+      renderItem={(item) => <ListItem data={item} icon={icon} />}
     />
   );
 };

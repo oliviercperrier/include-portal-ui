@@ -82,9 +82,10 @@ const fr = {
         messageCreate: 'Unable to create set',
       },
       success: {
-        title: 'Success',
-        messageCreate: 'Your set has been saved.',
-        messageUpdate: 'The set was updated.',
+        titleCreate: 'Your set has been saved.',
+        messageCreate: 'You can add your sets to a query from the sidebar or the dashboard.',
+        titleUpdate: 'Success',
+        messageUpdate: 'Your set has been updated.',
       },
     },
     cavatica: {
@@ -239,7 +240,7 @@ const fr = {
         },
       },
     },
-    savedSets:{
+    savedSets: {
       modal: {
         edit: {
           title: 'Save this Set',

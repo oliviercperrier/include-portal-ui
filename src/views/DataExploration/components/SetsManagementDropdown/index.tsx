@@ -15,16 +15,16 @@ import { IParticipantEntity } from 'graphql/participants/models';
 import { useEffect, useState } from 'react';
 import AddRemoveSaveSetModal from './AddRemoveSaveSetModal';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { MAX_LENGTH_NAME, useSavedSet } from 'store/savedSet';
+import { useSavedSet } from 'store/savedSet';
 import { IFileEntity } from 'graphql/files/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { INDEXES } from 'graphql/constants';
 import { isEmpty } from 'lodash';
 import CreateEditModal from 'views/Dashboard/components/DashboardCards/SavedSets/CreateEditModal';
 import { SetType } from 'services/api/savedSet/models';
+import { numberWithCommas } from 'utils/string';
 
 import styles from './index.module.scss';
-import { numberWithCommas } from 'utils/string';
 
 type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;

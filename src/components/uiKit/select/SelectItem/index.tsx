@@ -13,7 +13,7 @@ const { Text } = Typography;
 
 const SelectItem = ({ icon, title, caption }: OwnProps) => (
   <Space size={10} align="start">
-    <div className={styles.iconWrapper}>{icon}</div>
+    {icon ? <div className={styles.iconWrapper}>{icon}</div> : undefined}
     <Space direction="vertical" size={0}>
       {title}
       <Text type="secondary">{caption}</Text>

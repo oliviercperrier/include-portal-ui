@@ -1,39 +1,8 @@
 @import 'colors';
 
 .savedSetListItem {
-  .filterLink {
-    padding: 0;
-    height: unset;
-    color: $gray-8;
-  }
-
-  &:hover {
-    .setLink {
-      text-decoration: underline;
-      &:hover {
-        color: $gray-8;
-        text-decoration: none;
-      }
-    }
-
-    .countDisplay {
-      display: none;
-    }
-  }
-
-  .itemMeta {
-    margin-bottom: 0px;
-  }
-
-  .editSetAction {
-    &:hover,
-    &:focus {
-      background-color: transparent;
-    }
-  }
-
   .countDisplay {
-    padding-right: 12px;
+    padding-right: 5px;
     .count {
       font-weight: 500;
     }

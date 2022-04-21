@@ -38,7 +38,7 @@ const createSavedSet = createAsyncThunk<
       thunkAPI.dispatch(
         globalActions.displayNotification({
           type: 'success',
-          message: intl.get('api.savedSet.success.title'),
+          message: intl.get('api.savedSet.success.titleCreate'),
           description: intl.get('api.savedSet.success.messageCreate'),
         }),
       ),
@@ -78,7 +78,7 @@ const updateSavedSet = createAsyncThunk<
       thunkAPI.dispatch(
         globalActions.displayNotification({
           type: 'success',
-          message: intl.get('api.savedSet.success.title'),
+          message: intl.get('api.savedSet.success.titleUpdate'),
           description: intl.get('api.savedSet.success.messageUpdate'),
         }),
       ),

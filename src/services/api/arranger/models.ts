@@ -1,3 +1,5 @@
+import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+
 export interface IStatistics {
   families: number;
   fileSize: string;
@@ -30,4 +32,10 @@ export interface ArrangerColumnStateResults {
       };
     };
   };
+}
+
+export interface ArrangerPhenotypes {
+  sqon: ISyntheticSqon;
+  type: string;
+  aggregations_filter_themselves: boolean;
 }

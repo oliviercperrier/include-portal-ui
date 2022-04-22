@@ -1,7 +1,6 @@
 import { IBiospecimenEntity } from "graphql/biospecimens/models";
 import { IFileEntity } from "graphql/files/models";
 import { ArrangerResultsTree } from "graphql/models";
-import { Key } from "react";
 
 export interface IParticipantResultTree {
   participant: ArrangerResultsTree<IParticipantEntity>;

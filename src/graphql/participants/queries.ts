@@ -70,6 +70,16 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
   }
 `;
 
+export const GET_PARTICIPANT_COUNT = gql`
+  query getParticipantCount($sqon: JSON) {
+    participant {
+      hits(filters: $sqon) {
+        total
+      }
+    }
+  }
+`;
+
 export const PARTICIPANT_SEARCH_BY_ID_QUERY = gql`
   query searchParticipantById($sqon: JSON) {
     participant {

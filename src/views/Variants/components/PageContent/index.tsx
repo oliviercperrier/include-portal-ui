@@ -110,9 +110,14 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
         currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
-        loading={variantMapping.loading}
         total={variantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}
+        getResolvedQueryForCount={() => ({ op: 'and', content: [] })}
+        fetchQueryCount={() => {
+          return new Promise((resolve, reject) => {
+            resolve(1);
+          });
+        }}
       />
       <Tabs
         type="card"

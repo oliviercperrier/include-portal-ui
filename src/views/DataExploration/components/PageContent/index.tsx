@@ -48,11 +48,15 @@ import { INDEXES } from 'graphql/constants';
 import { numberWithCommas } from 'utils/string';
 import useQBStateWithSavedFilters from 'hooks/useQBStateWithSavedFilters';
 import copy from 'copy-to-clipboard';
-
-import styles from './index.module.scss';
 import { getCurrentUrl } from 'utils/helper';
 import { SHARED_FILTER_ID_QUERY_PARAM_KEY } from 'common/constants';
 import { globalActions } from 'store/global';
+import { ArrangerApi } from 'services/api/arranger';
+import { GET_PARTICIPANT_COUNT } from 'graphql/participants/queries';
+import { IParticipantResultTree } from 'graphql/participants/models';
+import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+
+import styles from './index.module.scss';
 
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
@@ -65,6 +69,15 @@ const addTagToFilter = (filter: ISavedFilter) => ({
   ...filter,
   tag: DATA_EPLORATION_FILTER_TAG,
 });
+
+const resolveSqonForParticipants = (queryList: ISyntheticSqon[], activeQuery: ISyntheticSqon) =>
+  mapFilterForParticipant(resolveSyntheticSqon(queryList, activeQuery));
+
+const resolveSqonForBiospecimens = (queryList: ISyntheticSqon[], activeQuery: ISyntheticSqon) =>
+  mapFilterForBiospecimen(resolveSyntheticSqon(queryList, activeQuery));
+
+const resolveSqonForFiles = (queryList: ISyntheticSqon[], activeQuery: ISyntheticSqon) =>
+  mapFilterForFiles(resolveSyntheticSqon(queryList, activeQuery));
 
 const PageContent = ({
   fileMapping,
@@ -85,13 +98,9 @@ const PageContent = ({
   const [biospecimenQueryConfig, setBiospecimenQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
   const [datafilesQueryConfig, setDatafilesQueryConfig] = useState(DEFAULT_QUERY_CONFIG);
 
-  const participantResolvedSqon = mapFilterForParticipant(
-    resolveSyntheticSqon(queryList, activeQuery),
-  );
-  const biospecimenResolvedSqon = mapFilterForBiospecimen(
-    resolveSyntheticSqon(queryList, activeQuery),
-  );
-  const fileResolvedSqon = mapFilterForFiles(resolveSyntheticSqon(queryList, activeQuery));
+  const participantResolvedSqon = resolveSqonForParticipants(queryList, activeQuery);
+  const biospecimenResolvedSqon = resolveSqonForBiospecimens(queryList, activeQuery);
+  const fileResolvedSqon = resolveSqonForFiles(queryList, activeQuery);
 
   const participantResults = useParticipants({
     first: participantQueryConfig.size,
@@ -234,9 +243,19 @@ const PageContent = ({
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
         currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
-        loading={participantMapping.loading || fileResults.loading || biospecimenResults.loading}
         total={participantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}
+        getResolvedQueryForCount={(sqon) => resolveSqonForParticipants(queryList, sqon)}
+        fetchQueryCount={async (sqon) => {
+          const { data } = await ArrangerApi.graphqlRequest<{ data: IParticipantResultTree }>({
+            query: GET_PARTICIPANT_COUNT.loc?.source.body,
+            variables: {
+              sqon: resolveSqonForParticipants(queryList, sqon),
+            },
+          });
+
+          return data?.data?.participant.hits.total ?? 0;
+        }}
       />
       <Tabs
         type="card"

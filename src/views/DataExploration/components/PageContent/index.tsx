@@ -204,6 +204,7 @@ const PageContent = ({
             enableDuplicate: true,
             enableFavoriteFilter: false,
             enableShare: true,
+            enableUndoChanges: true
           },
           selectedSavedFilter: selectedSavedFilter,
           savedFilters: savedFilterList,

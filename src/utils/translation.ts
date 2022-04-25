@@ -104,7 +104,8 @@ export const getQueryBuilderDictionary = (
       ),
       share: intl.get('components.querybuilder.header.tooltips.share'),
       setAsDefaultFilter: intl.get('components.querybuilder.header.tooltips.setAsDefaultFilter'),
-      usetDefaultFilter: intl.get('components.querybuilder.header.tooltips.usetDefaultFilter'),
+      unsetDefaultFilter: intl.get('components.querybuilder.header.tooltips.unsetDefaultFilter'),
+      undoChanges: intl.get('components.querybuilder.header.tooltips.undoChanges'),
       noSavedFilters: intl.get('components.querybuilder.header.tooltips.noSavedFilters'),
     },
     myFiltersDropdown: {

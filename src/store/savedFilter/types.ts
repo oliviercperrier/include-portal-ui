@@ -6,6 +6,7 @@ export type initialState = {
   savedFilters: TUserSavedFilter[];
   sharedSavedFilter?: TUserSavedFilter;
   isLoading: boolean;
+  isSaving: boolean;
   isUpdating: boolean;
   error?: any;
   fetchingError?: any;

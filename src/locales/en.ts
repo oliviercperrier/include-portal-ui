@@ -203,7 +203,8 @@ const fr = {
           duplicateQueryBuilder: 'Duplicate filter',
           share: 'Share (Copy url)',
           setAsDefaultFilter: 'Set as default filter',
-          usetDefaultFilter: 'Unset default filter',
+          unsetDefaultFilter: 'Unset default filter',
+          undoChanges: 'Discard unsaved changes',
           noSavedFilters: 'You have no saved filters',
         },
         myFiltersDropdown: {

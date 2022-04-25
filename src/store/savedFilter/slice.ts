@@ -14,6 +14,7 @@ export const SavedFilterState: initialState = {
   savedFilters: [],
   sharedSavedFilter: undefined,
   isLoading: false,
+  isSaving: false,
   isUpdating: false,
   selectedId: undefined,
 };
@@ -63,18 +64,18 @@ const savedFilterSlice = createSlice({
     }));
     // Create
     builder.addCase(createSavedFilter.pending, (state) => {
-      state.isLoading = true;
+      state.isSaving = true;
       state.error = undefined;
     });
     builder.addCase(createSavedFilter.fulfilled, (state, action) => ({
       ...state,
       savedFilters: sortByUpdateDate([...state.savedFilters, action.payload]),
-      isLoading: false,
+      isSaving: false,
     }));
     builder.addCase(createSavedFilter.rejected, (state, action) => ({
       ...state,
       error: action.payload,
-      isLoading: false,
+      isSaving: false,
     }));
     // Update
     builder.addCase(updateSavedFilter.pending, (state) => {

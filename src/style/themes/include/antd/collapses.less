@@ -1,11 +1,13 @@
-@collapse-header-padding: 5px;
 @collapse-header-bg: @gray-1;
+@collapse-content-padding: 16px;
 
 .@{collapse-prefix-cls} {
-  border-color: @gray-5;
-  
   &-content {
-    border-top: 1px solid @gray-4;
+    border-top: 1px solid @gray-4 !important;
+  }
+
+  &-content-box {
+    padding: @collapse-content-padding !important;
   }
 
   & > &-item {
@@ -16,13 +18,6 @@
     }
 
     > .@{collapse-prefix-cls}-header {
-      display: flex;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 24px;
-      padding-left: 16px;
-      padding-right: 16px;
-      
       .@{collapse-prefix-cls}-arrow {
         color: @gray-7;
       }

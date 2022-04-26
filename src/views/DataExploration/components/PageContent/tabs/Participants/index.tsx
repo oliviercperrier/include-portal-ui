@@ -412,6 +412,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
           <SetsManagementDropdown
             results={results}
             selectedKeys={selectedKeys}
+            selectedAllResults={selectedAllResults}
             sqon={getCurrentSqon()}
             type={SetType.PARTICIPANT}
           />,

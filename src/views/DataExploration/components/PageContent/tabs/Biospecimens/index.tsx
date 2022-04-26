@@ -275,6 +275,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
           <SetsManagementDropdown
             results={results}
             sqon={getCurrentSqon()}
+            selectedAllResults={selectedAllResults}
             type={SetType.BIOSPECIMEN}
             selectedKeys={selectedKeys}
           />,

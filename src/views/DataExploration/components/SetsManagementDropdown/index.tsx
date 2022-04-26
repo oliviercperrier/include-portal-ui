@@ -19,7 +19,6 @@ import { useSavedSet } from 'store/savedSet';
 import { IFileEntity } from 'graphql/files/models';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { INDEXES } from 'graphql/constants';
-import { isEmpty } from 'lodash';
 import CreateEditModal from 'views/Dashboard/components/DashboardCards/SavedSets/CreateEditModal';
 import { SetType } from 'services/api/savedSet/models';
 import { numberWithCommas } from 'utils/string';
@@ -29,6 +28,7 @@ import styles from './index.module.scss';
 type Props = {
   results: IQueryResults<IParticipantEntity[] | IFileEntity[] | IBiospecimenEntity[]>;
   sqon?: ISqonGroupFilter;
+  selectedAllResults: boolean;
   selectedKeys?: string[];
   type: SetType;
 };
@@ -129,7 +129,21 @@ const menu = (
   </Menu>
 );
 
-const SetsManagementDropdown = ({ results, sqon, type, selectedKeys = [] }: Props) => {
+const getSetCount = (selected: string[], total: number, allSelected: boolean) => {
+  if (allSelected) {
+    return total;
+  } else {
+    return selected.length === 0 ? total : selected.length;
+  }
+};
+
+const SetsManagementDropdown = ({
+  results,
+  sqon,
+  type,
+  selectedKeys = [],
+  selectedAllResults,
+}: Props) => {
   const [isEditDisabled, setIsEditDisabled] = useState(true);
   const [modal, setModal] = useState<ModalState>(modals.hideAll);
   const { savedSets, isLoading, fetchingError } = useSavedSet();
@@ -172,7 +186,7 @@ const SetsManagementDropdown = ({ results, sqon, type, selectedKeys = [] }: Prop
       )}
       <Dropdown
         overlay={menu(
-          isEmpty(selectedKeys) ? results.total : selectedKeys.length,
+          getSetCount(selectedKeys || [], results.total, selectedAllResults),
           onClick,
           isEditDisabled,
           type,

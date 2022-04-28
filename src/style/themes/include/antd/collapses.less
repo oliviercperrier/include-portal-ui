@@ -6,16 +6,20 @@
     padding: @collapse-content-padding !important;
   }
 
-  & > &-item {
-    border-color: @gray-5;
-
-    &:last-child {
-      border-radius: 2px; 
-
-      >.@{collapse-prefix-cls}-header {
-        border-radius: 2px;
+  &-borderless {
+    >.@{collapse-prefix-cls}-item { 
+      &:last-child {
+        border-radius: 2px; 
+  
+        >.@{collapse-prefix-cls}-header {
+          border-radius: 2px;
+        }
       }
     }
+  }
+
+  & > &-item {
+    border-color: @gray-5;
 
     > .@{collapse-prefix-cls}-header {
       .@{collapse-prefix-cls}-arrow {

@@ -2,10 +2,6 @@
 @collapse-content-padding: 16px;
 
 .@{collapse-prefix-cls} {
-  &-content {
-    border-top: 1px solid @gray-4 !important;
-  }
-
   &-content-box {
     padding: @collapse-content-padding !important;
   }
@@ -14,7 +10,11 @@
     border-color: @gray-5;
 
     &:last-child {
-      border-radius: 2px;
+      border-radius: 2px; 
+
+      >.@{collapse-prefix-cls}-header {
+        border-radius: 2px;
+      }
     }
 
     > .@{collapse-prefix-cls}-header {

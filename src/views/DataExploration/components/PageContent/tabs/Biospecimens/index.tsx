@@ -275,6 +275,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
           <SetsManagementDropdown
             results={results}
             sqon={getCurrentSqon()}
+            selectedAllResults={selectedAllResults}
             type={SetType.BIOSPECIMEN}
             selectedKeys={selectedKeys}
           />,
@@ -305,7 +306,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
         total: results.total,
         onChange: () => scrollToTop(SCROLL_WRAPPER_ID),
       }}
-      dataSource={results.data.map((i) => ({ ...i, key: i.sample_id }))}
+      dataSource={results.data.map((i) => ({ ...i, key: i.id }))}
       dictionary={getProTableDictionary()}
     />
   );

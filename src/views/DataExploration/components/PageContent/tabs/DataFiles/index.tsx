@@ -363,6 +363,7 @@ const DataFilesTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps) 
             <SetsManagementDropdown
               results={results}
               sqon={getCurrentSqon()}
+              selectedAllResults={selectedAllResults}
               type={SetType.FILE}
               selectedKeys={selectedKeys}
             />,

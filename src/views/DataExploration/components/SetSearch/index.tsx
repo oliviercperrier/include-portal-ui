@@ -99,6 +99,9 @@ const SetSearch = ({
         options={options}
         onChange={(values: string[]) => {
           setValues(values);
+
+          console.log(getAlternateNameByType(savedSets, type))
+
           updateActiveQueryField({
             queryBuilderId,
             field: getSetFieldId(type),

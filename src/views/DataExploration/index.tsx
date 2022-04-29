@@ -131,10 +131,10 @@ const filtersContainer = (
 };
 
 const DataExploration = (props: OwnProps) => {
-  const { tab } = useParams<{ tab: string }>(); // to sync filters with querybuilder
-  const participantMappingResults = useGetExtendedMappings('participant');
-  const fileMappingResults = useGetExtendedMappings('file');
-  const biospecimenMappingResults = useGetExtendedMappings('biospecimen');
+  const { tab } = useParams<{ tab: string }>();
+  const participantMappingResults = useGetExtendedMappings(INDEXES.PARTICIPANT);
+  const fileMappingResults = useGetExtendedMappings(INDEXES.FILE);
+  const biospecimenMappingResults = useGetExtendedMappings(INDEXES.BIOSPECIMEN);
 
   const menuItems: ISidebarMenuItem[] = [
     {

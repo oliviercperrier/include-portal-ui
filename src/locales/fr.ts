@@ -61,7 +61,7 @@ const fr = {
       results: 'Results',
       noResults: 'No Results',
       of: 'of',
-      selected: 'items selected',
+      selected: 'item selected',
       selectedPlural: 'items selected',
     },
   },

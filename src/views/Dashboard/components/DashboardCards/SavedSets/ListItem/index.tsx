@@ -31,9 +31,11 @@ const { Text } = Typography;
 const redirectToPage = (setType: string) => {
   switch (setType) {
     case INDEXES.FILE:
+      return `${DATA_EPLORATION_FILTER_TAG}/datafiles`;
     case INDEXES.PARTICIPANT:
+      return `${DATA_EPLORATION_FILTER_TAG}/participants`;
     case INDEXES.BIOSPECIMEN:
-      return DATA_EPLORATION_FILTER_TAG;
+      return `${DATA_EPLORATION_FILTER_TAG}/biospecimens`;
     default:
       return DATA_EPLORATION_FILTER_TAG;
   }

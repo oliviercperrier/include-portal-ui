@@ -23,7 +23,7 @@ export interface ISearchAutocomplete {
   limit?: number;
   onSearch: (value: string) => void;
   onSelect: (values: string[]) => void;
-  onClose: () => void;
+  onClose?: () => void;
   selectedItems?: string[];
 }
 
@@ -58,7 +58,9 @@ const SearchAutocomplete = ({
   return (
     <div className={`${styles.container} ${className}`}>
       <span className={styles.titleWrapper}>
-        <Text strong className={styles.title}>{title}</Text>
+        <Text strong className={styles.title}>
+          {title}
+        </Text>
         {tooltipText && (
           <Tooltip arrowPointAtCenter placement="topLeft" title={tooltipText}>
             <InfoCircleOutlined className={styles.tooltipIcon} />
@@ -76,7 +78,7 @@ const SearchAutocomplete = ({
           setItemSelected(values);
         }}
         onDropdownVisibleChange={(open) => {
-          if (!open) {
+          if (!open && onClose) {
             onClose();
           }
         }}

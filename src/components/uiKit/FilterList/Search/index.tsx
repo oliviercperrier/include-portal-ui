@@ -1,18 +1,16 @@
-import { useEffect, useState } from 'react';
-import isEmpty from 'lodash/isEmpty';
-
+import { useState } from 'react';
 import SearchAutocomplete, {
   ISearchAutocomplete,
   OptionsType,
 } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
-import { usePrevious } from 'hooks/usePrevious';
-import useLazyResultQuery from 'hooks/graphql/useLazyResultQuery';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';
+import { ArrangerApi } from 'services/api/arranger';
+import { DocumentNode } from 'graphql';
 
 interface IGlobalSearch<T> {
-  query: any;
+  query: DocumentNode;
   index: INDEXES;
   searchKey: string[];
   setCurrentOptions: (result: T[], search: string) => OptionsType[];
@@ -33,48 +31,39 @@ const Search = <T,>({
   searchValueTransformer,
   ...props
 }: TGlobalSearch<T>) => {
-  const [search, setSearch] = useState('');
   const [options, setOptions] = useState<OptionsType[]>([]);
 
-  const searchFilter = generateQuery({
-    operator: BooleanOperators.or,
-    newFilters: searchKey.map((key) =>
-      generateValueFilter({
-        field: key,
-        value: [`${search}*`],
-        index,
-      }),
-    ),
-  });
+  const handleSearch = async (search: string) => {
+    const searchFilter = generateQuery({
+      operator: BooleanOperators.or,
+      newFilters: searchKey.map((key) =>
+        generateValueFilter({
+          field: key,
+          value: [`${search}*`],
+          index,
+        }),
+      ),
+    });
 
-  const searchSQON = {
-    op: searchFilter.op,
-    content: searchFilter.content,
+    const { data } = await ArrangerApi.graphqlRequest<any>({
+      query: query.loc?.source.body,
+      variables: {
+        sqon: {
+          op: searchFilter.op,
+          content: searchFilter.content,
+        },
+      },
+    });
+
+    setOptions(setCurrentOptions(data.data, search));
   };
-
-  const { result: searchResult } = useLazyResultQuery<any>(query, {
-    variables: { sqon: searchSQON },
-  });
-  const previousData = usePrevious(searchResult);
-
-  useEffect(() => {
-    const newData = isEmpty(searchResult) ? previousData : searchResult;
-    setOptions(setCurrentOptions(newData, search));
-    // eslint-disable-next-line
-  }, [searchResult]);
 
   return (
     <SearchAutocomplete
       onSearch={(value) =>
-        setSearch(searchValueTransformer ? searchValueTransformer(value) : value)
+        handleSearch(searchValueTransformer ? searchValueTransformer(value) : value)
       }
-      onSelect={(values) => {
-        setSearch('');
-        onSelect(values);
-      }}
-      onClose={() => {
-        setSearch('');
-      }}
+      onSelect={onSelect}
       options={options}
       selectedItems={selectedItems}
       {...props}

@@ -8,7 +8,6 @@ import {
 } from '@ferlab/ui/core/data/sqon/types';
 import { findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
 import { Select, Tag, Tooltip, Typography } from 'antd';
-import { OptionsType } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
 import { INDEXES } from 'graphql/constants';
 import { intersection } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -28,6 +27,11 @@ interface OwnProps {
   field?: string;
   sqon: ISqonGroupFilter;
   emptyDescription?: string;
+}
+
+interface OptionsType {
+  value: string;
+  label: string;
 }
 
 const { Text } = Typography;
@@ -91,7 +95,9 @@ const SetSearch = ({
       <Select
         className={styles.search}
         allowClear
-        filterOption={false}
+        filterOption={(input, option) =>
+          option ? option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false
+        }
         placeholder="Select a saved set"
         mode="multiple"
         maxTagCount={1}
@@ -99,9 +105,6 @@ const SetSearch = ({
         options={options}
         onChange={(values: string[]) => {
           setValues(values);
-
-          console.log(getAlternateNameByType(savedSets, type))
-
           updateActiveQueryField({
             queryBuilderId,
             field: getSetFieldId(type),

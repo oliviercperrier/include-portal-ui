@@ -21,6 +21,7 @@ interface OwnProps<T> {
   index: INDEXES;
   query: DocumentNode;
   sqon: ISqonGroupFilter;
+  tooltipText?: string;
   optionsFormatter: (options: T[], matchRegex: RegExp, search: string) => OptionsType[];
 }
 
@@ -35,6 +36,7 @@ const GlobalSearch = <T,>({
   query,
   sqon,
   optionsFormatter,
+  tooltipText,
 }: OwnProps<T>) => (
   <Search<T>
     onSelect={(values) =>
@@ -48,6 +50,7 @@ const GlobalSearch = <T,>({
     }
     searchValueTransformer={(value) => value.toUpperCase()}
     index={index}
+    tooltipText={tooltipText}
     emptyDescription={emptyDescription}
     placeHolder={placeholder}
     query={query}

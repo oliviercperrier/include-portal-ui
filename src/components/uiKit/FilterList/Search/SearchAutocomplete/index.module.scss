@@ -1,11 +1,15 @@
 @import 'colors';
 
 .container {
-  .title {
+  .titleWrapper {
     color: $gray-9;
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+
+    .title {
+      font-size: 12px;
+    }
 
     .tooltipIcon {
       margin-left: 0.5rem;

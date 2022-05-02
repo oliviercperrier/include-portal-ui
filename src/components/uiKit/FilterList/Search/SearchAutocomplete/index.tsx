@@ -57,8 +57,8 @@ const SearchAutocomplete = ({
 
   return (
     <div className={`${styles.container} ${className}`}>
-      <span className={styles.title}>
-        <Text strong>{title}</Text>
+      <span className={styles.titleWrapper}>
+        <Text strong className={styles.title}>{title}</Text>
         {tooltipText && (
           <Tooltip arrowPointAtCenter placement="topLeft" title={tooltipText}>
             <InfoCircleOutlined className={styles.tooltipIcon} />

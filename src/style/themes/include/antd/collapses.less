@@ -2,6 +2,10 @@
 @collapse-content-padding: 16px;
 
 .@{collapse-prefix-cls} {
+  &, &-content {
+    border-color: @gray-4;
+  }
+
   &-content-box {
     padding: @collapse-content-padding !important;
   }
@@ -19,7 +23,7 @@
   }
 
   & > &-item {
-    border-color: @gray-5;
+    border-color: @gray-4;
 
     > .@{collapse-prefix-cls}-header {
       .@{collapse-prefix-cls}-arrow {

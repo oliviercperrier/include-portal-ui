@@ -24,6 +24,7 @@ type OwnProps = {
   sqon?: ISqonGroupFilter;
   setType: SetType;
   currentSaveSet?: IUserSetOutput;
+  hasSelectedKeys?: boolean;
 };
 
 const CreateEditModal = ({
@@ -34,6 +35,7 @@ const CreateEditModal = ({
   setType,
   visible = true,
   currentSaveSet,
+  hasSelectedKeys = false,
 }: OwnProps) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -94,6 +96,35 @@ const CreateEditModal = ({
     }
   };
 
+  const resolveConflictNames = (name: string) => {
+    let existsName = isSetNameExists(name);
+    let newName = name;
+    if (existsName) {
+      do {
+        newName = `${newName}(copy)`;
+        existsName = isSetNameExists(newName);
+      } while (existsName && newName.length < MAX_LENGTH_NAME);
+    }
+    return newName;
+  };
+
+  const getSetDefaultName = (formValue: string) => {
+    if (SetActionType.UPDATE_SET && currentSaveSet) {
+      return currentSaveSet.tag;
+    }
+
+    if (isLoading) {
+      return formValue;
+    }
+
+    if (hasSelectedKeys) {
+      let newName = `${setType.charAt(0).toUpperCase() + setType.slice(1)} Set`;
+      return resolveConflictNames(newName);
+    }
+
+    return resolveConflictNames(filtersToName({ filters: sqon }));
+  };
+
   const handleCancel = () => {
     setIsVisible(false);
     form.resetFields();
@@ -118,12 +149,7 @@ const CreateEditModal = ({
         fields={[
           {
             name: [SET_NAME_KEY],
-            value:
-              saveSetActionType === SetActionType.UPDATE_SET && currentSaveSet
-                ? currentSaveSet.tag
-                : isLoading
-                ? form.getFieldValue(SET_NAME_KEY)
-                : filtersToName({ filters: sqon }),
+            value: getSetDefaultName(form.getFieldValue(SET_NAME_KEY)),
           },
         ]}
         validateMessages={{

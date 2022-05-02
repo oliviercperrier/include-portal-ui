@@ -160,7 +160,7 @@ const SetsManagementDropdown = ({
     const m = modals[key];
     return setModal(m);
   };
-
+  
   return (
     <div id={`${type}-set-dropdown-container`}>
       {modal.showModalSave && sqon && (
@@ -170,6 +170,7 @@ const SetsManagementDropdown = ({
           setType={type}
           hideModalCb={() => setModal(modals.hideAll)}
           saveSetActionType={SetActionType.CREATE_SET}
+          hasSelectedKeys={selectedKeys?.length > 0 && !selectedAllResults}
         />
       )}
       {modal.showModalAddDelete && (

@@ -1,19 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TUserSavedFilter } from 'services/api/savedFilter/models';
 import { initialState } from 'store/savedFilter/types';
 import {
   createSavedFilter,
   deleteSavedFilter,
   fetchSavedFilters,
+  fetchSharedSavedFilter,
   setSavedFilterAsDefault,
   updateSavedFilter,
 } from './thunks';
 
 export const SavedFilterState: initialState = {
   savedFilters: [],
-  isLoading: true,
+  sharedSavedFilter: undefined,
+  isLoading: false,
+  isSaving: false,
   isUpdating: false,
   selectedId: undefined,
 };
+
+const sortByUpdateDate = (sets: TUserSavedFilter[]) =>
+  sets.sort((a, b) => (new Date(a.updated_date) < new Date(b.updated_date) ? 0 : -1));
 
 const savedFilterSlice = createSlice({
   name: 'user',
@@ -32,7 +39,7 @@ const savedFilterSlice = createSlice({
     });
     builder.addCase(fetchSavedFilters.fulfilled, (state, action) => ({
       ...state,
-      savedFilters: action.payload,
+      savedFilters: sortByUpdateDate(action.payload),
       isLoading: false,
     }));
     builder.addCase(fetchSavedFilters.rejected, (state, action) => ({
@@ -40,20 +47,35 @@ const savedFilterSlice = createSlice({
       fetchingError: action.payload,
       isLoading: false,
     }));
+    // Fetch Shared
+    builder.addCase(fetchSharedSavedFilter.pending, (state) => {
+      state.isLoading = true;
+      state.fetchingError = undefined;
+    });
+    builder.addCase(fetchSharedSavedFilter.fulfilled, (state, action) => ({
+      ...state,
+      sharedSavedFilter: action.payload,
+      isLoading: false,
+    }));
+    builder.addCase(fetchSharedSavedFilter.rejected, (state, action) => ({
+      ...state,
+      fetchingError: action.payload,
+      isLoading: false,
+    }));
     // Create
     builder.addCase(createSavedFilter.pending, (state) => {
-      state.isLoading = true;
+      state.isSaving = true;
       state.error = undefined;
     });
     builder.addCase(createSavedFilter.fulfilled, (state, action) => ({
       ...state,
-      savedFilters: [...state.savedFilters, action.payload],
-      isLoading: false,
+      savedFilters: sortByUpdateDate([...state.savedFilters, action.payload]),
+      isSaving: false,
     }));
     builder.addCase(createSavedFilter.rejected, (state, action) => ({
       ...state,
       error: action.payload,
-      isLoading: false,
+      isSaving: false,
     }));
     // Update
     builder.addCase(updateSavedFilter.pending, (state) => {
@@ -65,7 +87,7 @@ const savedFilterSlice = createSlice({
 
       return {
         ...state,
-        savedFilters: [...filters, action.payload],
+        savedFilters: sortByUpdateDate([...filters, action.payload]),
         isUpdating: false,
       };
     });

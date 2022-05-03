@@ -5,9 +5,11 @@ import SavedFilters from './SavedFilters';
 import Cavatica from './Cavatica';
 
 import styles from './index.module.scss';
+import SavedSets from './SavedSets';
 
 export interface DashboardCardProps {
   id: string;
+  key?: string;
   className?: string;
 }
 
@@ -37,5 +39,13 @@ export const dashboardCards: TSortableItems[] = [
     xxl: 8,
     className: cx(styles.cardColxxl6, styles.cardColxxl5),
     component: <SavedFilters id="3" className={styles.dashboardCard} />,
+  },
+  {
+    id: '4',
+    xs: 24,
+    md: 12,
+    xxl: 8,
+    className: cx(styles.cardColxxl6, styles.cardColxxl5),
+    component: <SavedSets id="4" className={styles.dashboardCard} />,
   },
 ];

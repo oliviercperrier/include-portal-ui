@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children, layout, ...routeProps }: OwnProps) => {
       <Redirect
         to={{
           pathname: STATIC_ROUTES.LOGIN,
-          search: `${REDIRECT_URI_KEY}=${routeProps.location?.pathname}`,
+          search: `${REDIRECT_URI_KEY}=${routeProps.location?.pathname}${routeProps.location?.search}`,
         }}
       />
     );

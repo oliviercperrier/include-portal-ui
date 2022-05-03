@@ -3,6 +3,9 @@ import { useDispatch } from 'react-redux';
 import { globalActions, useGlobals } from 'store/global';
 import { notification as antNotification } from 'antd';
 import { message as antMessage } from 'antd';
+import cx from 'classnames';
+
+import styles from './index.module.scss';
 
 const NotificationContextHolder = () => {
   const dispatch = useDispatch();
@@ -29,6 +32,7 @@ const NotificationContextHolder = () => {
       antMessage.open({
         ...message,
         style: undefined,
+        className: cx(styles.antMessage, styles[message.type]),
         onClose: () => {
           if (message.onClose) {
             message.onClose();

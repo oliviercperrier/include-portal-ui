@@ -65,11 +65,13 @@ const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
                       {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
                     </span>
                   ),
+                  validateTrigger: 'onSubmit',
                 },
                 {
                   type: 'string',
                   required: true,
                   message: intl.get('global.forms.errors.requiredField'),
+                  validateTrigger: 'onSubmit',
                 },
               ]}
               required={false}

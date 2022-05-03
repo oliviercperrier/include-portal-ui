@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Select, Tag, Tooltip, Typography } from 'antd';
+import { Select, Tag } from 'antd';
 import debounce from 'lodash/debounce';
 import take from 'lodash/take';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import Empty from '@ferlab/ui/core/components/Empty';
+import SearchLabel from 'components/uiKit/search/SearchLabel';
 
 import styles from './index.module.scss';
-import Empty from '@ferlab/ui/core/components/Empty';
 
 export type OptionsType = {
   value: string;
   label: string | React.ReactNode;
+  [name: string]: any;
 };
 
 export interface ISearchAutocomplete {
-  title?: string | React.ReactNode;
-  tooltipText?: string | React.ReactNode;
+  title?: string;
+  tooltipText?: string;
   placeHolder?: string | React.ReactNode;
   emptyDescription?: string;
   className?: string;
@@ -22,11 +23,9 @@ export interface ISearchAutocomplete {
   limit?: number;
   onSearch: (value: string) => void;
   onSelect: (values: string[]) => void;
-  onClose: () => void;
+  onClose?: () => void;
   selectedItems?: string[];
 }
-
-const { Text } = Typography;
 
 const SearchAutocomplete = ({
   className = '',
@@ -56,14 +55,7 @@ const SearchAutocomplete = ({
 
   return (
     <div className={`${styles.container} ${className}`}>
-      <span className={styles.title}>
-        <Text strong>{title}</Text>
-        {tooltipText && (
-          <Tooltip arrowPointAtCenter placement="topLeft" title={tooltipText}>
-            <InfoCircleOutlined className={styles.tooltipIcon} />
-          </Tooltip>
-        )}
-      </span>
+      <SearchLabel title={title} tooltipText={tooltipText} />
       <Select
         allowClear
         className={styles.search}
@@ -75,12 +67,12 @@ const SearchAutocomplete = ({
           setItemSelected(values);
         }}
         onDropdownVisibleChange={(open) => {
-          if (!open) {
+          if (!open && onClose) {
             onClose();
           }
         }}
         autoClearSearchValue={true}
-        notFoundContent={<Empty size="mini" imageType="grid" description={emptyDescription} />}
+        notFoundContent={<Empty size="mini" showImage={false} description={emptyDescription} />}
         onSearch={(value) => debounceSearch(value)}
         options={newOptions}
         placeholder={placeHolder}

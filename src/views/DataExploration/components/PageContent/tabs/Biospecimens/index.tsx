@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { INDEXES } from 'graphql/constants';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { generateSelectionSqon } from 'views/DataExploration/utils/report';
+import { generateSelectionSqon } from 'views/DataExploration/utils/selectionSqon';
 import { Link, useHistory } from 'react-router-dom';
 import { STATIC_ROUTES } from 'utils/routes';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
@@ -31,6 +31,8 @@ import useQueryBuilderState, {
   updateActiveQueryField,
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
 
@@ -216,7 +218,7 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
     // eslint-disable-next-line
   }, [JSON.stringify(activeQuery)]);
 
-  const getReportSqon = (): any =>
+  const getCurrentSqon = (): any =>
     selectedAllResults || !selectedKeys.length
       ? sqon
       : generateSelectionSqon(TAB_IDS.BIOSPECIMENS, selectedKeys);
@@ -266,17 +268,24 @@ const BioSpecimenTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProps
               columnStates: userInfo?.config.data_exploration?.tables?.biospecimens?.columns,
               columns: getDefaultColumns(history),
               index: INDEXES.BIOSPECIMEN,
-              sqon: getReportSqon(),
+              sqon: getCurrentSqon(),
             }),
           ),
         extra: [
+          <SetsManagementDropdown
+            results={results}
+            sqon={getCurrentSqon()}
+            selectedAllResults={selectedAllResults}
+            type={SetType.BIOSPECIMEN}
+            selectedKeys={selectedKeys}
+          />,
           <Button
             icon={<DownloadOutlined />}
             onClick={() =>
               dispatch(
                 fetchReport({
                   data: {
-                    sqon: getReportSqon(),
+                    sqon: getCurrentSqon(),
                     name: ReportType.BIOSEPCIMEN_DATA,
                   },
                 }),

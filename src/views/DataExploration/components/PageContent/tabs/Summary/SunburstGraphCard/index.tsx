@@ -36,15 +36,15 @@ const SunburstGraphCard = ({ id, className = '', field }: OwnProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [treeData, setTreeData] = useState<TreeNode[]>();
   const [currentNode, setCurrentNode] = useState<TreeNode>();
-  const phenotypeStore = useRef(new PhenotypeStore());
+  const phenotypeStore = useRef<PhenotypeStore | undefined>(new PhenotypeStore());
   const sunburstRef = useRef<SVGSVGElement>(null);
   const updateSunburst = useRef<(key: any) => void>();
   const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
 
   useEffect(() => {
     setIsLoading(true);
-    phenotypeStore.current.fetch({ field, sqon }).then(() => {
-      let rootNode = phenotypeStore.current.getRootNode();
+    phenotypeStore.current?.fetch({ field, sqon }).then(() => {
+      let rootNode = phenotypeStore.current?.getRootNode();
       setCurrentNode(rootNode);
       setTreeData(rootNode ? [lightTreeNodeConstructor(rootNode.key!)] : []);
       setIsLoading(false);

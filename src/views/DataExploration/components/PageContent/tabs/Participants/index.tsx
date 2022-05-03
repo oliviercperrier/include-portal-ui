@@ -1,8 +1,8 @@
 import {
-  ITableParticipantEntity,
+  IParticipantDiagnosis,
   IParticipantEntity,
   IParticipantObservedPhenotype,
-  IParticipantDiagnosis,
+  ITableParticipantEntity,
 } from 'graphql/participants/models';
 import { ArrangerResultsTree, IQueryResults } from 'graphql/models';
 import {
@@ -35,13 +35,15 @@ import { INDEXES } from 'graphql/constants';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import ExternalLink from 'components/uiKit/ExternalLink';
-import { generateSelectionSqon } from 'views/DataExploration/utils/report';
+import { generateSelectionSqon } from 'views/DataExploration/utils/selectionSqon';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
-import { scrollToTop, formatQuerySortList } from 'utils/helper';
+import { formatQuerySortList, scrollToTop } from 'utils/helper';
 import useQueryBuilderState, {
   addQuery,
 } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
+import SetsManagementDropdown from 'views/DataExploration/components/SetsManagementDropdown';
+import { SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
 
@@ -335,7 +337,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
     // eslint-disable-next-line
   }, [JSON.stringify(activeQuery)]);
 
-  const getReportSqon = (): any =>
+  const getCurrentSqon = (): any =>
     selectedAllResults || !selectedKeys.length
       ? sqon
       : generateSelectionSqon(TAB_IDS.PARTICIPANTS, selectedKeys);
@@ -346,7 +348,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
         dispatch(
           fetchReport({
             data: {
-              sqon: getReportSqon(),
+              sqon: getCurrentSqon(),
               name: e.key,
             },
           }),
@@ -401,12 +403,19 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
               columnStates: userInfo?.config.data_exploration?.tables?.participants?.columns,
               columns: defaultColumns,
               index: INDEXES.PARTICIPANT,
-              sqon: getReportSqon(),
+              sqon: getCurrentSqon(),
             }),
           ),
         onSelectAllResultsChange: setSelectedAllResults,
         onSelectedRowsChange: (keys) => setSelectedKeys(keys),
         extra: [
+          <SetsManagementDropdown
+            results={results}
+            selectedKeys={selectedKeys}
+            selectedAllResults={selectedAllResults}
+            sqon={getCurrentSqon()}
+            type={SetType.PARTICIPANT}
+          />,
           <Dropdown disabled={selectedKeys.length === 0} overlay={menu} placement="bottomLeft">
             <Button icon={<DownloadOutlined />}>Download clinical data</Button>
           </Dropdown>,

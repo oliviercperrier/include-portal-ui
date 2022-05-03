@@ -31,3 +31,6 @@ export const formatQuerySortList = (sorter: SorterResult<any> | SorterResult<any
 
   return r;
 };
+
+export const getCurrentUrl = () =>
+  window.location.protocol + '//' + window.location.host + window.location.pathname;

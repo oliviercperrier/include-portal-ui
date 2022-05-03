@@ -11,9 +11,7 @@ import {
 import { PhenotypeStore } from 'views/DataExploration/utils/PhenotypeStore';
 import { findSqonValueByField, removeFieldFromSqon } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
-import { useHistory } from 'react-router-dom';
 import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
-import { updateQueryFilters } from '@ferlab/ui/core/data/filters/utils';
 import { MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findChildrenKey, generateTree, getExpandedKeys, isChecked, searchInTree } from './helpers';
 import Empty from '@ferlab/ui/core/components/Empty';
@@ -42,7 +40,6 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
   const phenotypeStore = useRef(new PhenotypeStore());
   const [rootNode, setRootNode] = useState<TreeNode>();
   const [treeData, setTreeData] = useState<TreeNode>();
-  const history = useHistory();
   const { sqon } = useParticipantResolvedSqon(DATA_EXPLORATION_QB_ID);
 
   const getInitialExpandedKeys = (data: TreeNode[], collectedKeys: string[] = [], counter = 0) => {
@@ -107,7 +104,11 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
 
     if (!results || results.length === 0) {
       setExpandedKeys(getInitialExpandedKeys([treeData!]));
-      updateQueryFilters(history, `${field}.name`, []);
+      updateActiveQueryField({
+        queryBuilderId: DATA_EXPLORATION_QB_ID,
+        field: `${field}.name`,
+        value: []
+      })
     } else {
       updateActiveQueryField({
         queryBuilderId: DATA_EXPLORATION_QB_ID,

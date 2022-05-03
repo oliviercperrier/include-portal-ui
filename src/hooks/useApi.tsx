@@ -1,7 +1,7 @@
 // eslint-disable-next-line react-hooks/exhaustive-deps
-import { useState, useEffect } from "react";
-import { AxiosRequestConfig } from "axios";
-import { sendRequest } from "services/api";
+import { useState, useEffect } from 'react';
+import { AxiosRequestConfig } from 'axios';
+import { sendRequest } from 'services/api';
 
 interface OwnProps {
   config: AxiosRequestConfig;
@@ -11,7 +11,7 @@ interface OwnProps {
 const useApi = <T,>({ config, skip = false }: OwnProps) => {
   const [result, setResult] = useState<T>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>("");
+  const [error, setError] = useState<any>('');
   const [refreshIndex, setRefreshIndex] = useState(0);
 
   const refresh = () => {
@@ -28,7 +28,7 @@ const useApi = <T,>({ config, skip = false }: OwnProps) => {
 
       sendRequest<T>({
         ...config,
-        method: config.method ? config.method : "GET",
+        method: config.method ? config.method : 'GET',
       }).then(({ data, error }) => {
         if (error) {
           setLoading(false);

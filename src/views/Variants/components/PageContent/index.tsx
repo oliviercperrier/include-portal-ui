@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 import {
   createSavedFilter,
   deleteSavedFilter,
-  fetchSavedFilters,
   setSavedFilterAsDefault,
   updateSavedFilter,
 } from 'store/savedFilter/thunks';
@@ -63,11 +62,6 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
   });
 
   useEffect(() => {
-    dispatch(fetchSavedFilters(VARIANT_FILTER_TAG));
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
     setVariantQueryConfig({
       ...variantQueryConfig,
       pageIndex: DEFAULT_PAGE_INDEX,
@@ -116,9 +110,14 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
         enableShowHideLabels
         IconTotal={<UserOutlined size={18} />}
         currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
-        loading={variantMapping.loading}
         total={variantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}
+        getResolvedQueryForCount={() => ({ op: 'and', content: [] })}
+        fetchQueryCount={() => {
+          return new Promise((resolve, reject) => {
+            resolve(1);
+          });
+        }}
       />
       <Tabs
         type="card"

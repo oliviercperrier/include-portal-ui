@@ -61,7 +61,7 @@ const fr = {
       results: 'Results',
       noResults: 'No Results',
       of: 'of',
-      selected: 'items selected',
+      selected: 'item selected',
       selectedPlural: 'items selected',
     },
   },
@@ -72,6 +72,20 @@ const fr = {
         title: 'Error',
         messageUpdate: 'Unable to update filter',
         messageDelete: 'Unable to delete filter',
+      },
+    },
+    savedSet: {
+      error: {
+        title: 'Error',
+        messageUpdate: 'Unable to update set',
+        messageDelete: 'Unable to delete set',
+        messageCreate: 'Unable to create set',
+      },
+      success: {
+        titleCreate: 'Your set has been saved.',
+        messageCreate: 'You can add your sets to a query from the sidebar or the dashboard.',
+        titleUpdate: 'Success',
+        messageUpdate: 'Your set has been updated.',
       },
     },
     cavatica: {
@@ -189,7 +203,8 @@ const fr = {
           duplicateQueryBuilder: 'Duplicate filter',
           share: 'Share (Copy url)',
           setAsDefaultFilter: 'Set as default filter',
-          usetDefaultFilter: 'Unset default filter',
+          unsetDefaultFilter: 'Unset default filter',
+          undoChanges: 'Discard unsaved changes',
           noSavedFilters: 'You have no saved filters',
         },
         myFiltersDropdown: {
@@ -223,6 +238,38 @@ const fr = {
           confirm: 'Delete',
           buttonTitle: 'Clear all',
           description: 'You are about to delete all your queries. They will be lost forever.',
+        },
+      },
+    },
+    savedSets: {
+      modal: {
+        edit: {
+          title: 'Save this Set',
+          okText: 'Save',
+          cancelText: 'Cancel',
+          input: {
+            label: 'Set name',
+            placeholder: 'Untitled Set',
+            maximumLength: 'characters maximum',
+          },
+        },
+        add: {
+          title: 'Add to a {type} set',
+          okText: 'Add to set',
+          cancelText: 'Cancel',
+        },
+        remove: {
+          title: 'Remove from a {type} set',
+          okText: 'Remove from set',
+          cancelText: 'Cancel',
+        },
+      },
+      popupConfirm: {
+        delete: {
+          title: 'Permanently delete this set?',
+          okText: 'Delete set',
+          cancelText: 'Cancel',
+          content: 'You are about to permanently delete this set.',
         },
       },
     },
@@ -328,6 +375,11 @@ const fr = {
         savedFilters: {
           title: 'Saved Filters',
           noSavedFilters: 'You have no saved filters',
+          lastSaved: 'Last saved: {date} ago',
+        },
+        savedSets: {
+          title: 'Saved Sets',
+          noSavedFilters: 'You have no saved sets',
           lastSaved: 'Last saved: {date} ago',
         },
       },

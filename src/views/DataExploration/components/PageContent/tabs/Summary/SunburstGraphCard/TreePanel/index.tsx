@@ -59,7 +59,7 @@ const TreePanel = ({
           field: `${field}.name`,
           value: [currentNode?.title!],
           index: INDEXES.PARTICIPANT,
-          merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
+          merge_strategy: MERGE_VALUES_STRATEGIES.APPEND_VALUES,
         });
       }}
     >

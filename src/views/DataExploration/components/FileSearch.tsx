@@ -3,10 +3,10 @@ import { FILE_SEARCH_BY_ID_QUERY } from 'graphql/files/queries';
 import { IFileEntity } from 'graphql/files/models';
 import { FileTextOutlined } from '@ant-design/icons';
 import SelectItem from 'components/uiKit/select/SelectItem';
-import GlobalSearch, { ICustomSearchProps } from 'components/uiKit/GlobalSearch';
-import { highlightSearchMatch } from 'components/uiKit/GlobalSearch/utils';
 import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
+import GlobalSearch, { ICustomSearchProps } from 'components/uiKit/search/GlobalSearch';
+import { highlightSearchMatch } from 'components/uiKit/search/GlobalSearch/utils';
 
 const FileSearch = ({ queryBuilderId }: ICustomSearchProps) => {
   const { activeQuery } = useQueryBuilderState(queryBuilderId);

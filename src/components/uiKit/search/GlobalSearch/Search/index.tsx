@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SearchAutocomplete, {
   ISearchAutocomplete,
   OptionsType,
-} from 'components/uiKit/FilterList/Search/SearchAutocomplete';
+} from 'components/uiKit/search/GlobalSearch/Search/SearchAutocomplete';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { BooleanOperators } from '@ferlab/ui/core/data/sqon/operators';

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Select, Tag, Tooltip, Typography } from 'antd';
+import { Select, Tag } from 'antd';
 import debounce from 'lodash/debounce';
 import take from 'lodash/take';
-import { InfoCircleOutlined } from '@ant-design/icons';
 import Empty from '@ferlab/ui/core/components/Empty';
+import SearchLabel from 'components/uiKit/search/SearchLabel';
 
 import styles from './index.module.scss';
 
@@ -14,8 +14,8 @@ export type OptionsType = {
 };
 
 export interface ISearchAutocomplete {
-  title?: string | React.ReactNode;
-  tooltipText?: string | React.ReactNode;
+  title?: string;
+  tooltipText?: string;
   placeHolder?: string | React.ReactNode;
   emptyDescription?: string;
   className?: string;
@@ -26,8 +26,6 @@ export interface ISearchAutocomplete {
   onClose?: () => void;
   selectedItems?: string[];
 }
-
-const { Text } = Typography;
 
 const SearchAutocomplete = ({
   className = '',
@@ -57,16 +55,7 @@ const SearchAutocomplete = ({
 
   return (
     <div className={`${styles.container} ${className}`}>
-      <span className={styles.titleWrapper}>
-        <Text strong className={styles.title}>
-          {title}
-        </Text>
-        {tooltipText && (
-          <Tooltip arrowPointAtCenter placement="topLeft" title={tooltipText}>
-            <InfoCircleOutlined className={styles.tooltipIcon} />
-          </Tooltip>
-        )}
-      </span>
+      <SearchLabel title={title} tooltipText={tooltipText} />
       <Select
         allowClear
         className={styles.search}

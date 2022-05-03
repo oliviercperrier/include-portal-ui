@@ -1,8 +1,8 @@
 import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { ISqonGroupFilter, MERGE_VALUES_STRATEGIES } from '@ferlab/ui/core/data/sqon/types';
 import { findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
-import Search from 'components/uiKit/FilterList/Search';
-import { OptionsType } from 'components/uiKit/FilterList/Search/SearchAutocomplete';
+import Search from 'components/uiKit/search/GlobalSearch/Search';
+import { OptionsType } from 'components/uiKit/search/GlobalSearch/Search/SearchAutocomplete';
 import { DocumentNode } from 'graphql';
 import { INDEXES } from 'graphql/constants';
 import { get } from 'lodash';

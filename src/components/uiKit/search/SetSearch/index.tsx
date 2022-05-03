@@ -1,4 +1,3 @@
-import { InfoCircleFilled } from '@ant-design/icons';
 import Empty from '@ferlab/ui/core/components/Empty';
 import { updateActiveQueryField } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import {
@@ -7,13 +6,14 @@ import {
   SET_ID_PREFIX,
 } from '@ferlab/ui/core/data/sqon/types';
 import { findSqonValueByField } from '@ferlab/ui/core/data/sqon/utils';
-import { Select, Tag, Tooltip, Typography } from 'antd';
+import { Select, Tag } from 'antd';
 import { INDEXES } from 'graphql/constants';
 import { intersection } from 'lodash';
 import { useEffect, useState } from 'react';
 import { SetType } from 'services/api/savedSet/models';
 import { getSetFieldId, useSavedSet } from 'store/savedSet';
 import { getAlternateNameByType } from 'utils/sets';
+import SearchLabel from '../SearchLabel';
 
 import styles from './index.module.scss';
 
@@ -33,8 +33,6 @@ interface OptionsType {
   value: string;
   label: string;
 }
-
-const { Text } = Typography;
 
 const getDefaultValues = (field: string, sqon: ISqonGroupFilter) => {
   const selectedValue = (findSqonValueByField(field, sqon) ?? []).map((value: string) =>
@@ -84,14 +82,7 @@ const SetSearch = ({
 
   return (
     <div className={`${styles.container} ${className}`}>
-      <span className={styles.title}>
-        <Text strong>{title}</Text>
-        {tooltipText && (
-          <Tooltip arrowPointAtCenter placement="topLeft" title={tooltipText}>
-            <InfoCircleFilled className={styles.tooltipIcon} />
-          </Tooltip>
-        )}
-      </span>
+      <SearchLabel title={title} tooltipText={tooltipText} />
       <Select
         className={styles.search}
         allowClear

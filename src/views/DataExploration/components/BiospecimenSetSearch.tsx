@@ -1,9 +1,9 @@
-import { ICustomSearchProps } from 'components/uiKit/GlobalSearch';
+import { ICustomSearchProps } from 'components/uiKit/search/GlobalSearch';
 import useBiospecimenResolvedSqon from 'graphql/biospecimens/useBiospecimenResolvedSqon';
 import { INDEXES } from 'graphql/constants';
 import { SetType } from 'services/api/savedSet/models';
 import { DATA_EXPLORATION_QB_ID } from '../utils/constant';
-import SetSearch from './SetSearch';
+import SetSearch from 'components/uiKit/search/SetSearch';
 
 const BiospecimenSetSearch = ({ queryBuilderId }: ICustomSearchProps) => {
   const { sqon } = useBiospecimenResolvedSqon(queryBuilderId);

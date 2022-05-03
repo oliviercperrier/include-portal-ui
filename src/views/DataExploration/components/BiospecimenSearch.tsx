@@ -1,8 +1,8 @@
 import { ExperimentOutlined } from '@ant-design/icons';
 import useQueryBuilderState from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
-import GlobalSearch, { ICustomSearchProps } from 'components/uiKit/GlobalSearch';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import { highlightSearchMatch } from 'components/uiKit/GlobalSearch/utils';
+import GlobalSearch, { ICustomSearchProps } from 'components/uiKit/search/GlobalSearch';
+import { highlightSearchMatch } from 'components/uiKit/search/GlobalSearch/utils';
 import SelectItem from 'components/uiKit/select/SelectItem';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { BIOSPECIMEN_SEARCH_BY_ID_QUERY } from 'graphql/biospecimens/queries';

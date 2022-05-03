@@ -1,9 +1,9 @@
-import { ICustomSearchProps } from 'components/uiKit/GlobalSearch';
+import { ICustomSearchProps } from 'components/uiKit/search/GlobalSearch';
+import SetSearch from 'components/uiKit/search/SetSearch';
 import { INDEXES } from 'graphql/constants';
 import useFileResolvedSqon from 'graphql/files/useFileResolvedSqon';
 import { SetType } from 'services/api/savedSet/models';
 import { DATA_EXPLORATION_QB_ID } from '../utils/constant';
-import SetSearch from './SetSearch';
 
 const FileSetSearch = ({ queryBuilderId }: ICustomSearchProps) => {
   const { sqon } = useFileResolvedSqon(queryBuilderId);

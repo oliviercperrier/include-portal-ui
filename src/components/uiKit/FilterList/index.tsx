@@ -22,6 +22,19 @@ type OwnProps = {
 
 const { Text } = Typography;
 
+const isAllFacetOpen = (filterInfo: FilterInfo) => {
+  const allOpen = concatAllFacets(filterInfo).every((facet) =>
+    typeof facet === 'string' ? filterInfo.defaultOpenFacets?.includes(facet) : true,
+  )
+  return allOpen ? true : undefined
+}
+
+const concatAllFacets = (filterInfo: FilterInfo) => {
+  let allFacets: any[] = [];
+  filterInfo.groups.forEach(({ facets }) => allFacets.push(...facets));
+  return allFacets;
+};
+
 const FilterList = ({
   index,
   queryBuilderId,
@@ -29,7 +42,7 @@ const FilterList = ({
   filterInfo,
   filterMapper,
 }: OwnProps) => {
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState<boolean | undefined>(isAllFacetOpen(filterInfo));
 
   return (
     <>
@@ -65,6 +78,7 @@ const FilterList = ({
                   filterKey={facet}
                   extendedMappingResults={extendedMappingResults}
                   filtersOpen={filtersOpen}
+                  defaultOpen={filterInfo.defaultOpenFacets?.includes(facet) ? true : undefined}
                   filterMapper={filterMapper}
                 />
               ) : (

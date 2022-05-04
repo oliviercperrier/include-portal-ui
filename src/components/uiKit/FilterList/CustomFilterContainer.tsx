@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilterContainer from '@ferlab/ui/core/components/filters/FilterContainer';
 import { updateActiveQueryFilters } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { IFilter, IFilterGroup } from '@ferlab/ui/core/components/filters/types';
@@ -9,14 +9,16 @@ import CustomFilterSelector from './CustomFilterSelector';
 import { getFiltersDictionary } from 'utils/translation';
 import { TCustomFilterMapper } from '.';
 import { getSelectedFilters } from '@ferlab/ui/core/data/sqon/utils';
+import { isUndefined } from 'lodash';
 
 type OwnProps = {
   classname: string;
   index: string;
   queryBuilderId: string;
   filterKey: string;
+  defaultOpen?: boolean;
   extendedMappingResults: ExtendedMappingResults;
-  filtersOpen: boolean;
+  filtersOpen?: boolean;
   filterMapper?: TCustomFilterMapper;
 };
 
@@ -26,14 +28,23 @@ const CustomFilterContainer = ({
   queryBuilderId,
   filterKey,
   filtersOpen,
+  defaultOpen,
   extendedMappingResults,
   filterMapper,
 }: OwnProps) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [results, setResults] = useState<GqlResults<any>>();
   const found = (extendedMappingResults?.data || []).find(
     (f: ExtendedMapping) => f.field === underscoreToDot(filterKey),
   );
+
+  useEffect(() => {
+    if (!isUndefined(filtersOpen) && isOpen !== filtersOpen) {
+      setIsOpen(filtersOpen);
+    }
+    // eslint-disable-next-line
+  }, [filtersOpen]);
 
   const onChange = (fg: IFilterGroup, f: IFilter[]) => {
     updateActiveQueryFilters({
@@ -56,10 +67,10 @@ const CustomFilterContainer = ({
     : [];
 
   return (
-    <div className={classname} key={`${filterKey}_${filtersOpen}`}>
+    <div className={classname} key={filterKey}>
       <FilterContainer
         maxShowing={5}
-        isOpen={filtersOpen}
+        isOpen={isOpen}
         filterGroup={filterGroup}
         filters={filters}
         onChange={() => {}}

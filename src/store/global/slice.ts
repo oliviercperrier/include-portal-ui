@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { initialState } from 'store/global/types';
+import { initialState, MessageArgsPropsCustom } from 'store/global/types';
 import { LANG } from 'common/constants';
 import intl from 'react-intl-universal';
 import locales from 'locales';
 import { ArgsProps as NotificationArgsProps } from 'antd/lib/notification';
-import { ArgsProps as MessageArgsProps } from 'antd/lib/message';
 import { fetchStats } from './thunks';
 
 export const GlobalState: initialState = {
@@ -32,7 +31,7 @@ const globalSlice = createSlice({
       };
     },
 
-    displayMessage: (state, action: PayloadAction<MessageArgsProps>) => ({
+    displayMessage: (state, action: PayloadAction<MessageArgsPropsCustom>) => ({
       ...state,
       message: action.payload,
     }),

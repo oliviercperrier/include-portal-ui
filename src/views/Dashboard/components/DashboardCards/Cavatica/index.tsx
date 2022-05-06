@@ -13,7 +13,7 @@ import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { useDispatch } from 'react-redux';
 import CreateProjectModal from './CreateProjectModal';
 import { TCavaticaProjectWithMembers } from 'store/fenceCavatica/types';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { connectToFence, disconnectFromFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
 import { useFenceCavatica } from 'store/fenceCavatica';

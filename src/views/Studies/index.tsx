@@ -12,7 +12,7 @@ import { IStudyEntity } from 'graphql/studies/models';
 import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/utils';
 import { INDEXES } from 'graphql/constants';
 import { CheckOutlined } from '@ant-design/icons';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { addQuery } from '@ferlab/ui/core/components/QueryBuilder/utils/useQueryBuilderState';
 import { DATA_EXPLORATION_QB_ID } from 'views/DataExploration/utils/constant';
 

@@ -10,7 +10,7 @@ import { TUserSavedFilter } from 'services/api/savedFilter/models';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
 
 import styles from './index.module.scss';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 
 const { Text } = Typography;
 

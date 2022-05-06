@@ -13,7 +13,7 @@ import { FENCE_NAMES } from 'common/fenceTypes';
 import { useDispatch } from 'react-redux';
 import { TFenceStudy } from 'store/fenceStudies/types';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { useFenceStudies } from 'store/fenceStudies';
 import { useEffect } from 'react';
 import { fetchAllFenceStudies } from 'store/fenceStudies/thunks';

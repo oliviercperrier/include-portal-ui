@@ -9,7 +9,7 @@ import { ReactElement } from 'react';
 import { useSavedSet } from 'store/savedSet';
 import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { ExperimentOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons';
 
 import styles from './index.module.scss';

@@ -1,5 +1,5 @@
 import { Typography, Result } from 'antd';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import intl from 'react-intl-universal';
 
 interface OwnProps {

@@ -13,7 +13,7 @@ import {
 } from 'views/DataExploration/utils/constant';
 import { IQueryConfig, TQueryConfigCb } from 'common/searchPageTypes';
 import { SEX, TABLE_EMPTY_PLACE_HOLDER } from 'common/constants';
-import ExpandableCell from 'components/uiKit/table/ExpendableCell';
+import ExpandableCell from '@ferlab/ui/core/components/tables/ExpandableCell';
 import {
   extractMondoTitleAndCode,
   extractPhenotypeTitleAndCode,
@@ -34,7 +34,7 @@ import { generateQuery, generateValueFilter } from '@ferlab/ui/core/data/sqon/ut
 import { INDEXES } from 'graphql/constants';
 import { fetchReport, fetchTsvReport } from 'store/report/thunks';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { generateSelectionSqon } from 'views/DataExploration/utils/selectionSqon';
 import intl from 'react-intl-universal';
 import { capitalize } from 'lodash';
@@ -172,7 +172,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
       return (
         <ExpandableCell
-          nbToShow={1}
+          nOfElementsWhenCollapsed={1}
           dataSource={sourceTexts}
           renderItem={(sourceText, index): React.ReactNode => <div key={index}>{sourceText}</div>}
         />
@@ -193,7 +193,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
       return (
         <ExpandableCell
-          nbToShow={1}
+          nOfElementsWhenCollapsed={1}
           dataSource={mondoNames}
           renderItem={(mondo_id, index): React.ReactNode => {
             const mondoInfo = extractMondoTitleAndCode(mondo_id);
@@ -232,7 +232,7 @@ const defaultColumns: ProColumnType<any>[] = [
 
       return (
         <ExpandableCell
-          nbToShow={1}
+          nOfElementsWhenCollapsed={1}
           dataSource={phenotypeNames}
           renderItem={(hpo_id_phenotype, index): React.ReactNode => {
             const phenotypeInfo = extractPhenotypeTitleAndCode(hpo_id_phenotype);

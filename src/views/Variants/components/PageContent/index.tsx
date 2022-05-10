@@ -113,11 +113,11 @@ const PageContent = ({ variantMapping, tabId = TAB_IDS.SUMMARY }: OwnProps) => {
         total={variantResults.total}
         dictionary={getQueryBuilderDictionary(facetTransResolver)}
         getResolvedQueryForCount={() => ({ op: 'and', content: [] })}
-        fetchQueryCount={() => {
-          return new Promise((resolve, reject) => {
+        fetchQueryCount={() =>
+          new Promise((resolve, reject) => {
             resolve(1);
-          });
-        }}
+          })
+        }
       />
       <Tabs
         type="card"

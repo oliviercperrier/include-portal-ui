@@ -32,6 +32,7 @@ import FileSetSearch from './components/FileSetSearch';
 import BiospecimenSetSearch from './components/BiospecimenSetSearch';
 
 import styles from './index.module.scss';
+import UploadIds from 'components/uiKit/UploadIds';
 
 interface OwnProps {
   tab?: string;
@@ -50,6 +51,19 @@ export const filterGroups: {
     customSearches: [
       <ParticipantSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <ParticipantSetSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <UploadIds
+        fetchMatch={(ids) =>
+          new Promise<any>((resolve, reject) => {
+            resolve(
+              ids.map((id) => ({
+                id,
+                id1: id,
+                id2: id,
+              })),
+            );
+          })
+        }
+      />,
     ],
     groups: [
       {

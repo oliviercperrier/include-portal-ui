@@ -102,11 +102,15 @@ const Header = () => {
             key="user-menu"
             trigger={['click']}
             overlay={
-              <Menu>
-                <Menu.Item key="logout" onClick={() => dispatch(userActions.cleanLogout())}>
-                  {intl.get('layout.user.menu.logout')}
-                </Menu.Item>
-              </Menu>
+              <Menu
+                items={[
+                  {
+                    key: 'logout',
+                    label: intl.get('layout.user.menu.logout'),
+                    onClick: () => dispatch(userActions.cleanLogout()),
+                  },
+                ]}
+              />
             }
           >
             <a className={style.userMenuTrigger} onClick={(e) => e.preventDefault()} href="">

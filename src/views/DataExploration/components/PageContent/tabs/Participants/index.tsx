@@ -354,10 +354,17 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
           }),
         )
       }
-    >
-      <Menu.Item key={ReportType.CLINICAL_DATA}>Selected participants</Menu.Item>
-      <Menu.Item key={ReportType.CLINICAL_DATA_FAM}>Selected participants & family</Menu.Item>
-    </Menu>
+      items={[
+        {
+          key: ReportType.CLINICAL_DATA,
+          label: 'Selected participants',
+        },
+        {
+          key: ReportType.CLINICAL_DATA_FAM,
+          label: 'Selected participants & familys',
+        },
+      ]}
+    />
   );
 
   return (

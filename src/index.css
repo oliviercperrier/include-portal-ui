@@ -12,3 +12,7 @@ body {
 #appContainer {
   height: 100vh;
 }
+
+[ant-click-animating-without-extra-node='true']::after{
+  display:none;
+}

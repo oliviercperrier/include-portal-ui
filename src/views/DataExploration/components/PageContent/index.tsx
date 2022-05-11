@@ -260,6 +260,7 @@ const PageContent = ({
       />
       <Tabs
         type="card"
+        className='navNoMarginBtm'
         activeKey={tabId || TAB_IDS.SUMMARY}
         onChange={(key) => {
           if (!history.location.pathname.includes(key)) {

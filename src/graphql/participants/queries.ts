@@ -10,6 +10,7 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             id
             down_syndrome_diagnosis
             participant_id
+            external_id
             study_id
             study_external_id
             down_syndrome_status
@@ -65,6 +66,22 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
             }
           }
         }
+      }
+    }
+  }
+`;
+
+export const MATCH_PARTICIPANT_QUERY = gql`
+  query fetchMatchParticipant($sqon: JSON) {
+    participant {
+      hits(filters: $sqon) {
+        edges {
+          node {
+            participant_id
+            study_id
+          }
+        }
+        total
       }
     }
   }

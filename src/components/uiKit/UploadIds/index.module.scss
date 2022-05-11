@@ -1,48 +1,7 @@
-@import 'colors';
-
 .fuiUploadIdsButton {
   width: 100%;
 }
 
 span[class^='ProLabel_title'] {
   font-weight: 600;
-}
-
-.fuiUploadIdsModalWrapper {
-  .space {
-    width: 100%;
-  }
-
-  .fuiUploadIdsUpload {
-    :global(.ant-upload-list) {
-      margin-top: 8px;
-    }
-
-    .fuiUploadIdsListItem {
-      color: $blue-8;
-
-      .paperClipIcon {
-        font-size: 18px;
-        display: flex;
-      }
-    }
-  }
-
-  .fuiUploadIdsMatchUnmatch {
-    margin-top: 32px;
-  }
-
-  .fuiUploadIdsCollapsePanel {
-    :global(.ant-collapse-content-box) {
-      padding-top: 5px !important;
-    }
-  }
-
-  .fuiUploadIdsResultsTable {
-    margin-top: 8px;
-  }
-
-  .fuiUploadIdsTableCell {
-      width: 50%;
-  }
 }

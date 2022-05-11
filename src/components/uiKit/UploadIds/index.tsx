@@ -1,40 +1,91 @@
-import { PaperClipOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Space, Table, Tabs, Upload } from 'antd';
-import { useEffect, useState } from 'react';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, PopoverProps } from 'antd';
+import { ReactNode, useEffect, useState } from 'react';
 import cx from 'classnames';
-import ProLabel from '@ferlab/ui/core/components/ProLabel';
 import useDebounce from 'components/utils/useDebounce';
-import Collapse, { CollapsePanel } from '@ferlab/ui/core/components/Collapse';
+import { difference } from 'lodash';
+import UploadModal from './UploadModal';
 
 import styles from './index.module.scss';
-import { isEmpty } from 'lodash';
 
-export interface UploadIdsProps<T> {
-  className?: string;
-  fetchMatch: (ids: string[]) => Promise<T[]>;
+export interface MatchTableItem {
+  submittedId: string;
+  matchField: string;
+  mappedTo: string;
 }
 
-const UploadIds = <T extends object = any>({ className = '', fetchMatch }: UploadIdsProps<T>) => {
+export interface UnmatchTableItem {
+  submittedId: string;
+}
+
+export interface UploadIdDictionary {
+  modalTitle: string;
+  collapseTitle?: (matchCount: number, unmatchCount: number) => string;
+  matchTabTitle?: (matchCount: number) => string;
+  unmatchTabTitle?: (unmatchCount: number) => string;
+  submittedColTitle: string;
+  modalOkText?: ReactNode;
+  modalCancelText?: ReactNode;
+  modalUploadBtnText?: string;
+  inputLabel?: ReactNode;
+  mappedTo?: string;
+  uploadBtnText: string;
+  matchTable: {
+    idColTitle: string;
+    matchFieldColTitle: string;
+    mappedToFieldColTitle: string;
+  };
+}
+
+export interface UploadIdsProps {
+  className?: string;
+  fetchMatch: (ids: string[]) => Promise<MatchTableItem[]>;
+  popoverProps?: PopoverProps;
+  dictionary: UploadIdDictionary;
+  placeHolder: string;
+  onUpload: (matchIds: string[]) => void;
+  modalWidth?: number;
+}
+
+const UploadIds = ({
+  className = '',
+  fetchMatch,
+  popoverProps,
+  dictionary,
+  placeHolder,
+  onUpload,
+  modalWidth,
+}: UploadIdsProps) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState('');
-  const [match, setMatch] = useState<T[]>([]);
-  const [unmatch, setUnmatch] = useState<{ id: string }[]>([]);
+  const [match, setMatch] = useState<MatchTableItem[] | undefined>(undefined);
+  const [unmatch, setUnmatch] = useState<UnmatchTableItem[] | undefined>(undefined);
   const debouncedValue = useDebounce(value, 500);
 
   const getValueList = () => value.split(/[\n,\r ]/).filter((val) => !!val);
+  const getUnmatchList = (results: MatchTableItem[]) =>
+    difference(
+      getValueList(),
+      results.map((item) => item.submittedId),
+    ).map((id) => ({
+      submittedId: id,
+    }));
 
   useEffect(() => {
     if (debouncedValue) {
       (async () => {
+        setIsLoading(true);
         const results = await fetchMatch(getValueList());
         setMatch(results);
-        setUnmatch([{ id: 'lol' }]);
+        setUnmatch(getUnmatchList(results));
+        setIsLoading(false);
       })();
     } else {
       // clear match/unmatch
       setValue('');
-      setMatch([]);
-      setUnmatch([]);
+      setMatch(undefined);
+      setUnmatch(undefined);
     }
     // eslint-disable-next-line
   }, [debouncedValue]);
@@ -47,114 +98,22 @@ const UploadIds = <T extends object = any>({ className = '', fetchMatch }: Uploa
         icon={<UploadOutlined />}
         onClick={() => setModalVisible(true)}
       >
-        Upload a [ entity ] list
+        {dictionary.uploadBtnText}
       </Button>
-      <Modal
+      <UploadModal
+        width={modalWidth}
         visible={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        width={945}
-        title="Upload [Entity] List"
-        okText="Upload"
-        wrapClassName={styles.fuiUploadIdsModalWrapper}
-        destroyOnClose
-      >
-        <Space direction="vertical" className={styles.space}>
-          <ProLabel
-            title="Copy-paste a list of indentifiers or upload a file"
-            popoverProps={{
-              title: 'Allo',
-              content: 'Bonjour',
-            }}
-          />
-          <Space direction="vertical" size={12} className={styles.space}>
-            <Input.TextArea
-              rows={4}
-              placeholder="Ex: TP53, ENSG00000367, Q8WZ42"
-              onChange={(e) => setValue(e.target.value)}
-              value={value}
-            ></Input.TextArea>
-            <Upload
-              accept=".txt, .csv, .tsv"
-              multiple={false}
-              maxCount={1}
-              itemRender={(_, file) => (
-                <Space size={5} className={styles.fuiUploadIdsListItem}>
-                  <PaperClipOutlined className={styles.paperClipIcon} />
-                  {file.name}
-                </Space>
-              )}
-              className={styles.fuiUploadIdsUpload}
-              beforeUpload={async (file, fileList) => {
-                setValue(await file.text());
-                return false;
-              }}
-            >
-              <Button icon={<UploadOutlined />}>Upload a File</Button>
-            </Upload>
-          </Space>
-        </Space>
-        {isEmpty(match) && isEmpty(unmatch) ? null : (
-          <Collapse className={styles.fuiUploadIdsMatchUnmatch}>
-            <CollapsePanel
-              className={styles.fuiUploadIdsCollapsePanel}
-              key="match-unmatch-ids"
-              header="Summary Table (98 matched, 3 unmatched)"
-            >
-              <Tabs size="small" defaultActiveKey="matched">
-                <Tabs.TabPane key="matched" tab="Matched (98)">
-                  <Table
-                    bordered
-                    size="small"
-                    className={styles.fuiUploadIdsResultsTable}
-                    dataSource={match}
-                    columns={[
-                      {
-                        title: 'Submitted [Entity] Identifier',
-                        align: 'center',
-                        className: styles.fuiUploadIdsTableCell,
-                        children: [
-                          {
-                            title: 'title',
-                            dataIndex: 'id',
-                          },
-                        ],
-                      },
-                      {
-                        title: 'Mapped To',
-                        align: 'center',
-                        children: [
-                          {
-                            title: 'title',
-                            dataIndex: 'id1',
-                          },
-                          {
-                            title: 'title2',
-                            dataIndex: 'id2',
-                          },
-                        ],
-                      },
-                    ]}
-                  ></Table>
-                </Tabs.TabPane>
-                <Tabs.TabPane key="unmatched" tab="Unmatched (3)">
-                  <Table
-                    bordered
-                    size="small"
-                    dataSource={unmatch}
-                    className={styles.fuiUploadIdsResultsTable}
-                    columns={[
-                      {
-                        title: 'Submitted [Entity] Identifier',
-                        dataIndex: 'id',
-                      },
-                    ]}
-                  ></Table>
-                </Tabs.TabPane>
-              </Tabs>
-            </CollapsePanel>
-          </Collapse>
-        )}
-      </Modal>
+        setVisible={setModalVisible}
+        matchItems={match}
+        unmatchItems={unmatch}
+        dictionary={dictionary}
+        popoverProps={popoverProps}
+        placeHolder={placeHolder}
+        inputValue={value}
+        setInputValue={setValue}
+        onUpload={onUpload}
+        loading={isLoading}
+      />
     </>
   );
 };

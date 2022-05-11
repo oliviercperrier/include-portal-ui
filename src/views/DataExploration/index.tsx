@@ -33,6 +33,7 @@ import BiospecimenSetSearch from './components/BiospecimenSetSearch';
 
 import styles from './index.module.scss';
 import UploadIds from 'components/uiKit/UploadIds';
+import { ArrangerApi } from 'services/api/arranger';
 
 interface OwnProps {
   tab?: string;
@@ -52,15 +53,27 @@ export const filterGroups: {
       <ParticipantSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <ParticipantSetSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <UploadIds
+        placeHolder="e.g. PT_03Y3K025, HTP0001, 10214"
+        dictionary={{
+          modalTitle: 'Upload a Participant List',
+          submittedColTitle: 'Submitted Participant Identifier',
+          uploadBtnText: 'Upload Participant List',
+          matchTable: {
+            idColTitle: 'Participant id',
+            mappedToFieldColTitle: 'Mapped id',
+            matchFieldColTitle: 'Match id',
+          },
+        }}
+        onUpload={console.log}
         fetchMatch={(ids) =>
-          new Promise<any>((resolve, reject) => {
-            resolve(
-              ids.map((id) => ({
-                id,
-                id1: id,
-                id2: id,
-              })),
-            );
+          ArrangerApi.fetchMatchParticipant(ids).then(({ data }) => {
+            const participants = data?.data?.participant?.hits?.edges ?? [];
+
+            return participants.map(({ node }) => ({
+              submittedId: node.participant_id,
+              matchField: node.participant_id,
+              mappedTo: node.study_id,
+            }));
           })
         }
       />,

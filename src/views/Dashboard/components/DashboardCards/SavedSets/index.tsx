@@ -11,6 +11,7 @@ import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
 import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { ExperimentOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons';
+import cx from 'classnames';
 
 import styles from './index.module.scss';
 
@@ -72,7 +73,7 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
         />
       }
       content={
-        <Tabs className={styles.setTabs} defaultActiveKey="participants">
+        <Tabs className={cx(styles.setTabs, 'navNoMarginBtm')} defaultActiveKey="participants">
           <TabPane
             tab={
               <div>

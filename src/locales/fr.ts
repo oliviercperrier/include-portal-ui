@@ -619,7 +619,7 @@ const fr = {
     derived_sample_type: 'Derived Sample Type',
     ncit_id_tissue_type: 'Tissue Type (NCIT)',
     status: 'Availability',
-    age_at_biospecimen_collection: 'Age at Biospecimen Collection',
+    age_at_biospecimen_collection: 'Age at Biospec. Collection (days)',
     bio_repository: 'Biorepository',
     // File
     files: filesFacets,

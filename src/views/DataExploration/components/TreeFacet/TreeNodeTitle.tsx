@@ -9,19 +9,19 @@ interface OwnProps {
 }
 
 const TreeNodeTitle = (props: OwnProps) => (
-  <Row justify="space-between" align="middle">
-    <Col>{props.title}</Col>
-    <Col style={{ width: 100 }}>
+  <div className={styles.treeNodeTitle}>
+    <div>{props.title}</div>
+    <div style={{ minWidth: 100 }}>
       <Row>
-        <Col span={12} className={styles.phenotypeTreeCountTag}>
+        <Col md={12} className={styles.phenotypeTreeCountTag}>
           <Tag>{props.exactTagCount}</Tag>
         </Col>
-        <Col span={12} className={styles.phenotypeTreeCountTag}>
+        <Col md={12} className={styles.phenotypeTreeCountTag}>
           <Tag>{props.totalCount}</Tag>
         </Col>
       </Row>
-    </Col>
-  </Row>
+    </div>
+  </div>
 );
 
 export default TreeNodeTitle;

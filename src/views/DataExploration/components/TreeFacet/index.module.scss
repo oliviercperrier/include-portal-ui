@@ -71,3 +71,9 @@
     width: 90% !important;
   }
 }
+
+.treeNodeTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}

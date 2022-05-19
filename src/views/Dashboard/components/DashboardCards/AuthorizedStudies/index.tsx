@@ -13,10 +13,10 @@ import { FENCE_NAMES } from 'common/fenceTypes';
 import { useDispatch } from 'react-redux';
 import { TFenceStudy } from 'store/fenceStudies/types';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
-import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { useFenceStudies } from 'store/fenceStudies';
 import { useEffect } from 'react';
 import { fetchAllFenceStudies } from 'store/fenceStudies/thunks';
+import PopoverContentLink from 'components/uiKit/PopoverContentLink';
 
 import styles from './index.module.scss';
 
@@ -45,18 +45,16 @@ const AuthorizedStudies = ({ id, className = '' }: DashboardCardProps) => {
           })}
           infoPopover={{
             title: intl.get('screen.dashboard.cards.authorizedStudies.infoPopover.title'),
-            overlayClassName: styles.authorizedStudiesInfoPopover,
             content: (
               <Space direction="vertical" className={styles.content} size={0}>
                 <Text>
                   {intl.getHTML('screen.dashboard.cards.authorizedStudies.infoPopover.content')}{' '}
-                  <ExternalLink href="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?login=&page=login">
-                    <Button type="link" size="small" className={styles.applyForAccessBtn}>
-                      {intl.get(
-                        'screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess',
-                      )}
-                    </Button>
-                  </ExternalLink>
+                  <PopoverContentLink
+                    externalHref="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?login=&page=login"
+                    title={intl.get(
+                      'screen.dashboard.cards.authorizedStudies.infoPopover.applyingForDataAccess',
+                    )}
+                  />
                   .
                 </Text>
               </Space>

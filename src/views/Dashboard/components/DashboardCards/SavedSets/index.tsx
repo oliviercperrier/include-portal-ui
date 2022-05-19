@@ -12,6 +12,8 @@ import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolde
 import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { ExperimentOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons';
 import cx from 'classnames';
+import { STATIC_ROUTES } from 'utils/routes';
+import PopoverContentLink from 'components/uiKit/PopoverContentLink';
 
 import styles from './index.module.scss';
 
@@ -70,6 +72,22 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
           key={key}
           title={intl.get('screen.dashboard.cards.savedSets.title')}
           withHandle
+          infoPopover={{
+            title: 'Managing saved sets',
+            content: (
+              <Text>
+                A saved set is a set of one or more entity IDs that can be saved and revisited for
+                later use without having to manually reselect entity IDs. You can create
+                Participant, Biospecimen, and File saved sets at the top of the table of results in
+                the{' '}
+                <PopoverContentLink
+                  to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
+                  title="Data Exploration page"
+                />
+                .
+              </Text>
+            ),
+          }}
         />
       }
       content={

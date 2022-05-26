@@ -12,7 +12,6 @@ import { intersection } from 'lodash';
 import { useEffect, useState } from 'react';
 import { SetType } from 'services/api/savedSet/models';
 import { getSetFieldId, useSavedSet } from 'store/savedSet';
-import { getValueNameMapByType } from 'utils/sets';
 import SearchLabel from '../SearchLabel';
 
 import styles from './index.module.scss';
@@ -102,7 +101,6 @@ const SetSearch = ({
             value: values.map((value) => `${SET_ID_PREFIX}${value}`),
             index,
             merge_strategy: MERGE_VALUES_STRATEGIES.OVERRIDE_VALUES,
-            valueNameMapping: getValueNameMapByType(savedSets, type),
           });
         }}
         notFoundContent={<Empty size="mini" showImage={false} description={emptyDescription} />}

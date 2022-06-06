@@ -3,7 +3,7 @@ import cx from "classnames";
 import { Link } from "react-router-dom";
 import { Button } from "antd";
 
-import style from "./index.module.scss";
+import style from "components/Layout/Header/HeaderLink/index.module.scss";
 
 interface OwnProps {
   className?: string;

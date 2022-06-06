@@ -20,7 +20,7 @@ import { userActions } from 'store/user/slice';
 import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import Gravatar from '@ferlab/ui/core/components/Gravatar';
 
-import style from './index.module.scss';
+import style from 'components/Layout/Header/index.module.scss';
 
 const iconSize = { width: 14, height: 14 };
 const FT_FLAG_KEY = 'SITE_WIDE_BANNER';

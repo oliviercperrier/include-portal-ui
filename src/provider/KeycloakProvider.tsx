@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import {
   AuthClientError,
   AuthClientEvent,
-} from "@react-keycloak/core/lib/types";
+} from "@react-keycloak/core/"
 import EnvVariables from "helpers/EnvVariables";
 import { ReactKeycloakProvider as KeycloakProvider } from "@react-keycloak/web";
 import keycloak from "auth/keycloak-api/keycloak";

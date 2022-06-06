@@ -1,97 +1,81 @@
 {
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:jest/recommended",
-    "prettier",
-    "prettier/react",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
-  ],
-  "ignorePatterns": [".eslintrc.json"],
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "jest",
-    "simple-import-sort",
-    "prefer-arrow",
-    "sort-destructure-keys",
-    "sort-keys-fix"
-  ],
   "env": {
     "browser": true,
     "es6": true,
     "jest": true
   },
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
+  "plugins": [ "@typescript-eslint", "jest", "react", "react-hooks", "simple-import-sort" ],
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 2018,
+    "ecmaVersion": 6,
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "ecmaFeatures": {
+      "modules": true,
+      "jsx": true
+    }
+  },
+  "settings": {
+    "import/extensions": [".js",".jsx",".ts",".tsx"],
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts",".tsx"]
+    },
+    "react": {
+      "version": "detect"
+    }
   },
   "rules": {
-    "indent": ["error", 2],
-    "linebreak-style": "off",
-    "simple-import-sort/imports": [
-      "error",
-      {
-        "groups": [
-          ["^\\u0000"],
-          ["^react", "^@?\\w"],
-          [
-            "^(@|@company|@ui|components|utils|config|vendored-lib|layouts|pages|providers|routes|assets|locales|services|store|style|types)(/.*|$)"
-          ],
-          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
-          ["^.+\\.s?css$"]
-        ]
-      }
-    ],
-    "simple-import-sort/exports": "error",
-    "sort-keys-fix/sort-keys-fix": [
-      "error",
-      "asc",
-      {
-        "caseSensitive": false,
-        "natural": true
-      }
-    ],
-    "sort-destructure-keys/sort-destructure-keys": [
-      "error",
-      {
-        "caseSensitive": false
-      }
-    ],
-    "sort-vars": "error",
-    "no-nested-ternary": 0,
-    "prefer-arrow/prefer-arrow-functions": [
-      "error",
-      {
-        "disallowPrototype": true,
-        "singleReturnOnly": true,
-        "classPropertiesAllowed": false
-      }
-    ],
     "arrow-body-style": ["error", "as-needed"],
-    "react/jsx-sort-default-props": "error",
-    "react/jsx-sort-props": "error",
-    "react/jsx-props-no-spreading": "off",
-
-    "prefer-destructuring": [
+    "complexity": ["warn", 16],
+    "template-curly-spacing": "off",
+    "indent": "off",
+    "default-case": 0,
+    "max-len": [
       "error",
       {
-        "array": false,
-        "object": true
+        "code": 130,
+        "ignoreComments": true
       }
     ],
-    "no-console": "warn",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-non-null-assertion": "off"
-  }
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "prefer-spread": "error",
+    "prettier/prettier": ["error"],
+    "react/prop-types": 1,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/react-in-jsx-scope": "off",
+    "simple-import-sort/imports": ["error", {
+      "groups": [
+        // Side effect imports.
+        ["^\\u0000"],
+        // Packages. `react` related packages come first.
+        ["^react", "^@?\\w"],
+        // Internal packages.
+        ["^(@|assets|charkit|common|components|utils|hooks|icons|pages|services|assets|shapes|stateProviders|store|style|theme|ui|uikit)(/.*|$)"],
+        // Parent imports. Put `..` last.
+        ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+        // Other relative imports. Put same-folder imports and `.` last.
+        ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+        // Style imports.
+        ["^.+\\.s?css$"]
+      ]
+    }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.tsx"],
+      "rules": {
+        "react/prop-types": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["*.scss", "*.css", "*.less"]
 }

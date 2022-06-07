@@ -2,11 +2,12 @@ import TableHeader from '@ferlab/ui/core/components/ProTable/Header';
 import GridCard from '@ferlab/ui/core/view/v2/GridCard';
 import { Space, Typography, List } from 'antd';
 import { MAIN_SCROLL_WRAPPER_ID } from 'common/constants';
-import Gravatar from 'components/uiKit/Gravatar';
 import { useEffect, useState } from 'react';
 import { UserApi } from 'services/api/user';
 import { TUser } from 'services/api/user/models';
 import { scrollToTop } from 'utils/helper';
+import Gravatar from '@ferlab/ui/core/components/Gravatar';
+import { DEFAULT_GRAVATAR_PLACEHOLDER } from 'common/constants';
 
 import styles from './index.module.scss';
 
@@ -78,6 +79,7 @@ const CommunityPage = () => {
                       <Gravatar
                         className={styles.userGravatar}
                         circle
+                        placeholder={DEFAULT_GRAVATAR_PLACEHOLDER}
                         email={item.email || ''}
                         size={40}
                       />

@@ -4,7 +4,6 @@ import IncludeIconBeta from 'components/Icons/IncludeIconBeta';
 import { ReadOutlined, HomeOutlined, FileSearchOutlined, TeamOutlined } from '@ant-design/icons';
 import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 import { DownOutlined } from '@ant-design/icons';
-import Gravatar from 'components/uiKit/Gravatar';
 import HeaderLink from 'components/Layout/Header/HeaderLink';
 import { STATIC_ROUTES } from 'utils/routes';
 import { useUser } from 'store/user';
@@ -14,12 +13,14 @@ import NotificationBanner from 'components/featureToggle/NotificationBanner';
 import { AlterTypes } from 'common/types';
 import { useKeycloak } from '@react-keycloak/web';
 import { IncludeKeycloakTokenParsed } from 'common/tokenTypes';
+import { DEFAULT_GRAVATAR_PLACEHOLDER } from 'common/constants';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { userActions } from 'store/user/slice';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
+import Gravatar from '@ferlab/ui/core/components/Gravatar';
 
-import style from './index.module.scss';
+import style from 'components/Layout/Header/index.module.scss';
 
 const iconSize = { width: 14, height: 14 };
 const FT_FLAG_KEY = 'SITE_WIDE_BANNER';
@@ -101,17 +102,22 @@ const Header = () => {
             key="user-menu"
             trigger={['click']}
             overlay={
-              <Menu>
-                <Menu.Item key="logout" onClick={() => dispatch(userActions.cleanLogout())}>
-                  {intl.get('layout.user.menu.logout')}
-                </Menu.Item>
-              </Menu>
+              <Menu
+                items={[
+                  {
+                    key: 'logout',
+                    label: intl.get('layout.user.menu.logout'),
+                    onClick: () => dispatch(userActions.cleanLogout()),
+                  },
+                ]}
+              />
             }
           >
             <a className={style.userMenuTrigger} onClick={(e) => e.preventDefault()} href="">
               <Gravatar
-                className={style.userGravatar}
                 circle
+                placeholder={DEFAULT_GRAVATAR_PLACEHOLDER}
+                className={style.userGravatar}
                 email={tokenParsed.email || tokenParsed.identity_provider_identity}
               />
               <span className={style.userName}>{userInfo?.first_name}</span>

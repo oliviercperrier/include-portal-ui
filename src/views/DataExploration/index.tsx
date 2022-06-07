@@ -16,7 +16,7 @@ import { FilterInfo } from 'components/uiKit/FilterList/types';
 import { GraphqlBackend } from 'provider/types';
 import useGetExtendedMappings from 'hooks/graphql/useGetExtendedMappings';
 import { INDEXES } from 'graphql/constants';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import {
   mapFilterForBiospecimen,
   mapFilterForFiles,

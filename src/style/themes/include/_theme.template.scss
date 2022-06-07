@@ -1,5 +1,5 @@
 @import "~@ferlab/style/themes/default/theme.template";
-@import "colors";
+@import "src/style/themes/include/colors";
 
 $font-weight-semibold: 500;
 $font-weight-bold: 500;
@@ -87,3 +87,9 @@ $empty-content-color: $gray-7;
 $collapse-light-background-color: white;
 $collapse-shade-background-color: $gray-3;
 $collapse-header-border-color: $gray-4;
+
+// ProLabel
+$prolabel-required-mark-color: $red-8;
+
+// UploadIds
+$file-upload-item-color: $blue-8;

@@ -1,4 +1,4 @@
-@import "colors";
+@import "src/style/themes/include/colors";
 
 .cavaticaWrapper {
   height: 100%;
@@ -29,15 +29,6 @@
 
     [ant-click-animating-without-extra-node="true"]::after {
       display: none;
-    }
-  }
-}
-
-.cavaticaInfoPopover {
-  .readMoreBtn {
-    padding: 0;
-    &, &:hover {
-      color: $gray-8
     }
   }
 }

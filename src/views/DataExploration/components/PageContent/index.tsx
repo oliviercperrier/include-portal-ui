@@ -55,6 +55,7 @@ import { ArrangerApi } from 'services/api/arranger';
 import { GET_PARTICIPANT_COUNT } from 'graphql/participants/queries';
 import { IParticipantResultTree } from 'graphql/participants/models';
 import { ISyntheticSqon } from '@ferlab/ui/core/data/sqon/types';
+import { useSavedSet } from 'store/savedSet';
 
 import styles from './index.module.scss';
 
@@ -87,6 +88,7 @@ const PageContent = ({
 }: OwnProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { savedSets } = useSavedSet();
   const { queryList, activeQuery, selectedSavedFilter, savedFilterList } =
     useQBStateWithSavedFilters(DATA_EXPLORATION_QB_ID, DATA_EPLORATION_FILTER_TAG);
 
@@ -204,7 +206,7 @@ const PageContent = ({
             enableDuplicate: true,
             enableFavoriteFilter: false,
             enableShare: true,
-            enableUndoChanges: true
+            enableUndoChanges: true,
           },
           selectedSavedFilter: selectedSavedFilter,
           savedFilters: savedFilterList,
@@ -245,7 +247,7 @@ const PageContent = ({
         IconTotal={<UserOutlined size={18} />}
         currentQuery={isEmptySqon(activeQuery) ? {} : activeQuery}
         total={participantResults.total}
-        dictionary={getQueryBuilderDictionary(facetTransResolver)}
+        dictionary={getQueryBuilderDictionary(facetTransResolver, savedSets)}
         getResolvedQueryForCount={(sqon) => resolveSqonForParticipants(queryList, sqon)}
         fetchQueryCount={async (sqon) => {
           const { data } = await ArrangerApi.graphqlRequest<{ data: IParticipantResultTree }>({
@@ -260,6 +262,7 @@ const PageContent = ({
       />
       <Tabs
         type="card"
+        className="navNoMarginBtm"
         activeKey={tabId || TAB_IDS.SUMMARY}
         onChange={(key) => {
           if (!history.location.pathname.includes(key)) {

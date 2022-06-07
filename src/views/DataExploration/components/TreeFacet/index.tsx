@@ -107,8 +107,8 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
       updateActiveQueryField({
         queryBuilderId: DATA_EXPLORATION_QB_ID,
         field: `${field}.name`,
-        value: []
-      })
+        value: [],
+      });
     } else {
       updateActiveQueryField({
         queryBuilderId: DATA_EXPLORATION_QB_ID,
@@ -184,11 +184,23 @@ const TreeFacet = ({ type, field, titleFormatter }: Props) => {
           <Dropdown.Button
             type="primary"
             overlay={
-              <Menu onClick={(e) => handleOnApply(e.key as TermOperators)}>
-                <Menu.Item key={TermOperators.in}>Any of</Menu.Item>
-                <Menu.Item key={TermOperators.all}>All of</Menu.Item>
-                <Menu.Item key={TermOperators['some-not-in']}>None of</Menu.Item>
-              </Menu>
+              <Menu
+                onClick={(e) => handleOnApply(e.key as TermOperators)}
+                items={[
+                  {
+                    key: TermOperators.in,
+                    label: 'Any of',
+                  },
+                  {
+                    key: TermOperators.in,
+                    label: 'Any of',
+                  },
+                  {
+                    key: TermOperators['some-not-in'],
+                    label: 'None of',
+                  },
+                ]}
+              />
             }
             style={{ marginLeft: '8px' }}
             onClick={() => handleOnApply(TermOperators.in)}

@@ -8,7 +8,7 @@ import PageContent from './components/PageContent';
 import { GraphqlBackend } from 'provider/types';
 import ApolloProvider from 'provider/ApolloProvider';
 
-import styles from './index.module.scss';
+import styles from 'views/Variants/index.module.scss';
 
 interface OwnProps {
   tab?: string;

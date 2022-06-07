@@ -1,4 +1,4 @@
-@import "colors";
+@import "src/style/themes/include/colors";
 
 .authorizedWrapper {
   height: 100%;
@@ -25,15 +25,6 @@
     .notice {
       font-size: 12px;
       line-height: 10px;
-    }
-  }
-}
-
-.authorizedStudiesInfoPopover {
-  .applyForAccessBtn {
-    padding: 0;
-    &, &:hover {
-      color: $gray-8
     }
   }
 }

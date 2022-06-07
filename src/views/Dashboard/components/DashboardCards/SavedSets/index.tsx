@@ -9,10 +9,14 @@ import { ReactElement } from 'react';
 import { useSavedSet } from 'store/savedSet';
 import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 import CardErrorPlaceholder from 'views/Dashboard/components/CardErrorPlaceHolder';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import { ExperimentOutlined, FileTextOutlined, UserOutlined } from '@ant-design/icons';
+import cx from 'classnames';
+import { STATIC_ROUTES } from 'utils/routes';
+import PopoverContentLink from 'components/uiKit/PopoverContentLink';
 
 import styles from './index.module.scss';
+import {SUPPORT_EMAIL} from "store/report/thunks";
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -35,7 +39,7 @@ const getItemList = (
             subTitle={
               <Text>
                 Please refresh and try again or{' '}
-                <ExternalLink href="mailto:support@includedrc.org">
+                <ExternalLink href={`mailto:${SUPPORT_EMAIL}`}>
                   <Text>contact our support</Text>
                 </ExternalLink>
                 .
@@ -69,10 +73,26 @@ const SavedSets = ({ id, key, className = '' }: DashboardCardProps) => {
           key={key}
           title={intl.get('screen.dashboard.cards.savedSets.title')}
           withHandle
+          infoPopover={{
+            title: 'Managing saved sets',
+            content: (
+              <Text>
+                A saved set is a set of one or more entity IDs that can be saved and revisited for
+                later use without having to manually reselect entity IDs. You can create
+                Participant, Biospecimen, and File saved sets at the top of the table of results in
+                the{' '}
+                <PopoverContentLink
+                  to={STATIC_ROUTES.DATA_EXPLORATION_PARTICIPANTS}
+                  title="Data Exploration page"
+                />
+                .
+              </Text>
+            ),
+          }}
         />
       }
       content={
-        <Tabs className={styles.setTabs} defaultActiveKey="participants">
+        <Tabs className={cx(styles.setTabs, 'navNoMarginBtm')} defaultActiveKey="participants">
           <TabPane
             tab={
               <div>

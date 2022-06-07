@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { useGlobals } from 'store/global';
 import { fetchStats } from 'store/global/thunks';
 import { numberFormat } from '@ferlab/ui/core/utils/numberUtils';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import ExternalLinkIcon from 'components/Icons/ExternalLinkIcon';
 
 import styles from './index.module.scss';

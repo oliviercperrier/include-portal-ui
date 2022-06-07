@@ -1,4 +1,4 @@
-@import 'colors';
+@import 'src/style/themes/include/colors';
 
 .hpoTransfer {
   div[class$='transfer-list'] {
@@ -70,4 +70,10 @@
   .hpoTreeModal {
     width: 90% !important;
   }
+}
+
+.treeNodeTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }

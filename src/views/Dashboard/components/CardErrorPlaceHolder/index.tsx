@@ -1,6 +1,7 @@
 import { Typography, Result } from 'antd';
-import ExternalLink from 'components/uiKit/ExternalLink';
+import ExternalLink from '@ferlab/ui/core/components/ExternalLink';
 import intl from 'react-intl-universal';
+import {SUPPORT_EMAIL} from "store/report/thunks";
 
 interface OwnProps {
   title?: React.ReactNode;
@@ -17,7 +18,7 @@ const CardErrorPlaceholder = ({ title, subTitle }: OwnProps) => (
       subTitle || (
         <Text>
           {intl.get('screen.dashboard.cards.error.subtitle')}{' '}
-          <ExternalLink href="mailto:support@includedrc.org">
+          <ExternalLink href={`mailto:${SUPPORT_EMAIL}`}>
             <Text>{intl.get('screen.dashboard.cards.error.contactSupport')}</Text>
           </ExternalLink>
           .

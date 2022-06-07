@@ -89,9 +89,6 @@ const ListItem = ({ data, icon }: OwnProps) => {
                     field: getSetFieldId(data.setType),
                     value: [setValue],
                     index: data.setType,
-                    alternateName: {
-                      [setValue]: data.tag,
-                    },
                   }),
                 ],
               }),

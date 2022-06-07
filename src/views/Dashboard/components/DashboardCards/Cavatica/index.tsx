@@ -13,12 +13,12 @@ import { fenceCavaticaActions } from 'store/fenceCavatica/slice';
 import { useDispatch } from 'react-redux';
 import CreateProjectModal from './CreateProjectModal';
 import { TCavaticaProjectWithMembers } from 'store/fenceCavatica/types';
-import ExternalLink from 'components/uiKit/ExternalLink';
 import { connectToFence, disconnectFromFence } from 'store/fenceConnection/thunks';
 import { FENCE_NAMES } from 'common/fenceTypes';
 import { useFenceCavatica } from 'store/fenceCavatica';
 import { useEffect } from 'react';
 import { fetchAllProjects } from 'store/fenceCavatica/thunks';
+import PopoverContentLink from 'components/uiKit/PopoverContentLink';
 
 import styles from './index.module.scss';
 
@@ -44,16 +44,14 @@ const Cavatica = ({ id, className = '' }: DashboardCardProps) => {
             title={intl.get('screen.dashboard.cards.cavatica.title')}
             infoPopover={{
               title: intl.get('screen.dashboard.cards.cavatica.infoPopover.title'),
-              overlayClassName: styles.cavaticaInfoPopover,
               content: (
                 <Space direction="vertical" className={styles.content} size={0}>
                   <Text>
                     {intl.get('screen.dashboard.cards.cavatica.infoPopover.content')}{' '}
-                    <ExternalLink href="https://www.cavatica.org/">
-                      <Button type="link" size="small" className={styles.readMoreBtn}>
-                        {intl.get('screen.dashboard.cards.cavatica.infoPopover.readMore')}
-                      </Button>
-                    </ExternalLink>
+                    <PopoverContentLink
+                      externalHref="https://www.cavatica.org/"
+                      title={intl.get('screen.dashboard.cards.cavatica.infoPopover.readMore')}
+                    />
                   </Text>
                 </Space>
               ),

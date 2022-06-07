@@ -91,42 +91,58 @@ const menu = (
   isEditDisabled: boolean,
   type: string,
 ) => (
-  <Menu className={styles.saveSetOptionMenu} onClick={onClick}>
-    <Menu.Item
-      id="participant-count"
-      key="participant-count"
-      className={`${
-        exceedLimit(participantCount)
-          ? styles.saveSetOptionMenuInfoOver
-          : styles.saveSetOptionMenuInfo
-      }`}
-      disabled
-      icon={itemIcon(type)}
-    >
-      <span>
-        {participantCount} {type} selected
-      </span>
-      <Tooltip
-        arrowPointAtCenter
-        placement="topRight"
-        title={`Max. ${numberWithCommas(
-          ROW_SELECTION_LIMIT,
-        )} items at a time. The first 10,000 will be processed.`}
-      >
-        <InfoCircleOutlined className={styles.infoCircle} />
-      </Tooltip>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key={'create'} icon={<PlusOutlined />}>
-      Save as new set
-    </Menu.Item>
-    <Menu.Item key={'add_ids'} icon={<UsergroupAddOutlined />} disabled={isEditDisabled}>
-      Add to existing set
-    </Menu.Item>
-    <Menu.Item key={'remove_ids'} icon={<UsergroupDeleteOutlined />} disabled={isEditDisabled}>
-      Remove from existing set
-    </Menu.Item>
-  </Menu>
+  <Menu
+    className={styles.saveSetOptionMenu}
+    onClick={onClick}
+    items={[
+      {
+        key: 'participant-count',
+        className: `${
+          exceedLimit(participantCount)
+            ? styles.saveSetOptionMenuInfoOver
+            : styles.saveSetOptionMenuInfo
+        }`,
+        disabled: true,
+        icon: itemIcon(type),
+        label: (
+          <>
+            <span>
+              {participantCount} {type} selected
+            </span>
+            <Tooltip
+              arrowPointAtCenter
+              placement="topRight"
+              title={`Max. ${numberWithCommas(
+                ROW_SELECTION_LIMIT,
+              )} items at a time. The first 10,000 will be processed.`}
+            >
+              <InfoCircleOutlined className={styles.infoCircle} />
+            </Tooltip>
+          </>
+        ),
+      },
+      {
+        type: 'divider',
+      },
+      {
+        key: 'create',
+        icon: <PlusOutlined />,
+        label: 'Save as new set',
+      },
+      {
+        key: 'add_ids',
+        icon: <UsergroupAddOutlined />,
+        label: 'Add to existing set',
+        disabled: isEditDisabled,
+      },
+      {
+        key: 'remove_ids',
+        icon: <UsergroupDeleteOutlined />,
+        label: 'Remove from existing set',
+        disabled: isEditDisabled,
+      },
+    ]}
+  />
 );
 
 const getSetCount = (selected: string[], total: number, allSelected: boolean) => {
@@ -160,7 +176,7 @@ const SetsManagementDropdown = ({
     const m = modals[key];
     return setModal(m);
   };
-  
+
   return (
     <div id={`${type}-set-dropdown-container`}>
       {modal.showModalSave && sqon && (

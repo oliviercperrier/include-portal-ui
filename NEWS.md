@@ -8,7 +8,7 @@
 ### Technical / Other changes
 -->
 
-## 2022-05-31 include-portal-ui
+## 2022-05-31 include-portal-ui 1.3.0
 ### Features
 - [SJIP-257](https://d3b.atlassian.net/browse/SJIP-257) Feature (Dashboard): Added information icon and popover to Saved Filters and Saved Sets widget
 ## Technical / Other changes

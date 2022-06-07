@@ -16,6 +16,7 @@ import { STATIC_ROUTES } from 'utils/routes';
 import PopoverContentLink from 'components/uiKit/PopoverContentLink';
 
 import styles from './index.module.scss';
+import {SUPPORT_EMAIL} from "store/report/thunks";
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -38,7 +39,7 @@ const getItemList = (
             subTitle={
               <Text>
                 Please refresh and try again or{' '}
-                <ExternalLink href="mailto:support@includedrc.org">
+                <ExternalLink href={`mailto:${SUPPORT_EMAIL}`}>
                   <Text>contact our support</Text>
                 </ExternalLink>
                 .

@@ -16,6 +16,8 @@ import { ArrangerApi } from 'services/api/arranger';
 import { ArrangerColumnStateResults } from 'services/api/arranger/models';
 import { INDEXES } from 'graphql/constants';
 
+export const SUPPORT_EMAIL = 'support@includedcc.org';
+
 const showErrorReportNotif = (thunkApi: any) =>
   thunkApi.dispatch(
     globalActions.displayNotification({
@@ -26,7 +28,7 @@ const showErrorReportNotif = (thunkApi: any) =>
           {intl.get('api.report.error.message')}
           <a
             style={{ color: 'unset', textDecoration: 'underline' }}
-            href="mailto:support@includedrc.org"
+            href={`mailto:${SUPPORT_EMAIL}`}
           >
             {intl.get('api.report.error.support')}
           </a>

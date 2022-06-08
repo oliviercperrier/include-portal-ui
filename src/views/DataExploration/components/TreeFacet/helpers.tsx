@@ -59,8 +59,10 @@ export const searchInTree = (
   const cleanSearchText = searchText.replace(/[-/\\^$*+?.()|[\]{}]/g, '');
   const regex = new RegExp('\\b(\\w*' + cleanSearchText + '\\w*)\\b', 'gi');
   const text = treeNode.title;
+  const key = treeNode.key;
   const result = text.search(regex) >= 0;
-  let match = cleanSearchText === '' || result;
+  const resultKey = key.search(regex) >= 0;
+  let match = cleanSearchText === '' || result || resultKey;
 
   if (treeNode.children.length > 0) {
     let matchChild = cleanSearchText === '' || false;
@@ -76,7 +78,7 @@ export const searchInTree = (
   if (!treeNode.hidden) {
     hitTreeNodes.push(treeNode.key);
 
-    if (result) {
+    if (result || resultKey) {
       const [before, hit, after] = treeNode.title.split(regex);
       treeNode.name = (
         <Typography.Text>

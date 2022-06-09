@@ -13,8 +13,6 @@ interface OwnProps {
   filter: TUserSavedFilter;
 }
 
-const FILTER_NAME_MAX_LENGTH = 50;
-
 const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
   const dispatch = useDispatch();
   const [editForm] = Form.useForm();
@@ -56,17 +54,6 @@ const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
               name="title"
               label={intl.get('components.querybuilder.header.modal.edit.input.label')}
               rules={[
-                {
-                  type: 'string',
-                  max: FILTER_NAME_MAX_LENGTH,
-                  message: (
-                    <span>
-                      <WarningFilled /> {FILTER_NAME_MAX_LENGTH}{' '}
-                      {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
-                    </span>
-                  ),
-                  validateTrigger: 'onSubmit',
-                },
                 {
                   type: 'string',
                   required: true,

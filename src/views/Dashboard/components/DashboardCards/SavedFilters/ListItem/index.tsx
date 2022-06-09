@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 import { TUserSavedFilter } from 'services/api/savedFilter/models';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
@@ -16,6 +16,8 @@ interface OwnProps {
   id: any;
   data: TUserSavedFilter;
 }
+
+const { Text } = Typography;
 
 const SavedFiltersListItem = ({ data }: OwnProps) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,7 +44,11 @@ const SavedFiltersListItem = ({ data }: OwnProps) => {
             pathname: FILTER_TAG_PAGE_MAPPING[data.tag],
             search: `?${FILTER_ID_QUERY_PARAM_KEY}=${data.id}`,
           },
-          content: data.title,
+          content: (
+            <Text style={{ width: 400 }} ellipsis={{ tooltip: data.title }}>
+              {data.title}
+            </Text>
+          ),
           onClick: () =>
             setQueryBuilderState(FILTER_TAG_QB_ID_MAPPING[data.tag], {
               active: data.queries[0].id,

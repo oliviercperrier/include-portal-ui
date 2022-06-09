@@ -33,7 +33,7 @@ const UserSetsForm = ({
         {userSets.map((s: IUserSetOutput) => (
           <Select.Option key={s.id} value={s.id}>
             <Row>
-              <Col style={{ paddingRight: 15 }}>{s.tag}</Col>
+              <Col className={styles.setDropdownName}>{s.tag}</Col>
               <Col style={{ paddingRight: 2 }}>
                 <UserOutlined />
               </Col>

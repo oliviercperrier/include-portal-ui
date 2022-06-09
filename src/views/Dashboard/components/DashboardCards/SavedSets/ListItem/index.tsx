@@ -78,7 +78,7 @@ const ListItem = ({ data, icon }: OwnProps) => {
         }
         linkProps={{
           to: redirectToPage(data.setType),
-          content: data.tag,
+          content: <div className={styles.setName}>{data.tag}</div>,
           onClick: () => {
             const setValue = `${SET_ID_PREFIX}${data.id}`;
             addQuery({

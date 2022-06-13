@@ -59,6 +59,8 @@ import { useSavedSet } from 'store/savedSet';
 
 import styles from './index.module.scss';
 
+export const MAX_TITLE_LENGTH = 200;
+
 type OwnProps = {
   fileMapping: ExtendedMappingResults;
   biospecimenMapping: ExtendedMappingResults;
@@ -215,6 +217,7 @@ const PageContent = ({
           onSaveFilter: handleOnSaveFilter,
           onDeleteFilter: handleOnDeleteFilter,
           onSetAsFavorite: handleOnSaveAsFavorite,
+          maxNameCapSavedQuery: MAX_TITLE_LENGTH,
         }}
         facetFilterConfig={{
           enable: true,

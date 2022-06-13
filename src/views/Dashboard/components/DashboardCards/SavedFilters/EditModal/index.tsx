@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { updateSavedFilter } from 'store/savedFilter/thunks';
 
 import styles from './index.module.scss';
+import { MAX_TITLE_LENGTH } from 'views/DataExploration/components/PageContent';
 
 interface OwnProps {
   visible?: boolean;
@@ -54,6 +55,17 @@ const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
               name="title"
               label={intl.get('components.querybuilder.header.modal.edit.input.label')}
               rules={[
+                {
+                  type: 'string',
+                  max: MAX_TITLE_LENGTH,
+                  message: (
+                    <span>
+                      <WarningFilled /> {MAX_TITLE_LENGTH}{' '}
+                      {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
+                    </span>
+                  ),
+                  validateTrigger: 'onSubmit',
+                },
                 {
                   type: 'string',
                   required: true,

@@ -11,10 +11,11 @@ import { SetActionType } from 'views/DataExploration/components/SetsManagementDr
 import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
 
 import styles from './index.module.scss';
+import { WarningFilled } from '@ant-design/icons';
+import { MAX_TITLE_LENGTH } from 'views/DataExploration/components/PageContent';
 
 const FORM_NAME = 'save-set';
 const SET_NAME_KEY = 'nameSet';
-const MAX_LENGTH_NAME = 200;
 
 type OwnProps = {
   title: string;
@@ -103,7 +104,7 @@ const CreateEditModal = ({
       do {
         newName = `${newName}(copy)`;
         existsName = isSetNameExists(newName);
-      } while (existsName && newName.length < MAX_LENGTH_NAME);
+      } while (existsName && newName.length < MAX_TITLE_LENGTH);
     }
     return newName;
   };
@@ -161,6 +162,17 @@ const CreateEditModal = ({
           className={styles.setCreateFormItem}
           name={SET_NAME_KEY}
           rules={[
+            {
+              type: 'string',
+              max: MAX_TITLE_LENGTH,
+              message: (
+                <span>
+                  <WarningFilled /> {MAX_TITLE_LENGTH}{' '}
+                  {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
+                </span>
+              ),
+              validateTrigger: 'onSubmit',
+            },
             {
               type: 'string',
               required: true,

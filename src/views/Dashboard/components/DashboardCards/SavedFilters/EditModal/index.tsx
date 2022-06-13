@@ -6,14 +6,13 @@ import { useDispatch } from 'react-redux';
 import { updateSavedFilter } from 'store/savedFilter/thunks';
 
 import styles from './index.module.scss';
+import { MAX_TITLE_LENGTH } from 'views/DataExploration/components/PageContent';
 
 interface OwnProps {
   visible?: boolean;
   onCancel: () => void;
   filter: TUserSavedFilter;
 }
-
-const FILTER_NAME_MAX_LENGTH = 50;
 
 const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
   const dispatch = useDispatch();
@@ -58,10 +57,10 @@ const EditModal = ({ visible = false, onCancel, filter }: OwnProps) => {
               rules={[
                 {
                   type: 'string',
-                  max: FILTER_NAME_MAX_LENGTH,
+                  max: MAX_TITLE_LENGTH,
                   message: (
                     <span>
-                      <WarningFilled /> {FILTER_NAME_MAX_LENGTH}{' '}
+                      <WarningFilled /> {MAX_TITLE_LENGTH}{' '}
                       {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
                     </span>
                   ),

@@ -6,12 +6,13 @@ import { createSavedSet, updateSavedSet } from 'store/savedSet/thunks';
 import filtersToName from 'common/sqonToName';
 import { ISqonGroupFilter } from '@ferlab/ui/core/data/sqon/types';
 import intl from 'react-intl-universal';
-import { MAX_LENGTH_NAME, PROJECT_ID, useSavedSet } from 'store/savedSet';
+import { PROJECT_ID, useSavedSet } from 'store/savedSet';
 import { SetActionType } from 'views/DataExploration/components/SetsManagementDropdown';
 import { IUserSetOutput, SetType } from 'services/api/savedSet/models';
-import { WarningFilled } from '@ant-design/icons';
 
 import styles from './index.module.scss';
+import { WarningFilled } from '@ant-design/icons';
+import { MAX_TITLE_LENGTH } from 'views/DataExploration/components/PageContent';
 
 const FORM_NAME = 'save-set';
 const SET_NAME_KEY = 'nameSet';
@@ -103,7 +104,7 @@ const CreateEditModal = ({
       do {
         newName = `${newName}(copy)`;
         existsName = isSetNameExists(newName);
-      } while (existsName && newName.length < MAX_LENGTH_NAME);
+      } while (existsName && newName.length < MAX_TITLE_LENGTH);
     }
     return newName;
   };
@@ -163,10 +164,10 @@ const CreateEditModal = ({
           rules={[
             {
               type: 'string',
-              max: MAX_LENGTH_NAME,
+              max: MAX_TITLE_LENGTH,
               message: (
                 <span>
-                  <WarningFilled /> {MAX_LENGTH_NAME}{' '}
+                  <WarningFilled /> {MAX_TITLE_LENGTH}{' '}
                   {intl.get('components.querybuilder.header.modal.edit.input.maximumLength')}
                 </span>
               ),

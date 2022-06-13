@@ -80,13 +80,15 @@ export const searchInTree = (
 
     if (result || resultKey) {
       const [before, hit, after] = treeNode.title.split(regex);
-      treeNode.name = (
-        <Typography.Text>
-          {before}
-          <div className={styles.highlight}>{hit}</div>
-          {after}
-        </Typography.Text>
-      );
+      if (hit) {
+        treeNode.name = (
+            <Typography.Text>
+              {before}
+              <div className={styles.highlight}>{hit}</div>
+              {after}
+            </Typography.Text>
+        );
+      }
     }
   }
   return match;

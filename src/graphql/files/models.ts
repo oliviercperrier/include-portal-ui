@@ -10,6 +10,7 @@ export interface IFileResultTree {
 export interface IFileEntity {
   key?: string;
   id: string;
+  fhir_id: string;
   score: number;
   acl: string[];
   controlled_access: string;

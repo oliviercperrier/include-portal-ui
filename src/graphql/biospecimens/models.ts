@@ -9,6 +9,7 @@ export interface IBiospecimenResultTree {
 export interface IBiospecimenEntity {
   key?: string;
   id: string;
+  fhir_id: string;
   status: string;
   score: number;
   volume_ul: number;

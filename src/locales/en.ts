@@ -279,6 +279,52 @@ const fr = {
       biospecimens: 'Biospecimens',
       datafiles: 'Data Files',
     },
+    uploadIds: {
+      modal: {
+        title: 'Upload a {entity} list',
+        submittedColTitle: 'Submitted {entity} identifiers',
+        uploadBtnText: 'Upload a {entity} list',
+        mappedTo: 'Mapped To',
+        collapseTitle: 'Summary Table  ({matchCount} matched, {unMatchCount} unmatched)',
+        inputLabel: 'Copy-paste a list of identifiers or upload a file',
+        match: 'Matched ({count})',
+        unmatch: 'Unmatched ({count})',
+        tableMessage:
+          '{submittedCount} submitted identifiers mapped to {mappedCount} unique system identifiers',
+        matchTable: {
+          idcol: '{entity} ID',
+          participant: {
+            matchcol: 'Participant ID',
+            mappedcol: 'Study ID',
+          },
+          file: {
+            matchcol: 'File ID',
+            mappedcol: 'Study ID',
+          },
+          biospecimen: {
+            matchcol: 'Sample ID',
+            mappedcol: 'Study ID',
+          },
+        },
+        pillTitle: 'Uploaded List',
+        upload: {
+          fileBtn: 'Upload a file',
+          btn: 'Upload',
+        },
+        clearBtn: 'Clear',
+        cancelBtn: 'Cancel',
+        emptyTable: 'No data',
+        popover: {
+          title: 'Identifiers and File Formats',
+          identifiers: 'Identifiers',
+          separatedBy: {
+            title: 'Separated by',
+            values: 'comma, space, new line',
+          },
+          uploadFileFormats: 'Upload file formats',
+        },
+      },
+    },
   },
   // LAYOUT
   layout: {
@@ -587,6 +633,18 @@ const fr = {
   facets: {
     file_id: 'File ID',
     // Participant
+    participant_facet_ids: {
+      participant_fhir_id_1: 'Participant ID',
+      participant_fhir_id_2: 'Participant ID',
+    },
+    file_facet_ids: {
+      file_fhir_id_1: 'File ID',
+      file_fhir_id_2: 'File ID',
+    },
+    biospecimen_facet_ids: {
+      biospecimen_fhir_id_1: 'Sample ID',
+      biospecimen_fhir_id_2: 'Sample ID',
+    },
     participant_id: 'Participant ID',
     study_id: 'Study Code',
     down_syndrome_status: 'Down Syndrome Status',

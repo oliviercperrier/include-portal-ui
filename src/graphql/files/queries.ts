@@ -8,6 +8,7 @@ export const SEARCH_FILES_QUERY = gql`
         edges {
           node {
             id
+            fhir_id
             file_id
             data_category
             data_type
@@ -31,6 +32,24 @@ export const SEARCH_FILES_QUERY = gql`
             }
             sequencing_experiment {
               experiment_strategy
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const CHECK_FILE_MATCH = gql`
+  query fetchMatchFile($sqon: JSON, $first: Int, $offset: Int) {
+    file {
+      hits(filters: $sqon, first: $first, offset: $offset) {
+        edges {
+          node {
+            fhir_id
+            file_id
+            study {
+              study_id
             }
           }
         }

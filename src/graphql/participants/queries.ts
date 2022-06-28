@@ -71,27 +71,28 @@ export const SEARCH_PARTICIPANT_QUERY = gql`
   }
 `;
 
-export const MATCH_PARTICIPANT_QUERY = gql`
-  query fetchMatchParticipant($sqon: JSON) {
+export const GET_PARTICIPANT_COUNT = gql`
+  query getParticipantCount($sqon: JSON) {
     participant {
       hits(filters: $sqon) {
-        edges {
-          node {
-            participant_id
-            study_id
-          }
-        }
         total
       }
     }
   }
 `;
 
-export const GET_PARTICIPANT_COUNT = gql`
-  query getParticipantCount($sqon: JSON) {
+export const CHECK_PARTICIPANT_MATCH = gql`
+  query fetchMatchParticipant($sqon: JSON, $first: Int, $offset: Int) {
     participant {
-      hits(filters: $sqon) {
-        total
+      hits(filters: $sqon, first: $first, offset: $offset) {
+        edges {
+          node {
+            fhir_id
+            participant_id
+            external_id
+            study_id
+          }
+        }
       }
     }
   }

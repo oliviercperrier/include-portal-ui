@@ -32,6 +32,9 @@ import FileSetSearch from './components/FileSetSearch';
 import BiospecimenSetSearch from './components/BiospecimenSetSearch';
 
 import styles from './index.module.scss';
+import ParticipantUploadIds from './components/UploadIds/ParticipantUploadIds';
+import FileUploadIds from './components/UploadIds/FileUploadIds';
+import BiospecimenUploadIds from './components/UploadIds/BiospecimenUploadIds';
 
 interface OwnProps {
   tab?: string;
@@ -50,6 +53,7 @@ export const filterGroups: {
     customSearches: [
       <ParticipantSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <ParticipantSetSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <ParticipantUploadIds key={2} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
     ],
     groups: [
       {
@@ -75,6 +79,7 @@ export const filterGroups: {
       <BiospecimenSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <BiospecimenCollectionSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <BiospecimenSetSearch key={2} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <BiospecimenUploadIds key={3} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
     ],
     groups: [
       {
@@ -93,6 +98,7 @@ export const filterGroups: {
     customSearches: [
       <FileSearch key={0} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
       <FileSetSearch key={1} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
+      <FileUploadIds key={2} queryBuilderId={DATA_EXPLORATION_QB_ID} />,
     ],
     groups: [
       {

@@ -34,6 +34,7 @@ export interface IParticipantObservedPhenotype {
 export interface IParticipantEntity {
   id: string;
   score: number;
+  fhir_id: string;
   age_at_data_collection: number;
   down_syndrome_diagnosis: string;
   ethnicity: string;
@@ -41,6 +42,7 @@ export interface IParticipantEntity {
   is_proband: boolean;
   down_syndrome_status: string;
   participant_id: string;
+  external_id: string;
   race: string;
   sex: string;
   study_external_id: string;

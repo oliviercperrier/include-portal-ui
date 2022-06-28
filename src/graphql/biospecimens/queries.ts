@@ -40,6 +40,22 @@ export const SEARCH_BIOSPECIMEN_QUERY = gql`
   }
 `;
 
+export const CHECK_BIOSPECIMEN_MATCH = gql`
+  query fetchMatchBiospecimen($sqon: JSON, $first: Int, $offset: Int) {
+    biospecimen {
+      hits(filters: $sqon, first: $first, offset: $offset) {
+        edges {
+          node {
+            fhir_id
+            sample_id
+            study_id
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const BIOSPECIMEN_SEARCH_BY_ID_QUERY = gql`
   query searchBiospecimenById($sqon: JSON) {
     biospecimen {

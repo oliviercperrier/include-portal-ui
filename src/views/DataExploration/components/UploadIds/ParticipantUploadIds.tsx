@@ -28,7 +28,7 @@ const ParticipantUploadIds = ({ queryBuilderId }: OwnProps) => (
           offset: 0,
           sqon: generateQuery({
             operator: BooleanOperators.or,
-            newFilters: ['participant_id', 'external_id'].map((field) =>
+            newFilters: ['participant_id'].map((field) =>
               generateValueFilter({
                 field,
                 value: ids,

@@ -287,8 +287,8 @@ const fr = {
         mappedTo: 'Mapped To',
         collapseTitle: 'Summary Table  ({matchCount} matched, {unMatchCount} unmatched)',
         inputLabel: 'Copy-paste a list of identifiers or upload a file',
-        match: 'Matched (count)',
-        unmatch: 'Unmatched (count)',
+        match: 'Matched ({count})',
+        unmatch: 'Unmatched ({count})',
         tableMessage: '{submittedCount} submitted identifiers mapped to {mappedCount} unique system identifiers',
         matchTable: {
           idcol: '{entity} ID',

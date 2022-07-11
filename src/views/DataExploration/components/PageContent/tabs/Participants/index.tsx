@@ -361,7 +361,7 @@ const ParticipantsTab = ({ results, setQueryConfig, queryConfig, sqon }: OwnProp
         },
         {
           key: ReportType.CLINICAL_DATA_FAM,
-          label: 'Selected participants & familys',
+          label: 'Selected participants & families',
         },
       ]}
     />

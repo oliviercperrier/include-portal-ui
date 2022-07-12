@@ -49,6 +49,7 @@ export const CHECK_BIOSPECIMEN_MATCH = gql`
             fhir_id
             sample_id
             study_id
+            container_id
           }
         }
       }

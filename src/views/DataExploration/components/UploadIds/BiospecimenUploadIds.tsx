@@ -9,6 +9,7 @@ import { ArrangerApi } from 'services/api/arranger';
 import EntityUploadIds from './EntityUploadIds';
 import { IBiospecimenEntity } from 'graphql/biospecimens/models';
 import { CHECK_BIOSPECIMEN_MATCH } from 'graphql/biospecimens/queries';
+import { uniqBy } from 'lodash';
 
 interface OwnProps {
   queryBuilderId: string;
@@ -43,7 +44,7 @@ const BiospecimenUploadIds = ({ queryBuilderId }: OwnProps) => (
         response.data?.data?.biospecimen?.hits?.edges || [],
       );
 
-      return biospecimens.map((biospecimen) => ({
+      return uniqBy(biospecimens, "sample_id").map((biospecimen) => ({
         key: biospecimen.fhir_id,
         submittedId: ids.find((id) => [biospecimen.sample_id].includes(id))!,
         mappedTo: biospecimen.sample_id,
